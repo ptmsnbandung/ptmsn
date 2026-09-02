@@ -53,39 +53,45 @@
                 </div>
             </div>
 
-            <!-- Col 2: Layanan (2 cols) -->
-            <div class="lg:col-span-2 sm:pl-4">
-                <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Layanan</div>
-                <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
-                    <li><a href="#paket" class="hover:text-white transition-colors">Internet Broadband</a></li>
-                    <li><a href="#layanan" class="hover:text-white transition-colors">Fiber Optic</a></li>
-                    <li><a href="#layanan" class="hover:text-white transition-colors">Network Infrastructure</a></li>
-                    <li><a href="#layanan" class="hover:text-white transition-colors">Digital Solutions</a></li>
-                </ul>
-            </div>
+            <!-- Col 2, 3, 4: Navigation Links (2 Columns on Mobile, 3 Columns on Tablet/Desktop) -->
+            <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-4 lg:pt-0 border-t border-white/10 lg:border-t-0">
+                
+                <!-- Layanan -->
+                <div>
+                    <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Layanan</div>
+                    <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
+                        <li><a href="#paket" class="hover:text-white transition-colors">Internet Broadband</a></li>
+                        <li><a href="#layanan" class="hover:text-white transition-colors">Fiber Optic</a></li>
+                        <li><a href="#layanan" class="hover:text-white transition-colors">Network Infrastructure</a></li>
+                        <li><a href="#layanan" class="hover:text-white transition-colors">Digital Solutions</a></li>
+                    </ul>
+                </div>
 
-            <!-- Col 3: Perusahaan (2 cols) -->
-            <div class="lg:col-span-2">
-                <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Perusahaan</div>
-                <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
-                    <li><a href="#tentang-kami" class="hover:text-white transition-colors">Tentang Kami</a></li>
-                    <li><a href="#portofolio" class="hover:text-white transition-colors">Proyek</a></li>
-                    <li><a href="#coverage" class="hover:text-white transition-colors">Coverage</a></li>
-                    <li><a href="#kontak" class="hover:text-white transition-colors">Karir</a></li>
-                </ul>
-            </div>
+                <!-- Perusahaan -->
+                <div>
+                    <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Perusahaan</div>
+                    <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
+                        <li><a href="#tentang-kami" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#portofolio" class="hover:text-white transition-colors">Proyek</a></li>
+                        <li><a href="#coverage" class="hover:text-white transition-colors">Coverage</a></li>
+                        <li><a href="#kontak" class="hover:text-white transition-colors">Karir</a></li>
+                    </ul>
+                </div>
 
-            <!-- Col 4: Bantuan (3 cols) -->
-            <div class="lg:col-span-3">
-                <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Bantuan</div>
-                <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
-                    <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
-                    <li><a href="#kontak" class="hover:text-white transition-colors">Support / NOC 24/7</a></li>
-                    <li><a href="#kontak" class="hover:text-white transition-colors">Kontak</a></li>
-                    <li class="pt-2 text-[11px] text-emerald-400 font-mono">
-                        <span>● Network Operation: Active</span>
-                    </li>
-                </ul>
+                <!-- Bantuan & NOC -->
+                <div class="col-span-2 sm:col-span-1 pt-4 sm:pt-0 border-t border-white/10 sm:border-t-0">
+                    <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Bantuan & NOC</div>
+                    <ul class="grid grid-cols-2 sm:grid-cols-1 gap-2.5 text-xs text-slate-300 font-medium">
+                        <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#kontak" class="hover:text-white transition-colors">Support 24/7</a></li>
+                        <li><a href="#kontak" class="hover:text-white transition-colors">Kontak Kami</a></li>
+                        <li class="flex items-center gap-1.5 text-[11px] text-emerald-400 font-mono">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>NOC Active</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
 
         </div>
