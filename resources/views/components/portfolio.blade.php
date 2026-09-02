@@ -109,15 +109,15 @@
 
         </div>
 
-        <!-- Secondary Projects / Portfolios: Pure Floating Logos without Cards (2 Columns on Mobile, 4 Columns on Desktop) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-10 items-center justify-items-center max-w-5xl mx-auto py-4 sm:py-6">
+        <!-- Secondary Projects / Portfolios: Pure Floating Transparent Logos (2 Columns on Mobile, 4 Columns on Desktop) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-14 items-center justify-items-center max-w-5xl mx-auto py-6 sm:py-10">
             @foreach($portfolios as $portfolio)
-                <div class="flex items-center justify-center w-full py-2 group transition-transform duration-300 hover:scale-105" title="{{ $portfolio->title }}">
+                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" title="{{ $portfolio->title }}">
                     @if(file_exists(public_path($portfolio->image)))
-                        <img src="{{ asset($portfolio->image) }}" alt="{{ $portfolio->title }}" class="h-12 sm:h-16 max-w-[130px] sm:max-w-[180px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-md">
+                        <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg">
                     @else
                         <div class="text-[#0284c7] flex items-center justify-center">
-                            <iconify-icon icon="solar:code-square-bold" width="32"></iconify-icon>
+                            <iconify-icon icon="solar:code-square-bold" width="40"></iconify-icon>
                         </div>
                     @endif
                 </div>
