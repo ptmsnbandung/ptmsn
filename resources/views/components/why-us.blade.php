@@ -41,12 +41,12 @@
         <!-- Bottom Row: 4 Pillars Editorial List (2 Columns x 2 Rows without Card Backgrounds) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-8 sm:gap-y-10 pt-10 sm:pt-12 border-t border-slate-200">
             
-            <!-- 01 — NETWORK EXPERTISE -->
+            <!-- 01 — KEAHLIAN JARINGAN -->
             <div class="space-y-2.5">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">01</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
-                        NETWORK EXPERTISE
+                        KEAHLIAN JARINGAN
                     </h3>
                 </div>
                 <p class="font-sans text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -54,12 +54,12 @@
                 </p>
             </div>
 
-            <!-- 02 — INTEGRATED SOLUTION -->
+            <!-- 02 — SOLUSI TERINTEGRASI -->
             <div class="space-y-2.5">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">02</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
-                        INTEGRATED SOLUTION
+                        SOLUSI TERINTEGRASI
                     </h3>
                 </div>
                 <p class="font-sans text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -67,12 +67,12 @@
                 </p>
             </div>
 
-            <!-- 03 — PROVEN EXPERIENCE -->
+            <!-- 03 — PENGALAMAN TERBUKTI -->
             <div class="space-y-2.5">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">03</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
-                        PROVEN EXPERIENCE
+                        PENGALAMAN TERBUKTI
                     </h3>
                 </div>
                 <p class="font-sans text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -80,12 +80,12 @@
                 </p>
             </div>
 
-            <!-- 04 — LONG-TERM PARTNER -->
+            <!-- 04 — MITRA JANGKA PANJANG -->
             <div class="space-y-2.5">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">04</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
-                        LONG-TERM PARTNER
+                        MITRA JANGKA PANJANG
                     </h3>
                 </div>
                 <p class="font-sans text-sm sm:text-base text-slate-600 leading-relaxed">
