@@ -560,11 +560,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize AOS if available
         if (typeof window.AOS !== 'undefined') {
             window.AOS.init({
-                duration: 750,
+                duration: 400,        // Fast, crisp, modern animation
                 easing: 'ease-out-cubic',
                 once: true,
-                offset: 60,
-                delay: 50,
+                offset: -40,          // Triggers early BEFORE reaching the screen so there's zero blank waiting time!
+                delay: 0,             // Zero artificial delay
             });
 
             // Synchronize AOS with Lenis smooth scroll

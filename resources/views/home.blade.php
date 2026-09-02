@@ -45,7 +45,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-white/15 border-y border-white/15">
                 
                 <!-- 01 — Internet -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up" data-aos-delay="100">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -100,7 +100,7 @@
                 </div>
 
                 <!-- 02 — Software Development -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up" data-aos-delay="200">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -147,7 +147,7 @@
                 </div>
 
                 <!-- 03 — IT Solution -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up" data-aos-delay="300">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -226,7 +226,7 @@
                 </p>
 
                 <!-- Value Proposition Badges -->
-                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-heading font-semibold text-slate-200" data-aos="fade-up" data-aos-delay="150">
+                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-heading font-semibold text-slate-200" data-aos="fade-up">
                     <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 shadow-2xs backdrop-blur-md">
                         <iconify-icon icon="solar:check-circle-bold" class="text-emerald-400"></iconify-icon>
                         <span>Gratis Router WiFi</span>
@@ -245,14 +245,14 @@
             <!-- 4 Clean Package Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-8 sm:pt-10">
                 @foreach($packages as $package)
-                    <div class="flex flex-col flex-1" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <div class="flex flex-col flex-1" data-aos="fade-up">
                         <x-package-card :package="$package" />
                     </div>
                 @endforeach
             </div>
 
             <!-- Bottom Custom Enterprise Inquiries Note -->
-            <div class="mt-14 p-6 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white" data-aos="fade-up" data-aos-delay="200">
+            <div class="mt-14 p-6 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white" data-aos="fade-up">
                 <div class="flex items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-[#38bdf8] shrink-0">
                         <iconify-icon icon="solar:buildings-bold" width="24"></iconify-icon>

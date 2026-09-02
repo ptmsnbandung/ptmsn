@@ -50,7 +50,7 @@
         </div>
 
         <!-- Horizontal Interactive Carousel Container with Left & Right Arrow Buttons (Auto every 2s) -->
-        <div class="testimonial-carousel-container relative max-w-2xl mx-auto px-4 sm:px-12" data-aos="fade-up" data-aos-delay="150">
+        <div class="testimonial-carousel-container relative max-w-2xl mx-auto px-4 sm:px-12" data-aos="fade-up">
             
             <!-- Left Arrow Button -->
             <button 

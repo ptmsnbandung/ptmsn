@@ -14,7 +14,7 @@
         </div>
 
         <!-- Accordion Items in Dark Glass Cards -->
-        <div class="space-y-4" data-aos="fade-up" data-aos-delay="150">
+        <div class="space-y-4" data-aos="fade-up">
             <!-- FAQ 1 -->
             <div class="faq-item rounded-2xl bg-white/[0.04] border border-white/10 overflow-hidden transition-all duration-300 shadow-lg backdrop-blur-md open">
                 <div class="faq-header p-6 flex items-center justify-between cursor-pointer select-none">

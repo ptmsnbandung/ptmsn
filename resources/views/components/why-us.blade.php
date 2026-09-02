@@ -42,7 +42,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-8 sm:gap-y-10 pt-10 sm:pt-12 border-t border-slate-200">
             
             <!-- 01 — KEAHLIAN JARINGAN -->
-            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="100">
+            <div class="space-y-2.5" data-aos="fade-up">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">01</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -55,7 +55,7 @@
             </div>
 
             <!-- 02 — SOLUSI TERINTEGRASI -->
-            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="200">
+            <div class="space-y-2.5" data-aos="fade-up">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">02</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -68,7 +68,7 @@
             </div>
 
             <!-- 03 — PENGALAMAN TERBUKTI -->
-            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="300">
+            <div class="space-y-2.5" data-aos="fade-up">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">03</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -81,7 +81,7 @@
             </div>
 
             <!-- 04 — MITRA JANGKA PANJANG -->
-            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="400">
+            <div class="space-y-2.5" data-aos="fade-up">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">04</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">

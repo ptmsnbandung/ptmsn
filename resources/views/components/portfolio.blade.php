@@ -112,7 +112,7 @@
         <!-- Secondary Projects / Portfolios: Pure Floating Transparent Logos (2 Columns on Mobile, 4 Columns on Desktop) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-14 items-center justify-items-center max-w-5xl mx-auto py-6 sm:py-10">
             @foreach($portfolios as $portfolio)
-                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}" title="{{ $portfolio->title }}">
+                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" data-aos="fade-up" title="{{ $portfolio->title }}">
                     @if(file_exists(public_path($portfolio->image)))
                         <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg">
                     @else
