@@ -554,35 +554,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       8. AOS (Animate On Scroll) Initialization & Lenis Synchronization
+       8. Hero Section Opening Sequence (GSAP)
        ========================================================================== */
     const initScrollAnimations = () => {
-        // Initialize AOS if available
-        if (typeof window.AOS !== 'undefined') {
-            window.AOS.init({
-                duration: 350,
-                easing: 'ease-out-cubic',
-                once: true,
-                offset: -80,
-                delay: 0,
-                debounceDelay: 0,
-                throttleDelay: 0,
-            });
-
-            // Synchronize AOS with Lenis smooth scroll
-            if (lenis) {
-                lenis.on('scroll', () => {
-                    window.AOS.refresh();
-                });
-            }
-
-            // Refresh AOS after all images and fonts load
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    window.AOS.refresh();
-                }, 100);
-            });
-        }
 
         // Hero Section Opening Sequence (GSAP)
         if (typeof window.gsap !== 'undefined') {

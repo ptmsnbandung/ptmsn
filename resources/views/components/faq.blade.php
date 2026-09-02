@@ -1,7 +1,7 @@
 <section id="faq" class="pt-12 sm:pt-16 pb-24 sm:pb-28 px-4 sm:px-6 lg:px-8 relative z-10 w-full bg-transparent">
     <div class="max-w-4xl mx-auto relative z-10">
         <!-- Section Header (Dark Mode) -->
-        <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+        <div class="text-center max-w-2xl mx-auto mb-14">
             <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold backdrop-blur-md">
                 <span>Pusat Informasi</span>
             </div>
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Accordion Items in Dark Glass Cards -->
-        <div class="space-y-4" data-aos="fade-up">
+        <div class="space-y-4">
             <!-- FAQ 1 -->
             <div class="faq-item rounded-2xl bg-white/[0.04] border border-white/10 overflow-hidden transition-all duration-300 shadow-lg backdrop-blur-md open">
                 <div class="faq-header p-6 flex items-center justify-between cursor-pointer select-none">

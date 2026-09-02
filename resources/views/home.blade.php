@@ -29,7 +29,7 @@
 
         <div class="max-w-7xl mx-auto relative z-10">
                        <!-- Section Header -->
-            <div class="text-center max-w-3xl mx-auto mb-16 sm:mb-20" data-aos="fade-up">
+            <div class="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                     <span>Layanan & Portofolio Solusi</span>
                 </div>
@@ -45,7 +45,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-white/15 border-y border-white/15">
                 
                 <!-- 01 — Internet -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -100,7 +100,7 @@
                 </div>
 
                 <!-- 02 — Software Development -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -147,7 +147,7 @@
                 </div>
 
                 <!-- 03 — IT Solution -->
-                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]" data-aos="fade-up">
+                <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03]">
                     <div>
                         <!-- Real Photo Frame -->
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
@@ -214,7 +214,7 @@
 
         <div class="max-w-7xl mx-auto relative z-10">
             <!-- Header Section -->
-            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <div class="text-center max-w-3xl mx-auto mb-16">
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs backdrop-blur-md">
                     <span>Harga Transparan • Tanpa Biaya Tersembunyi</span>
                 </div>
@@ -226,7 +226,7 @@
                 </p>
 
                 <!-- Value Proposition Badges -->
-                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-heading font-semibold text-slate-200" data-aos="fade-up">
+                <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-heading font-semibold text-slate-200">
                     <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 shadow-2xs backdrop-blur-md">
                         <iconify-icon icon="solar:check-circle-bold" class="text-emerald-400"></iconify-icon>
                         <span>Gratis Router WiFi</span>
@@ -245,14 +245,14 @@
             <!-- 4 Clean Package Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-8 sm:pt-10">
                 @foreach($packages as $package)
-                    <div class="flex flex-col flex-1" data-aos="fade-up">
+                    <div class="flex flex-col flex-1">
                         <x-package-card :package="$package" />
                     </div>
                 @endforeach
             </div>
 
             <!-- Bottom Custom Enterprise Inquiries Note -->
-            <div class="mt-14 p-6 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white" data-aos="fade-up">
+            <div class="mt-14 p-6 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white">
                 <div class="flex items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-[#38bdf8] shrink-0">
                         <iconify-icon icon="solar:buildings-bold" width="24"></iconify-icon>

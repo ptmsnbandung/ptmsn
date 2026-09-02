@@ -72,10 +72,6 @@
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
-    <!-- AOS (Animate On Scroll) -->
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
     <!-- SweetAlert2 (CSS + JS) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css">
     
