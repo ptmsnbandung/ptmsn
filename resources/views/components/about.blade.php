@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto relative z-10">
         
         <!-- Top Centered Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16" data-aos="fade-up">
             <!-- Badge -->
             <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-sky-100/90 border border-sky-200 text-xs font-mono text-[#0284c7] uppercase tracking-wider mb-4 font-semibold shadow-2xs backdrop-blur-sm">
                 <span>{{ \App\Models\SiteSetting::get('about_badge', 'Tentang PT Media Solusi Network') }}</span>
@@ -18,14 +18,14 @@
         <div class="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
             <!-- Left Column: Corporate Story & Pillars (6 cols) -->
-            <div class="lg:col-span-6 flex flex-col justify-center">
+            <div class="lg:col-span-6 flex flex-col justify-center" data-aos="fade-right" data-aos-duration="800">
                 <!-- Narrative Paragraph (Justified) -->
                 <p class="mb-6 text-slate-600 font-sans text-base sm:text-[17px] leading-relaxed text-justify">
                     {!! \App\Models\SiteSetting::get('about_description', '<strong class="text-slate-900 font-bold">PT Media Solusi Network</strong> adalah perusahaan holding penyedia solusi IT terpadu, developer aplikasi, dan infrastruktur internet yang telah dipercaya oleh pemerintah daerah, BUMN, serta berbagai sektor korporasi swasta.') !!}
                 </p>
 
                 <!-- Trust Sector Pills (3 Side-by-Side Cards on Mobile & Desktop) -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-xs font-heading font-semibold text-slate-700 w-full">
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-xs font-heading font-semibold text-slate-700 w-full" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
                         <iconify-icon icon="solar:buildings-bold" class="text-[#0284c7] text-base sm:text-lg shrink-0"></iconify-icon>
                         <span class="text-[10px] sm:text-xs leading-tight sm:leading-snug">Pemerintah & BUMN</span>
@@ -42,7 +42,7 @@
             </div>
 
             <!-- Right Column: Official Graphic Showcase (tentang-kami.png) (6 cols) -->
-            <div class="lg:col-span-6 flex items-center justify-center">
+            <div class="lg:col-span-6 flex items-center justify-center" data-aos="fade-left" data-aos-duration="800">
                 <div class="relative w-full flex items-center justify-center group">
                     <!-- Ambient Soft Cyan Glow -->
                     <div class="absolute w-80 h-80 bg-sky-400/20 rounded-full blur-[80px] pointer-events-none"></div>

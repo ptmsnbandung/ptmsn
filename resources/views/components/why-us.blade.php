@@ -5,7 +5,7 @@
         <div class="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-16 sm:mb-20">
             
             <!-- Left Column: Eyebrow + Large Heading + Description -->
-            <div class="lg:col-span-6 flex flex-col justify-center text-left">
+            <div class="lg:col-span-6 flex flex-col justify-center text-left" data-aos="fade-right">
                 
                 <!-- Prominent Eyebrow (WHY MSN) -->
                 <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-xs sm:text-sm font-mono text-[#0284c7] uppercase tracking-widest mb-4 font-bold shadow-2xs w-fit">
@@ -26,7 +26,7 @@
             </div>
 
             <!-- Right Column: Proportional Feature Photo (Clean & Well-Fitted) -->
-            <div class="lg:col-span-6 flex items-center justify-center">
+            <div class="lg:col-span-6 flex items-center justify-center" data-aos="fade-left">
                 <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-100 group">
                     <img 
                         src="{{ asset('images/hero/fiber-technician-field.jpg') }}" 
@@ -42,7 +42,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-8 sm:gap-y-10 pt-10 sm:pt-12 border-t border-slate-200">
             
             <!-- 01 — KEAHLIAN JARINGAN -->
-            <div class="space-y-2.5">
+            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="100">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">01</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -55,7 +55,7 @@
             </div>
 
             <!-- 02 — SOLUSI TERINTEGRASI -->
-            <div class="space-y-2.5">
+            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="200">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">02</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -68,7 +68,7 @@
             </div>
 
             <!-- 03 — PENGALAMAN TERBUKTI -->
-            <div class="space-y-2.5">
+            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="300">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">03</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">
@@ -81,7 +81,7 @@
             </div>
 
             <!-- 04 — MITRA JANGKA PANJANG -->
-            <div class="space-y-2.5">
+            <div class="space-y-2.5" data-aos="fade-up" data-aos-delay="400">
                 <div class="flex items-baseline gap-4 pb-2.5 border-b border-slate-200">
                     <span class="font-mono text-2xl sm:text-3xl font-light text-[#0284c7] tracking-tight">04</span>
                     <h3 class="font-heading font-bold text-base sm:text-lg text-slate-900 uppercase tracking-wider">

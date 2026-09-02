@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto relative z-10">
         
         <!-- Section Header (Portofolio + Exact Narrative from Image 3) -->
-        <div class="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+        <div class="text-center max-w-4xl mx-auto mb-16 sm:mb-20" data-aos="fade-up">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100/90 border border-sky-200 text-xs font-mono text-[#0284c7] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                 <span>Studi Kasus & Rekam Jejak Nyata</span>
             </div>
@@ -24,7 +24,7 @@
         </div>
 
         <!-- 1 Grand Featured Case Study: Project -> Problem -> Solution -> Result -->
-        <div class="rounded-3xl border border-slate-200 bg-[#0c2340] text-white overflow-hidden shadow-2xl mb-14 grid lg:grid-cols-12 gap-0 items-stretch">
+        <div class="rounded-3xl border border-slate-200 bg-[#0c2340] text-white overflow-hidden shadow-2xl mb-14 grid lg:grid-cols-12 gap-0 items-stretch" data-aos="fade-up" data-aos-duration="800">
             
             <!-- Left Side: Grand Real Deployment Photo (6 cols) -->
             <div class="lg:col-span-6 relative min-h-[340px] lg:min-h-[480px] overflow-hidden group">
@@ -48,35 +48,35 @@
 
                     <!-- Project Title -->
                     <h3 class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight mb-6">
-                        Pengembangan Jaringan Fiber Optic Kawasan
+                        Penggelaran Jaringan Fiber Optic Terintegrasi
                     </h3>
 
-                    <!-- Project -> Problem -> Solution -> Result Flow -->
-                    <div class="space-y-4 mb-8 text-xs sm:text-sm font-sans">
+                    <!-- Project Storyline -->
+                    <div class="space-y-4 text-xs sm:text-sm font-sans mb-8">
                         
                         <!-- Problem -->
-                        <div class="p-3.5 rounded-xl bg-white/[0.05] border border-white/10">
-                            <div class="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider mb-1">
+                        <div class="p-3.5 rounded-xl bg-white/[0.06] border border-white/10">
+                            <div class="font-mono text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1">
                                 [ Problem / Tantangan ]
                             </div>
-                            <p class="text-slate-300 leading-relaxed">
-                                Kawasan perkantoran dan bisnis menghadapi seringnya downtime dan latensi tinggi akibat ketergantungan pada transmisi tembaga lama tanpa jalur proteksi redundansi.
-                            </p>
+                            <div class="text-slate-300 leading-relaxed">
+                                Kebutuhan konektivitas antar-titik operasional yang membutuhkan bandwidth simetris tinggi tanpa fluktuasi di kawasan padat lalu lintas Bandung.
+                            </div>
                         </div>
 
                         <!-- Solution -->
-                        <div class="p-3.5 rounded-xl bg-white/[0.05] border border-white/10">
-                            <div class="text-[11px] font-mono font-bold text-[#38bdf8] uppercase tracking-wider mb-1">
-                                [ Solution / Solusi Kami ]
+                        <div class="p-3.5 rounded-xl bg-white/[0.06] border border-white/10">
+                            <div class="font-mono text-[11px] font-bold text-[#38bdf8] uppercase tracking-wider mb-1">
+                                [ Solution / Solusi MSN ]
                             </div>
-                            <p class="text-slate-300 leading-relaxed">
-                                Penggelaran 120 km jaringan kabel fiber optic murni, implementasi Metro-E ring backbone berkapasitas 100G, dan pemasangan 85 titik distribusi ODP aktif.
-                            </p>
+                            <div class="text-slate-300 leading-relaxed">
+                                Perancangan rute kabel fiber optic bawah tanah & udara dengan redundansi cincin (ring topology) serta terminasi OTB berstandar industri telco.
+                            </div>
                         </div>
 
                         <!-- Result -->
-                        <div class="p-3.5 rounded-xl bg-white/[0.05] border border-white/10">
-                            <div class="text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider mb-1">
+                        <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                            <div class="font-mono text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
                                 [ Result / Hasil Nyata ]
                             </div>
                             <div class="grid grid-cols-3 gap-2 pt-2 text-center">
@@ -112,7 +112,7 @@
         <!-- Secondary Projects / Portfolios: Pure Floating Transparent Logos (2 Columns on Mobile, 4 Columns on Desktop) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-14 items-center justify-items-center max-w-5xl mx-auto py-6 sm:py-10">
             @foreach($portfolios as $portfolio)
-                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" title="{{ $portfolio->title }}">
+                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}" title="{{ $portfolio->title }}">
                     @if(file_exists(public_path($portfolio->image)))
                         <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg">
                     @else

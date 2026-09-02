@@ -554,43 +554,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       8. High-Performance Slide & Reveal Animations (100% Guaranteed Visible)
+       8. AOS (Animate On Scroll) Initialization & Lenis Synchronization
        ========================================================================== */
     const initScrollAnimations = () => {
-        // A. Pure Hardware-Accelerated IntersectionObserver for Reveal Slide-Up
-        const revealElements = document.querySelectorAll('.reveal-slide-up');
-        
-        if (revealElements.length && 'IntersectionObserver' in window) {
-            const revealObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-revealed');
-                        observer.unobserve(entry.target);
-                    }
+        // Initialize AOS if available
+        if (typeof window.AOS !== 'undefined') {
+            window.AOS.init({
+                duration: 750,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 60,
+                delay: 50,
+            });
+
+            // Synchronize AOS with Lenis smooth scroll
+            if (lenis) {
+                lenis.on('scroll', () => {
+                    window.AOS.refresh();
                 });
-            }, {
-                rootMargin: '0px 0px -30px 0px',
-                threshold: 0.02
-            });
+            }
 
-            revealElements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    el.classList.add('is-revealed');
-                } else {
-                    revealObserver.observe(el);
-                }
+            // Refresh AOS after all images and fonts load
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    window.AOS.refresh();
+                }, 100);
             });
-
-            // Fail-safe: ensure all elements become visible
-            setTimeout(() => {
-                revealElements.forEach(el => el.classList.add('is-revealed'));
-            }, 600);
-        } else {
-            revealElements.forEach(el => el.classList.add('is-revealed'));
         }
 
-        // B. Hero Section Fluid Opening Sequence (GSAP)
+        // Hero Section Opening Sequence (GSAP)
         if (typeof window.gsap !== 'undefined') {
             const heroSection = document.getElementById('hero');
             if (heroSection) {

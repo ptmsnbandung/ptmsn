@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto">
         
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+        <div class="text-center max-w-3xl mx-auto mb-16 sm:mb-20" data-aos="fade-up">
             <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-sky-100/80 border border-sky-200 text-xs font-mono text-[#0284c7] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                 <span>Lokasi Kantor & Layanan Pelanggan</span>
             </div>
@@ -17,7 +17,7 @@
         <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
             
             <!-- Left Column: Company Contact Info (5 cols) -->
-            <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div class="lg:col-span-5 flex flex-col justify-between space-y-4" data-aos="fade-right">
                 
                 <!-- Card 1: Alamat Operasional Resmi -->
                 <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex items-start gap-4 hover:border-sky-300 transition-colors">
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Right Column: Interactive Google Maps Container (7 cols) -->
-            <div class="lg:col-span-7 flex flex-col justify-between">
+            <div class="lg:col-span-7 flex flex-col justify-between" data-aos="fade-left">
                 <div class="relative w-full h-full min-h-[440px] rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-white flex flex-col">
                     
                     <!-- Google Maps Iframe (PT. MSN - Jl. Reog No.18 Bandung) -->
