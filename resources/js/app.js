@@ -553,4 +553,388 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /* ==========================================================================
+       8. Cinematic GSAP ScrollTrigger Slide & Reveal Animations
+       ========================================================================== */
+    const initScrollAnimations = () => {
+        if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+            return;
+        }
+
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Sync Lenis with ScrollTrigger if Lenis exists
+        if (lenis) {
+            lenis.on('scroll', ScrollTrigger.update);
+        }
+
+        // Check if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            return;
+        }
+
+        // -------------------------------------------------------------
+        // A. HERO SECTION: Fluid Opening Slide Sequence
+        // -------------------------------------------------------------
+        const heroSection = document.getElementById('hero');
+        if (heroSection) {
+            const heroBadge = heroSection.querySelector('.inline-flex.items-center.px-4');
+            const heroH1 = heroSection.querySelector('h1');
+            const heroDesc = heroSection.querySelector('p');
+            const heroButtons = heroSection.querySelectorAll('a[href="#kontak"], a[href="#coverage"]');
+            const heroMetrics = heroSection.querySelectorAll('.grid.grid-cols-2 > div, .grid.grid-cols-4 > div');
+            const heroImageContainer = heroSection.querySelector('.lg\\:col-span-5');
+            const heroImage = heroSection.querySelector('img');
+
+            const heroTl = gsap.timeline({ delay: 0.15 });
+
+            if (heroBadge) {
+                heroTl.from(heroBadge, {
+                    y: -25,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power3.out'
+                });
+            }
+
+            if (heroH1) {
+                heroTl.from(heroH1, {
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.9,
+                    ease: 'power3.out'
+                }, '-=0.5');
+            }
+
+            if (heroDesc) {
+                heroTl.from(heroDesc, {
+                    y: 25,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power3.out'
+                }, '-=0.6');
+            }
+
+            if (heroButtons.length) {
+                heroTl.from(heroButtons, {
+                    y: 25,
+                    opacity: 0,
+                    duration: 0.7,
+                    stagger: 0.12,
+                    ease: 'power3.out'
+                }, '-=0.5');
+            }
+
+            if (heroMetrics.length) {
+                heroTl.from(heroMetrics, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.75,
+                    stagger: 0.08,
+                    ease: 'power3.out'
+                }, '-=0.4');
+            }
+
+            if (heroImageContainer) {
+                heroTl.from(heroImageContainer, {
+                    x: 45,
+                    opacity: 0,
+                    scale: 0.95,
+                    duration: 1.1,
+                    ease: 'power3.out'
+                }, '-=0.9');
+            }
+
+            // Subtle gentle breathing/floating motion for Hero illustration
+            if (heroImage) {
+                gsap.to(heroImage, {
+                    y: -12,
+                    duration: 3.5,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // B. SECTION HEADERS: Elegant Slide Up Reveal
+        // -------------------------------------------------------------
+        document.querySelectorAll('section').forEach(section => {
+            if (section.id === 'hero') return;
+
+            const eyebrow = section.querySelector('.font-mono.uppercase') || section.querySelector('.inline-flex.items-center.px-4');
+            const heading = section.querySelector('h2');
+            const sub = heading ? heading.nextElementSibling : null;
+
+            const headerElements = [eyebrow, heading, sub].filter(el => el && el.tagName);
+
+            if (headerElements.length) {
+                gsap.from(headerElements, {
+                    scrollTrigger: {
+                        trigger: heading || section,
+                        start: 'top 85%',
+                        once: true
+                    },
+                    y: 35,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.12,
+                    ease: 'power3.out'
+                });
+            }
+        });
+
+        // -------------------------------------------------------------
+        // C. ABOUT SECTION: Dual Column Slide-In
+        // -------------------------------------------------------------
+        const aboutSection = document.getElementById('tentang-kami');
+        if (aboutSection) {
+            const leftNarrative = aboutSection.querySelector('.lg\\:col-span-7');
+            const rightPhoto = aboutSection.querySelector('.lg\\:col-span-5');
+
+            if (leftNarrative) {
+                gsap.from(leftNarrative.children, {
+                    scrollTrigger: {
+                        trigger: aboutSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 35,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                });
+            }
+
+            if (rightPhoto) {
+                gsap.from(rightPhoto, {
+                    scrollTrigger: {
+                        trigger: aboutSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    x: 40,
+                    opacity: 0,
+                    duration: 0.9,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // D. SERVICES SECTION: Cards Stagger Slide-Up
+        // -------------------------------------------------------------
+        const servicesSection = document.getElementById('layanan');
+        if (servicesSection) {
+            const serviceCards = servicesSection.querySelectorAll('.grid > div');
+            if (serviceCards.length) {
+                gsap.from(serviceCards, {
+                    scrollTrigger: {
+                        trigger: servicesSection.querySelector('.grid'),
+                        start: 'top 82%',
+                        once: true
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // E. COVERAGE SECTION: Interactive Box Scale & Slide
+        // -------------------------------------------------------------
+        const coverageSection = document.getElementById('coverage');
+        if (coverageSection) {
+            const coverageBox = coverageSection.querySelector('#coverageForm')?.closest('.rounded-3xl, .rounded-2xl') || coverageSection.querySelector('.max-w-3xl');
+            if (coverageBox) {
+                gsap.from(coverageBox, {
+                    scrollTrigger: {
+                        trigger: coverageSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 40,
+                    opacity: 0,
+                    scale: 0.96,
+                    duration: 0.85,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // F. PACKAGES (PAKET): 4 Pricing Cards Stagger Slide-Up
+        // -------------------------------------------------------------
+        const packagesSection = document.getElementById('paket');
+        if (packagesSection) {
+            const packageCards = packagesSection.querySelectorAll('.grid-cols-2 > div, .lg\\:grid-cols-4 > div');
+            if (packageCards.length) {
+                gsap.from(packageCards, {
+                    scrollTrigger: {
+                        trigger: packagesSection.querySelector('.grid'),
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 55,
+                    opacity: 0,
+                    duration: 0.85,
+                    stagger: 0.12,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // G. WHY US (MENGAPA MEMILIH KAMI): Photo + 4 Pillars Stagger
+        // -------------------------------------------------------------
+        const whyUsSection = document.getElementById('why-us');
+        if (whyUsSection) {
+            const whyPhoto = whyUsSection.querySelector('img')?.parentElement;
+            if (whyPhoto) {
+                gsap.from(whyPhoto, {
+                    scrollTrigger: {
+                        trigger: whyUsSection,
+                        start: 'top 82%',
+                        once: true
+                    },
+                    x: 35,
+                    opacity: 0,
+                    duration: 0.9,
+                    ease: 'power3.out'
+                });
+            }
+
+            const pillars = whyUsSection.querySelectorAll('.border-t .space-y-2\\.5, .grid-cols-1 > div, .md\\:grid-cols-2 > div');
+            if (pillars.length) {
+                gsap.from(pillars, {
+                    scrollTrigger: {
+                        trigger: whyUsSection.querySelector('.border-t'),
+                        start: 'top 85%',
+                        once: true
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.75,
+                    stagger: 0.12,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // H. PORTFOLIO: Featured Case Study + Client Logo Grid
+        // -------------------------------------------------------------
+        const portfolioSection = document.getElementById('portofolio');
+        if (portfolioSection) {
+            const featuredCard = portfolioSection.querySelector('.rounded-3xl.overflow-hidden, .group.relative');
+            if (featuredCard) {
+                gsap.from(featuredCard, {
+                    scrollTrigger: {
+                        trigger: portfolioSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 45,
+                    opacity: 0,
+                    scale: 0.97,
+                    duration: 0.85,
+                    ease: 'power3.out'
+                });
+            }
+
+            const clientLogos = portfolioSection.querySelectorAll('.grid-cols-2 img, .grid-cols-4 img');
+            if (clientLogos.length) {
+                gsap.from(clientLogos, {
+                    scrollTrigger: {
+                        trigger: portfolioSection.querySelector('.grid-cols-2, .grid-cols-4') || portfolioSection,
+                        start: 'top 85%',
+                        once: true
+                    },
+                    y: 30,
+                    opacity: 0,
+                    scale: 0.9,
+                    duration: 0.65,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // I. TESTIMONIALS: Slide In
+        // -------------------------------------------------------------
+        const testimonialsSection = document.getElementById('testimoni');
+        if (testimonialsSection) {
+            const carousel = testimonialsSection.querySelector('.testimonial-carousel-container');
+            if (carousel) {
+                gsap.from(carousel, {
+                    scrollTrigger: {
+                        trigger: testimonialsSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 45,
+                    opacity: 0,
+                    duration: 0.85,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // J. FAQ: Accordions Stagger Slide-Up
+        // -------------------------------------------------------------
+        const faqSection = document.getElementById('faq');
+        if (faqSection) {
+            const faqList = faqSection.querySelectorAll('.faq-item');
+            if (faqList.length) {
+                gsap.from(faqList, {
+                    scrollTrigger: {
+                        trigger: faqSection.querySelector('.space-y-4, .space-y-3') || faqSection,
+                        start: 'top 82%',
+                        once: true
+                    },
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.65,
+                    stagger: 0.08,
+                    ease: 'power3.out'
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // K. CONTACT & CTA: Slide-In
+        // -------------------------------------------------------------
+        const contactSection = document.getElementById('kontak');
+        if (contactSection) {
+            const contactCards = contactSection.querySelectorAll('.grid > div');
+            if (contactCards.length) {
+                gsap.from(contactCards, {
+                    scrollTrigger: {
+                        trigger: contactSection,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: 'power3.out'
+                });
+            }
+        }
+    };
+
+    // Run animation initialization
+    initScrollAnimations();
+
 });
