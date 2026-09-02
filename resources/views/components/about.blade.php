@@ -24,19 +24,19 @@
                     {!! \App\Models\SiteSetting::get('about_description', '<strong class="text-slate-900 font-bold">PT Media Solusi Network</strong> adalah perusahaan holding penyedia solusi IT terpadu, developer aplikasi, dan infrastruktur internet yang telah dipercaya oleh pemerintah daerah, BUMN, serta berbagai sektor korporasi swasta.') !!}
                 </p>
 
-                <!-- Trust Sector Pills (3 Equal Aligned Cards) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-heading font-semibold text-slate-700 w-full">
-                    <div class="flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
-                        <iconify-icon icon="solar:buildings-bold" class="text-[#0284c7] text-base shrink-0"></iconify-icon>
-                        <span class="leading-snug">Pemerintah & BUMN</span>
+                <!-- Trust Sector Pills (3 Side-by-Side Cards on Mobile & Desktop) -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 text-xs font-heading font-semibold text-slate-700 w-full">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
+                        <iconify-icon icon="solar:buildings-bold" class="text-[#0284c7] text-base sm:text-lg shrink-0"></iconify-icon>
+                        <span class="text-[10px] sm:text-xs leading-tight sm:leading-snug">Pemerintah & BUMN</span>
                     </div>
-                    <div class="flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
-                        <iconify-icon icon="solar:users-group-two-rounded-bold" class="text-emerald-600 text-base shrink-0"></iconify-icon>
-                        <span class="leading-snug">Korporasi & Swasta</span>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
+                        <iconify-icon icon="solar:users-group-two-rounded-bold" class="text-emerald-600 text-base sm:text-lg shrink-0"></iconify-icon>
+                        <span class="text-[10px] sm:text-xs leading-tight sm:leading-snug">Korporasi & Swasta</span>
                     </div>
-                    <div class="flex items-center justify-center gap-2 px-3.5 py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
-                        <iconify-icon icon="solar:server-square-bold" class="text-sky-500 text-base shrink-0"></iconify-icon>
-                        <span class="leading-snug">Holding ISP & IT</span>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/95 border border-sky-100 shadow-xs backdrop-blur-sm hover:border-sky-300 hover:shadow-sm transition-all text-center">
+                        <iconify-icon icon="solar:server-square-bold" class="text-sky-500 text-base sm:text-lg shrink-0"></iconify-icon>
+                        <span class="text-[10px] sm:text-xs leading-tight sm:leading-snug">Holding ISP & IT</span>
                     </div>
                 </div>
             </div>
