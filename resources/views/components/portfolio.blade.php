@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto relative z-10">
         
         <!-- Section Header (Portofolio + Exact Narrative from Image 3) -->
-        <div class="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+        <div class="text-center max-w-4xl mx-auto mb-16 sm:mb-20 reveal-on-scroll">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100/90 border border-sky-200 text-xs font-mono text-[#0284c7] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                 <span>Studi Kasus & Rekam Jejak Nyata</span>
             </div>
@@ -24,7 +24,7 @@
         </div>
 
         <!-- 1 Grand Featured Case Study: Project -> Problem -> Solution -> Result -->
-        <div class="rounded-3xl border border-slate-200 bg-[#0c2340] text-white overflow-hidden shadow-2xl mb-14 grid lg:grid-cols-12 gap-0 items-stretch">
+        <div class="rounded-3xl border border-slate-200 bg-[#0c2340] text-white overflow-hidden shadow-2xl mb-14 grid lg:grid-cols-12 gap-0 items-stretch reveal-on-scroll">
             
             <!-- Left Side: Grand Real Deployment Photo (6 cols) -->
             <div class="lg:col-span-6 relative min-h-[340px] lg:min-h-[480px] overflow-hidden group">
@@ -112,7 +112,7 @@
         <!-- Secondary Projects / Portfolios: Pure Floating Transparent Logos (2 Columns on Mobile, 4 Columns on Desktop) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-14 items-center justify-items-center max-w-5xl mx-auto py-6 sm:py-10">
             @foreach($portfolios as $portfolio)
-                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105" title="{{ $portfolio->title }}">
+                <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105 reveal-zoom" title="{{ $portfolio->title }}">
                     @if(file_exists(public_path($portfolio->image)))
                         <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg">
                     @else

@@ -1,5 +1,5 @@
 <section class="py-8 sm:py-10 px-4 sm:px-6 lg:px-8 relative z-10 bg-transparent w-full">
-    <div class="max-w-4xl mx-auto rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center shadow-lg border border-sky-400/25" style="background: linear-gradient(150deg, #07172e 0%, #0c2445 50%, #07172e 100%);">
+    <div class="max-w-4xl mx-auto rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center shadow-lg border border-sky-400/25 reveal-zoom" style="background: linear-gradient(150deg, #07172e 0%, #0c2445 50%, #07172e 100%);">
         
         <!-- Subtle Diagonal Accent -->
         <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 8px);"></div>

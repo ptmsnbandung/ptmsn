@@ -7,7 +7,7 @@
     <div class="max-w-5xl mx-auto relative z-10">
         
         <!-- Section Header -->
-        <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+        <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12 reveal-on-scroll">
             <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                 <span>Pemeriksaan Jaringan Instan</span>
             </div>
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Grand Search Box Container -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-white/[0.05] border border-sky-400/30 backdrop-blur-xl shadow-2xl">
+        <div class="p-6 sm:p-8 rounded-3xl bg-white/[0.05] border border-sky-400/30 backdrop-blur-xl shadow-2xl reveal-zoom">
             <form id="coverageForm" class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-grow">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">

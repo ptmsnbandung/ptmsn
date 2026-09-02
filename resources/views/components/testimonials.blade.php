@@ -37,7 +37,7 @@
     <div class="max-w-7xl mx-auto relative z-10">
         
         <!-- Section Header (Dark Mode) -->
-        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16 reveal-on-scroll">
             <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs backdrop-blur-md">
                 <span>Ulasan Nyata • Google Reviews</span>
             </div>
@@ -50,7 +50,7 @@
         </div>
 
         <!-- Horizontal Interactive Carousel Container with Left & Right Arrow Buttons (Auto every 2s) -->
-        <div class="testimonial-carousel-container relative max-w-2xl mx-auto px-4 sm:px-12">
+        <div class="testimonial-carousel-container relative max-w-2xl mx-auto px-4 sm:px-12 reveal-zoom">
             
             <!-- Left Arrow Button -->
             <button 

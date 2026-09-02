@@ -590,7 +590,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Run animation initialization
+    /* ==========================================================================
+       9. High-Performance Scroll Reveal (IntersectionObserver - Zero Lag)
+       ========================================================================== */
+    const initScrollReveals = () => {
+        const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-from-left, .reveal-from-right, .reveal-zoom');
+        if (!revealElements.length) return;
+
+        // Fail-safe: if IntersectionObserver not supported, reveal all immediately
+        if (!('IntersectionObserver' in window)) {
+            revealElements.forEach(el => el.classList.add('is-visible'));
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px 50px 0px', // Pre-trigger 50px BEFORE entering viewport!
+            threshold: 0.02
+        });
+
+        revealElements.forEach(el => {
+            // If already within or above the viewport on initial render, reveal immediately
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= window.innerHeight + 50) {
+                el.classList.add('is-visible');
+            } else {
+                observer.observe(el);
+            }
+        });
+    };
+
+    // Run animation initializations
     initScrollAnimations();
+    initScrollReveals();
 
 });
