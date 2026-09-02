@@ -111,9 +111,9 @@
     <!-- Floating WhatsApp Widget -->
     <x-floating-whatsapp />
 
-    <!-- Back to Top Button -->
-    <button class="back-to-top-btn fixed bottom-24 right-8 w-12 h-12 rounded-full bg-white border border-slate-200 text-[#0284c7] shadow-xl flex items-center justify-center cursor-pointer z-40 transition-all duration-300 opacity-0 invisible hover:scale-110 hover:border-[#0284c7] hover:bg-[#0284c7] hover:text-white" aria-label="Kembali ke atas">
-        <iconify-icon icon="solar:arrow-up-linear" width="22" height="22"></iconify-icon>
+    <!-- Back to Top Button (Positioned on the Left for Clean Mobile Ergonomics) -->
+    <button class="back-to-top-btn fixed bottom-4 left-4 sm:bottom-6 sm:left-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/80 text-[#0284c7] shadow-lg flex items-center justify-center cursor-pointer z-40 transition-all duration-300 opacity-0 invisible hover:scale-110 hover:border-[#0284c7] hover:bg-[#0284c7] hover:text-white active:scale-95" aria-label="Kembali ke atas">
+        <iconify-icon icon="solar:arrow-up-linear" width="18" height="18" class="sm:w-5 sm:h-5"></iconify-icon>
     </button>
 
 </body>
