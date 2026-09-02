@@ -243,8 +243,8 @@
                 </div>
             </div>
 
-            <!-- 4 Clean Package Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch pt-6">
+            <!-- 4 Clean Package Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-6">
                 @foreach($packages as $package)
                     <x-package-card :package="$package" />
                 @endforeach
