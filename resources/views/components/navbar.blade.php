@@ -1,4 +1,4 @@
-<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full bg-transparent border-b border-[#38bdf8]/35 py-3.5 shadow-[0_1px_15px_rgba(56,189,248,0.15)]" id="mainNavbar">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full bg-transparent border-b border-[#38bdf8]/35 py-2.5 sm:py-3.5 shadow-[0_1px_15px_rgba(56,189,248,0.15)]" id="mainNavbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between gap-4">
             
@@ -8,14 +8,14 @@
                 <img 
                     src="{{ asset('images/logo/logo-msn-white.png') }}" 
                     alt="Logo PT Media Solusi Network" 
-                    class="h-8 sm:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 block" 
+                    class="h-6 sm:h-8 md:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 block" 
                     id="navLogoWhite"
                 >
                 <!-- Full Color Logo: logo-msn BG Trans (Active on White Scrolled Navbar) -->
                 <img 
                     src="{{ asset('images/logo/logo-msn BG Trans.png') }}" 
                     alt="Logo PT Media Solusi Network" 
-                    class="h-8 sm:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 hidden" 
+                    class="h-6 sm:h-8 md:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 hidden" 
                     id="navLogoColor"
                 >
             </a>
@@ -56,8 +56,8 @@
                 </a>
 
                 <!-- Mobile Menu Button -->
-                <button type="button" class="lg:hidden p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:text-[#38bdf8] transition-colors" id="mobileMenuBtn" aria-label="Buka Menu">
-                    <iconify-icon icon="solar:hamburger-menu-linear" width="22"></iconify-icon>
+                <button type="button" class="lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/10 border border-white/20 text-white hover:text-[#38bdf8] transition-colors" id="mobileMenuBtn" aria-label="Buka Menu">
+                    <iconify-icon icon="solar:hamburger-menu-linear" width="20" class="sm:w-[22px] sm:h-[22px]"></iconify-icon>
                 </button>
             </div>
 
@@ -71,7 +71,7 @@
 <div id="mobileDrawer" class="fixed top-0 right-0 bottom-0 w-[280px] bg-slate-900 border-l border-white/10 p-6 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between">
     <div>
         <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-            <img src="{{ asset('images/logo/logo-msn-white.png') }}" alt="Logo PT MSN" class="h-7 w-auto object-contain">
+            <img src="{{ asset('images/logo/logo-msn-white.png') }}" alt="Logo PT MSN" class="h-6 sm:h-7 w-auto object-contain">
             <button id="mobileCloseBtn" class="text-white/60 hover:text-white p-1">
                 <iconify-icon icon="solar:close-circle-linear" width="24"></iconify-icon>
             </button>

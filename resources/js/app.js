@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isScrolled) {
             // Scrolled state: Solid Crisp White Glass Navbar with Vivid Blue Bottom Border
-            navbar.classList.remove('bg-transparent', 'border-[#38bdf8]/35', 'shadow-[0_1px_15px_rgba(56,189,248,0.15)]', 'py-3.5');
-            navbar.classList.add('bg-white/90', 'backdrop-blur-xl', 'border-b', 'border-[#0ea5e9]/45', 'shadow-[0_4px_25px_rgba(2,132,199,0.08)]', 'py-3');
+            navbar.classList.remove('bg-transparent', 'border-[#38bdf8]/35', 'shadow-[0_1px_15px_rgba(56,189,248,0.15)]', 'py-2.5', 'sm:py-3.5');
+            navbar.classList.add('bg-white/90', 'backdrop-blur-xl', 'border-b', 'border-[#0ea5e9]/45', 'shadow-[0_4px_25px_rgba(2,132,199,0.08)]', 'py-2', 'sm:py-3');
 
             // Switch to full color transparent logo
             if (navLogoWhite && navLogoColor) {
@@ -104,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctaBtn.className = 'hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-heading font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all duration-200 shadow-[0_2px_12px_rgba(2,132,199,0.35)] whitespace-nowrap';
             }
             if (mobileMenuBtn) {
-                mobileMenuBtn.className = 'lg:hidden p-2.5 rounded-xl bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-[#0284c7] hover:border-[#0284c7] hover:bg-sky-50 transition-colors';
+                mobileMenuBtn.className = 'lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-[#0284c7] hover:border-[#0284c7] hover:bg-sky-50 transition-colors';
             }
         } else {
             // Top/Hero state: 100% Transparent Navbar with Cyan/Sky Blue Bottom Border
-            navbar.classList.remove('bg-white/90', 'backdrop-blur-xl', 'border-[#0ea5e9]/45', 'shadow-[0_4px_25px_rgba(2,132,199,0.08)]', 'py-3');
-            navbar.classList.add('bg-transparent', 'border-b', 'border-[#38bdf8]/35', 'shadow-[0_1px_15px_rgba(56,189,248,0.15)]', 'py-3.5');
+            navbar.classList.remove('bg-white/90', 'backdrop-blur-xl', 'border-[#0ea5e9]/45', 'shadow-[0_4px_25px_rgba(2,132,199,0.08)]', 'py-2', 'sm:py-3');
+            navbar.classList.add('bg-transparent', 'border-b', 'border-[#38bdf8]/35', 'shadow-[0_1px_15px_rgba(56,189,248,0.15)]', 'py-2.5', 'sm:py-3.5');
 
             // Switch to pure white logo
             if (navLogoWhite && navLogoColor) {
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctaBtn.className = 'hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap';
             }
             if (mobileMenuBtn) {
-                mobileMenuBtn.className = 'lg:hidden p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:text-[#38bdf8] transition-colors';
+                mobileMenuBtn.className = 'lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/10 border border-white/20 text-white hover:text-[#38bdf8] transition-colors';
             }
         }
 
