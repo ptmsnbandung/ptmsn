@@ -284,12 +284,19 @@
     </div>
 
     <!-- 10 & 11. UNIFIED TESTIMONIALS & FAQ IN SLEEK DARK NETWORK CIRCUIT THEME -->
-    <div class="relative z-10 w-full overflow-hidden border-b border-white/10" style="background-image: url('{{ asset('images/testimonials/network-circuit-bg.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-        <!-- Translucent Dark Cyber Overlay for optimum text legibility -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#07172e]/85 via-[#0a1e3b]/80 to-[#050e1d]/90 backdrop-blur-[1px] pointer-events-none z-0"></div>
+    <div class="relative z-10 w-full overflow-hidden border-b border-white/10 bg-[#050d1a]">
+        
+        <!-- High-Resolution Cyber Background: Crisp Circuit Graphic -->
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-30 sm:opacity-50 lg:opacity-70 bg-center bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/testimonials/network-circuit-bg.jpg') }}');"></div>
+
+        <!-- Precision Crisp Architectural Cyber Grid (Always 100% Sharp on All Mobile & Retina Screens) -->
+        <div class="absolute inset-0 pointer-events-none opacity-25 z-0" style="background-image: linear-gradient(to right, rgba(56, 189, 248, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.15) 1px, transparent 1px); background-size: 28px 28px;"></div>
+
+        <!-- Translucent Dark Cyber Gradient Overlay (No blur filter for crystal-clear display) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#07172e]/92 via-[#07172e]/80 to-[#050d1a]/95 pointer-events-none z-0"></div>
         
         <!-- Ambient Cyber Glow Accent -->
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#38bdf8]/15 rounded-full blur-[140px] pointer-events-none z-0"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[350px] sm:w-[700px] h-[300px] bg-[#38bdf8]/12 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
         <div class="relative z-10">
             <!-- 10. TESTIMONIAL (Real Corporate Social Proof in Dark Mode) -->
