@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" fill="none">
+  <defs>
+    <linearGradient id="msnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48B5C3"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#48B5C3" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon Emblem: Interconnected Network Nodes / Speed Wave -->
+  <g transform="translate(4, 6)">
+    <rect x="0" y="0" width="48" height="48" rx="14" fill="url(#msnGrad)" />
+    <!-- Signal waves & nodes -->
+    <circle cx="16" cy="32" r="3.5" fill="#FFFFFF" />
+    <circle cx="24" cy="18" r="4" fill="#FFFFFF" />
+    <circle cx="32" cy="28" r="3.5" fill="#FFFFFF" />
+    <path d="M16 32 L24 18 L32 28" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M11 19 A18 18 0 0 1 37 19" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M15 23 A12 12 0 0 1 33 23" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(62, 10)">
+    <text x="0" y="24" font-family="'Poppins', 'Segoe UI', sans-serif" font-size="24" font-weight="800" letter-spacing="1.5" fill="#0F172A">
+      MSN
+    </text>
+    <rect x="58" y="9" width="6" height="6" rx="3" fill="#48B5C3" />
+    <text x="0" y="38" font-family="'Inter', 'Segoe UI', sans-serif" font-size="9" font-weight="600" letter-spacing="2.2" fill="#64748B">
+      MEDIA SOLUSI NETWORK
+    </text>
+  </g>
+</svg>
