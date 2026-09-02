@@ -246,7 +246,9 @@
             <!-- 4 Clean Package Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-8 sm:pt-10">
                 @foreach($packages as $package)
-                    <x-package-card :package="$package" />
+                    <div class="reveal-slide-up flex flex-col flex-1" style="transition-delay: {{ $loop->index * 100 }}ms;">
+                        <x-package-card :package="$package" />
+                    </div>
                 @endforeach
             </div>
 
