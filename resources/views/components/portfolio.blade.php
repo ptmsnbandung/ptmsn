@@ -109,48 +109,17 @@
 
         </div>
 
-        <!-- Secondary Projects Grid (4 Columns) with Clean Glass Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Secondary Projects / Portfolios: Clean Logo Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             @foreach($portfolios as $portfolio)
-                <div class="rounded-2xl bg-white/95 backdrop-blur-md border border-sky-100 p-6 flex flex-col justify-between hover:border-sky-300 hover:shadow-lg transition-all duration-300 group transform hover:-translate-y-1">
-                    <div>
-                        <!-- Project Image/Preview -->
-                        <div class="aspect-[16/11] w-full rounded-xl bg-slate-50 border border-slate-200/80 overflow-hidden mb-5 p-4 flex items-center justify-center">
-                            @if(file_exists(public_path($portfolio->image)))
-                                <img src="{{ asset($portfolio->image) }}" alt="{{ $portfolio->title }}" class="max-h-24 max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
-                            @else
-                                <div class="w-12 h-12 rounded-xl bg-sky-50 text-[#0284c7] flex items-center justify-center">
-                                    <iconify-icon icon="solar:code-square-bold" width="24"></iconify-icon>
-                                </div>
-                            @endif
+                <div class="flex items-center justify-center h-24 sm:h-32 px-4 py-3 rounded-2xl bg-white/90 border border-sky-100 shadow-2xs hover:shadow-md hover:border-sky-300 hover:bg-white transition-all duration-300 group" title="{{ $portfolio->title }}">
+                    @if(file_exists(public_path($portfolio->image)))
+                        <img src="{{ asset($portfolio->image) }}" alt="{{ $portfolio->title }}" class="max-h-14 sm:max-h-20 max-w-[130px] sm:max-w-[180px] object-contain group-hover:scale-105 transition-transform duration-300">
+                    @else
+                        <div class="w-10 h-10 rounded-xl bg-sky-50 text-[#0284c7] flex items-center justify-center">
+                            <iconify-icon icon="solar:code-square-bold" width="22"></iconify-icon>
                         </div>
-
-                        <!-- Category Badge -->
-                        <div class="mb-2.5">
-                            <span class="inline-block text-[10px] font-mono font-bold uppercase tracking-wider text-[#0284c7] bg-sky-50 px-2.5 py-0.5 rounded border border-sky-200">
-                                {{ $portfolio->category ?? 'Enterprise IT' }}
-                            </span>
-                        </div>
-
-                        <!-- Title -->
-                        <h4 class="font-heading font-bold text-base text-slate-900 mb-2 leading-snug group-hover:text-[#0284c7] transition-colors">
-                            {{ $portfolio->title }}
-                        </h4>
-
-                        <!-- Description -->
-                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4">
-                            {{ $portfolio->description }}
-                        </p>
-                    </div>
-
-                    <!-- Footer Action -->
-                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                        <span class="font-mono text-[11px]">{{ $portfolio->year ?? 'Produksi' }}</span>
-                        <a href="#kontak" class="inline-flex items-center gap-1 font-heading font-bold text-[#0284c7] hover:underline">
-                            <span>Detail</span>
-                            <iconify-icon icon="solar:arrow-right-linear" width="12"></iconify-icon>
-                        </a>
-                    </div>
+                    @endif
                 </div>
             @endforeach
         </div>
