@@ -48,21 +48,17 @@
             </div>
 
             <!-- Key Enterprise Metrics -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 pt-6 border-t border-white/15 max-w-2xl w-full text-center lg:text-left mx-auto lg:mx-0">
+            <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-white/15 max-w-xl w-full text-center lg:text-left mx-auto lg:mx-0">
                 <div class="text-center lg:text-left">
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">1.500+</div>
+                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">1000+</div>
                     <div class="text-xs text-white/60 font-medium mt-1">Pelanggan Aktif</div>
                 </div>
                 <div class="text-center lg:text-left">
                     <div class="font-heading font-extrabold text-2xl sm:text-3xl text-[#38bdf8] tracking-tight">50+</div>
-                    <div class="text-xs text-white/60 font-medium mt-1">Titik Jaringan & Wilayah</div>
+                    <div class="text-xs text-white/60 font-medium mt-1">Titik Jaringan</div>
                 </div>
                 <div class="text-center lg:text-left">
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">99.9%</div>
-                    <div class="text-xs text-white/60 font-medium mt-1">Garansi Uptime SLA</div>
-                </div>
-                <div class="text-center lg:text-left">
-                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-[#38bdf8] tracking-tight">24/7/365</div>
+                    <div class="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">24/7</div>
                     <div class="text-xs text-white/60 font-medium mt-1">Dedicated Support NOC</div>
                 </div>
             </div>
