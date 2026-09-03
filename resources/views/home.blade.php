@@ -239,10 +239,55 @@
                 </div>
             </div>
 
-            <!-- 4 Clean Package Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-8 sm:pt-10">
-                @foreach($packages as $package)
+            <!-- Interactive Switch Toggle: Broadband vs SOHO ("Tombol Ganti") -->
+            <div class="flex flex-col items-center justify-center pt-8 pb-4">
+                <div class="inline-flex p-1.5 rounded-full bg-[#050d1a]/90 border border-sky-400/30 shadow-2xl backdrop-blur-xl relative" role="tablist">
+                    <!-- Broadband Button -->
+                    <button 
+                        type="button" 
+                        id="tabBroadbandBtn"
+                        class="px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-heading font-extrabold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-lg bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#0284c7] text-white"
+                        role="tab"
+                        aria-selected="true"
+                    >
+                        <iconify-icon icon="solar:home-wifi-bold" width="18" height="18"></iconify-icon>
+                        <span>Paket Broadband</span>
+                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-mono">Rumah</span>
+                    </button>
+
+                    <!-- SOHO Button -->
+                    <button 
+                        type="button" 
+                        id="tabSohoBtn"
+                        class="px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-heading font-extrabold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white hover:bg-white/5"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        <iconify-icon icon="solar:buildings-bold" width="18" height="18"></iconify-icon>
+                        <span>Paket SOHO</span>
+                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[10px] font-mono border border-cyan-400/30">Bisnis & Kantor</span>
+                    </button>
+                </div>
+                
+                <!-- Category Caption Subtitle -->
+                <p id="packageCategoryDesc" class="text-xs sm:text-sm text-slate-300 font-sans mt-3.5 text-center">
+                    Internet fiber optic residensial kecepatan tinggi tanpa batas kuota (FUP) untuk kebutuhan harian & keluarga.
+                </p>
+            </div>
+
+            <!-- Broadband Package Cards Grid (4 Cards: Bronze, Silver, Gold, Platinum) -->
+            <div id="broadbandContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-4 sm:pt-6 transition-all duration-300">
+                @foreach($broadbandPackages as $package)
                     <div class="flex flex-col flex-1 reveal-on-scroll stagger-{{ $loop->iteration }}">
+                        <x-package-card :package="$package" />
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- SOHO Package Cards Grid (5 Cards: Crystal, Saphire, Emerald, Ruby, Diamond) -->
+            <div id="sohoContainer" class="hidden grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 items-stretch pt-4 sm:pt-6 transition-all duration-300">
+                @foreach($sohoPackages as $package)
+                    <div class="flex flex-col flex-1 {{ $loop->last ? 'col-span-2 lg:col-span-1 max-w-sm lg:max-w-none mx-auto w-full' : '' }}">
                         <x-package-card :package="$package" />
                     </div>
                 @endforeach
@@ -325,4 +370,57 @@
             <x-contact />
         </div>
     </div>
+
+    <!-- Interactive Package Switcher Script (Broadband vs SOHO) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabBroadbandBtn = document.getElementById('tabBroadbandBtn');
+        const tabSohoBtn = document.getElementById('tabSohoBtn');
+        const broadbandContainer = document.getElementById('broadbandContainer');
+        const sohoContainer = document.getElementById('sohoContainer');
+        const desc = document.getElementById('packageCategoryDesc');
+
+        if (!tabBroadbandBtn || !tabSohoBtn || !broadbandContainer || !sohoContainer) return;
+
+        const activeClasses = ['bg-gradient-to-r', 'from-[#0284c7]', 'via-[#0ea5e9]', 'to-[#0284c7]', 'text-white', 'shadow-lg'];
+        const inactiveClasses = ['text-slate-300', 'hover:text-white', 'hover:bg-white/5'];
+
+        function showBroadband() {
+            tabBroadbandBtn.classList.add(...activeClasses);
+            tabBroadbandBtn.classList.remove(...inactiveClasses);
+            tabBroadbandBtn.setAttribute('aria-selected', 'true');
+
+            tabSohoBtn.classList.remove(...activeClasses);
+            tabSohoBtn.classList.add(...inactiveClasses);
+            tabSohoBtn.setAttribute('aria-selected', 'false');
+
+            broadbandContainer.classList.remove('hidden');
+            sohoContainer.classList.add('hidden');
+
+            if (desc) {
+                desc.textContent = 'Internet fiber optic residensial kecepatan tinggi tanpa batas kuota (FUP) untuk kebutuhan harian & keluarga.';
+            }
+        }
+
+        function showSoho() {
+            tabSohoBtn.classList.add(...activeClasses);
+            tabSohoBtn.classList.remove(...inactiveClasses);
+            tabSohoBtn.setAttribute('aria-selected', 'true');
+
+            tabBroadbandBtn.classList.remove(...activeClasses);
+            tabBroadbandBtn.classList.add(...inactiveClasses);
+            tabBroadbandBtn.setAttribute('aria-selected', 'false');
+
+            sohoContainer.classList.remove('hidden');
+            broadbandContainer.classList.add('hidden');
+
+            if (desc) {
+                desc.textContent = 'Koneksi rasio 1:1 simetris berkinerja tinggi khusus Small Office & Home Office dengan IP Dedicated dan SLA Bisnis.';
+            }
+        }
+
+        tabBroadbandBtn.addEventListener('click', showBroadband);
+        tabSohoBtn.addEventListener('click', showSoho);
+    });
+    </script>
 </x-layouts.app>

@@ -20,7 +20,7 @@
                 @method('PUT')
             @endif
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <!-- Name -->
                 <div>
                     <label for="name" class="block text-[11px] font-mono font-bold uppercase text-slate-300 mb-1">Nama Paket</label>
@@ -29,10 +29,23 @@
                         id="name" 
                         name="name" 
                         value="{{ old('name', $package->name) }}" 
-                        placeholder="BRONZE, SILVER, GOLD" 
+                        placeholder="BRONZE, CRYSTAL, dsb" 
                         required 
                         class="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/15 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#38bdf8] focus:border-[#38bdf8] transition-all font-heading font-bold uppercase"
                     >
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label for="category" class="block text-[11px] font-mono font-bold uppercase text-slate-300 mb-1">Kategori Paket</label>
+                    <select 
+                        id="category" 
+                        name="category" 
+                        class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#38bdf8] focus:border-[#38bdf8] transition-all font-mono"
+                    >
+                        <option value="broadband" class="bg-slate-900 text-white" {{ old('category', $package->category) === 'broadband' ? 'selected' : '' }}>Broadband (Rumah)</option>
+                        <option value="soho" class="bg-slate-900 text-white" {{ old('category', $package->category) === 'soho' ? 'selected' : '' }}>SOHO (Bisnis & Kantor)</option>
+                    </select>
                 </div>
 
                 <!-- Speed -->

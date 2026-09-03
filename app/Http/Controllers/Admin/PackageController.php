@@ -28,6 +28,7 @@ class PackageController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'string', 'in:broadband,soho'],
             'speed' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'period' => ['required', 'string', 'max:50'],
@@ -42,6 +43,7 @@ class PackageController extends Controller
 
         Package::create([
             'name' => $validated['name'],
+            'category' => $request->input('category', 'broadband'),
             'speed' => $validated['speed'],
             'price' => $validated['price'],
             'period' => $validated['period'],
@@ -68,6 +70,7 @@ class PackageController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'string', 'in:broadband,soho'],
             'speed' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'period' => ['required', 'string', 'max:50'],
@@ -82,6 +85,7 @@ class PackageController extends Controller
 
         $package->update([
             'name' => $validated['name'],
+            'category' => $request->input('category', 'broadband'),
             'speed' => $validated['speed'],
             'price' => $validated['price'],
             'period' => $validated['period'],

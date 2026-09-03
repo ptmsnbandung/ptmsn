@@ -2,11 +2,12 @@
 
 @php
     $whatsappNumber = config('company.whatsapp');
-    $waText = urlencode("Halo PT Media Solusi Network, saya ingin berlangganan paket {$package->name} ({$package->speed} - {$package->formatted_price}/bln). Mohon informasi pemasangan baru.");
+    $categoryPrefix = ($package->category === 'soho' ? 'SOHO ' : '');
+    $waText = urlencode("Halo PT Media Solusi Network, saya ingin berlangganan paket {$categoryPrefix}{$package->name} ({$package->speed} - {$package->formatted_price}/bln). Mohon informasi pemasangan baru.");
     $waLink = "https://wa.me/{$whatsappNumber}?text={$waText}";
 
     $tierLower = strtolower($package->name);
-    $isFeatured = $tierLower === 'gold' || $package->is_popular;
+    $isFeatured = $tierLower === 'gold' || $tierLower === 'emerald' || $package->is_popular;
 
     // Clean numerical speed
     $speedNumber = trim(preg_replace('/[^0-9]/', '', $package->speed));
@@ -22,7 +23,12 @@
         'bronze' => '1 - 3 Perangkat • Harian',
         'silver' => '3 - 5 Perangkat • Streaming',
         'gold' => '5 - 8 Perangkat • Terfavorit',
-        'platinum' => '8 - 12+ Perangkat • Bisnis/SOHO',
+        'platinum' => '8 - 12+ Perangkat • Kecepatan Tinggi',
+        'crystal' => '3 - 6 Perangkat • Kantor Kecil',
+        'saphire' => '6 - 10 Perangkat • Operasional SOHO',
+        'emerald' => '10 - 15 Perangkat • Paling Diminati',
+        'ruby' => '15 - 20 Perangkat • High Traffic SOHO',
+        'diamond' => '20+ Perangkat • Performa Maksimal',
     ];
     $recText = $recommendations[$tierLower] ?? 'Koneksi Stabil & Cepat';
 
@@ -32,6 +38,11 @@
         'silver' => 'bg-slate-100 text-slate-700 border-slate-300',
         'gold' => 'bg-gradient-to-r from-sky-50 to-blue-50 text-[#0284c7] border-sky-300 font-black',
         'platinum' => 'bg-indigo-50 text-indigo-700 border-indigo-200 font-bold',
+        'crystal' => 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold',
+        'saphire' => 'bg-purple-50 text-purple-700 border-purple-300 font-bold',
+        'emerald' => 'bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800 border-amber-300 font-black',
+        'ruby' => 'bg-rose-50 text-rose-700 border-rose-300 font-bold',
+        'diamond' => 'bg-sky-50 text-sky-700 border-sky-300 font-bold',
     ];
     $currentBadge = $tierBadgeStyles[$tierLower] ?? 'bg-slate-50 text-slate-700 border-slate-200';
 @endphp
@@ -89,30 +100,41 @@
 
             <!-- Checklist Features -->
             <ul class="space-y-2 sm:space-y-3 my-4 sm:my-6 text-left text-[11px] sm:text-xs lg:text-sm text-slate-700 font-medium">
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Unlimited Tanpa FUP</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">IP Private Dedicated</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Fiber Optic Murni</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Gratis Router WiFi ONT</span>
-                </li>
+                @if(!empty($package->features) && is_array($package->features))
+                    @foreach($package->features as $feature)
+                        <li class="flex items-start sm:items-center gap-2">
+                            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                            </div>
+                            <span class="leading-tight">{{ $feature }}</span>
+                        </li>
+                    @endforeach
+                @else
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Unlimited Akses (Tanpa FUP)</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">IP Private / Dedicated</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Fast Network Fiber Optic</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Termasuk Modem ONT / WiFi</span>
+                    </li>
+                @endif
             </ul>
         </div>
 
@@ -171,30 +193,41 @@
 
             <!-- Checklist Features -->
             <ul class="space-y-2 sm:space-y-3 my-4 sm:my-6 text-left text-[11px] sm:text-xs lg:text-sm text-slate-700 font-medium">
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Unlimited Tanpa FUP</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">IP Private Dedicated</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Fiber Optic Murni</span>
-                </li>
-                <li class="flex items-start sm:items-center gap-2">
-                    <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                        <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                    </div>
-                    <span class="leading-tight">Gratis Router WiFi ONT</span>
-                </li>
+                @if(!empty($package->features) && is_array($package->features))
+                    @foreach($package->features as $feature)
+                        <li class="flex items-start sm:items-center gap-2">
+                            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                            </div>
+                            <span class="leading-tight">{{ $feature }}</span>
+                        </li>
+                    @endforeach
+                @else
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Unlimited Akses (Tanpa FUP)</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">IP Private / Dedicated</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Fast Network Fiber Optic</span>
+                    </li>
+                    <li class="flex items-start sm:items-center gap-2">
+                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                        </div>
+                        <span class="leading-tight">Termasuk Modem ONT / WiFi</span>
+                    </li>
+                @endif
             </ul>
         </div>
 

@@ -15,9 +15,19 @@ class HomeController extends Controller
      */
     public function index(): View
     {
-        $packages = Package::where('is_active', true)
+        $broadbandPackages = Package::where('is_active', true)
+            ->where(function ($query) {
+                $query->where('category', 'broadband')->orWhereNull('category');
+            })
             ->orderBy('sort_order')
             ->get();
+
+        $sohoPackages = Package::where('is_active', true)
+            ->where('category', 'soho')
+            ->orderBy('sort_order')
+            ->get();
+
+        $packages = $broadbandPackages;
 
         $services = Service::where('is_active', true)
             ->orderBy('sort_order')
@@ -33,6 +43,8 @@ class HomeController extends Controller
 
         return view('home', compact(
             'packages',
+            'broadbandPackages',
+            'sohoPackages',
             'services',
             'portfolios',
             'clients'
