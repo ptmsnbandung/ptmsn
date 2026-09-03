@@ -571,11 +571,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const heroTl = window.gsap.timeline({ delay: 0.1 });
 
-                if (heroBadge) heroTl.from(heroBadge, { y: -20, opacity: 0, duration: 0.7, ease: 'power3.out' });
-                if (heroH1) heroTl.from(heroH1, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4');
-                if (heroDesc) heroTl.from(heroDesc, { y: 20, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.5');
-                if (heroButtons.length) heroTl.from(heroButtons, { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' }, '-=0.4');
-                if (heroMetrics.length) heroTl.from(heroMetrics, { y: 20, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, '-=0.3');
+                if (heroBadge) heroTl.from(heroBadge, { y: -20, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' });
+                if (heroH1) heroTl.from(heroH1, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', clearProps: 'all' }, '-=0.4');
+                if (heroDesc) heroTl.from(heroDesc, { y: 20, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' }, '-=0.5');
+                if (heroButtons.length) heroTl.from(heroButtons, { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', clearProps: 'all' }, '-=0.4');
+                if (heroMetrics.length) heroTl.from(heroMetrics, { y: 20, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', clearProps: 'all' }, '-=0.3');
 
                 if (heroImage) {
                     window.gsap.to(heroImage, {
