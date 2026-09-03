@@ -41,9 +41,8 @@ class PackageController extends Controller
 
         $features = array_filter(array_map('trim', explode("\n", $request->input('features', ''))));
 
-        Package::create([
+        $data = [
             'name' => $validated['name'],
-            'category' => $request->input('category', 'broadband'),
             'speed' => $validated['speed'],
             'price' => $validated['price'],
             'period' => $validated['period'],
@@ -52,7 +51,13 @@ class PackageController extends Controller
             'is_popular' => $request->boolean('is_popular'),
             'is_active' => $request->boolean('is_active', true),
             'sort_order' => $validated['sort_order'],
-        ]);
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('packages', 'category')) {
+            $data['category'] = $request->input('category', 'broadband');
+        }
+
+        Package::create($data);
 
         return redirect()->route('admin.packages.index')
             ->with('success', 'Paket internet baru berhasil ditambahkan!');
@@ -83,9 +88,8 @@ class PackageController extends Controller
 
         $features = array_filter(array_map('trim', explode("\n", $request->input('features', ''))));
 
-        $package->update([
+        $data = [
             'name' => $validated['name'],
-            'category' => $request->input('category', 'broadband'),
             'speed' => $validated['speed'],
             'price' => $validated['price'],
             'period' => $validated['period'],
@@ -94,7 +98,13 @@ class PackageController extends Controller
             'is_popular' => $request->boolean('is_popular'),
             'is_active' => $request->boolean('is_active'),
             'sort_order' => $validated['sort_order'],
-        ]);
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('packages', 'category')) {
+            $data['category'] = $request->input('category', 'broadband');
+        }
+
+        $package->update($data);
 
         return redirect()->route('admin.packages.index')
             ->with('success', "Paket {$package->name} berhasil diperbarui!");

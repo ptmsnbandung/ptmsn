@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('category')->default('broadband');
             $table->string('speed');
             $table->unsignedInteger('price');
             $table->string('period')->default('bulan');
