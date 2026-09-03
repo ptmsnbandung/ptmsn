@@ -612,18 +612,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, {
             root: null,
-            rootMargin: '0px 0px 50px 0px', // Pre-trigger 50px BEFORE entering viewport!
-            threshold: 0.02
+            rootMargin: '0px 0px -40px 0px', // Triggers when element is at least 40px inside the visible viewport
+            threshold: 0.08
         });
 
         revealElements.forEach(el => {
-            // If already within or above the viewport on initial render, reveal immediately
-            const rect = el.getBoundingClientRect();
-            if (rect.top <= window.innerHeight + 50) {
-                el.classList.add('is-visible');
-            } else {
-                observer.observe(el);
-            }
+            observer.observe(el);
         });
     };
 
