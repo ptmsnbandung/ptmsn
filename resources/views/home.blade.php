@@ -255,19 +255,26 @@
             </div>
 
             <!-- Bottom Custom Enterprise Inquiries Note -->
-            <div class="mt-14 p-6 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white reveal-zoom">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-[#38bdf8] shrink-0">
+            <div class="mt-12 sm:mt-14 p-5 sm:p-7 rounded-3xl bg-white/[0.08] border border-white/15 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left text-white reveal-zoom">
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <!-- Building Icon (Hidden on Mobile, Visible on Tablet & Desktop) -->
+                    <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-sky-500/20 border border-sky-400/30 items-center justify-center text-[#38bdf8] shrink-0">
                         <iconify-icon icon="solar:buildings-bold" width="24"></iconify-icon>
                     </div>
-                    <div>
-                        <div class="font-heading font-bold text-white text-base">Butuh Bandwidth Khusus / Dedicated Internet Bisnis hingga 10 Gbps?</div>
-                        <div class="text-xs sm:text-sm text-slate-300">Kami menyediakan paket Corporate Dedicated dengan SLA 99.9% dan IP Public Static.</div>
+                    <div class="w-full sm:w-auto">
+                        <h4 class="font-heading font-bold text-white text-sm sm:text-base leading-snug mb-1">
+                            Butuh Bandwidth Khusus / Dedicated Internet Bisnis hingga 10 Gbps?
+                        </h4>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            Kami menyediakan paket Corporate Dedicated dengan SLA 99.9% dan IP Public Static.
+                        </p>
                     </div>
                 </div>
-                <a href="#kontak" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all shrink-0 shadow-lg shadow-sky-500/20 hover:scale-105">
+                <a href="#kontak" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all shrink-0 shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 group">
                     <span>Hubungi Tim Sales B2B</span>
-                    <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+                    <svg class="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 12H20M14 18L20 12L14 6"/>
+                    </svg>
                 </a>
             </div>
         </div>
