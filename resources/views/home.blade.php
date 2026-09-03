@@ -287,17 +287,17 @@
     <!-- 10 & 11. UNIFIED TESTIMONIALS & FAQ IN SLEEK DARK NETWORK CIRCUIT THEME -->
     <div class="relative z-10 w-full overflow-hidden border-b border-white/10 bg-[#050d1a]">
         
-        <!-- High-Resolution Cyber Background: Crisp Circuit Graphic -->
-        <div class="absolute inset-0 z-0 pointer-events-none opacity-30 sm:opacity-50 lg:opacity-70 bg-center bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/testimonials/network-circuit-bg.jpg') }}');"></div>
+        <!-- High-Resolution Cyber Background: Subtle Ambient Circuit Graphic (Dimmed for Perfect Contrast) -->
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-10 sm:opacity-15 bg-center bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/testimonials/network-circuit-bg.jpg') }}');"></div>
 
-        <!-- Precision Crisp Architectural Cyber Grid (Always 100% Sharp on All Mobile & Retina Screens) -->
-        <div class="absolute inset-0 pointer-events-none opacity-25 z-0" style="background-image: linear-gradient(to right, rgba(56, 189, 248, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.15) 1px, transparent 1px); background-size: 28px 28px;"></div>
+        <!-- Precision Crisp Architectural Cyber Grid (Subtle Ambient Texture) -->
+        <div class="absolute inset-0 pointer-events-none opacity-15 z-0" style="background-image: linear-gradient(to right, rgba(56, 189, 248, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.1) 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-        <!-- Translucent Dark Cyber Gradient Overlay (No blur filter for crystal-clear display) -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#07172e]/92 via-[#07172e]/80 to-[#050d1a]/95 pointer-events-none z-0"></div>
+        <!-- Deep Dark Overlay for Maximum Text & Card Readability -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050d1a]/98 via-[#07172e]/92 to-[#050d1a]/98 pointer-events-none z-0"></div>
         
         <!-- Ambient Cyber Glow Accent -->
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[350px] sm:w-[700px] h-[300px] bg-[#38bdf8]/12 rounded-full blur-[100px] pointer-events-none z-0"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[350px] sm:w-[700px] h-[300px] bg-[#38bdf8]/8 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
         <div class="relative z-10">
             <!-- 10. TESTIMONIAL (Real Corporate Social Proof in Dark Mode) -->
