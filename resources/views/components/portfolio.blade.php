@@ -13,12 +13,9 @@
                 Portofolio
             </h2>
 
-            <div class="space-y-3 font-sans text-sm sm:text-base text-slate-700 leading-[1.8] text-center max-w-3xl mx-auto">
+            <div class="font-sans text-sm sm:text-base text-slate-700 leading-[1.8] text-center max-w-3xl mx-auto">
                 <p>
                     Pemanfaatan Teknologi Informasi telah menjadi bagian yang hampir tidak terpisahkan dan menyentuh berbagai aspek kehidupan manusia. Hal ini dikarenakan oleh manfaat yang dapat meningkatkan efisiensi, efektifitas, transparansi dan akuntabilitas suatu aktifitas kegiatan.
-                </p>
-                <p class="text-slate-600 text-xs sm:text-sm">
-                    Selain itu kemajuan teknologi informasi yang pesat serta potensi pemanfaatannya secara luas telah membuka peluang bagi pengaksesan, pengelolaan dan pendayagunaan informasi dalam volume yang besar secara cepat dan akurat.
                 </p>
             </div>
         </div>

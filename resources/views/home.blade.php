@@ -33,12 +33,9 @@
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs">
                     <span>Layanan & Portofolio Solusi</span>
                 </div>
-                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[46px] text-white tracking-tight mb-5 leading-tight" data-reveal-words>
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[46px] text-white tracking-tight leading-tight" data-reveal-words>
                     Solusi untuk Kebutuhan Konektivitas Anda.
                 </h2>
-                <p class="font-sans text-base sm:text-lg text-slate-300 leading-[1.7]">
-                    Infrastruktur internet fiber optic, pengelolaan jaringan terpadu, dan rekayasa piranti lunak enterprise yang dirancang untuk mendukung stabilitas operasional bisnis Anda.
-                </p>
             </div>
 
             <!-- Editorial 3-Column Structured Layout (01 Internet / 02 Software Development / 03 IT Solution) -->
@@ -221,12 +218,9 @@
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.08] border border-white/20 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-xs backdrop-blur-md">
                     <span>Harga Transparan • Tanpa Biaya Tersembunyi</span>
                 </div>
-                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-white tracking-tight mb-4" data-reveal-words>
+                <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-white tracking-tight mb-6" data-reveal-words>
                     Pilihan Paket Internet Fiber Optic.
                 </h2>
-                <p class="font-sans text-base sm:text-lg text-slate-300 leading-[1.7] mb-6">
-                    Koneksi 100% True Unlimited tanpa FUP dengan rasio simetris 1:1, latency rendah, dan dukungan teknisi profesional 24/7.
-                </p>
 
                 <!-- Value Proposition Badges -->
                 <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-heading font-semibold text-slate-200 reveal-on-scroll">
