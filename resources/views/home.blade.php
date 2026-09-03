@@ -47,13 +47,14 @@
                 <!-- 01 — Internet -->
                 <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03] reveal-on-scroll stagger-1">
                     <div>
-                        <!-- Real Photo Frame -->
+                        {{-- Sembunyikan gambar sementara:
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
                             <img src="{{ asset('images/services/service-internet.jpg') }}" alt="Internet PT Media Solusi Network" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#07172e]/80 via-transparent to-transparent pointer-events-none"></div>
                         </div>
+                        --}}
 
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-4">
                             <span class="font-mono font-extrabold text-3xl sm:text-4xl text-cyan-400/40 group-hover:text-[#38bdf8] transition-colors duration-300">
                                 01
                             </span>
@@ -102,13 +103,14 @@
                 <!-- 02 — Software Development -->
                 <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03] reveal-on-scroll stagger-2">
                     <div>
-                        <!-- Real Photo Frame -->
+                        {{-- Sembunyikan gambar sementara:
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
                             <img src="{{ asset('images/services/service-software.jpg') }}" alt="Software Development PT Media Solusi Network" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#07172e]/80 via-transparent to-transparent pointer-events-none"></div>
                         </div>
+                        --}}
 
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-4">
                             <span class="font-mono font-extrabold text-3xl sm:text-4xl text-cyan-400/40 group-hover:text-[#38bdf8] transition-colors duration-300">
                                 02
                             </span>
@@ -149,13 +151,14 @@
                 <!-- 03 — IT Solution -->
                 <div class="group p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 hover:bg-white/[0.03] reveal-on-scroll stagger-3">
                     <div>
-                        <!-- Real Photo Frame -->
+                        {{-- Sembunyikan gambar sementara:
                         <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 border border-white/15 shadow-lg group-hover:border-cyan-400/40 transition-all duration-300">
                             <img src="{{ asset('images/services/service-infrastructure.jpg') }}" alt="IT Solution PT Media Solusi Network" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#07172e]/80 via-transparent to-transparent pointer-events-none"></div>
                         </div>
+                        --}}
 
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-4">
                             <span class="font-mono font-extrabold text-3xl sm:text-4xl text-cyan-400/40 group-hover:text-[#38bdf8] transition-colors duration-300">
                                 03
                             </span>
