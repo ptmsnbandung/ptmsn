@@ -3,7 +3,11 @@
 -- PT MEDIA SOLUSI NETWORK
 -- ==========================================================
 
--- 1. Nonaktifkan paket lama (Bronze, Silver, Gold, Platinum, Crystal, dll)
+-- 1. Tambahkan kolom category jika belum ada di tabel packages
+-- (Jika muncul Duplicate column name, abaikan saja dan lanjut ke baris berikutnya)
+ALTER TABLE `packages` ADD COLUMN `category` VARCHAR(255) NOT NULL DEFAULT 'broadband' AFTER `name`;
+
+-- 2. Nonaktifkan paket lama (Bronze, Silver, Gold, Platinum, Crystal, dll)
 UPDATE `packages` 
 SET `is_active` = 0 
 WHERE `name` NOT IN (
@@ -17,7 +21,7 @@ WHERE `name` NOT IN (
     'BISNIS ENTERPRISE'
 );
 
--- 2. Hapus jika nama paket sudah ada sebelumnya (mencegah duplikasi data)
+-- 3. Hapus jika nama paket sudah ada sebelumnya (mencegah duplikasi data)
 DELETE FROM `packages` 
 WHERE `name` IN (
     'PAKET BASIC', 

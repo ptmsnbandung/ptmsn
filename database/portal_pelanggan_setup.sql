@@ -29,7 +29,11 @@ CREATE TABLE IF NOT EXISTS `tickets` (
 -- 2. UPDATE PAKET INTERNET TERBARU (RUMAHAN & BISNIS)
 -- ==========================================================
 
--- Nonaktifkan paket lama
+-- 2.1 Tambahkan kolom category jika belum ada di tabel packages
+-- (Jika muncul peringatan Duplicate column name 'category', abaikan dan lanjut ke langkah berikutnya)
+ALTER TABLE `packages` ADD COLUMN `category` VARCHAR(255) NOT NULL DEFAULT 'broadband' AFTER `name`;
+
+-- 2.2 Nonaktifkan paket lama
 UPDATE `packages` 
 SET `is_active` = 0 
 WHERE `name` NOT IN (
