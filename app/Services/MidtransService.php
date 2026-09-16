@@ -31,6 +31,13 @@ class MidtransService
      */
     public function isProduction(): bool
     {
+        $serverKey = $this->getServerKey();
+        if (str_starts_with($serverKey, 'SB-Mid-')) {
+            return false;
+        }
+        if (str_starts_with($serverKey, 'Mid-server-')) {
+            return true;
+        }
         return (bool) config('services.midtrans.is_production', false);
     }
 
@@ -55,9 +62,9 @@ class MidtransService
     }
 
     /**
-     * Buat Transaksi Snap Token ke Midtrans API
+     * Buat Transaksi Snap Token ke Midtrans API (Selalu buat sesi baru agar token tidak kadaluarsa)
      */
-    public function createSnapTransaction(BillingLayanan $billing, Customer $customer, bool $forceNew = false): array
+    public function createSnapTransaction(BillingLayanan $billing, Customer $customer, bool $forceNew = true): array
     {
         if ($billing->is_paid) {
             return [
@@ -74,18 +81,9 @@ class MidtransService
             ];
         }
 
-        // Jika sudah pernah request token dan belum expired serta tidak dipaksa buat baru
-        if (!$forceNew && !empty($billing->snap_token)) {
-            return [
-                'success' => true,
-                'token' => $billing->snap_token,
-                'redirect_url' => $billing->redirect_url,
-                'order_id' => $billing->kode_billing_layanan,
-            ];
-        }
-
         // Generate ID Order Unik: kode billing + random angka (format bawaan IMS)
         $uniqueOrderId = $billing->kode_billing_layanan . '-' . rand(10000, 99999);
+
         $amount = (int) round((float) $billing->total_layanan);
 
         $cleanPhone = preg_replace('/[^0-9]/', '', $customer->phone ?? '08123456789');
