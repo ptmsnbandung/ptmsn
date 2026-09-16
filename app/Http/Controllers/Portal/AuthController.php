@@ -22,14 +22,14 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login langsung dengan nomor telepon / nomor internet
+     * Proses login langsung dengan nomor telepon / WhatsApp
      */
     public function login(Request $request)
     {
         $request->validate([
             'phone' => ['required', 'string'],
         ], [
-            'phone.required' => 'Nomor Telepon / WhatsApp atau Nomor Internet wajib diisi.',
+            'phone.required' => 'Nomor Telepon / WhatsApp wajib diisi.',
         ]);
 
         $rawInput = trim($request->phone);
@@ -39,15 +39,12 @@ class AuthController extends Controller
         }
 
         try {
-            // Cari data pelanggan langsung di database ims_v2 (trx_batchjob_register & m_pelanggan)
+            // Cari data pelanggan langsung di database ims_v2 murni berdasarkan nomor HP/WhatsApp
             $customer = Customer::with(['pelanggan', 'bandwith'])
-                ->where(function ($query) use ($phone, $rawInput) {
-                    $query->whereHas('pelanggan', function ($q) use ($phone, $rawInput) {
-                        $q->where('nomor_hp', $phone)
-                          ->orWhere('nomor_hp_2', $phone)
-                          ->orWhere('nomor_hp', $rawInput);
-                    })
-                    ->orWhere('nomor_internet', $rawInput);
+                ->whereHas('pelanggan', function ($q) use ($phone, $rawInput) {
+                    $q->where('nomor_hp', $phone)
+                      ->orWhere('nomor_hp_2', $phone)
+                      ->orWhere('nomor_hp', $rawInput);
                 })
                 ->first();
 
@@ -69,7 +66,7 @@ class AuthController extends Controller
         }
 
         return back()->withInput($request->only('phone'))->withErrors([
-            'phone' => 'Nomor telepon / ID (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
+            'phone' => 'Nomor telepon (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
         ]);
     }
 

@@ -82,16 +82,11 @@
             
             <!-- Card Header -->
             <div class="mb-5">
-                <div class="flex items-center justify-between mb-1">
-                    <h1 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight">
-                        Masuk ke Portal
-                    </h1>
-                    <span class="px-2 py-0.5 rounded-full bg-sky-100/80 text-sky-700 font-mono font-bold text-[10px] uppercase tracking-wider">
-                        Tanpa PIN
-                    </span>
-                </div>
+                <h1 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight mb-1">
+                    Masuk ke Portal
+                </h1>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                    Masukkan nomor WhatsApp atau Nomor Pelanggan (ID Internet) Anda
+                    Masukkan nomor telepon WhatsApp Anda yang terdaftar
                 </p>
             </div>
 
@@ -139,7 +134,7 @@
 
                 <div>
                     <label for="phone" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        No. WhatsApp / ID Internet
+                        Nomor Telepon / WhatsApp
                     </label>
                     
                     <div class="relative">
@@ -147,14 +142,14 @@
                             <iconify-icon icon="solar:phone-bold" width="18"></iconify-icon>
                         </div>
                         <input 
-                            type="text" 
+                            type="tel" 
                             id="phone" 
                             name="phone" 
                             value="{{ old('phone') }}" 
                             required 
                             autofocus 
                             class="w-full pl-10 pr-3.5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/90 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all font-mono shadow-xs"
-                            placeholder="Masukkan No. WA atau ID Internet"
+                            placeholder="Contoh: 081234567890"
                             autocomplete="tel"
                         >
                     </div>
