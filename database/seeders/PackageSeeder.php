@@ -86,7 +86,7 @@ class PackageSeeder extends Seeder
             // --- PAKET BISNIS ---
             [
                 'name' => 'UMKM BASIC',
-                'category' => 'soho',
+                'category' => 'bisnis',
                 'speed' => '50 Mbps',
                 'price' => 399000,
                 'period' => 'bln',
@@ -103,7 +103,7 @@ class PackageSeeder extends Seeder
             ],
             [
                 'name' => 'UMKM PLUS',
-                'category' => 'soho',
+                'category' => 'bisnis',
                 'speed' => '100 Mbps',
                 'price' => 699000,
                 'period' => 'bln',
@@ -120,7 +120,7 @@ class PackageSeeder extends Seeder
             ],
             [
                 'name' => 'BISNIS PRO',
-                'category' => 'soho',
+                'category' => 'bisnis',
                 'speed' => '200 Mbps',
                 'price' => 999000,
                 'period' => 'bln',
@@ -137,7 +137,7 @@ class PackageSeeder extends Seeder
             ],
             [
                 'name' => 'BISNIS ENTERPRISE',
-                'category' => 'soho',
+                'category' => 'bisnis',
                 'speed' => '300 Mbps',
                 'price' => 1299000,
                 'period' => 'bln',

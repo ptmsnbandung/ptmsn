@@ -43,8 +43,8 @@
                         name="category" 
                         class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-white text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#38bdf8] focus:border-[#38bdf8] transition-all font-mono"
                     >
-                        <option value="broadband" class="bg-slate-900 text-white" {{ old('category', $package->category) === 'broadband' ? 'selected' : '' }}>Broadband (Rumah)</option>
-                        <option value="soho" class="bg-slate-900 text-white" {{ old('category', $package->category) === 'soho' ? 'selected' : '' }}>SOHO (Bisnis & Kantor)</option>
+                        <option value="broadband" class="bg-slate-900 text-white" {{ old('category', $package->category) === 'broadband' ? 'selected' : '' }}>Broadband (Rumahan)</option>
+                        <option value="bisnis" class="bg-slate-900 text-white" {{ in_array(old('category', $package->category), ['bisnis', 'soho']) ? 'selected' : '' }}>Bisnis (SOHO)</option>
                     </select>
                 </div>
 

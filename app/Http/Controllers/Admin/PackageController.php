@@ -28,7 +28,7 @@ class PackageController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'in:broadband,soho'],
+            'category' => ['nullable', 'string', 'in:broadband,soho,bisnis'],
             'speed' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'period' => ['required', 'string', 'max:50'],
@@ -75,7 +75,7 @@ class PackageController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'in:broadband,soho'],
+            'category' => ['nullable', 'string', 'in:broadband,soho,bisnis'],
             'speed' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'period' => ['required', 'string', 'max:50'],

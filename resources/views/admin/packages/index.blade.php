@@ -39,8 +39,8 @@
                             <td class="py-2.5 px-4 font-mono text-[11px] text-slate-400 font-bold">#{{ $pkg->sort_order }}</td>
                             <td class="py-2.5 px-4">
                                 <div class="font-heading font-semibold text-white text-xs sm:text-sm">{{ $pkg->name }}</div>
-                                <span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono uppercase {{ $pkg->category === 'soho' ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-400/30' : 'bg-slate-700/50 text-slate-300' }}">
-                                    {{ $pkg->category === 'soho' ? 'SOHO' : 'BROADBAND' }}
+                                <span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono uppercase {{ in_array($pkg->category, ['soho', 'bisnis']) ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-400/30' : 'bg-slate-700/50 text-slate-300' }}">
+                                    {{ in_array($pkg->category, ['soho', 'bisnis']) ? 'BISNIS' : 'BROADBAND' }}
                                 </span>
                             </td>
                             <td class="py-2.5 px-4">
