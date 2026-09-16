@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('ticket_number')->unique(); // e.g. TKT-20260916-001
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
+            $table->string('customer_id')->index(); // nomor_internet pelanggan di ims_v2
             $table->string('category'); // internet_mati, los_merah, koneksi_lambat, perangkat_rusak, billing, lainnya
             $table->string('subject');
             $table->text('description');

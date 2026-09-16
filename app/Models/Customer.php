@@ -2,55 +2,134 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Ims\Bandwith;
+use App\Models\Ims\Pelanggan;
+use App\Models\Ims\TiketGangguan;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Customer extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    protected $fillable = [
-        'customer_id',
-        'name',
-        'phone',
-        'email',
-        'password',
-        'address',
-        'city',
-        'district',
-        'package_id',
-        'ip_address',
-        'status',
-        'billing_amount',
-        'due_date',
-        'billing_status',
-    ];
+    /**
+     * Database connection khusus IMS v2
+     */
+    protected $connection = 'ims';
+
+    /**
+     * Tabel registrasi pelanggan di IMS
+     */
+    protected $table = 'trx_batchjob_register';
+
+    /**
+     * Primary key nomor internet pelanggan
+     */
+    protected $primaryKey = 'nomor_internet';
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
+    protected $guarded = [];
 
     protected $hidden = [
-        'password',
+        'pppoe_password',
+        'ont_ps',
         'remember_token',
     ];
 
-    protected $casts = [
-        'billing_amount' => 'decimal:2',
-        'due_date' => 'integer',
-        'password' => 'hashed',
-    ];
-
     /**
-     * Relasi ke paket internet pelanggan
+     * Relasi ke biodata penduduk / pelanggan di IMS
      */
-    public function package()
+    public function pelanggan()
     {
-        return $this->belongsTo(Package::class, 'package_id');
+        return $this->belongsTo(Pelanggan::class, 'nik_penduduk', 'nik_penduduk');
     }
 
     /**
-     * Relasi ke laporan gangguan / tiket
+     * Relasi ke paket bandwidth di IMS
+     */
+    public function bandwith()
+    {
+        return $this->belongsTo(Bandwith::class, 'kode_bandwith', 'kode_bandwith');
+    }
+
+    /**
+     * Relasi ke tiket gangguan di IMS
+     */
+    public function imsTickets()
+    {
+        return $this->hasMany(TiketGangguan::class, 'nomor_internet', 'nomor_internet');
+    }
+
+    /**
+     * Relasi ke tiket gangguan portal website
      */
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'customer_id')->latest();
+        return $this->hasMany(Ticket::class, 'customer_id', 'nomor_internet')->latest();
+    }
+
+    // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---
+
+    public function getCustomerIdAttribute()
+    {
+        return $this->nomor_internet;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->nama_pelanggan;
+    }
+
+    public function getPhoneAttribute()
+    {
+        return $this->pelanggan?->nomor_hp ?? $this->pelanggan?->nomor_hp_2 ?? '';
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->pelanggan?->email ?? '';
+    }
+
+    public function getAddressAttribute()
+    {
+        return $this->alamat_pasang;
+    }
+
+    public function getStatusAttribute()
+    {
+        return ($this->is_suspend == '1' || $this->is_suspend == '0' || empty($this->is_suspend)) ? 'active' : 'suspended';
+    }
+
+    public function getBillingAmountAttribute()
+    {
+        return (float) ($this->bandwith?->harga_bandwith ?? 250000);
+    }
+
+    public function getDueDateAttribute()
+    {
+        return $this->periode_billing ?? 20;
+    }
+
+    public function getBillingStatusAttribute()
+    {
+        return ($this->is_suspend == '2' || $this->is_suspend == '1') ? 'paid' : 'unpaid';
+    }
+
+    public function getIpAddressAttribute()
+    {
+        return $this->ont_us ?? '10.20.104.22';
+    }
+
+    public function getPackageAttribute()
+    {
+        $speedNominal = $this->bandwith?->nominal_bandwith ?? '25';
+        return (object) [
+            'name' => 'Broadband ' . ($this->kode_bandwith ?? 'FTTH'),
+            'speed' => (is_numeric($speedNominal) ? $speedNominal . ' Mbps' : $speedNominal),
+            'price' => $this->billing_amount,
+        ];
     }
 }
