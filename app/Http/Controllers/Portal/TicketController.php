@@ -58,7 +58,7 @@ class TicketController extends Controller
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         if ($customer) {
-            $customer->load(['pelanggan', 'bandwith', 'package']);
+            $customer->load(['pelanggan', 'bandwith']);
         }
 
         $packages = \App\Models\Package::where('is_active', true)
