@@ -392,15 +392,28 @@
                 if (typeof window.snap !== 'undefined') {
                     window.snap.pay(data.token, {
                         onSuccess: function(result) {
-                            alert('Pembayaran berhasil dikonfirmasi! Halaman akan diperbarui.');
-                            window.location.reload();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Pembayaran Berhasil!',
+                                text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
+                                confirmButtonColor: '#0ea5e9'
+                            }).then(() => window.location.reload());
                         },
                         onPending: function(result) {
-                            alert('Transaksi Anda sedang diproses / menunggu pembayaran.');
-                            window.location.reload();
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Menunggu Pembayaran',
+                                text: 'Instruksi pembayaran telah dibuat. Silakan selesaikan pembayaran sesuai panduan Midtrans.',
+                                confirmButtonColor: '#0ea5e9'
+                            }).then(() => window.location.reload());
                         },
                         onError: function(result) {
-                            alert('Pembayaran gagal atau dibatalkan oleh pengguna.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pembayaran Dibatalkan',
+                                text: 'Pembayaran gagal diproses atau telah dibatalkan.',
+                                confirmButtonColor: '#0ea5e9'
+                            });
                         },
                         onClose: function() {
                             console.log('Jendela popup Snap Midtrans ditutup.');
@@ -409,10 +422,20 @@
                 } else if (data.redirect_url) {
                     window.open(data.redirect_url, '_blank');
                 } else {
-                    alert('Sistem pembayaran Midtrans siap. Token didapatkan.');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Siap Membayar',
+                        text: 'Sistem pembayaran Midtrans siap diproses.',
+                        confirmButtonColor: '#0ea5e9'
+                    });
                 }
             } else {
-                alert(data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa koneksi atau konfigurasi.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa konfigurasi server.',
+                    confirmButtonColor: '#0ea5e9'
+                });
             }
         })
         .catch(err => {
@@ -421,7 +444,12 @@
                 btn.innerHTML = originalContent;
             }
             console.error('Midtrans Request Error:', err);
-            alert('Terjadi kendala saat menghubungi server pembayaran.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Gangguan Server',
+                text: 'Terjadi kendala saat menghubungi server pembayaran.',
+                confirmButtonColor: '#0ea5e9'
+            });
         });
     }
 </script>

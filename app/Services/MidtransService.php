@@ -81,8 +81,10 @@ class MidtransService
             ];
         }
 
-        // Generate ID Order Unik: kode billing + random angka (format bawaan IMS)
-        $uniqueOrderId = $billing->kode_billing_layanan . '-' . rand(10000, 99999);
+        // Generate ID Order Unik: ubah karakter slash '/' menjadi '-' agar valid sesuai spesifikasi Midtrans
+        // Spesifikasi Midtrans: hanya boleh alfanumerik, dash (-), underscore (_), tilde (~), titik (.)
+        $cleanKodeBilling = str_replace(['/', '\\', ' '], '-', $billing->kode_billing_layanan);
+        $uniqueOrderId = $cleanKodeBilling . '-' . rand(10000, 99999);
 
         $amount = (int) round((float) $billing->total_layanan);
 
@@ -206,6 +208,12 @@ class MidtransService
         // Cari billing berdasarkan kode billing (prefix sebelum -rand)
         $kodeBilling = preg_replace('/-[0-9]+$/', '', $orderId);
         $billing = BillingLayanan::where('kode_billing_layanan', $kodeBilling)->first();
+
+        if (!$billing) {
+            // Coba dengan mengembalikan dash '-' menjadi slash '/' (format asli INV/xxx/xx/xxxx)
+            $withSlashes = str_replace('-', '/', $kodeBilling);
+            $billing = BillingLayanan::where('kode_billing_layanan', $withSlashes)->first();
+        }
 
         if (!$billing) {
             // Fallback: cari dari payload payment_post yang mengandung order_id

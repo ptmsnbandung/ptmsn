@@ -140,6 +140,8 @@
     </div>
 
     @if(!$invoice->is_paid)
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
         <script>
             function payWithMidtrans(kodeBilling) {
@@ -171,22 +173,40 @@
                         if (typeof window.snap !== 'undefined') {
                             window.snap.pay(data.token, {
                                 onSuccess: function(result) {
-                                    alert('Pembayaran berhasil dikonfirmasi! Halaman akan diperbarui.');
-                                    window.location.reload();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Pembayaran Berhasil!',
+                                        text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
+                                        confirmButtonColor: '#0ea5e9'
+                                    }).then(() => window.location.reload());
                                 },
                                 onPending: function(result) {
-                                    alert('Transaksi Anda sedang diproses / menunggu pembayaran.');
-                                    window.location.reload();
+                                    Swal.fire({
+                                        icon: 'info',
+                                        title: 'Menunggu Pembayaran',
+                                        text: 'Instruksi pembayaran telah dibuat. Silakan selesaikan pembayaran sesuai panduan Midtrans.',
+                                        confirmButtonColor: '#0ea5e9'
+                                    }).then(() => window.location.reload());
                                 },
                                 onError: function(result) {
-                                    alert('Pembayaran gagal atau dibatalkan.');
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Pembayaran Dibatalkan',
+                                        text: 'Pembayaran gagal atau dibatalkan.',
+                                        confirmButtonColor: '#0ea5e9'
+                                    });
                                 }
                             });
                         } else if (data.redirect_url) {
                             window.open(data.redirect_url, '_blank');
                         }
                     } else {
-                        alert(data.message || 'Gagal memproses pembayaran Midtrans.');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: data.message || 'Gagal memproses pembayaran Midtrans.',
+                            confirmButtonColor: '#0ea5e9'
+                        });
                     }
                 })
                 .catch(err => {
@@ -194,7 +214,12 @@
                         btn.disabled = false;
                         btn.innerHTML = originalContent;
                     }
-                    alert('Terjadi kesalahan saat menghubungi server pembayaran.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gangguan Jaringan',
+                        text: 'Terjadi kesalahan saat menghubungi server pembayaran.',
+                        confirmButtonColor: '#0ea5e9'
+                    });
                 });
             }
         </script>
