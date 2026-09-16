@@ -90,12 +90,12 @@ class TiketGangguan extends Model
     {
         $st = (string) $this->status;
         if ($st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close') {
-            return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+            return 'bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm';
         }
         if ($st === '12' || $st === '13' || $st === 'in_progress' || $st === 'proses') {
-            return 'bg-sky-500/10 text-[#38bdf8] border border-sky-500/30';
+            return 'bg-sky-50 text-sky-700 border border-sky-200 shadow-sm';
         }
-        return 'bg-amber-500/10 text-amber-400 border border-amber-500/30';
+        return 'bg-amber-50 text-amber-700 border border-amber-200 shadow-sm';
     }
 
     public function getTechnicianNameAttribute()

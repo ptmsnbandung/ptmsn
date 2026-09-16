@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-[#050c18] text-slate-100">
+<html lang="id" class="h-full bg-slate-50 text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,9 @@
     <title>@yield('title', 'Portal Pelanggan') — PT Media Solusi Network</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-msn BG Trans - Copy2.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
-    <!-- Google Fonts: Manrope, Inter, JetBrains Mono -->
+    <!-- Google Fonts: Inter, Manrope, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,8 +25,7 @@
                             blue: '#0284c7',
                             cyan: '#0ea5e9',
                             sky: '#38bdf8',
-                            navy: '#07172e',
-                            dark: '#050d1a',
+                            navy: '#0f172a',
                         }
                     },
                     fontFamily: {
@@ -48,61 +47,99 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #050d1a;
+            background-color: #f1f5f9;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(2, 132, 199, 0.05) 0px, transparent 50%);
+                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.15) 0px, transparent 40%),
+                radial-gradient(at 85% 20%, rgba(56, 189, 248, 0.18) 0px, transparent 45%),
+                radial-gradient(at 50% 85%, rgba(99, 102, 241, 0.10) 0px, transparent 50%),
+                radial-gradient(at 90% 85%, rgba(14, 165, 233, 0.12) 0px, transparent 40%),
+                radial-gradient(at 10% 80%, rgba(16, 185, 129, 0.08) 0px, transparent 40%);
+            background-attachment: fixed;
         }
+
+        /* Glassmorphism Classes */
         .portal-card {
-            background: rgba(11, 24, 43, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.15);
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 10px 30px -5px rgba(15, 23, 42, 0.06), 
+                0 1px 3px 0 rgba(0, 0, 0, 0.03),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
         }
+
         .portal-card-hover {
-            transition: all 0.2s ease-in-out;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         .portal-card-hover:hover {
-            border-color: rgba(56, 189, 248, 0.35);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.12);
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(56, 189, 248, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 20px 35px -10px rgba(14, 165, 233, 0.16), 
+                0 0 0 1px rgba(56, 189, 248, 0.35),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(203, 213, 225, 0.85);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
         }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans antialiased text-slate-200" x-data="{ mobileMenu: false, userDropdown: false }">
+<body class="min-h-full flex flex-col font-sans antialiased text-slate-800" x-data="{ mobileMenu: false, userDropdown: false }">
+
+    <!-- Ambient Glowing Orbs Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-sky-300/30 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 -right-32 w-96 h-96 bg-cyan-300/25 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-indigo-200/30 rounded-full blur-3xl"></div>
+    </div>
 
     <!-- Top Portal Header -->
-    <header class="sticky top-0 z-40 bg-[#061120]/90 backdrop-blur-md border-b border-white/10">
+    <header class="sticky top-0 z-40 bg-white/75 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
                 <!-- Left: Logo & Portal Tag -->
                 <div class="flex items-center gap-3 sm:gap-4">
-                    <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-3">
-                        <img src="{{ asset('images/logo/logo-msn-white.png') }}" alt="PT MSN" class="h-7 sm:h-8 w-auto object-contain">
+                    <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2">
+                        <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-8 sm:h-9 w-auto object-contain">
                     </a>
-                    <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-[10px] font-mono font-bold text-[#38bdf8] uppercase tracking-wider">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-[10px] font-mono font-bold text-sky-700 uppercase tracking-wider shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>PORTAL PELANGGAN</span>
                     </div>
                 </div>
 
                 <!-- Center: Navigation Links (Desktop) -->
-                <nav class="hidden md:flex items-center gap-1 bg-white/[0.04] border border-white/10 p-1 rounded-full">
-                    <a href="{{ route('portal.dashboard') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.dashboard') ? 'bg-[#38bdf8] text-[#050d1a] shadow-sm font-bold' : 'text-slate-300 hover:text-white hover:bg-white/[0.05]' }}">
+                <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 backdrop-blur-md border border-slate-200/70 p-1 rounded-full shadow-inner">
+                    <a href="{{ route('portal.dashboard') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
                         <span class="flex items-center gap-1.5">
                             <iconify-icon icon="solar:home-smile-bold" width="15"></iconify-icon>
                             <span>Beranda</span>
                         </span>
                     </a>
-                    <a href="{{ route('portal.tickets.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') ? 'bg-[#38bdf8] text-[#050d1a] shadow-sm font-bold' : 'text-slate-300 hover:text-white hover:bg-white/[0.05]' }}">
+                    <a href="{{ route('portal.tickets.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
                         <span class="flex items-center gap-1.5">
                             <iconify-icon icon="solar:shield-warning-bold" width="15"></iconify-icon>
                             <span>Laporan Gangguan</span>
                         </span>
                     </a>
-                    <a href="{{ route('portal.profile') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.profile') ? 'bg-[#38bdf8] text-[#050d1a] shadow-sm font-bold' : 'text-slate-300 hover:text-white hover:bg-white/[0.05]' }}">
+                    <a href="{{ route('portal.profile') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
                         <span class="flex items-center gap-1.5">
                             <iconify-icon icon="solar:user-circle-bold" width="15"></iconify-icon>
                             <span>Profil & Paket</span>
@@ -112,20 +149,20 @@
 
                 <!-- Right: Quick Lapor CTA & User Menu -->
                 <div class="flex items-center gap-2.5 sm:gap-3">
-                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-heading font-bold text-xs shadow-lg shadow-rose-500/20 hover:scale-105 active:scale-95 transition-all">
+                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs shadow-md shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all">
                         <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
                         <span>Lapor Gangguan</span>
                     </a>
 
                     <!-- User Profile Dropdown -->
                     <div class="relative" @click.outside="userDropdown = false">
-                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2 sm:py-1 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 transition-colors">
-                            <div class="w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-500/30 text-[#38bdf8] flex items-center justify-center font-bold text-xs">
+                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-2xl bg-white/80 border border-slate-200/80 hover:bg-white hover:border-sky-300 transition-all shadow-sm">
+                            <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
                                 {{ substr(Auth::guard('customer')->user()->name ?? 'P', 0, 1) }}
                             </div>
                             <div class="hidden lg:block text-left pr-1">
-                                <div class="text-xs font-heading font-bold text-white max-w-[120px] truncate leading-tight">{{ Auth::guard('customer')->user()->name }}</div>
-                                <div class="text-[10px] font-mono text-slate-400 leading-tight">{{ Auth::guard('customer')->user()->phone }}</div>
+                                <div class="text-xs font-heading font-bold text-slate-800 max-w-[130px] truncate leading-tight">{{ Auth::guard('customer')->user()->name }}</div>
+                                <div class="text-[10px] font-mono text-slate-500 leading-tight">{{ Auth::guard('customer')->user()->phone }}</div>
                             </div>
                             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-xs hidden sm:block"></iconify-icon>
                         </button>
@@ -133,34 +170,34 @@
                         <!-- Dropdown Content -->
                         <div 
                             x-show="userDropdown" 
-                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter="transition ease-out duration-150"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave="transition ease-in duration-100"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute right-0 mt-2 w-52 rounded-2xl bg-[#081528] border border-white/10 shadow-2xl p-1.5 z-50 divide-y divide-white/10"
+                            class="absolute right-0 mt-2 w-56 rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-2xl p-2 z-50 divide-y divide-slate-100"
                             style="display: none;"
                         >
-                            <div class="px-3 py-2">
-                                <div class="text-xs font-bold text-white">{{ Auth::guard('customer')->user()->name }}</div>
-                                <div class="text-[11px] font-mono text-[#38bdf8]">{{ Auth::guard('customer')->user()->customer_id }}</div>
+                            <div class="px-3 py-2.5">
+                                <div class="text-xs font-bold text-slate-800">{{ Auth::guard('customer')->user()->name }}</div>
+                                <div class="text-[11px] font-mono text-sky-600 font-semibold">ID: {{ Auth::guard('customer')->user()->customer_id }}</div>
                             </div>
                             <div class="py-1">
-                                <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-lg">
-                                    <iconify-icon icon="solar:user-bold" width="15"></iconify-icon>
+                                <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
+                                    <iconify-icon icon="solar:user-bold" class="text-sky-500" width="16"></iconify-icon>
                                     <span>Informasi Akun</span>
                                 </a>
-                                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-2 px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-lg">
-                                    <iconify-icon icon="solar:globe-bold" width="15"></iconify-icon>
-                                    <span>Website Utama</span>
+                                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
+                                    <iconify-icon icon="solar:globe-bold" class="text-indigo-500" width="16"></iconify-icon>
+                                    <span>Website Utama PT MSN</span>
                                 </a>
                             </div>
                             <div class="pt-1">
                                 <form action="{{ route('portal.logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg text-left font-semibold">
-                                        <iconify-icon icon="solar:logout-2-bold" width="15"></iconify-icon>
+                                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl text-left font-semibold transition-colors">
+                                        <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
                                         <span>Keluar (Logout)</span>
                                     </button>
                                 </form>
@@ -169,7 +206,7 @@
                     </div>
 
                     <!-- Mobile Menu Button -->
-                    <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-xl bg-white/[0.06] border border-white/10 text-white">
+                    <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-2xl bg-white/80 border border-slate-200 text-slate-700 shadow-sm">
                         <iconify-icon icon="solar:hamburger-menu-bold" width="20"></iconify-icon>
                     </button>
                 </div>
@@ -178,20 +215,20 @@
         </div>
 
         <!-- Mobile Drawer / Menu -->
-        <div x-show="mobileMenu" @click.outside="mobileMenu = false" class="md:hidden px-4 pt-2 pb-4 border-t border-white/10 bg-[#061120] space-y-2" style="display: none;">
-            <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-[#38bdf8] text-[#050d1a] font-bold' : 'text-slate-300 bg-white/[0.03]' }}">
+        <div x-show="mobileMenu" @click.outside="mobileMenu = false" class="md:hidden px-4 pt-2 pb-4 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl space-y-2 shadow-lg" style="display: none;">
+            <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
                 <iconify-icon icon="solar:home-smile-bold" width="16"></iconify-icon>
                 <span>Beranda</span>
             </a>
-            <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') ? 'bg-[#38bdf8] text-[#050d1a] font-bold' : 'text-slate-300 bg-white/[0.03]' }}">
+            <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
                 <iconify-icon icon="solar:shield-warning-bold" width="16"></iconify-icon>
                 <span>Laporan Gangguan</span>
             </a>
-            <a href="{{ route('portal.profile') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.profile') ? 'bg-[#38bdf8] text-[#050d1a] font-bold' : 'text-slate-300 bg-white/[0.03]' }}">
+            <a href="{{ route('portal.profile') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
                 <iconify-icon icon="solar:user-circle-bold" width="16"></iconify-icon>
                 <span>Profil & Layanan</span>
             </a>
-            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-heading font-bold text-xs">
+            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-heading font-bold text-xs shadow-md">
                 <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
                 <span>Lapor Gangguan Baru</span>
             </a>
@@ -199,34 +236,34 @@
     </header>
 
     <!-- Main Body Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
         <!-- Flash Alerts -->
         @if(session('success'))
-            <div class="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-lg shadow-emerald-500/5">
+            <div class="mb-6 p-4 rounded-3xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-sm">
                 <div class="flex items-center gap-3">
-                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-xl shrink-0"></iconify-icon>
-                    <span>{{ session('success') }}</span>
+                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-xl shrink-0"></iconify-icon>
+                    <span class="font-medium">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
 
         @if(session('info'))
-            <div class="mb-6 p-4 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-300 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-lg">
+            <div class="mb-6 p-4 rounded-3xl bg-sky-50/90 backdrop-blur-md border border-sky-200 text-sky-800 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-sm">
                 <div class="flex items-center gap-3">
-                    <iconify-icon icon="solar:info-circle-bold" class="text-[#38bdf8] text-xl shrink-0"></iconify-icon>
-                    <span>{{ session('info') }}</span>
+                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-xl shrink-0"></iconify-icon>
+                    <span class="font-medium">{{ session('info') }}</span>
                 </div>
             </div>
         @endif
 
-        @if($errors->any())
-            <div class="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-sans shadow-lg">
+        @if(isset($errors) && $errors->any())
+            <div class="mb-6 p-4 rounded-3xl bg-rose-50/90 backdrop-blur-md border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-sm">
                 <div class="font-bold mb-1 flex items-center gap-2">
-                    <iconify-icon icon="solar:danger-circle-bold" class="text-lg"></iconify-icon>
+                    <iconify-icon icon="solar:danger-circle-bold" class="text-lg text-rose-500"></iconify-icon>
                     <span>Harap perhatikan input berikut:</span>
                 </div>
-                <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-200/90 pl-1">
+                <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-700 pl-1">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -239,19 +276,19 @@
     </main>
 
     <!-- Portal Footer -->
-    <footer class="mt-auto border-t border-white/10 bg-[#040913] py-5 text-center text-xs text-slate-500 font-mono">
+    <footer class="relative z-10 mt-auto border-t border-slate-200/80 bg-white/65 backdrop-blur-xl py-5 text-center text-xs text-slate-500 font-mono shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-2">
                 <span>&copy; {{ date('Y') }} PT Media Solusi Network</span>
                 <span>•</span>
-                <span class="text-slate-400">Helpdesk NOC 24/7</span>
+                <span class="text-slate-600 font-semibold">Helpdesk NOC 24/7</span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="https://wa.me/6281214878436" target="_blank" class="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-semibold">
+                <a href="https://wa.me/6281214878436" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1 font-semibold">
                     <iconify-icon icon="solar:chat-round-dots-bold"></iconify-icon>
                     <span>WA Helpdesk (0812-1487-8436)</span>
                 </a>
-                <a href="{{ route('home') }}" class="text-slate-400 hover:text-[#38bdf8] transition-colors">
+                <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition-colors">
                     Beranda Website
                 </a>
             </div>
@@ -260,3 +297,4 @@
 
 </body>
 </html>
+
