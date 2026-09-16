@@ -342,10 +342,12 @@
                 window.addEventListener(evt, resetIdleTimer, { passive: true });
             });
 
-            resetIdleTimer();
+        resetIdleTimer();
         })();
     </script>
 
+    @stack('scripts')
 </body>
 </html>
+
 

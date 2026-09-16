@@ -124,12 +124,13 @@
 
                 <!-- Col 3: Action & Midtrans Checkout Button -->
                 <div class="flex flex-col justify-center space-y-3">
-                    @if($currentInvoice->status !== 'paid')
+                    @if(!$currentInvoice->is_paid)
                         <!-- Button Bayar Sekarang (Trigger Midtrans Payment) -->
                         <button 
                             type="button" 
-                            @click="midtransModal = true"
-                            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-center"
+                            id="btnPayMain"
+                            onclick="payWithMidtrans('{{ $currentInvoice->kode_billing_layanan }}', 'btnPayMain')"
+                            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-center disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             <iconify-icon icon="solar:card-recive-bold" width="22"></iconify-icon>
                             <span>Bayar Sekarang (Midtrans)</span>
@@ -237,14 +238,29 @@
                                 </span>
                             </td>
                             <td class="py-3.5 px-4 text-center">
-                                <a 
-                                    href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
-                                    target="_blank"
-                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs"
-                                >
-                                    <iconify-icon icon="solar:document-text-bold" width="14"></iconify-icon>
-                                    <span>Struk</span>
-                                </a>
+                                <div class="flex items-center justify-center gap-1.5">
+                                    @if(!$inv->is_paid)
+                                        <button 
+                                            type="button" 
+                                            id="btnPayHist-{{ $loop->index }}"
+                                            onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60"
+                                            title="Bayar tagihan ini via Midtrans"
+                                        >
+                                            <iconify-icon icon="solar:card-recive-bold" width="13"></iconify-icon>
+                                            <span>Bayar</span>
+                                        </button>
+                                    @endif
+                                    <a 
+                                        href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
+                                        target="_blank"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs"
+                                        title="Cetak struk resmi"
+                                    >
+                                        <iconify-icon icon="solar:document-text-bold" width="13"></iconify-icon>
+                                        <span>Struk</span>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -339,3 +355,75 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
+<script>
+    function payWithMidtrans(kodeBilling, btnId = null) {
+        let btn = null;
+        let originalContent = '';
+        if (btnId) {
+            btn = document.getElementById(btnId);
+            if (btn) {
+                originalContent = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1" width="16"></iconify-icon><span>Memproses Midtrans...</span>';
+            }
+        }
+
+        const endpoint = `{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/pay`;
+
+        fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+
+            if (data.success && data.token) {
+                if (typeof window.snap !== 'undefined') {
+                    window.snap.pay(data.token, {
+                        onSuccess: function(result) {
+                            alert('Pembayaran berhasil dikonfirmasi! Halaman akan diperbarui.');
+                            window.location.reload();
+                        },
+                        onPending: function(result) {
+                            alert('Transaksi Anda sedang diproses / menunggu pembayaran.');
+                            window.location.reload();
+                        },
+                        onError: function(result) {
+                            alert('Pembayaran gagal atau dibatalkan oleh pengguna.');
+                        },
+                        onClose: function() {
+                            console.log('Jendela popup Snap Midtrans ditutup.');
+                        }
+                    });
+                } else if (data.redirect_url) {
+                    window.open(data.redirect_url, '_blank');
+                } else {
+                    alert('Sistem pembayaran Midtrans siap. Token didapatkan.');
+                }
+            } else {
+                alert(data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa koneksi atau konfigurasi.');
+            }
+        })
+        .catch(err => {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+            console.error('Midtrans Request Error:', err);
+            alert('Terjadi kendala saat menghubungi server pembayaran.');
+        });
+    }
+</script>
+@endpush
+

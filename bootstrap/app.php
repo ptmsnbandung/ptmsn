@@ -31,6 +31,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'portal/logout/*',
             'admin/logout',
             'logout',
+            'midtrans/notification',
+            'midtrans/*',
+            'api/midtrans/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

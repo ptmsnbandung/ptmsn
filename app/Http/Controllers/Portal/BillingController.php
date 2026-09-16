@@ -4,12 +4,21 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ims\BillingLayanan;
+use App\Services\MidtransService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BillingController extends Controller
 {
+    protected MidtransService $midtransService;
+
+    public function __construct(MidtransService $midtransService)
+    {
+        $this->midtransService = $midtransService;
+    }
+
     /**
      * Tampilkan Halaman Menu Tagihan & Pembayaran Pelanggan (Terhubung ke IMS v2)
      */
@@ -57,10 +66,15 @@ class BillingController extends Controller
             $invoices = $customer->billingLayanan()->get();
         }
 
+        $snapJsUrl = $this->midtransService->getSnapJsUrl();
+        $clientKey = $this->midtransService->getClientKey();
+
         return view('portal.billing.index', compact(
             'customer',
             'currentInvoice',
-            'invoices'
+            'invoices',
+            'snapJsUrl',
+            'clientKey'
         ));
     }
 
@@ -85,6 +99,61 @@ class BillingController extends Controller
             abort(403, 'Akses tidak diizinkan.');
         }
 
-        return view('portal.billing.show', compact('customer', 'invoice'));
+        $snapJsUrl = $this->midtransService->getSnapJsUrl();
+        $clientKey = $this->midtransService->getClientKey();
+
+        return view('portal.billing.show', compact('customer', 'invoice', 'snapJsUrl', 'clientKey'));
+    }
+
+    /**
+     * Endpoint Buat / Dapatkan Token Midtrans Snap untuk Tagihan Tertentu
+     */
+    public function pay(Request $request, string $invoiceCode): JsonResponse
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+
+        $decodedCode = urldecode($invoiceCode);
+
+        $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
+            ->orWhere('kode_billing_layanan', $invoiceCode)
+            ->firstOrFail();
+
+        if ($invoice->nomor_internet !== $customer->customer_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akses ditolak: Tagihan bukan milik akun Anda.',
+            ], 403);
+        }
+
+        if ($invoice->is_paid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tagihan ini sudah LUNAS.',
+            ], 400);
+        }
+
+        $force = $request->boolean('force', false);
+        $result = $this->midtransService->createSnapTransaction($invoice, $customer, $force);
+
+        if (!$result['success']) {
+            return response()->json($result, 500);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * Webhook / HTTP Notification Handler dari Midtrans
+     */
+    public function handleNotification(Request $request): JsonResponse
+    {
+        $payload = $request->all();
+
+        $result = $this->midtransService->handleNotification($payload);
+
+        return response()->json([
+            'message' => $result['message'],
+        ], $result['code'] ?? 200);
     }
 }

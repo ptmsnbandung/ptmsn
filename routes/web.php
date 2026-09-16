@@ -54,6 +54,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
         // Tagihan & Pembayaran (Billing)
         Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
+        Route::post('/tagihan/{invoice}/pay', [PortalBillingController::class, 'pay'])->where('invoice', '.*')->name('billing.pay');
         Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->where('invoice', '.*')->name('billing.show');
 
         // Profile & Service Settings
@@ -61,6 +62,15 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::put('/profile', [PortalProfileController::class, 'update'])->name('profile.update');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Midtrans Payment Gateway Webhook Callback
+|--------------------------------------------------------------------------
+*/
+Route::post('/midtrans/notification', [PortalBillingController::class, 'handleNotification'])->name('midtrans.notification');
+Route::post('/api/midtrans/notification', [PortalBillingController::class, 'handleNotification']);
+
 
 /*
 |--------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Invoice {{ $invoice->invoice_number }} — PT Media Solusi Network</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,14 +20,27 @@
 <body class="bg-slate-100 min-h-screen py-6 sm:py-10 px-4 text-slate-800">
 
     <!-- Action Bar (Hidden on Print) -->
-    <div class="max-w-3xl mx-auto mb-5 flex items-center justify-between no-print">
+    <div class="max-w-3xl mx-auto mb-5 flex flex-wrap items-center justify-between gap-3 no-print">
         <a href="{{ route('portal.billing.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-sky-600 bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm transition-all">
             &larr; Kembali ke Portal Tagihan
         </a>
-        <button onclick="window.print()" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-            <span>Cetak / Simpan PDF</span>
-        </button>
+        <div class="flex items-center gap-2">
+            @if(!$invoice->is_paid)
+                <button 
+                    type="button" 
+                    id="btnPayInvoice"
+                    onclick="payWithMidtrans('{{ $invoice->kode_billing_layanan }}')"
+                    class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-60"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                    <span>Bayar Sekarang (Midtrans)</span>
+                </button>
+            @endif
+            <button onclick="window.print()" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <span>Cetak / Simpan PDF</span>
+            </button>
+        </div>
     </div>
 
     <!-- Official Invoice Container -->
@@ -125,5 +139,67 @@
         </div>
     </div>
 
+    @if(!$invoice->is_paid)
+        <script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
+        <script>
+            function payWithMidtrans(kodeBilling) {
+                const btn = document.getElementById('btnPayInvoice');
+                const originalContent = btn ? btn.innerHTML : '';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span>Memproses Midtrans...</span>';
+                }
+
+                const endpoint = `{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/pay`;
+
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = originalContent;
+                    }
+
+                    if (data.success && data.token) {
+                        if (typeof window.snap !== 'undefined') {
+                            window.snap.pay(data.token, {
+                                onSuccess: function(result) {
+                                    alert('Pembayaran berhasil dikonfirmasi! Halaman akan diperbarui.');
+                                    window.location.reload();
+                                },
+                                onPending: function(result) {
+                                    alert('Transaksi Anda sedang diproses / menunggu pembayaran.');
+                                    window.location.reload();
+                                },
+                                onError: function(result) {
+                                    alert('Pembayaran gagal atau dibatalkan.');
+                                }
+                            });
+                        } else if (data.redirect_url) {
+                            window.open(data.redirect_url, '_blank');
+                        }
+                    } else {
+                        alert(data.message || 'Gagal memproses pembayaran Midtrans.');
+                    }
+                })
+                .catch(err => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = originalContent;
+                    }
+                    alert('Terjadi kesalahan saat menghubungi server pembayaran.');
+                });
+            }
+        </script>
+    @endif
+
 </body>
 </html>
+
