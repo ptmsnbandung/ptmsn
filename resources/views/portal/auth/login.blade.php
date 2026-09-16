@@ -179,27 +179,33 @@
                 </button>
             </form>
 
-            <!-- Quick Demo Account Box for Testing -->
+            <!-- Quick Demo Account Box for Testing (from IMS DB) -->
             <div class="mt-6 pt-5 border-t border-white/10">
-                <div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
-                    <iconify-icon icon="solar:user-id-bold" class="text-[#38bdf8]"></iconify-icon>
-                    <span>Klik Akun Demo untuk Pengujian:</span>
+                <div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <iconify-icon icon="solar:user-id-bold" class="text-[#38bdf8]"></iconify-icon>
+                        <span>Pilih Contoh Pelanggan IMS:</span>
+                    </span>
+                    <span class="text-[10px] text-emerald-400 font-mono">IMS v2 Database</span>
                 </div>
                 <div class="grid grid-cols-1 gap-2">
-                    <button type="button" onclick="fillDemo('081234567890', '123456')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
-                        <div>
-                            <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">Budi Santoso (0812-3456-7890)</div>
-                            <div class="text-[10px] text-slate-400">Paket Gold 25 Mbps • Ada Tiket Aktif</div>
-                        </div>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
-                    </button>
-                    <button type="button" onclick="fillDemo('087812345678', '123456')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
-                        <div>
-                            <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">Ahmad Fauzi (0878-1234-5678)</div>
-                            <div class="text-[10px] text-slate-400">Paket Silver 20 Mbps (Cianjur)</div>
-                        </div>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
-                    </button>
+                    @forelse($demoCustomers as $demo)
+                        <button type="button" onclick="fillDemo('{{ $demo->phone ?? $demo->customer_id }}', '{{ $demo->ont_ps ?? '123456' }}')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
+                            <div>
+                                <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">{{ $demo->name }} ({{ $demo->phone ?? $demo->customer_id }})</div>
+                                <div class="text-[10px] text-slate-400">ID: {{ $demo->customer_id }} • Paket: {{ $demo->package_name ?? $demo->package->name ?? 'Internet' }}</div>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
+                        </button>
+                    @empty
+                        <button type="button" onclick="fillDemo('081320335016', 'secret123')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
+                            <div>
+                                <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">Asep Yudi (0813-2033-5016)</div>
+                                <div class="text-[10px] text-slate-400">ID: 1010222 • Pelanggan IMS v2</div>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
+                        </button>
+                    @endforelse
                 </div>
             </div>
 
