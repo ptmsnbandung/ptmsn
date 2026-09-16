@@ -18,19 +18,7 @@ class AuthController extends Controller
             return redirect()->route('portal.dashboard');
         }
 
-        // Ambil data sampel real langsung dari ims_v2.trx_batchjob_register
-        try {
-            $demoCustomers = Customer::with(['pelanggan', 'bandwith'])
-                ->whereHas('pelanggan', function ($q) {
-                    $q->whereNotNull('nomor_hp')->where('nomor_hp', '!=', '');
-                })
-                ->take(3)
-                ->get();
-        } catch (\Exception $e) {
-            $demoCustomers = collect([]);
-        }
-
-        return view('portal.auth.login', compact('demoCustomers'));
+        return view('portal.auth.login');
     }
 
     /**
