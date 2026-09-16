@@ -133,6 +133,12 @@
                             <span>Beranda</span>
                         </span>
                     </a>
+                    <a href="{{ route('portal.billing.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
+                        <span class="flex items-center gap-1.5">
+                            <iconify-icon icon="solar:wallet-money-bold" width="15"></iconify-icon>
+                            <span>Tagihan & Pembayaran</span>
+                        </span>
+                    </a>
                     <a href="{{ route('portal.tickets.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
                         <span class="flex items-center gap-1.5">
                             <iconify-icon icon="solar:shield-warning-bold" width="15"></iconify-icon>
@@ -184,6 +190,10 @@
                                 <div class="text-[11px] font-mono text-sky-600 font-semibold">ID: {{ Auth::guard('customer')->user()->customer_id }}</div>
                             </div>
                             <div class="py-1">
+                                <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
+                                    <iconify-icon icon="solar:wallet-money-bold" class="text-emerald-500" width="16"></iconify-icon>
+                                    <span>Tagihan & Pembayaran</span>
+                                </a>
                                 <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
                                     <iconify-icon icon="solar:user-bold" class="text-sky-500" width="16"></iconify-icon>
                                     <span>Informasi Akun</span>
@@ -216,6 +226,10 @@
             <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
                 <iconify-icon icon="solar:home-smile-bold" width="16"></iconify-icon>
                 <span>Beranda</span>
+            </a>
+            <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
+                <iconify-icon icon="solar:wallet-money-bold" width="16"></iconify-icon>
+                <span>Tagihan & Pembayaran</span>
             </a>
             <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
                 <iconify-icon icon="solar:shield-warning-bold" width="16"></iconify-icon>

@@ -63,3 +63,31 @@ VALUES
 ('BISNIS PRO', 'bisnis', '200 Mbps', 999000, 'bln', 'Kecepatan super tinggi dan bandwidth konsisten untuk perusahaan dan multi-workstation.', '["Unlimited Akses (Tanpa FUP)", "Fiber Optic 1:1 Simetris", "IP Dedicated Bisnis", "SLA Bisnis 99.5%"]', 0, 1, 7, NOW(), NOW()),
 ('BISNIS ENTERPRISE', 'bisnis', '300 Mbps', 1299000, 'bln', 'Kapasitas maksimal enterprise untuk korporat, instansi, dan kebutuhan cloud computing skala besar.', '["Unlimited Akses (Tanpa FUP)", "Fiber Optic 1:1 Simetris", "IP Dedicated Bisnis", "Dedicated NOC & SLA 99.8%"]', 0, 1, 8, NOW(), NOW());
 
+-- ==========================================================
+-- 3. TABEL INVOICES (TAGIHAN & PEMBAYARAN MIDTRANS)
+-- ==========================================================
+CREATE TABLE IF NOT EXISTS `invoices` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `invoice_number` varchar(255) NOT NULL,
+  `customer_id` varchar(100) NOT NULL COMMENT 'Nomor Internet Pelanggan',
+  `period` varchar(100) NOT NULL COMMENT 'Periode tagihan (contoh: September 2026)',
+  `package_name` varchar(255) NOT NULL,
+  `amount` int(10) unsigned NOT NULL,
+  `tax_amount` int(10) unsigned NOT NULL DEFAULT 0,
+  `total_amount` int(10) unsigned NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'unpaid' COMMENT 'unpaid, paid, pending, expired',
+  `due_date` date NOT NULL,
+  `paid_at` timestamp NULL DEFAULT NULL,
+  `payment_method` varchar(100) DEFAULT NULL,
+  `midtrans_order_id` varchar(255) DEFAULT NULL,
+  `midtrans_snap_token` varchar(255) DEFAULT NULL,
+  `midtrans_payload` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `invoices_invoice_number_unique` (`invoice_number`),
+  KEY `invoices_customer_id_index` (`customer_id`),
+  KEY `invoices_midtrans_order_id_index` (`midtrans_order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+

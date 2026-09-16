@@ -92,7 +92,7 @@
                 <div class="text-xs text-slate-600 mt-0.5">
                     Jatuh Tempo: Tgl {{ $customer->due_date }} / bulan
                 </div>
-                <div class="text-[11px] mt-2">
+                <div class="text-[11px] mt-2 flex items-center justify-between">
                     @if($customer->billing_status === 'paid')
                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold font-mono">
                             <iconify-icon icon="solar:check-read-linear"></iconify-icon> Lunas Bulan Ini
@@ -102,6 +102,10 @@
                             <iconify-icon icon="solar:danger-circle-bold"></iconify-icon> Menunggu Pembayaran
                         </span>
                     @endif
+                    <a href="{{ route('portal.billing.index') }}" class="text-sky-600 hover:text-sky-700 font-heading font-bold text-xs hover:underline flex items-center gap-0.5">
+                        <span>Bayar</span>
+                        <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                    </a>
                 </div>
             </div>
         </div>

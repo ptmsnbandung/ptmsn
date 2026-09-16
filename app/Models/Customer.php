@@ -68,6 +68,14 @@ class Customer extends Authenticatable
         return $this->tickets();
     }
 
+    /**
+     * Relasi ke riwayat tagihan & pembayaran (di database lokal ptmsn)
+     */
+    public function invoices()
+    {
+        return $this->hasMany(\App\Models\Invoice::class, 'customer_id', 'nomor_internet')->orderBy('due_date', 'desc');
+    }
+
     // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---
 
     public function getCustomerIdAttribute()

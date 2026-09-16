@@ -15,6 +15,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Portal\AuthController as PortalAuthController;
+use App\Http\Controllers\Portal\BillingController as PortalBillingController;
 use App\Http\Controllers\Portal\DashboardController as PortalDashboardController;
 use App\Http\Controllers\Portal\ProfileController as PortalProfileController;
 use App\Http\Controllers\Portal\TicketController as PortalTicketController;
@@ -50,6 +51,10 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('/tickets/create', [PortalTicketController::class, 'create'])->name('tickets.create');
         Route::post('/tickets', [PortalTicketController::class, 'store'])->name('tickets.store');
         Route::get('/tickets/{ticket}', [PortalTicketController::class, 'show'])->name('tickets.show');
+
+        // Tagihan & Pembayaran (Billing)
+        Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
+        Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->name('billing.show');
 
         // Profile & Service Settings
         Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
