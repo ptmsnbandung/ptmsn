@@ -2,12 +2,12 @@
 
 @php
     $whatsappNumber = config('company.whatsapp');
-    $categoryPrefix = ($package->category === 'soho' ? 'SOHO ' : '');
-    $waText = urlencode("Halo PT Media Solusi Network, saya ingin berlangganan paket {$categoryPrefix}{$package->name} ({$package->speed} - {$package->formatted_price}/bln). Mohon informasi pemasangan baru.");
+    $categoryPrefix = (in_array(strtolower($package->category ?? ''), ['soho', 'bisnis']) ? 'Bisnis ' : 'Rumahan ');
+    $waText = urlencode("Halo PT Media Solusi Network, saya ingin berlangganan {$categoryPrefix}{$package->name} ({$package->speed} - {$package->formatted_price}/bln). Mohon informasi pemasangan baru.");
     $waLink = "https://wa.me/{$whatsappNumber}?text={$waText}";
 
-    $tierLower = strtolower($package->name);
-    $isFeatured = $tierLower === 'gold' || $tierLower === 'emerald' || $package->is_popular;
+    $nameLower = strtolower(trim($package->name));
+    $isFeatured = $nameLower === 'paket keluarga' || $nameLower === 'umkm plus' || $nameLower === 'gold' || $nameLower === 'emerald' || $package->is_popular;
 
     // Clean numerical speed
     $speedNumber = trim(preg_replace('/[^0-9]/', '', $package->speed));
@@ -15,40 +15,41 @@
         $speedNumber = $package->speed;
     }
 
-    // Formatted price display
-    $priceThousands = number_format($package->price / 1000, 0, ',', '.');
-
     // Recommendation pill per tier
     $recommendations = [
-        'bronze' => '1 - 3 Perangkat • Harian',
-        'silver' => '3 - 5 Perangkat • Streaming',
+        'paket basic' => '1 - 4 Perangkat • Ringan',
+        'paket hemat' => '3 - 6 Perangkat • Hemat',
+        'paket keluarga' => '5 - 8 Perangkat • Terfavorit',
+        'paket premium' => '8 - 10 Perangkat • Kecepatan Tinggi',
+        'umkm basic' => 'Operasional UMKM & Toko',
+        'umkm plus' => 'Kantor & Usaha Berkembang',
+        'bisnis pro' => 'Perusahaan & High Traffic',
+        'bisnis enterprise' => 'Korporat & Instansi Besar',
+        'bronze' => '1 - 4 Perangkat • Ringan',
+        'silver' => '3 - 6 Perangkat • Hemat',
         'gold' => '5 - 8 Perangkat • Terfavorit',
-        'platinum' => '8 - 12+ Perangkat • Kecepatan Tinggi',
-        'crystal' => '3 - 6 Perangkat • Kantor Kecil',
-        'saphire' => '6 - 10 Perangkat • Operasional SOHO',
-        'emerald' => '10 - 15 Perangkat • Paling Diminati',
-        'ruby' => '15 - 20 Perangkat • High Traffic SOHO',
-        'diamond' => '20+ Perangkat • Performa Maksimal',
+        'platinum' => '8 - 10 Perangkat • Kecepatan Tinggi',
     ];
-    $recText = $recommendations[$tierLower] ?? 'Koneksi Stabil & Cepat';
+    $recText = $package->ideal_devices ?? ($recommendations[$nameLower] ?? 'Koneksi Stabil & Cepat');
 
     // Tier badge styles
     $tierBadgeStyles = [
-        'bronze' => 'bg-amber-500/10 text-amber-800 border-amber-300',
-        'silver' => 'bg-slate-100 text-slate-700 border-slate-300',
+        'paket basic' => 'bg-amber-500/10 text-amber-800 border-amber-300',
+        'paket hemat' => 'bg-slate-100 text-slate-700 border-slate-300',
+        'paket keluarga' => 'bg-gradient-to-r from-sky-50 to-blue-50 text-[#0284c7] border-sky-300 font-black',
+        'paket premium' => 'bg-indigo-50 text-indigo-700 border-indigo-200 font-bold',
+        'umkm basic' => 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold',
+        'umkm plus' => 'bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800 border-amber-300 font-black',
+        'bisnis pro' => 'bg-purple-50 text-purple-700 border-purple-300 font-bold',
+        'bisnis enterprise' => 'bg-rose-50 text-rose-700 border-rose-300 font-bold',
         'gold' => 'bg-gradient-to-r from-sky-50 to-blue-50 text-[#0284c7] border-sky-300 font-black',
-        'platinum' => 'bg-indigo-50 text-indigo-700 border-indigo-200 font-bold',
-        'crystal' => 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold',
-        'saphire' => 'bg-purple-50 text-purple-700 border-purple-300 font-bold',
         'emerald' => 'bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800 border-amber-300 font-black',
-        'ruby' => 'bg-rose-50 text-rose-700 border-rose-300 font-bold',
-        'diamond' => 'bg-sky-50 text-sky-700 border-sky-300 font-bold',
     ];
-    $currentBadge = $tierBadgeStyles[$tierLower] ?? 'bg-slate-50 text-slate-700 border-slate-200';
+    $currentBadge = $tierBadgeStyles[$nameLower] ?? 'bg-slate-50 text-slate-700 border-slate-200';
 @endphp
 
 @if($isFeatured)
-    <!-- Featured / Rekomendasi Package Card (Gold - 25 Mbps) -->
+    <!-- Featured / Rekomendasi Package Card (Paling Populer) -->
     <div class="relative rounded-2xl sm:rounded-3xl p-4 sm:p-7 lg:p-8 flex flex-col justify-between bg-white border-2 border-[#0284c7] shadow-[0_12px_40px_rgba(2,132,199,0.22)] hover:shadow-[0_18px_50px_rgba(2,132,199,0.3)] transition-all duration-300 transform hover:-translate-y-2 flex-1 group">
         
         <!-- Top Floating Popular Ribbon -->
@@ -64,7 +65,7 @@
                     {{ $package->name }}
                 </span>
                 
-                <!-- Speed Display Hero (Bold without parentheses) -->
+                <!-- Speed Display Hero -->
                 <div class="mt-2 sm:mt-3 flex items-baseline justify-center gap-1">
                     <span class="font-heading font-black text-3xl sm:text-4xl lg:text-[46px] text-slate-900 tracking-tight leading-none group-hover:text-[#0284c7] transition-colors">
                         {{ $speedNumber }}
@@ -90,11 +91,20 @@
 
             <!-- Price Display Section -->
             <div class="text-center py-3 my-2 border-y border-slate-100 bg-gradient-to-b from-sky-50/50 to-transparent rounded-xl">
-                <div class="flex items-baseline justify-center gap-0.5">
+                <div class="flex items-baseline justify-center gap-1">
                     <span class="text-[11px] sm:text-xs font-bold text-slate-400 font-sans">Rp</span>
-                    <span class="font-heading font-black text-2xl sm:text-3xl lg:text-[36px] text-slate-900 tracking-tight">{{ $priceThousands }}</span>
-                    <span class="text-[11px] sm:text-xs font-bold text-[#0284c7]">.000</span>
-                    <span class="text-[10px] sm:text-xs font-mono text-slate-500 ml-1">/ bln</span>
+                    <span class="font-heading font-black text-2xl sm:text-3xl lg:text-[34px] text-slate-900 tracking-tight">{{ number_format($package->price, 0, ',', '.') }}</span>
+                    <span class="text-[10px] sm:text-xs font-mono text-slate-500">/ bln</span>
+                </div>
+
+                <!-- 3-Month 5% Discount Special Offer Badge -->
+                <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex flex-col items-center justify-center">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-600 text-white font-mono font-black text-[9px] uppercase tracking-wider">Diskon 5%</span>
+                        <span class="text-[11px] sm:text-xs font-mono font-bold text-emerald-900">{{ $package->formatted_price_three_months }}</span>
+                        <span class="text-[9px] text-emerald-700 font-medium">/ 3 bln</span>
+                    </div>
+                    <span class="text-[10px] text-slate-500 mt-1 font-sans">Langganan langsung 3 bulan</span>
                 </div>
             </div>
 
@@ -120,12 +130,6 @@
                         <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                             <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
                         </div>
-                        <span class="leading-tight">IP Private / Dedicated</span>
-                    </li>
-                    <li class="flex items-start sm:items-center gap-2">
-                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                        </div>
                         <span class="leading-tight">Fast Network Fiber Optic</span>
                     </li>
                     <li class="flex items-start sm:items-center gap-2">
@@ -138,7 +142,7 @@
             </ul>
         </div>
 
-        <!-- CTA Action Button (Signature Cyan / Sky Gradient) -->
+        <!-- CTA Action Button -->
         <div class="pt-2">
             <a href="{{ $waLink }}" target="_blank" rel="noopener noreferrer" class="group/btn w-full py-3 sm:py-3.5 px-3 rounded-xl sm:rounded-2xl font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#0284c7] hover:from-[#0369a1] hover:to-[#0284c7] text-white transition-all duration-300 shadow-md shadow-sky-500/25 hover:scale-105 active:scale-95 text-center">
                 <span class="hidden sm:inline">PILIH PAKET INI</span>
@@ -148,7 +152,7 @@
         </div>
     </div>
 @else
-    <!-- Standard Clean & Modern Package Card (Bronze, Silver, Platinum) -->
+    <!-- Standard Clean & Modern Package Card -->
     <div class="relative rounded-2xl sm:rounded-3xl p-4 sm:p-7 lg:p-8 flex flex-col justify-between bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md hover:border-sky-300 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex-1 group">
         <div>
             <!-- Tier Name & Speed Header -->
@@ -157,7 +161,7 @@
                     {{ $package->name }}
                 </span>
                 
-                <!-- Speed Display Hero (Bold without parentheses) -->
+                <!-- Speed Display Hero -->
                 <div class="mt-2 sm:mt-3 flex items-baseline justify-center gap-1">
                     <span class="font-heading font-black text-3xl sm:text-4xl lg:text-[44px] text-slate-900 tracking-tight leading-none group-hover:text-[#0284c7] transition-colors">
                         {{ $speedNumber }}
@@ -183,11 +187,20 @@
 
             <!-- Price Display Section -->
             <div class="text-center py-3 my-2 border-y border-slate-100 bg-slate-50/80 rounded-xl">
-                <div class="flex items-baseline justify-center gap-0.5">
+                <div class="flex items-baseline justify-center gap-1">
                     <span class="text-[11px] sm:text-xs font-bold text-slate-400 font-sans">Rp</span>
-                    <span class="font-heading font-black text-2xl sm:text-3xl lg:text-[34px] text-slate-900 tracking-tight">{{ $priceThousands }}</span>
-                    <span class="text-[11px] sm:text-xs font-bold text-[#0284c7]">.000</span>
-                    <span class="text-[10px] sm:text-xs font-mono text-slate-500 ml-1">/ bln</span>
+                    <span class="font-heading font-black text-2xl sm:text-3xl lg:text-[34px] text-slate-900 tracking-tight">{{ number_format($package->price, 0, ',', '.') }}</span>
+                    <span class="text-[10px] sm:text-xs font-mono text-slate-500">/ bln</span>
+                </div>
+
+                <!-- 3-Month 5% Discount Special Offer Badge -->
+                <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex flex-col items-center justify-center">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
+                        <span class="px-1.5 py-0.5 rounded bg-emerald-600 text-white font-mono font-black text-[9px] uppercase tracking-wider">Diskon 5%</span>
+                        <span class="text-[11px] sm:text-xs font-mono font-bold text-emerald-900">{{ $package->formatted_price_three_months }}</span>
+                        <span class="text-[9px] text-emerald-700 font-medium">/ 3 bln</span>
+                    </div>
+                    <span class="text-[10px] text-slate-500 mt-1 font-sans">Langganan langsung 3 bulan</span>
                 </div>
             </div>
 
@@ -213,12 +226,6 @@
                         <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                             <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
                         </div>
-                        <span class="leading-tight">IP Private / Dedicated</span>
-                    </li>
-                    <li class="flex items-start sm:items-center gap-2">
-                        <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-                            <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                        </div>
                         <span class="leading-tight">Fast Network Fiber Optic</span>
                     </li>
                     <li class="flex items-start sm:items-center gap-2">
@@ -231,7 +238,7 @@
             </ul>
         </div>
 
-        <!-- CTA Action Button (Refined Corporate Outline with Blue Accent) -->
+        <!-- CTA Action Button -->
         <div class="pt-2">
             <a href="{{ $waLink }}" target="_blank" rel="noopener noreferrer" class="group/btn w-full py-3 sm:py-3.5 px-3 rounded-xl sm:rounded-2xl font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 border-2 border-[#0284c7] text-[#0284c7] hover:bg-gradient-to-r hover:from-[#0284c7] hover:to-[#0ea5e9] hover:text-white hover:border-transparent transition-all duration-300 shadow-2xs hover:scale-105 active:scale-95 text-center">
                 <span class="hidden sm:inline">PILIH PAKET INI</span>
@@ -241,3 +248,4 @@
         </div>
     </div>
 @endif
+

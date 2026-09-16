@@ -239,10 +239,10 @@
                 </div>
             </div>
 
-            <!-- Interactive Switch Toggle: Broadband vs SOHO ("Tombol Ganti") -->
+            <!-- Interactive Switch Toggle: Rumahan vs Bisnis ("Tombol Ganti") -->
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
                 <div class="inline-flex p-1.5 rounded-full bg-[#050d1a]/90 border border-sky-400/30 shadow-2xl backdrop-blur-xl relative" role="tablist">
-                    <!-- Broadband Button -->
+                    <!-- Broadband / Rumahan Button -->
                     <button 
                         type="button" 
                         id="tabBroadbandBtn"
@@ -251,11 +251,11 @@
                         aria-selected="true"
                     >
                         <iconify-icon icon="solar:home-wifi-bold" width="18" height="18"></iconify-icon>
-                        <span>Paket Broadband</span>
+                        <span>Paket Rumahan</span>
                         <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-mono">Rumah</span>
                     </button>
 
-                    <!-- SOHO Button -->
+                    <!-- Bisnis Button -->
                     <button 
                         type="button" 
                         id="tabSohoBtn"
@@ -264,8 +264,8 @@
                         aria-selected="false"
                     >
                         <iconify-icon icon="solar:buildings-bold" width="18" height="18"></iconify-icon>
-                        <span>Paket SOHO</span>
-                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[10px] font-mono border border-cyan-400/30">Bisnis & Kantor</span>
+                        <span>Paket Bisnis</span>
+                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[10px] font-mono border border-cyan-400/30">Bisnis & UKM</span>
                     </button>
                 </div>
                 
@@ -275,7 +275,7 @@
                 </p>
             </div>
 
-            <!-- Broadband Package Cards Grid (4 Cards: Bronze, Silver, Gold, Platinum) -->
+            <!-- Rumahan Package Cards Grid (4 Cards: Basic, Hemat, Keluarga, Premium) -->
             <div id="broadbandContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-4 sm:pt-6 transition-all duration-300">
                 @foreach($broadbandPackages as $package)
                     <div class="flex flex-col flex-1 reveal-on-scroll stagger-{{ $loop->iteration }}">
@@ -284,10 +284,10 @@
                 @endforeach
             </div>
 
-            <!-- SOHO Package Cards Grid (5 Cards: Crystal, Saphire, Emerald, Ruby, Diamond) -->
-            <div id="sohoContainer" class="hidden grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 items-stretch pt-4 sm:pt-6 transition-all duration-300">
+            <!-- Bisnis Package Cards Grid (4 Cards: UMKM Basic, UMKM Plus, Bisnis Pro, Bisnis Enterprise) -->
+            <div id="sohoContainer" class="hidden grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 items-stretch pt-4 sm:pt-6 transition-all duration-300">
                 @foreach($sohoPackages as $package)
-                    <div class="flex flex-col flex-1 {{ $loop->last ? 'col-span-2 lg:col-span-1 max-w-sm lg:max-w-none mx-auto w-full' : '' }}">
+                    <div class="flex flex-col flex-1 reveal-on-scroll stagger-{{ $loop->iteration }}">
                         <x-package-card :package="$package" />
                     </div>
                 @endforeach
@@ -415,7 +415,7 @@
             broadbandContainer.classList.add('hidden');
 
             if (desc) {
-                desc.textContent = 'Koneksi rasio 1:1 simetris berkinerja tinggi khusus Small Office & Home Office dengan IP Dedicated dan SLA Bisnis.';
+                desc.textContent = 'Koneksi rasio 1:1 simetris berkinerja tinggi khusus UMKM, bisnis, dan perkantoran dengan IP Dedicated dan SLA Bisnis.';
             }
         }
 
