@@ -340,5 +340,8 @@ class DatabaseSeeder extends Seeder
 
         // 7. Site Settings
         $this->call(SiteSettingSeeder::class);
+
+        // 8. Demo Customers & Tickets
+        $this->call(CustomerSeeder::class);
     }
 }

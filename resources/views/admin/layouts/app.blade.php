@@ -140,6 +140,26 @@
 
                 <div class="pt-3 px-2.5 pb-1 text-[9px] font-mono font-bold uppercase tracking-widest text-slate-500">Operasional</div>
 
+                <a href="{{ route('admin.tickets.index') }}" class="flex items-center justify-between px-3 py-2 rounded-lg font-heading text-xs font-semibold transition-all {{ request()->routeIs('admin.tickets.*') ? 'bg-[#38bdf8] text-[#050d1a] shadow-[0_0_12px_rgba(56,189,248,0.25)] font-bold' : 'text-slate-300 hover:bg-white/[0.06] hover:text-white' }}">
+                    <div class="flex items-center gap-2.5">
+                        <iconify-icon icon="solar:shield-warning-bold" width="16"></iconify-icon>
+                        <span>Tiket Gangguan</span>
+                    </div>
+                    @php
+                        $openTicketsCount = \App\Models\Ticket::whereIn('status', ['open', 'in_progress'])->count();
+                    @endphp
+                    @if($openTicketsCount > 0)
+                        <span class="px-1.5 py-0.2 text-[10px] font-mono font-bold rounded-full {{ request()->routeIs('admin.tickets.*') ? 'bg-slate-950 text-[#38bdf8]' : 'bg-rose-500 text-white' }}">
+                            {{ $openTicketsCount }}
+                        </span>
+                    @endif
+                </a>
+
+                <a href="{{ route('admin.customers.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg font-heading text-xs font-semibold transition-all {{ request()->routeIs('admin.customers.*') ? 'bg-[#38bdf8] text-[#050d1a] shadow-[0_0_12px_rgba(56,189,248,0.25)] font-bold' : 'text-slate-300 hover:bg-white/[0.06] hover:text-white' }}">
+                    <iconify-icon icon="solar:users-group-rounded-bold" width="16"></iconify-icon>
+                    <span>Data Pelanggan</span>
+                </a>
+
                 <a href="{{ route('admin.coverage.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg font-heading text-xs font-semibold transition-all {{ request()->routeIs('admin.coverage.*') ? 'bg-[#38bdf8] text-[#050d1a] shadow-[0_0_12px_rgba(56,189,248,0.25)] font-bold' : 'text-slate-300 hover:bg-white/[0.06] hover:text-white' }}">
                     <iconify-icon icon="solar:map-point-wave-bold" width="16"></iconify-icon>
                     <span>Cakupan Area (Coverage)</span>

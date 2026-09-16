@@ -48,11 +48,18 @@
                 </a>
             </nav>
 
-            <!-- High-Converting CTA Button: Cek Coverage → -->
-            <div class="flex items-center gap-3">
-                <a href="#coverage" class="hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap" id="navCtaBtn">
+            <!-- High-Converting Action Buttons: Portal Pelanggan & Cek Coverage -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <!-- Portal Pelanggan Button -->
+                <a href="{{ route('portal.login') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 xl:px-4 py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.18] border border-[#38bdf8]/40 hover:border-[#38bdf8] text-white font-heading font-semibold text-xs sm:text-sm transition-all duration-200 hover:scale-105 active:scale-95 whitespace-nowrap shadow-[0_0_15px_rgba(56,189,248,0.15)] group" id="navPortalBtn">
+                    <iconify-icon icon="solar:user-circle-bold" width="16" class="text-[#38bdf8] group-hover:rotate-12 transition-transform"></iconify-icon>
+                    <span>Portal Pelanggan</span>
+                </a>
+
+                <!-- Cek Coverage Button -->
+                <a href="#coverage" class="hidden sm:inline-flex items-center gap-2 px-3.5 xl:px-4 py-2 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap" id="navCtaBtn">
                     <span>Cek Coverage</span>
-                    <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+                    <iconify-icon icon="solar:arrow-right-linear" width="15"></iconify-icon>
                 </a>
 
                 <!-- Mobile Menu Button -->
@@ -105,8 +112,12 @@
         </nav>
     </div>
 
-    <div class="pt-6 border-t border-white/10">
-        <a href="#coverage" class="w-full py-3 rounded-xl bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20">
+    <div class="pt-4 border-t border-white/10 space-y-2.5">
+        <a href="{{ route('portal.login') }}" class="w-full py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-[#38bdf8]/40 text-white font-heading font-bold text-xs tracking-wider flex items-center justify-center gap-2">
+            <iconify-icon icon="solar:user-circle-bold" class="text-[#38bdf8]" width="16"></iconify-icon>
+            <span>Portal Pelanggan</span>
+        </a>
+        <a href="#coverage" class="w-full py-2.5 rounded-xl bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20">
             <span>Cek Coverage</span>
             <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
         </a>

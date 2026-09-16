@@ -1,17 +1,23 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CoverageController as AdminCoverageController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CoverageController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Portal\AuthController as PortalAuthController;
+use App\Http\Controllers\Portal\DashboardController as PortalDashboardController;
+use App\Http\Controllers\Portal\ProfileController as PortalProfileController;
+use App\Http\Controllers\Portal\TicketController as PortalTicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,15 +31,43 @@ Route::post('/coverage/check', [CoverageController::class, 'check'])->name('cove
 
 /*
 |--------------------------------------------------------------------------
+| Portal Pelanggan (Customer Portal) Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('portal')->name('portal.')->group(function () {
+    // Guest customer routes
+    Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [PortalAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [PortalAuthController::class, 'logout'])->name('logout');
+
+    // Protected customer routes
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [PortalDashboardController::class, 'index']);
+
+        // Trouble Tickets (Laporan Gangguan)
+        Route::get('/tickets', [PortalTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/create', [PortalTicketController::class, 'create'])->name('tickets.create');
+        Route::post('/tickets', [PortalTicketController::class, 'store'])->name('tickets.store');
+        Route::get('/tickets/{ticket}', [PortalTicketController::class, 'show'])->name('tickets.show');
+
+        // Profile & Service Settings
+        Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
+        Route::put('/profile', [PortalProfileController::class, 'update'])->name('profile.update');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
 | Admin Authentication Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     /*
     |--------------------------------------------------------------------------
@@ -62,6 +96,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Coverage Areas CRUD
         Route::resource('coverage', AdminCoverageController::class)->except(['show']);
+
+        // Trouble Tickets Management
+        Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('tickets.show');
+        Route::put('/tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
+        Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
+
+        // Customers Management
+        Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+        Route::post('/customers', [AdminCustomerController::class, 'store'])->name('customers.store');
+        Route::delete('/customers/{customer}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
 
         // Contact Messages Inbox
         Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
