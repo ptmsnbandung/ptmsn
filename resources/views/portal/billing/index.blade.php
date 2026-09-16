@@ -52,7 +52,7 @@
                 </div>
 
                 <div>
-                    @if($currentInvoice->status === 'paid')
+                    @if($currentInvoice->is_paid)
                         <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold font-mono shadow-sm">
                             <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-sm"></iconify-icon>
                             <span>LUNAS (SUDAH DIBAYAR)</span>
@@ -229,7 +229,7 @@
                             </td>
                             <td class="py-3.5 px-4">
                                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border {{ $inv->status_badge_classes }}">
-                                    @if($inv->status === 'paid')
+                                    @if($inv->is_paid)
                                         <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
                                     @else
                                         <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>

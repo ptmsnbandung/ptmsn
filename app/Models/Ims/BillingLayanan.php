@@ -91,7 +91,12 @@ class BillingLayanan extends Model
 
     public function getIsPaidAttribute(): bool
     {
-        return trim($this->status_bill_lay) === '15';
+        return trim((string) $this->status_bill_lay) === '15';
+    }
+
+    public function getStatusAttribute(): string
+    {
+        return $this->is_paid ? 'paid' : 'unpaid';
     }
 
     public function getStatusLabelAttribute(): string

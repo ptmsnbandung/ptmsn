@@ -125,6 +125,10 @@ class Customer extends Authenticatable
 
     public function getBillingStatusAttribute()
     {
+        $latest = $this->billingLayanan->first();
+        if ($latest) {
+            return $latest->is_paid ? 'paid' : 'unpaid';
+        }
         return ($this->is_suspend == '2' || $this->is_suspend == '1') ? 'paid' : 'unpaid';
     }
 
