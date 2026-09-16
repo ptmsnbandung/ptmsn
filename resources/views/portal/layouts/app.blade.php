@@ -110,67 +110,73 @@
     </div>
 
     <!-- Top Portal Header -->
-    <header class="sticky top-0 z-40 bg-white/75 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)]">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.04)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
-                <!-- Left: Logo & Portal Tag -->
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2">
+                <!-- Left: Logo & Portal Badge -->
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('portal.dashboard') }}" class="flex items-center transition-transform hover:opacity-90">
                         <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-8 sm:h-9 w-auto object-contain">
                     </a>
-                    <div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-[10px] font-mono font-bold text-sky-700 uppercase tracking-wider shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>PORTAL PELANGGAN</span>
+                    <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200/80 text-[10px] font-mono font-bold tracking-wider uppercase">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>Portal Pelanggan</span>
+                        </span>
                     </div>
                 </div>
 
                 <!-- Center: Navigation Links (Desktop) -->
-                <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 backdrop-blur-md border border-slate-200/70 p-1 rounded-full shadow-inner">
-                    <a href="{{ route('portal.dashboard') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
+                <nav class="hidden md:flex items-center gap-1 bg-slate-100/90 backdrop-blur-md border border-slate-200/80 p-1 rounded-2xl shadow-inner">
+                    <a href="{{ route('portal.dashboard') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.dashboard') ? 'bg-white text-sky-700 shadow-sm border border-slate-200/60 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60' }}">
                         <span class="flex items-center gap-1.5">
-                            <iconify-icon icon="solar:home-smile-bold" width="15"></iconify-icon>
+                            <iconify-icon icon="solar:home-smile-bold" width="15" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
                             <span>Beranda</span>
                         </span>
                     </a>
-                    <a href="{{ route('portal.billing.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
+                    <a href="{{ route('portal.billing.index') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.billing.*') ? 'bg-white text-sky-700 shadow-sm border border-slate-200/60 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60' }}">
                         <span class="flex items-center gap-1.5">
-                            <iconify-icon icon="solar:wallet-money-bold" width="15"></iconify-icon>
-                            <span>Tagihan & Pembayaran</span>
+                            <iconify-icon icon="solar:wallet-money-bold" width="15" class="{{ request()->routeIs('portal.billing.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                            <span>Tagihan</span>
                         </span>
                     </a>
-                    <a href="{{ route('portal.tickets.index') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
+                    <a href="{{ route('portal.tickets.index') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'bg-white text-sky-700 shadow-sm border border-slate-200/60 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60' }}">
                         <span class="flex items-center gap-1.5">
-                            <iconify-icon icon="solar:shield-warning-bold" width="15"></iconify-icon>
-                            <span>Laporan Gangguan</span>
+                            <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="{{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                            <span>Bantuan & Tiket</span>
                         </span>
                     </a>
-                    <a href="{{ route('portal.profile') }}" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white shadow-md font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/80' }}">
+                    <a href="{{ route('portal.profile') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.profile') ? 'bg-white text-sky-700 shadow-sm border border-slate-200/60 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60' }}">
                         <span class="flex items-center gap-1.5">
-                            <iconify-icon icon="solar:user-circle-bold" width="15"></iconify-icon>
-                            <span>Profil & Paket</span>
+                            <iconify-icon icon="solar:user-circle-bold" width="15" class="{{ request()->routeIs('portal.profile') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                            <span>Profil Akun</span>
                         </span>
                     </a>
                 </nav>
 
-                <!-- Right: Quick Lapor CTA & User Menu -->
-                <div class="flex items-center gap-2.5 sm:gap-3">
-                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs shadow-md shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all">
-                        <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
-                        <span>Lapor Gangguan</span>
+                <!-- Right: Quick Action & User Menu -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-heading font-semibold text-xs transition-all shadow-sm shadow-sky-500/20 active:scale-95">
+                        <iconify-icon icon="solar:add-circle-bold" width="15"></iconify-icon>
+                        <span>+ Buat Tiket</span>
                     </a>
 
                     <!-- User Profile Dropdown -->
                     <div class="relative" @click.outside="userDropdown = false">
-                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-2xl bg-white/80 border border-slate-200/80 hover:bg-white hover:border-sky-300 transition-all shadow-sm">
-                            <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                                {{ substr(Auth::guard('customer')->user()->name ?? 'P', 0, 1) }}
+                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-xs transition-all">
+                            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs shadow-xs ring-1 ring-sky-100">
+                                {{ strtoupper(substr(Auth::guard('customer')->user()->name ?? 'P', 0, 1)) }}
                             </div>
-                            <div class="hidden lg:block text-left pr-1">
-                                <div class="text-xs font-heading font-bold text-slate-800 max-w-[130px] truncate leading-tight">{{ Auth::guard('customer')->user()->name }}</div>
-                                <div class="text-[10px] font-mono text-slate-500 leading-tight">{{ Auth::guard('customer')->user()->phone }}</div>
+                            <div class="hidden lg:block text-left pr-0.5">
+                                <div class="text-xs font-heading font-bold text-slate-800 max-w-[120px] truncate leading-tight">
+                                    {{ explode(' ', trim(Auth::guard('customer')->user()->name ?? 'Pelanggan'))[0] }}
+                                </div>
+                                <div class="text-[10px] font-mono text-slate-500 leading-tight">
+                                    {{ Auth::guard('customer')->user()->customer_id ? 'ID: ' . Auth::guard('customer')->user()->customer_id : Auth::guard('customer')->user()->phone }}
+                                </div>
                             </div>
-                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-xs hidden sm:block"></iconify-icon>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-xs transition-transform duration-200 ml-0.5 hidden sm:block" :class="userDropdown ? 'rotate-180' : ''"></iconify-icon>
                         </button>
 
                         <!-- Dropdown Content -->
@@ -182,17 +188,21 @@
                             x-transition:leave="transition ease-in duration-100"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute right-0 mt-2 w-56 rounded-3xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-2xl p-2 z-50 divide-y divide-slate-100"
+                            class="absolute right-0 mt-2 w-60 rounded-2xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-xl p-2 z-50 divide-y divide-slate-100"
                             style="display: none;"
                         >
                             <div class="px-3 py-2.5">
-                                <div class="text-xs font-bold text-slate-800">{{ Auth::guard('customer')->user()->name }}</div>
-                                <div class="text-[11px] font-mono text-sky-600 font-semibold">ID: {{ Auth::guard('customer')->user()->customer_id }}</div>
+                                <div class="text-xs font-bold text-slate-800 leading-tight">{{ Auth::guard('customer')->user()->name }}</div>
+                                <div class="text-[11px] font-mono text-sky-600 font-semibold mt-0.5">ID: {{ Auth::guard('customer')->user()->customer_id ?? '-' }}</div>
                             </div>
                             <div class="py-1">
                                 <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
                                     <iconify-icon icon="solar:wallet-money-bold" class="text-emerald-500" width="16"></iconify-icon>
-                                    <span>Tagihan & Pembayaran</span>
+                                    <span>Tagihan Saya</span>
+                                </a>
+                                <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
+                                    <iconify-icon icon="solar:chat-round-dots-bold" class="text-amber-500" width="16"></iconify-icon>
+                                    <span>Bantuan & Tiket</span>
                                 </a>
                                 <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50/80 rounded-xl transition-colors font-medium">
                                     <iconify-icon icon="solar:user-bold" class="text-sky-500" width="16"></iconify-icon>
@@ -213,7 +223,7 @@
                     </div>
 
                     <!-- Mobile Menu Button -->
-                    <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-2xl bg-white/80 border border-slate-200 text-slate-700 shadow-sm">
+                    <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-xs hover:bg-slate-50">
                         <iconify-icon icon="solar:hamburger-menu-bold" width="20"></iconify-icon>
                     </button>
                 </div>
@@ -222,29 +232,29 @@
         </div>
 
         <!-- Mobile Drawer / Menu -->
-        <div x-show="mobileMenu" @click.outside="mobileMenu = false" class="md:hidden px-4 pt-2 pb-4 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl space-y-2 shadow-lg" style="display: none;">
-            <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
+        <div x-show="mobileMenu" @click.outside="mobileMenu = false" class="md:hidden px-4 pt-2 pb-4 border-t border-slate-200/80 bg-white/95 backdrop-blur-xl space-y-1.5 shadow-lg" style="display: none;">
+            <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
                 <iconify-icon icon="solar:home-smile-bold" width="16"></iconify-icon>
                 <span>Beranda</span>
             </a>
-            <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
+            <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
                 <iconify-icon icon="solar:wallet-money-bold" width="16"></iconify-icon>
-                <span>Tagihan & Pembayaran</span>
+                <span>Tagihan</span>
             </a>
-            <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
-                <iconify-icon icon="solar:shield-warning-bold" width="16"></iconify-icon>
-                <span>Laporan Gangguan</span>
+            <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
+                <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
+                <span>Bantuan & Tiket</span>
             </a>
-            <a href="{{ route('portal.profile') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white font-bold shadow' : 'text-slate-700 bg-slate-50' }}">
+            <a href="{{ route('portal.profile') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
                 <iconify-icon icon="solar:user-circle-bold" width="16"></iconify-icon>
-                <span>Profil & Layanan</span>
+                <span>Profil Akun</span>
             </a>
-            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-heading font-bold text-xs shadow-md">
-                <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
-                <span>Lapor Gangguan Baru</span>
+            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-heading font-bold text-xs shadow-xs">
+                <iconify-icon icon="solar:add-circle-bold" width="16"></iconify-icon>
+                <span>+ Buat Tiket Baru</span>
             </a>
             <div class="pt-2 border-t border-slate-200/80">
-                <a href="{{ route('portal.logout') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 transition-colors">
+                <a href="{{ route('portal.logout') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 transition-colors">
                     <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
                     <span>Keluar (Logout)</span>
                 </a>
