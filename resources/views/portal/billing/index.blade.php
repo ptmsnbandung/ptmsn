@@ -153,7 +153,7 @@
 
                     <!-- Print / View Detail Button -->
                     <a 
-                        href="{{ route('portal.billing.show', $currentInvoice->id) }}" 
+                        href="{{ route('portal.billing.show', urlencode($currentInvoice->kode_billing_layanan)) }}" 
                         target="_blank"
                         class="w-full py-2.5 px-4 rounded-2xl bg-white/90 hover:bg-white border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-semibold text-xs shadow-2xs hover:shadow transition-all flex items-center justify-center gap-2 text-center"
                     >
@@ -238,7 +238,7 @@
                             </td>
                             <td class="py-3.5 px-4 text-center">
                                 <a 
-                                    href="{{ route('portal.billing.show', $inv->id) }}" 
+                                    href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
                                     target="_blank"
                                     class="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs"
                                 >

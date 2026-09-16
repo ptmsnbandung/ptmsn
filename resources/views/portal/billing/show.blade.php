@@ -45,11 +45,11 @@
             </div>
 
             <div class="text-left sm:text-right">
-                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider {{ $invoice->status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }} mb-2">
+                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider {{ $invoice->is_paid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }} mb-2">
                     {{ $invoice->status_label }}
                 </span>
                 <h1 class="text-xl sm:text-2xl font-black text-slate-900 font-mono tracking-tight">{{ $invoice->invoice_number }}</h1>
-                <p class="text-xs text-slate-500 mt-1">Tanggal: <strong class="text-slate-700">{{ $invoice->created_at?->format('d/m/Y') ?? date('d/m/Y') }}</strong></p>
+                <p class="text-xs text-slate-500 mt-1">Tanggal: <strong class="text-slate-700">{{ $invoice->date_create?->format('d/m/Y') ?? date('d/m/Y') }}</strong></p>
                 <p class="text-xs text-slate-500">Jatuh Tempo: <strong class="text-slate-700">{{ $invoice->due_date?->format('d/m/Y') }}</strong></p>
             </div>
         </div>

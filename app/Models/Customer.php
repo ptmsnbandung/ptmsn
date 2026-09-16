@@ -69,11 +69,16 @@ class Customer extends Authenticatable
     }
 
     /**
-     * Relasi ke riwayat tagihan & pembayaran (di database lokal ptmsn)
+     * Relasi ke riwayat tagihan & pembayaran di database IMS (trx_billing_layanan)
      */
+    public function billingLayanan()
+    {
+        return $this->hasMany(\App\Models\Ims\BillingLayanan::class, 'nomor_internet', 'nomor_internet')->orderBy('date_create', 'desc');
+    }
+
     public function invoices()
     {
-        return $this->hasMany(\App\Models\Invoice::class, 'customer_id', 'nomor_internet')->orderBy('due_date', 'desc');
+        return $this->billingLayanan();
     }
 
     // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
-use App\Models\Invoice;
+use App\Models\Ims\BillingLayanan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class BillingController extends Controller
 {
     /**
-     * Tampilkan Halaman Menu Tagihan & Pembayaran Pelanggan
+     * Tampilkan Halaman Menu Tagihan & Pembayaran Pelanggan (Terhubung ke IMS v2)
      */
     public function index()
     {
@@ -21,42 +21,41 @@ class BillingController extends Controller
             $customer->load(['pelanggan', 'bandwith']);
         }
 
-        $currentPeriod = Carbon::now()->translatedFormat('F Y');
-        $cleanCustomerId = preg_replace('/[^A-Za-z0-9]/', '', $customer->customer_id);
-        $invoiceNumber = 'INV/' . Carbon::now()->format('Ym') . '/' . $cleanCustomerId;
+        // Ambil riwayat seluruh invoice pelanggan dari tabel IMS trx_billing_layanan
+        $invoices = $customer->billingLayanan;
 
-        $dueDay = min(28, max(1, (int) ($customer->due_date ?: 20)));
-        $dueDate = Carbon::now()->setDay($dueDay);
+        // Cari tagihan aktif: prioritaskan yang belum lunas (status != 15), atau ambil tagihan terbaru
+        $currentInvoice = $invoices->firstWhere('is_paid', false) ?? $invoices->first();
 
-        // Cari atau buatkan invoice bulan berjalan secara otomatis
-        $currentInvoice = Invoice::firstOrCreate(
-            [
-                'customer_id' => $customer->customer_id,
-                'period' => $currentPeriod,
-            ],
-            [
-                'invoice_number' => $invoiceNumber,
-                'package_name' => ($customer->package->name ?? 'Broadband FTTH') . ' (' . ($customer->package->speed ?? '25 Mbps') . ')',
-                'amount' => $customer->billing_amount,
-                'tax_amount' => 0,
-                'total_amount' => $customer->billing_amount,
-                'status' => $customer->billing_status,
-                'due_date' => $dueDate->toDateString(),
-            ]
-        );
+        // Jika belum ada data tagihan di IMS untuk pelanggan ini, siapkan tagihan bulan berjalan
+        if (!$currentInvoice) {
+            $currentMonth = Carbon::now()->format('m');
+            $currentYear = Carbon::now()->format('Y');
+            $kodeBilling = 'INV/' . $customer->customer_id . '/' . $currentMonth . '/' . $currentYear;
 
-        // Jika status di profil berubah (misal sudah lunas), sinkronkan
-        if ($customer->billing_status === 'paid' && $currentInvoice->status === 'unpaid') {
-            $currentInvoice->update([
-                'status' => 'paid',
-                'paid_at' => Carbon::now(),
-            ]);
+            $currentInvoice = BillingLayanan::firstOrCreate(
+                [
+                    'kode_billing_layanan' => $kodeBilling,
+                ],
+                [
+                    'nomor_internet' => $customer->customer_id,
+                    'kode_bandwith' => $customer->kode_bandwith ?? 'AG26007',
+                    'nominal_bandwith' => (string) ($customer->bandwith?->nominal_bandwith ?? '25'),
+                    'bulan_tagihan' => $currentMonth,
+                    'tahun_tagihan' => $currentYear,
+                    'periode_tagihan' => Carbon::now()->translatedFormat('M Y'),
+                    'total_layanan' => (string) $customer->billing_amount,
+                    'potongan' => '0',
+                    'ppn' => '0.11',
+                    'status_bill_lay' => ($customer->billing_status === 'paid' ? '15' : '13'),
+                    'expiry' => Carbon::now()->setDay(min(28, (int)($customer->due_date ?: 20)))->setTime(23, 59, 0),
+                    'date_create' => Carbon::now(),
+                ]
+            );
+
+            // Muat ulang riwayat
+            $invoices = $customer->billingLayanan()->get();
         }
-
-        // Ambil riwayat seluruh invoice pelanggan
-        $invoices = Invoice::where('customer_id', $customer->customer_id)
-            ->orderBy('due_date', 'desc')
-            ->get();
 
         return view('portal.billing.index', compact(
             'customer',
@@ -66,15 +65,23 @@ class BillingController extends Controller
     }
 
     /**
-     * Cetak / Tampilkan Rincian Tagihan Resmi (Print Friendly)
+     * Cetak / Tampilkan Rincian Tagihan Resmi (Print Friendly) dari IMS v2
      */
-    public function show(Invoice $invoice)
+    public function show(string $invoiceCode)
     {
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
+        // Decode jika terdapat URL encoding
+        $decodedCode = urldecode($invoiceCode);
+
+        // Cari di tabel trx_billing_layanan
+        $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
+            ->orWhere('kode_billing_layanan', $invoiceCode)
+            ->firstOrFail();
+
         // Pastikan hanya pemilik invoice yang bisa melihat
-        if ($invoice->customer_id !== $customer->customer_id) {
+        if ($invoice->nomor_internet !== $customer->customer_id) {
             abort(403, 'Akses tidak diizinkan.');
         }
 

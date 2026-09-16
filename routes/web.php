@@ -54,7 +54,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
         // Tagihan & Pembayaran (Billing)
         Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
-        Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->name('billing.show');
+        Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->where('invoice', '.*')->name('billing.show');
 
         // Profile & Service Settings
         Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
