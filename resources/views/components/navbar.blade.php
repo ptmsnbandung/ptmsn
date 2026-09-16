@@ -48,11 +48,11 @@
                 </a>
             </nav>
 
-            <!-- Action Button: Portal Pelanggan -->
+            <!-- Action Button: Portal Pelanggan & Mobile Toggle -->
             <div class="flex items-center gap-2 sm:gap-2.5">
-                <!-- Portal Pelanggan Button -->
-                <a href="{{ route('portal.login') }}" class="hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group" id="navCtaBtn">
-                    <iconify-icon icon="solar:user-circle-bold" width="17" class="text-current transition-transform group-hover:scale-110"></iconify-icon>
+                <!-- Portal Pelanggan Button (Visible on mobile & desktop) -->
+                <a href="{{ route('portal.login') }}" class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group" id="navCtaBtn">
+                    <iconify-icon icon="solar:user-circle-bold" width="16" class="text-current sm:w-[17px] sm:h-[17px] transition-transform group-hover:scale-110"></iconify-icon>
                     <span>Portal Pelanggan</span>
                 </a>
 

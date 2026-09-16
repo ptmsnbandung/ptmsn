@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pillDock.className = 'hidden lg:flex items-center gap-0.5 xl:gap-1 bg-slate-100/80 backdrop-blur-md p-1.5 rounded-full border border-slate-200/70 shadow-xs transition-all duration-300';
             }
             if (ctaBtn) {
-                ctaBtn.className = 'hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-heading font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all duration-200 shadow-[0_2px_12px_rgba(2,132,199,0.35)] whitespace-nowrap group';
+                ctaBtn.className = 'inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-heading font-bold text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all duration-200 shadow-[0_2px_12px_rgba(2,132,199,0.35)] whitespace-nowrap group';
             }
             if (mobileMenuBtn) {
                 mobileMenuBtn.className = 'lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-[#0284c7] hover:border-[#0284c7] hover:bg-sky-50 transition-colors';
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pillDock.className = 'hidden lg:flex items-center gap-0.5 xl:gap-1 bg-white/[0.07] backdrop-blur-md p-1.5 rounded-full border border-white/15 transition-all duration-300';
             }
             if (ctaBtn) {
-                ctaBtn.className = 'hidden sm:inline-flex items-center gap-2 px-4 xl:px-5 py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group';
+                ctaBtn.className = 'inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] font-heading font-bold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group';
             }
             if (mobileMenuBtn) {
                 mobileMenuBtn.className = 'lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/10 border border-white/20 text-white hover:text-[#38bdf8] transition-colors';
