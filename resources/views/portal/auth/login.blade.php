@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login Portal Pelanggan — PT Media Solusi Network</title>
+    <title>Portal Pelanggan — PT Media Solusi Network</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-msn BG Trans - Copy2.png') }}">
@@ -48,7 +48,7 @@
             font-family: 'Inter', sans-serif;
         }
         .login-card {
-            background: rgba(13, 27, 49, 0.8);
+            background: rgba(13, 27, 49, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(56, 189, 248, 0.25);
@@ -77,8 +77,8 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>PORTAL LAYANAN PELANGGAN</span>
             </div>
-            <h1 class="font-heading font-extrabold text-2xl text-white tracking-tight">Masuk Akun Pelanggan</h1>
-            <p class="text-xs text-slate-400 mt-1">Pantau status jaringan, tagihan, dan laporan gangguan</p>
+            <h1 class="font-heading font-extrabold text-2xl text-white tracking-tight">Masuk Portal Pelanggan</h1>
+            <p class="text-xs text-slate-400 mt-1">Masukkan nomor telepon / WhatsApp yang terdaftar untuk masuk</p>
         </div>
 
         <!-- Login Card -->
@@ -101,8 +101,8 @@
             @if($errors->any())
                 <div class="mb-5 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-sans">
                     @foreach($errors->all() as $error)
-                        <div class="flex items-center gap-2">
-                            <iconify-icon icon="solar:danger-circle-bold" class="text-base shrink-0 text-rose-400"></iconify-icon>
+                        <div class="flex items-start gap-2">
+                            <iconify-icon icon="solar:danger-circle-bold" class="text-base shrink-0 text-rose-400 mt-0.5"></iconify-icon>
                             <span>{{ $error }}</span>
                         </div>
                     @endforeach
@@ -112,67 +112,37 @@
             <form action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4">
                 @csrf
 
-                <!-- Phone Number Input -->
+                <!-- Phone Number / Internet ID Input -->
                 <div>
                     <label for="phone" class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
-                        <span>Nomor Telepon / WhatsApp</span>
-                        <span class="text-[10px] text-sky-400 font-sans font-normal">Terdaftar di MSN</span>
+                        <span>Nomor WhatsApp / Nomor Internet</span>
+                        <span class="text-[10px] text-emerald-400 font-mono font-normal">Langsung Masuk</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <iconify-icon icon="solar:phone-bold" width="18"></iconify-icon>
                         </div>
                         <input 
-                            type="tel" 
+                            type="text" 
                             id="phone" 
                             name="phone" 
-                            value="{{ old('phone', '081234567890') }}" 
+                            value="{{ old('phone') }}" 
                             required 
                             autofocus 
                             class="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-white/[0.07] border border-white/20 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-transparent transition-all font-mono"
-                            placeholder="Contoh: 081234567890"
+                            placeholder="Contoh: 081320335016 / 1010222"
                         >
                     </div>
-                </div>
-
-                <!-- PIN / Password Input -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                            PIN / Kata Sandi
-                        </label>
-                        <a href="https://wa.me/6281214878436?text=Halo%20Admin%20PT%20MSN,%20saya%20lupa%20PIN%20Portal%20Pelanggan" target="_blank" class="text-[11px] text-[#38bdf8] hover:underline font-sans">
-                            Lupa PIN?
-                        </a>
+                    <div class="text-[11px] text-slate-400 mt-1.5 flex items-center gap-1">
+                        <iconify-icon icon="solar:shield-check-bold" class="text-[#38bdf8]"></iconify-icon>
+                        <span>Cukup masukkan nomor yang terdaftar di IMS tanpa perlu PIN</span>
                     </div>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                            <iconify-icon icon="solar:lock-password-bold" width="18"></iconify-icon>
-                        </div>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            value="123456"
-                            required 
-                            class="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-white/[0.07] border border-white/20 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-transparent transition-all font-mono"
-                            placeholder="Masukkan PIN Anda"
-                        >
-                    </div>
-                </div>
-
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between text-xs pt-0.5">
-                    <label class="flex items-center gap-2 cursor-pointer text-slate-300 select-none">
-                        <input type="checkbox" name="remember" checked class="w-4 h-4 rounded bg-white/10 border-white/20 text-[#38bdf8] focus:ring-[#38bdf8]">
-                        <span>Ingat saya di perangkat ini</span>
-                    </label>
                 </div>
 
                 <!-- Submit Button -->
                 <button 
                     type="submit" 
-                    class="w-full py-4 px-6 rounded-2xl bg-[#38bdf8] hover:bg-white hover:text-[#0284c7] text-[#050d1a] font-heading font-extrabold text-sm transition-all duration-200 shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer pt-3.5"
+                    class="w-full py-4 px-6 rounded-2xl bg-[#38bdf8] hover:bg-white hover:text-[#0284c7] text-[#050d1a] font-heading font-extrabold text-sm transition-all duration-200 shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
                     <span>Masuk ke Portal</span>
                     <iconify-icon icon="solar:login-2-bold" width="18"></iconify-icon>
@@ -180,42 +150,36 @@
             </form>
 
             <!-- Quick Demo Account Box for Testing (from IMS DB) -->
-            <div class="mt-6 pt-5 border-t border-white/10">
-                <div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
-                    <span class="flex items-center gap-1.5">
-                        <iconify-icon icon="solar:user-id-bold" class="text-[#38bdf8]"></iconify-icon>
-                        <span>Pilih Contoh Pelanggan IMS:</span>
-                    </span>
-                    <span class="text-[10px] text-emerald-400 font-mono">IMS v2 Database</span>
+            @if($demoCustomers->isNotEmpty())
+                <div class="mt-6 pt-5 border-t border-white/10">
+                    <div class="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <iconify-icon icon="solar:user-id-bold" class="text-[#38bdf8]"></iconify-icon>
+                            <span>Klik Contoh Pelanggan IMS:</span>
+                        </span>
+                        <span class="text-[10px] text-emerald-400 font-mono">Database IMS</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        @foreach($demoCustomers as $demo)
+                            <button type="button" onclick="fillDemo('{{ $demo->phone ?? $demo->customer_id }}')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
+                                <div class="truncate max-w-[280px]">
+                                    <div class="text-xs font-bold text-white group-hover:text-[#38bdf8] truncate">{{ $demo->name }}</div>
+                                    <div class="text-[10px] text-slate-400 font-mono">No HP: {{ $demo->phone }} • ID: {{ $demo->customer_id }}</div>
+                                </div>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold shrink-0 ml-2">Pilih</span>
+                            </button>
+                        @endforeach
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 gap-2">
-                    @forelse($demoCustomers as $demo)
-                        <button type="button" onclick="fillDemo('{{ $demo->phone ?? $demo->customer_id }}', '{{ $demo->ont_ps ?? '123456' }}')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
-                            <div>
-                                <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">{{ $demo->name }} ({{ $demo->phone ?? $demo->customer_id }})</div>
-                                <div class="text-[10px] text-slate-400">ID: {{ $demo->customer_id }} • Paket: {{ $demo->package_name ?? $demo->package->name ?? 'Internet' }}</div>
-                            </div>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
-                        </button>
-                    @empty
-                        <button type="button" onclick="fillDemo('081320335016', 'secret123')" class="p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-left transition-all flex items-center justify-between group">
-                            <div>
-                                <div class="text-xs font-bold text-white group-hover:text-[#38bdf8]">Asep Yudi (0813-2033-5016)</div>
-                                <div class="text-[10px] text-slate-400">ID: 1010222 • Pelanggan IMS v2</div>
-                            </div>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">Pilih</span>
-                        </button>
-                    @endforelse
-                </div>
-            </div>
+            @endif
 
         </div>
 
         <!-- Help Info & Footer -->
         <div class="text-center mt-6 space-y-3">
             <div class="text-xs text-slate-400">
-                Belum berlangganan internet PT MSN? 
-                <a href="{{ route('home') }}#paket" class="text-[#38bdf8] hover:underline font-semibold">Pilih Paket Internet</a>
+                Nomor Anda belum terdaftar? 
+                <a href="https://wa.me/6281214878436?text=Halo%20Admin%20PT%20MSN,%20saya%20ingin%20mendaftarkan%20nomor%20HP%20saya%20di%20portal%20pelanggan" target="_blank" class="text-[#38bdf8] hover:underline font-semibold">Hubungi Customer Service</a>
             </div>
             <div>
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors font-mono">
@@ -228,9 +192,8 @@
     </div>
 
     <script>
-        function fillDemo(phone, pin) {
+        function fillDemo(phone) {
             document.getElementById('phone').value = phone;
-            document.getElementById('password').value = pin;
         }
     </script>
 

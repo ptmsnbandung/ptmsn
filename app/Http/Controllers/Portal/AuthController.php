@@ -34,16 +34,14 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login nomor telepon / nomor internet + PIN
+     * Proses login langsung dengan nomor telepon / nomor internet
      */
     public function login(Request $request)
     {
         $request->validate([
             'phone' => ['required', 'string'],
-            'password' => ['required', 'string'],
         ], [
-            'phone.required' => 'Nomor telepon / Nomor internet wajib diisi.',
-            'password.required' => 'PIN / Kata sandi wajib diisi.',
+            'phone.required' => 'Nomor Telepon / WhatsApp atau Nomor Internet wajib diisi.',
         ]);
 
         $rawInput = trim($request->phone);
@@ -53,7 +51,7 @@ class AuthController extends Controller
         }
 
         try {
-            // Cari data pelanggan langsung di database ims_v2
+            // Cari data pelanggan langsung di database ims_v2 (trx_batchjob_register & m_pelanggan)
             $customer = Customer::with(['pelanggan', 'bandwith'])
                 ->where(function ($query) use ($phone, $rawInput) {
                     $query->whereHas('pelanggan', function ($q) use ($phone, $rawInput) {
@@ -66,34 +64,21 @@ class AuthController extends Controller
                 ->first();
 
             if ($customer) {
-                // Verifikasi Kata Sandi / PIN
-                $passwordInput = $request->password;
-                $isValidPassword = false;
+                // Langsung login tanpa perlu memasukkan PIN/kata sandi
+                Auth::guard('customer')->login($customer, $request->boolean('remember', true));
+                $request->session()->regenerate();
 
-                if (!empty($customer->ont_ps) && $passwordInput === $customer->ont_ps) {
-                    $isValidPassword = true;
-                } elseif (!empty($customer->pppoe_password) && $passwordInput === $customer->pppoe_password) {
-                    $isValidPassword = true;
-                } elseif ($passwordInput === '123456') {
-                    $isValidPassword = true;
-                } elseif (!empty($customer->phone) && strlen($customer->phone) >= 6 && substr($customer->phone, -6) === $passwordInput) {
-                    $isValidPassword = true;
-                }
-
-                if ($isValidPassword) {
-                    Auth::guard('customer')->login($customer, $request->boolean('remember'));
-                    $request->session()->regenerate();
-
-                    return redirect()->intended(route('portal.dashboard'))
-                        ->with('success', "Selamat datang kembali di Portal PT MSN, {$customer->name}!");
-                }
+                return redirect()->intended(route('portal.dashboard'))
+                    ->with('success', "Selamat datang di Portal Layanan PT MSN, {$customer->name}!");
             }
         } catch (\Exception $e) {
-            // Handle error koneksi database jika belum dikonfigurasi
+            return back()->withInput($request->only('phone'))->withErrors([
+                'phone' => 'Gagal terhubung ke database IMS: ' . $e->getMessage(),
+            ]);
         }
 
         return back()->withInput($request->only('phone'))->withErrors([
-            'phone' => 'Nomor telepon / Nomor internet atau PIN / Kata sandi yang Anda masukkan tidak sesuai.',
+            'phone' => 'Nomor telepon (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
         ]);
     }
 

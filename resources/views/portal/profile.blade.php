@@ -131,62 +131,13 @@
                         >{{ old('address', $customer->address) }}</textarea>
                     </div>
 
-                    <!-- Change PIN Section -->
-                    <div class="pt-4 border-t border-white/10 space-y-4">
-                        <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                            <iconify-icon icon="solar:lock-password-bold" class="text-amber-400"></iconify-icon>
-                            <span>Ganti PIN / Kata Sandi (Opsional)</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label for="current_password" class="block text-xs font-mono text-slate-400 mb-1">
-                                    PIN Saat Ini
-                                </label>
-                                <input 
-                                    type="password" 
-                                    id="current_password" 
-                                    name="current_password" 
-                                    placeholder="••••••"
-                                    class="w-full px-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/15 text-white text-xs focus:outline-none focus:ring-1 focus:ring-[#38bdf8]"
-                                >
-                            </div>
-
-                            <div>
-                                <label for="new_password" class="block text-xs font-mono text-slate-400 mb-1">
-                                    PIN Baru (Min 6 digit)
-                                </label>
-                                <input 
-                                    type="password" 
-                                    id="new_password" 
-                                    name="new_password" 
-                                    placeholder="••••••"
-                                    class="w-full px-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/15 text-white text-xs focus:outline-none focus:ring-1 focus:ring-[#38bdf8]"
-                                >
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="new_password_confirmation" class="block text-xs font-mono text-slate-400 mb-1">
-                                Konfirmasi PIN Baru
-                            </label>
-                            <input 
-                                type="password" 
-                                id="new_password_confirmation" 
-                                name="new_password_confirmation" 
-                                placeholder="••••••"
-                                class="w-full px-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/15 text-white text-xs focus:outline-none focus:ring-1 focus:ring-[#38bdf8]"
-                            >
-                        </div>
-                    </div>
-
                     <div class="pt-4 flex justify-end">
                         <button 
                             type="submit" 
                             class="px-6 py-3 rounded-2xl bg-[#38bdf8] hover:bg-white hover:text-[#0284c7] text-[#050d1a] font-heading font-extrabold text-xs sm:text-sm transition-all duration-200 shadow-md flex items-center gap-2 cursor-pointer"
                         >
                             <iconify-icon icon="solar:check-circle-bold" width="16"></iconify-icon>
-                            <span>Simpan Perubahan</span>
+                            <span>Simpan Perubahan Kontak</span>
                         </button>
                     </div>
 
