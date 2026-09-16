@@ -39,10 +39,10 @@
         </div>
 
         @php
-            $currentStep = match($ticket->status) {
-                'open' => 1,
-                'in_progress' => 2,
-                'resolved', 'closed' => 3,
+            $currentStep = match((string) $ticket->status) {
+                '11', 'open' => 1,
+                '12', '13', 'in_progress', 'proses' => 2,
+                '14', 'resolved', 'closed', 'done', 'close' => 3,
                 default => 1,
             };
         @endphp

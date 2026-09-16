@@ -58,17 +58,14 @@ class Customer extends Authenticatable
     /**
      * Relasi ke tiket gangguan di IMS
      */
-    public function imsTickets()
-    {
-        return $this->hasMany(TiketGangguan::class, 'nomor_internet', 'nomor_internet');
-    }
-
-    /**
-     * Relasi ke tiket gangguan portal website
-     */
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'customer_id', 'nomor_internet')->latest();
+        return $this->hasMany(TiketGangguan::class, 'nomor_internet', 'nomor_internet')->orderBy('date_create', 'desc');
+    }
+
+    public function imsTickets()
+    {
+        return $this->tickets();
     }
 
     // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---

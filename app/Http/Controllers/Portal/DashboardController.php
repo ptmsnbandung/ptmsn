@@ -19,10 +19,10 @@ class DashboardController extends Controller
             $customer->load(['pelanggan', 'bandwith']);
         }
 
-        // Ambil tiket terbaru
+        // Ambil tiket terbaru dari IMS
         $recentTickets = $customer ? $customer->tickets()->take(5)->get() : collect([]);
-        $activeTicketsCount = $customer ? $customer->tickets()->whereIn('status', ['open', 'in_progress'])->count() : 0;
-        $resolvedTicketsCount = $customer ? $customer->tickets()->where('status', 'resolved')->count() : 0;
+        $activeTicketsCount = $customer ? $customer->tickets()->whereIn('status', ['11', '12', '13', 'open', 'in_progress', 'proses'])->count() : 0;
+        $resolvedTicketsCount = $customer ? $customer->tickets()->whereIn('status', ['14', 'resolved', 'done', 'close', 'closed'])->count() : 0;
 
         return view('portal.dashboard', compact(
             'customer',

@@ -2,6 +2,8 @@
 
 namespace App\Models\Ims;
 
+use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class TiketGangguan extends Model
@@ -16,10 +18,103 @@ class TiketGangguan extends Model
     protected $guarded = [];
 
     /**
-     * Relasi ke nomor internet pendaftaran
+     * Relasi ke nomor internet pelanggan
      */
-    public function batchjobRegister()
+    public function customer()
     {
-        return $this->belongsTo(BatchjobRegister::class, 'nomor_internet', 'nomor_internet');
+        return $this->belongsTo(Customer::class, 'nomor_internet', 'nomor_internet');
+    }
+
+    public function getIdAttribute()
+    {
+        return $this->tiket;
+    }
+
+    public function getTicketNumberAttribute()
+    {
+        return $this->tiket;
+    }
+
+    public function getSubjectAttribute()
+    {
+        return $this->indikasi ?: ($this->keluhan ? \Illuminate\Support\Str::limit($this->keluhan, 60) : 'Laporan Gangguan');
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->keluhan;
+    }
+
+    public function getCategoryAttribute()
+    {
+        return $this->kat_tiket;
+    }
+
+    public function getPriorityAttribute(): string
+    {
+        return 'Normal';
+    }
+
+    public function getPhotoPathAttribute()
+    {
+        return null;
+    }
+
+    public function getCategoryLabelAttribute(): string
+    {
+        return match ((string) $this->kat_tiket) {
+            '11' => 'Gangguan Layanan',
+            '12' => 'Ubah Password',
+            '13' => 'Cek Coverage Area',
+            '14' => 'Terminasi',
+            '15' => 'Suspend Layanan',
+            '16' => 'Pemasangan Baru',
+            '17' => 'Ubah Layanan',
+            default => $this->kat_tiket ?: 'Gangguan Layanan',
+        };
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        $st = (string) $this->status;
+        if ($st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close') {
+            return 'Selesai';
+        }
+        if ($st === '12' || $st === '13' || $st === 'in_progress' || $st === 'proses') {
+            return 'Sedang Ditangani';
+        }
+        return 'Menunggu Verifikasi';
+    }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        $st = (string) $this->status;
+        if ($st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close') {
+            return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+        }
+        if ($st === '12' || $st === '13' || $st === 'in_progress' || $st === 'proses') {
+            return 'bg-sky-500/10 text-[#38bdf8] border border-sky-500/30';
+        }
+        return 'bg-amber-500/10 text-amber-400 border border-amber-500/30';
+    }
+
+    public function getTechnicianNameAttribute()
+    {
+        return $this->user_update ?: ($this->penanganan ? 'Tim NOC PT MSN' : null);
+    }
+
+    public function getResolutionNotesAttribute()
+    {
+        return $this->penanganan;
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return !empty($this->date_create) ? Carbon::parse($this->date_create) : now();
+    }
+
+    public function getResolvedAtAttribute()
+    {
+        return !empty($this->date_update) ? Carbon::parse($this->date_update) : null;
     }
 }

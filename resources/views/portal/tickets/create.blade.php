@@ -25,76 +25,76 @@
                 <form action="{{ route('portal.tickets.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
 
-                    <!-- 1. Kategori Gangguan (Visual Radio Cards) -->
+                    <!-- 1. Kategori Tiket IMS (Visual Radio Cards) -->
                     <div class="space-y-2.5">
                         <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                            1. Jenis Kendala / Gangguan <span class="text-rose-400">*</span>
+                            1. Kategori Pengaduan / Permintaan <span class="text-rose-400">*</span>
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             
                             <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="los_merah" class="sr-only" {{ old('category', 'los_merah') === 'los_merah' ? 'checked' : '' }}>
-                                <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                                <input type="radio" name="kat_tiket" value="11" class="sr-only" {{ old('kat_tiket', '11') === '11' ? 'checked' : '' }}>
+                                <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
                                     <iconify-icon icon="solar:shield-warning-bold" width="18"></iconify-icon>
                                 </div>
                                 <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Lampu LOS Merah</div>
-                                    <div class="text-[10px] text-slate-400">Modem berkedip merah</div>
+                                    <div class="text-xs font-bold text-white">Gangguan Layanan</div>
+                                    <div class="text-[10px] text-slate-400">LOS merah, mati total, lambat</div>
                                 </div>
                             </label>
 
                             <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="internet_mati" class="sr-only" {{ old('category') === 'internet_mati' ? 'checked' : '' }}>
-                                <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:forbidden-circle-bold" width="18"></iconify-icon>
+                                <input type="radio" name="kat_tiket" value="12" class="sr-only" {{ old('kat_tiket') === '12' ? 'checked' : '' }}>
+                                <div class="w-8 h-8 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:key-minimalistic-square-3-bold" width="18"></iconify-icon>
                                 </div>
                                 <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Internet Mati Total</div>
-                                    <div class="text-[10px] text-slate-400">Tidak ada koneksi sama sekali</div>
+                                    <div class="text-xs font-bold text-white">Ubah Password</div>
+                                    <div class="text-[10px] text-slate-400">Ganti SSID / password WiFi</div>
                                 </div>
                             </label>
 
                             <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="koneksi_lambat" class="sr-only" {{ old('category') === 'koneksi_lambat' ? 'checked' : '' }}>
-                                <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:speedometer-low-bold" width="18"></iconify-icon>
-                                </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Koneksi Lambat / RTO</div>
-                                    <div class="text-[10px] text-slate-400">Kecepatan turun drastis</div>
-                                </div>
-                            </label>
-
-                            <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="perangkat_rusak" class="sr-only" {{ old('category') === 'perangkat_rusak' ? 'checked' : '' }}>
-                                <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:server-square-bold" width="18"></iconify-icon>
-                                </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Kerusakan ONT/Modem</div>
-                                    <div class="text-[10px] text-slate-400">Adaptor mati / perangkat panas</div>
-                                </div>
-                            </label>
-
-                            <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="billing" class="sr-only" {{ old('category') === 'billing' ? 'checked' : '' }}>
+                                <input type="radio" name="kat_tiket" value="17" class="sr-only" {{ old('kat_tiket') === '17' ? 'checked' : '' }}>
                                 <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:bill-check-bold" width="18"></iconify-icon>
+                                    <iconify-icon icon="solar:round-transfer-vertical-bold" width="18"></iconify-icon>
                                 </div>
                                 <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Tagihan / Pembayaran</div>
-                                    <div class="text-[10px] text-slate-400">Konfirmasi status bayar</div>
+                                    <div class="text-xs font-bold text-white">Ubah Layanan</div>
+                                    <div class="text-[10px] text-slate-400">Upgrade / downgrade kecepatan</div>
                                 </div>
                             </label>
 
                             <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
-                                <input type="radio" name="category" value="lainnya" class="sr-only" {{ old('category') === 'lainnya' ? 'checked' : '' }}>
-                                <div class="w-8 h-8 rounded-xl bg-slate-500/20 text-slate-400 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:question-circle-bold" width="18"></iconify-icon>
+                                <input type="radio" name="kat_tiket" value="13" class="sr-only" {{ old('kat_tiket') === '13' ? 'checked' : '' }}>
+                                <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:map-point-wave-bold" width="18"></iconify-icon>
                                 </div>
                                 <div class="text-left">
-                                    <div class="text-xs font-bold text-white">Lainnya / Pertanyaan</div>
-                                    <div class="text-[10px] text-slate-400">Pertanyaan teknis lain</div>
+                                    <div class="text-xs font-bold text-white">Cek Coverage Area</div>
+                                    <div class="text-[10px] text-slate-400">Pindah alamat / cek jangkauan</div>
+                                </div>
+                            </label>
+
+                            <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
+                                <input type="radio" name="kat_tiket" value="15" class="sr-only" {{ old('kat_tiket') === '15' ? 'checked' : '' }}>
+                                <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:pause-circle-bold" width="18"></iconify-icon>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-white">Suspend Layanan</div>
+                                    <div class="text-[10px] text-slate-400">Jeda sementara koneksi</div>
+                                </div>
+                            </label>
+
+                            <label class="relative flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#38bdf8]/50 cursor-pointer transition-all has-[:checked]:border-[#38bdf8] has-[:checked]:bg-[#38bdf8]/10">
+                                <input type="radio" name="kat_tiket" value="14" class="sr-only" {{ old('kat_tiket') === '14' ? 'checked' : '' }}>
+                                <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:user-cross-bold" width="18"></iconify-icon>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-white">Terminasi</div>
+                                    <div class="text-[10px] text-slate-400">Penghentian berlangganan</div>
                                 </div>
                             </label>
 
