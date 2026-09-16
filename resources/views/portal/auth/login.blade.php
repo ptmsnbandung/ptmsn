@@ -77,6 +77,17 @@
     <!-- Centered Card Container (Sleek & Compact) -->
     <div class="relative z-10 w-full max-w-[390px] mx-auto py-4">
         
+        <!-- Brand Logo MSN MID -->
+        <div class="text-center mb-5">
+            <a href="{{ route('home') }}" class="inline-block hover:opacity-90 transition-opacity" title="PT Media Solusi Network">
+                <img 
+                    src="{{ asset('images/logo/LOGO MSN MID.png') }}" 
+                    alt="Logo PT Media Solusi Network" 
+                    class="h-14 sm:h-16 w-auto mx-auto object-contain drop-shadow-xs hover:scale-105 transition-transform"
+                >
+            </a>
+        </div>
+
         <!-- The Login Glass Card -->
         <div class="login-glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-7">
             
