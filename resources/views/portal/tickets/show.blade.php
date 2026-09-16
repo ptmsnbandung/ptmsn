@@ -84,8 +84,12 @@
                         <iconify-icon icon="solar:check-circle-bold" width="20"></iconify-icon>
                     </div>
                     <div>
-                        <div class="text-xs font-heading font-bold {{ $currentStep >= 3 ? 'text-slate-900' : 'text-slate-400' }}">3. Gangguan Selesai</div>
-                        <div class="text-[11px] text-slate-500">Koneksi Kembali Normal</div>
+                        <div class="text-xs font-heading font-bold {{ $currentStep >= 3 ? 'text-slate-900' : 'text-slate-400' }}">
+                            {{ (string) $ticket->kat_tiket === '11' ? '3. Gangguan Selesai' : '3. Permintaan Selesai' }}
+                        </div>
+                        <div class="text-[11px] text-slate-500">
+                            {{ (string) $ticket->kat_tiket === '11' ? 'Koneksi Kembali Normal' : 'Berhasil Ditindaklanjuti' }}
+                        </div>
                     </div>
                 </div>
 
