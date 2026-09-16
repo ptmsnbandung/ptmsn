@@ -194,13 +194,10 @@
                                 </a>
                             </div>
                             <div class="pt-1">
-                                <form action="{{ route('portal.logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl text-left font-semibold transition-colors">
-                                        <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
-                                        <span>Keluar (Logout)</span>
-                                    </button>
-                                </form>
+                                <a href="{{ route('portal.logout') }}" class="w-full flex items-center gap-2 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl text-left font-semibold transition-colors">
+                                    <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
+                                    <span>Keluar (Logout)</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -232,6 +229,12 @@
                 <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
                 <span>Lapor Gangguan Baru</span>
             </a>
+            <div class="pt-2 border-t border-slate-200/80">
+                <a href="{{ route('portal.logout') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-heading font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 transition-colors">
+                    <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
+                    <span>Keluar (Logout)</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -306,18 +309,7 @@
                 clearTimeout(idleTimer);
                 idleTimer = setTimeout(function() {
                     // Otomatis logout ketika 1 jam tidak ada interaksi
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '{{ route("portal.logout") }}';
-
-                    const tokenInput = document.createElement('input');
-                    tokenInput.type = 'hidden';
-                    tokenInput.name = '_token';
-                    tokenInput.value = '{{ csrf_token() }}';
-                    form.appendChild(tokenInput);
-
-                    document.body.appendChild(form);
-                    form.submit();
+                    window.location.href = '{{ route("portal.logout") }}';
                 }, TIMEOUT_MS);
             }
 

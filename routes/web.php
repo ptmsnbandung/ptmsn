@@ -38,7 +38,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
     // Guest customer routes
     Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [PortalAuthController::class, 'login'])->name('login.submit');
-    Route::post('/logout', [PortalAuthController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'], '/logout', [PortalAuthController::class, 'logout'])->name('logout');
 
     // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
     Route::middleware(['auth:customer', 'portal.timeout'])->group(function () {
@@ -67,7 +67,7 @@ Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
-    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'], '/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     /*
     |--------------------------------------------------------------------------
