@@ -11,7 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectTo(guests: '/admin/login');
+        $middleware->redirectTo(
+            guests: function (\Illuminate\Http\Request $request) {
+                if ($request->is('portal*')) {
+                    return route('portal.login');
+                }
+                return route('admin.login');
+            }
+        );
+
+        $middleware->alias([
+            'portal.timeout' => \App\Http\Middleware\CustomerPortalSessionTimeout::class,
+        ]);
 
         $middleware->validateCsrfTokens(except: [
             'coverage/check',

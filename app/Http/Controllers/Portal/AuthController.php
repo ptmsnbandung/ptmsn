@@ -64,9 +64,12 @@ class AuthController extends Controller
                 ->first();
 
             if ($customer) {
-                // Langsung login tanpa perlu memasukkan PIN/kata sandi
-                Auth::guard('customer')->login($customer, $request->boolean('remember', true));
+                // Langsung login tanpa perlu memasukkan PIN/kata sandi (tanpa remember token agar patuh batas sesi 1 jam)
+                Auth::guard('customer')->login($customer, false);
                 $request->session()->regenerate();
+
+                // Catat waktu aktivitas awal (untuk timeout 1 jam)
+                session(['customer_last_activity' => time()]);
 
                 return redirect()->intended(route('portal.dashboard'))
                     ->with('success', "Selamat datang di Portal Layanan PT MSN, {$customer->name}!");
@@ -78,7 +81,7 @@ class AuthController extends Controller
         }
 
         return back()->withInput($request->only('phone'))->withErrors([
-            'phone' => 'Nomor telepon (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
+            'phone' => 'Nomor telepon / ID (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
         ]);
     }
 
@@ -89,6 +92,7 @@ class AuthController extends Controller
     {
         Auth::guard('customer')->logout();
 
+        $request->session()->forget('customer_last_activity');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

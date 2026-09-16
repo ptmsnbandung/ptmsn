@@ -40,8 +40,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
     Route::post('/login', [PortalAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [PortalAuthController::class, 'logout'])->name('logout');
 
-    // Protected customer routes
-    Route::middleware('auth:customer')->group(function () {
+    // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
+    Route::middleware(['auth:customer', 'portal.timeout'])->group(function () {
         Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard', [PortalDashboardController::class, 'index']);
 

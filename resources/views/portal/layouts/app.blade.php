@@ -295,6 +295,41 @@
         </div>
     </footer>
 
+    <!-- Auto Logout 1 Jam Inaktivitas -->
+    <script>
+        (function() {
+            // Batas waktu inaktivitas 1 jam (3600 detik = 3.600.000 ms)
+            const TIMEOUT_MS = 3600 * 1000;
+            let idleTimer;
+
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(function() {
+                    // Otomatis logout ketika 1 jam tidak ada interaksi
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("portal.logout") }}';
+
+                    const tokenInput = document.createElement('input');
+                    tokenInput.type = 'hidden';
+                    tokenInput.name = '_token';
+                    tokenInput.value = '{{ csrf_token() }}';
+                    form.appendChild(tokenInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }, TIMEOUT_MS);
+            }
+
+            const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+            events.forEach(function(evt) {
+                window.addEventListener(evt, resetIdleTimer, { passive: true });
+            });
+
+            resetIdleTimer();
+        })();
+    </script>
+
 </body>
 </html>
 
