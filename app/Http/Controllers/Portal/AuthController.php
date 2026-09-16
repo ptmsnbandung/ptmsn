@@ -22,31 +22,42 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login langsung dengan nomor telepon / WhatsApp
+     * Proses login langsung dengan Nomor Internet atau Nomor Telepon / WhatsApp
      */
     public function login(Request $request)
     {
-        $request->validate([
-            'phone' => ['required', 'string'],
-        ], [
-            'phone.required' => 'Nomor Telepon / WhatsApp wajib diisi.',
-        ]);
+        $rawInput = trim($request->input('login') ?: $request->input('phone') ?: '');
 
-        $rawInput = trim($request->phone);
+        if (empty($rawInput)) {
+            return back()->withInput()->withErrors([
+                'login' => 'Nomor Internet atau Nomor Telepon / WhatsApp wajib diisi.',
+                'phone' => 'Nomor Internet atau Nomor Telepon / WhatsApp wajib diisi.',
+            ]);
+        }
+
         $phone = preg_replace('/[^0-9]/', '', $rawInput);
         if (str_starts_with($phone, '62')) {
             $phone = '0' . substr($phone, 2);
         }
 
         try {
-            // Cari data pelanggan langsung di database ims_v2 murni berdasarkan nomor HP/WhatsApp
+            // 1. Cari pelanggan berdasarkan Nomor Internet (ID Pelanggan) persis
             $customer = Customer::with(['pelanggan', 'bandwith'])
-                ->whereHas('pelanggan', function ($q) use ($phone, $rawInput) {
-                    $q->where('nomor_hp', $phone)
-                      ->orWhere('nomor_hp_2', $phone)
-                      ->orWhere('nomor_hp', $rawInput);
-                })
+                ->where('nomor_internet', $rawInput)
                 ->first();
+
+            // 2. Jika tidak ditemukan, cari dengan angka bersih atau relasi ke biodata pelanggan (nomor HP / WA)
+            if (!$customer) {
+                $customer = Customer::with(['pelanggan', 'bandwith'])
+                    ->where('nomor_internet', $phone)
+                    ->orWhereHas('pelanggan', function ($q) use ($phone, $rawInput) {
+                        $q->where('nomor_hp', $phone)
+                          ->orWhere('nomor_hp_2', $phone)
+                          ->orWhere('nomor_hp', $rawInput)
+                          ->orWhere('nomor_hp_2', $rawInput);
+                    })
+                    ->first();
+            }
 
             if ($customer) {
                 // Langsung login tanpa perlu memasukkan PIN/kata sandi (tanpa remember token agar patuh batas sesi 1 jam)
@@ -60,13 +71,13 @@ class AuthController extends Controller
                     ->with('success', "Selamat datang di Portal Layanan PT MSN, {$customer->name}!");
             }
         } catch (\Exception $e) {
-            return back()->withInput($request->only('phone'))->withErrors([
-                'phone' => 'Gagal terhubung ke database IMS: ' . $e->getMessage(),
+            return back()->withInput($request->only('login', 'phone'))->withErrors([
+                'login' => 'Gagal terhubung ke database IMS: ' . $e->getMessage(),
             ]);
         }
 
-        return back()->withInput($request->only('phone'))->withErrors([
-            'phone' => 'Nomor telepon (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan nomor sesuai dengan yang didaftarkan saat pemasangan internet.',
+        return back()->withInput($request->only('login', 'phone'))->withErrors([
+            'login' => 'Nomor Internet / Nomor WhatsApp (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan data sesuai dengan yang terdaftar.',
         ]);
     }
 

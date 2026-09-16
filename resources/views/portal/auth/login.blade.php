@@ -97,7 +97,7 @@
                     Masuk ke Portal
                 </h1>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                    Masukkan nomor telepon WhatsApp Anda yang terdaftar
+                    Gunakan Nomor Internet (ID Pelanggan) atau Nomor WhatsApp yang terdaftar
                 </p>
             </div>
 
@@ -144,24 +144,25 @@
                 @csrf
 
                 <div>
-                    <label for="phone" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Nomor Telepon / WhatsApp
+                    <label for="login" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                        <span>Nomor Internet / WhatsApp</span>
+                        <span class="text-[10px] text-sky-600 font-semibold normal-case">ID Pelanggan / No. HP</span>
                     </label>
                     
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                            <iconify-icon icon="solar:phone-bold" width="18"></iconify-icon>
+                            <iconify-icon icon="solar:user-id-bold" width="18"></iconify-icon>
                         </div>
                         <input 
-                            type="tel" 
-                            id="phone" 
-                            name="phone" 
-                            value="{{ old('phone') }}" 
+                            type="text" 
+                            id="login" 
+                            name="login" 
+                            value="{{ old('login', old('phone')) }}" 
                             required 
                             autofocus 
                             class="w-full pl-10 pr-3.5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/90 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all font-mono shadow-xs"
-                            placeholder="Contoh: 081234567890"
-                            autocomplete="tel"
+                            placeholder="Contoh: 1711221 atau 081234567890"
+                            autocomplete="username"
                         >
                     </div>
 
