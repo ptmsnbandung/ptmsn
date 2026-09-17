@@ -7,6 +7,16 @@
 
     <!-- Back Link & Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+        @php
+            $typeLabel = match((string) $ticket->kat_tiket) {
+                '17' => 'Pengajuan Ubah Layanan',
+                '12' => 'Permintaan Ubah WiFi',
+                '13' => 'Pengajuan Relokasi',
+                '14' => 'Permohonan Terminasi',
+                '15' => 'Pengajuan Suspend',
+                default => 'Tiket Gangguan',
+            };
+        @endphp
         <div>
             <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 hover:text-sky-600 transition-colors mb-1 sm:mb-2 font-mono font-semibold">
                 <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
@@ -14,7 +24,7 @@
             </a>
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
                 <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
-                    Tiket #{{ $ticket->ticket_number }}
+                    {{ $typeLabel }} #{{ $ticket->ticket_number }}
                 </h1>
                 <span class="text-[10px] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-full {{ $ticket->status_badge_class }} font-semibold">
                     {{ $ticket->status_label }}
@@ -25,7 +35,7 @@
             </div>
         </div>
 
-        <a href="https://wa.me/6281214878436?text=Halo%20NOC%20PT%20MSN,%20saya%20ingin%20menanyakan%20progres%20Tiket%20Gangguan%20%23{{ $ticket->ticket_number }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
+        <a href="https://wa.me/6281214878436?text={{ urlencode('Halo Tim Layanan PT MSN, saya ingin menanyakan status ' . $typeLabel . ' #' . $ticket->ticket_number) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
             <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="text-emerald-600"></iconify-icon>
             <span>Tanya via WhatsApp</span>
         </a>

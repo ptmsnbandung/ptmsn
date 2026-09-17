@@ -267,16 +267,21 @@ class TicketController extends Controller
             'hide' => null,
         ]);
 
-        // Jika kategori Ubah Layanan (17), simpan juga ke tabel trx_ubah_layanan IMS
+        // Jika kategori Ubah Layanan (17), simpan ke tabel trx_ubah_layanan IMS
         if ($katTiket === '17') {
             try {
                 $targetPkg = isset($targetPkg) ? $targetPkg : null;
+                $speedNumber = (int) preg_replace('/[^0-9]/', '', $targetPkg?->speed ?? '20');
+                $matchingBw = \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->where('hide', '0')->first()
+                    ?: \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->first();
+                $kodeBandwithBaru = $matchingBw?->kode_bandwith ?: ($customer->pelanggan?->kode_bandwith ?: 'AG167632');
+
                 $kodeTrxUbah = 'UB-' . $customer->nomor_internet . rand(1000, 9999);
                 UbahLayanan::create([
                     'kode_trx_ubah_layanan' => $kodeTrxUbah,
                     'nomor_internet' => $customer->nomor_internet,
-                    'kode_bandwith_lama' => $customer->pelanggan?->kode_bandwith,
-                    'kode_bandwith_baru' => $targetPkg?->slug ?: ($targetPkg?->id ? 'AG' . $targetPkg->id : null),
+                    'kode_bandwith_lama' => $customer->pelanggan?->kode_bandwith ?: $customer->kode_bandwith,
+                    'kode_bandwith_baru' => $kodeBandwithBaru,
                     'status_ubah_layanan' => '11', // Status 11 = Request
                     'date_request' => date('Y-m-d'),
                     'note_request' => $keluhan,
@@ -284,13 +289,38 @@ class TicketController extends Controller
                     'user_create' => 'Portal Pelanggan',
                     'hide' => '0',
                 ]);
+
+                // Sinkronkan juga ke database ims_v3 jika ada
+                try {
+                    \Illuminate\Support\Facades\DB::statement("
+                        INSERT INTO `ims_v3`.`trx_ubah_layanan` 
+                        (`kode_trx_ubah_layanan`, `nomor_internet`, `kode_bandwith_lama`, `kode_bandwith_baru`, `status_ubah_layanan`, `date_request`, `note_request`, `date_create`, `user_create`, `hide`)
+                        VALUES (?, ?, ?, ?, '11', ?, ?, NOW(), 'Portal Pelanggan', '0')
+                    ", [
+                        $kodeTrxUbah,
+                        $customer->nomor_internet,
+                        $customer->pelanggan?->kode_bandwith ?: $customer->kode_bandwith,
+                        $kodeBandwithBaru,
+                        date('Y-m-d'),
+                        $keluhan
+                    ]);
+                } catch (\Exception $exV3) {}
+
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::warning("Gagal simpan trx_ubah_layanan: " . $e->getMessage());
             }
         }
 
+        $successMsg = match ($katTiket) {
+            '17' => "Permintaan Ubah Layanan / Perubahan Paket (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim administrasi layanan kami akan segera memproses penyesuaian paket Anda.",
+            '12' => "Permintaan Ubah Password WiFi (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim teknisi NOC kami akan segera memperbarui konfigurasi modem ONT Anda.",
+            '13' => "Pengajuan Relokasi Alamat (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim survei kami akan segera menghubungi Anda.",
+            '14', '15' => "Permohonan administrasi layanan (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim kami akan segera menindaklanjuti.",
+            default => "Laporan gangguan #{$ticket->tiket} berhasil dikirim ke sistem IMS! Tim teknisi NOC kami akan segera menindaklanjuti.",
+        };
+
         return redirect()->route('portal.tickets.show', $ticket->tiket)
-            ->with('success', "Laporan tiket #{$ticket->tiket} berhasil dikirim ke sistem IMS! Tim teknisi NOC kami akan segera menindaklanjuti.");
+            ->with('success', $successMsg);
     }
 
     /**
