@@ -77,10 +77,10 @@ class TiketGangguan extends Model
     public function getStatusLabelAttribute(): string
     {
         $st = (string) $this->status;
-        if ($st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close') {
+        if ($st === '13' || $st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close' || $st === 'closed') {
             return 'Selesai';
         }
-        if ($st === '12' || $st === '13' || $st === 'in_progress' || $st === 'proses') {
+        if ($st === '12' || $st === 'in_progress' || $st === 'proses' || $st === 'konfirmasi') {
             return 'Sedang Ditangani';
         }
         return 'Menunggu Verifikasi';
@@ -89,13 +89,13 @@ class TiketGangguan extends Model
     public function getStatusBadgeClassAttribute(): string
     {
         $st = (string) $this->status;
-        if ($st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close') {
-            return 'bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm';
+        if ($st === '13' || $st === '14' || $st === 'resolved' || $st === 'done' || $st === 'close' || $st === 'closed') {
+            return 'bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs';
         }
-        if ($st === '12' || $st === '13' || $st === 'in_progress' || $st === 'proses') {
-            return 'bg-sky-50 text-sky-700 border border-sky-200 shadow-sm';
+        if ($st === '12' || $st === 'in_progress' || $st === 'proses' || $st === 'konfirmasi') {
+            return 'bg-sky-50 text-sky-700 border border-sky-200 shadow-xs';
         }
-        return 'bg-amber-50 text-amber-700 border border-amber-200 shadow-sm';
+        return 'bg-amber-50 text-amber-700 border border-amber-200 shadow-xs';
     }
 
     public function getTechnicianNameAttribute()

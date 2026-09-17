@@ -22,11 +22,11 @@ class TicketController extends Controller
         if ($request->filled('status')) {
             $status = $request->status;
             if ($status === 'open') {
-                $query->whereIn('status', ['11', 'open']);
+                $query->whereIn('status', ['11', 'open', 'antrian']);
             } elseif ($status === 'in_progress') {
-                $query->whereIn('status', ['12', '13', 'in_progress', 'proses']);
+                $query->whereIn('status', ['12', 'in_progress', 'proses', 'konfirmasi']);
             } elseif ($status === 'resolved') {
-                $query->whereIn('status', ['14', 'resolved', 'done', 'close', 'closed']);
+                $query->whereIn('status', ['13', '14', 'resolved', 'done', 'close', 'closed']);
             } else {
                 $query->where('status', $status);
             }

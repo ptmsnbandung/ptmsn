@@ -40,9 +40,9 @@
 
         @php
             $currentStep = match((string) $ticket->status) {
-                '11', 'open' => 1,
-                '12', '13', 'in_progress', 'proses' => 2,
-                '14', 'resolved', 'closed', 'done', 'close' => 3,
+                '11', 'open', 'antrian' => 1,
+                '12', 'in_progress', 'proses', 'konfirmasi' => 2,
+                '13', '14', 'resolved', 'closed', 'done', 'close' => 3,
                 default => 1,
             };
         @endphp
