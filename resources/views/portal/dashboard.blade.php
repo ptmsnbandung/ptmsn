@@ -239,7 +239,7 @@
         <!-- Right 1 Col: Quick Tools & Self-Troubleshooting -->
         <div class="space-y-3 sm:space-y-4">
             <div class="flex items-center gap-1.5 sm:gap-2">
-                <iconify-icon icon="solar:wrench-bold" class="text-sky-600 text-base sm:text-lg"></iconify-icon>
+                <iconify-icon icon="solar:settings-bold" class="text-sky-600 text-base sm:text-lg"></iconify-icon>
                 <h2 class="text-sm sm:text-lg font-heading font-bold text-slate-900">Panduan Mandiri</h2>
             </div>
 
@@ -247,7 +247,7 @@
             <div class="portal-card rounded-2xl p-3.5 sm:p-5 space-y-2.5">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-sky-100 border border-sky-200 text-sky-600 flex items-center justify-center shrink-0 shadow-xs">
-                        <iconify-icon icon="solar:speedometer-bold" width="18" class="sm:text-xl"></iconify-icon>
+                        <iconify-icon icon="solar:bolt-circle-bold" width="18" class="sm:text-xl"></iconify-icon>
                     </div>
                     <div>
                         <div class="text-xs font-heading font-bold text-slate-900">Uji Kecepatan Internet</div>
