@@ -173,7 +173,7 @@
                     $ssUrl = $ticket->foto_ss_url ?? route('portal.tickets.image', ['filename' => $ticket->foto_ss]);
                     $ssFileName = $ticket->foto_ss ?: ($ticket->doc_ubahlayanan ?? 'screenshot.jpg');
                 @endphp
-                <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border-sky-200/80 bg-gradient-to-br from-white via-sky-50/30 to-blue-50/20 space-y-3 sm:space-y-4 shadow-xs" x-data="{ modalOpen: false }">
+                <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border-sky-200/80 bg-gradient-to-br from-white via-sky-50/30 to-blue-50/20 space-y-3 sm:space-y-4 shadow-xs" x-data="{ modalOpen: false, imgError: false }">
                     <div class="flex items-center justify-between">
                         <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-800 flex items-center gap-1.5">
                             <iconify-icon icon="solar:gallery-bold" class="text-sky-600 text-sm"></iconify-icon>
@@ -189,18 +189,39 @@
                     </p>
 
                     <!-- Preview Thumbnail (Click to Zoom) -->
-                    <div class="relative group rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-900/5 cursor-pointer shadow-xs" @click="modalOpen = true">
+                    <div x-show="!imgError" class="relative group rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-900/5 cursor-pointer shadow-xs" @click="modalOpen = true">
                         <img 
                             src="{{ $ssUrl }}" 
                             alt="Bukti Screenshot NOC" 
                             class="w-full max-h-[360px] sm:max-h-[440px] object-contain rounded-xl sm:rounded-2xl transition-transform duration-300 group-hover:scale-[1.01]"
                             loading="lazy"
+                            @error="imgError = true"
                         >
                         <div class="absolute inset-0 bg-slate-950/35 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 backdrop-blur-[2px]">
                             <span class="px-3 py-1.5 rounded-xl bg-white/95 text-slate-900 font-heading font-bold text-xs shadow-lg flex items-center gap-1.5">
                                 <iconify-icon icon="solar:magnifer-zoom-in-bold" width="16" class="text-sky-600"></iconify-icon>
                                 <span>Klik untuk Perbesar</span>
                             </span>
+                        </div>
+                    </div>
+
+                    <!-- Fallback if physical file not on server -->
+                    <div x-show="imgError" class="p-5 sm:p-8 text-center space-y-2.5 bg-slate-50/90 border border-dashed border-slate-300 rounded-xl sm:rounded-2xl" style="display: none;">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mx-auto shadow-xs">
+                            <iconify-icon icon="solar:gallery-remove-bold" width="22"></iconify-icon>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="text-xs sm:text-sm font-heading font-bold text-slate-800">Lampiran Screenshot Tersimpan di Database IMS</div>
+                            <p class="text-[10px] sm:text-[11px] text-slate-500 font-mono">File: {{ $ssFileName }}</p>
+                            <p class="text-[11px] text-slate-600 max-w-md mx-auto pt-0.5">
+                                Bukti penyesuaian layanan telah tercatat di sistem NOC. Jika Anda membutuhkan salinan file gambar, hubungi tim Helpdesk NOC kami.
+                            </p>
+                        </div>
+                        <div class="pt-1">
+                            <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo NOC PT MSN, saya ingin meminta salinan screenshot penyesuaian layanan (File: ' . $ssFileName . ')') }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-xs">
+                                <iconify-icon icon="solar:chat-round-dots-bold" width="14"></iconify-icon>
+                                <span>Minta Gambar via WhatsApp</span>
+                            </a>
                         </div>
                     </div>
 

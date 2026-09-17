@@ -385,15 +385,18 @@ class TicketController extends Controller
             public_path('uploads'),
             public_path('uploads/ubah_layanan'),
             public_path('assets/images'),
+            public_path('images'),
             storage_path('app/public'),
             storage_path('app/public/proof-mutations'),
             storage_path('app/public/ubah_layanan'),
-            'c:/xampp/htdocs/ims-new/storage/app/public',
+            'c:/xampp/htdocs/ims-new/public/storage/proof-mutations',
             'c:/xampp/htdocs/ims-new/storage/app/public/proof-mutations',
+            'c:/xampp/htdocs/ims-new/storage/app/public',
             'c:/xampp/htdocs/ims-new/public/uploads',
             'c:/xampp/htdocs/ims2/public/uploads',
             'c:/xampp/htdocs/ims2/public/assets/images',
             'c:/xampp/htdocs/imscjp/storage/app/public',
+            'c:/xampp/htdocs/adamjaya/public/uploads',
         ];
 
         foreach ($possibleDirs as $dir) {
@@ -407,7 +410,13 @@ class TicketController extends Controller
             }
         }
 
-        abort(404, 'Foto SS bukti NOC tidak ditemukan di server.');
+        // Jika ada konfigurasi URL server IMS terpusat
+        $remoteBase = env('IMS_ASSETS_URL') ?: env('IMS_BASE_URL');
+        if ($remoteBase) {
+            return redirect(rtrim($remoteBase, '/') . '/' . $filename);
+        }
+
+        abort(404, 'Foto SS bukti NOC tidak ditemukan di direktori server lokal.');
     }
 }
 
