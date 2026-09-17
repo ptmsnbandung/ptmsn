@@ -351,7 +351,7 @@
                     Tutup
                 </button>
                 <a 
-                    href="https://wa.me/6281214878436?text=Halo%20Admin%20PT%20MSN,%20saya%20ingin%20konfirmasi%20pembayaran%20tagihan%20nomor%20{{ $currentInvoice->invoice_number }}%20sebesar%20{{ $currentInvoice->formatted_total }}" 
+                    href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20Admin%20PT%20MSN,%20saya%20ingin%20konfirmasi%20pembayaran%20tagihan%20nomor%20{{ $currentInvoice->invoice_number }}%20sebesar%20{{ $currentInvoice->formatted_total }}" 
                     target="_blank"
                     class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-heading font-bold text-xs hover:shadow-md transition-all flex items-center justify-center gap-1.5"
                 >

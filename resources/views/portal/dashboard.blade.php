@@ -47,7 +47,7 @@
                     <iconify-icon icon="solar:danger-triangle-bold" width="16" class="shrink-0"></iconify-icon>
                     <span>Lapor Gangguan</span>
                 </a>
-                <a href="https://wa.me/6281214878436?text=Halo%20NOC%20PT%20MSN,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20konsultasi" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white/90 hover:bg-white border border-slate-200 text-slate-800 font-heading font-semibold text-xs sm:text-sm shadow-xs hover:shadow transition-all text-center">
+                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20NOC%20PT%20MSN,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20konsultasi" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white/90 hover:bg-white border border-slate-200 text-slate-800 font-heading font-semibold text-xs sm:text-sm shadow-xs hover:shadow transition-all text-center">
                     <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-500 shrink-0" width="16"></iconify-icon>
                     <span>Hubungi NOC</span>
                 </a>
@@ -299,9 +299,9 @@
                 <p class="text-[10px] sm:text-[11px] text-slate-600 leading-relaxed">
                     Siap siaga melayani Anda 24 jam setiap hari.
                 </p>
-                <a href="https://wa.me/6281214878436" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
+                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
                     <iconify-icon icon="solar:chat-round-dots-bold" width="15"></iconify-icon>
-                    <span>WhatsApp NOC (0812-1487-8436)</span>
+                    <span>WhatsApp NOC ({{ config('company.phone', '+62 896-9662-9955') }})</span>
                 </a>
             </div>
 

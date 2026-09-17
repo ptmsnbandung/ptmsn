@@ -322,7 +322,7 @@
 
                 <!-- Right: Quick Action Links -->
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
-                    <a href="https://wa.me/6281214878436" target="_blank" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
+                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}" target="_blank" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
                         <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
                         <span>WhatsApp NOC</span>
                     </a>

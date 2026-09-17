@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <a href="https://wa.me/6281214878436?text={{ urlencode('Halo Tim Layanan PT MSN, saya ingin menanyakan status ' . $typeLabel . ' #' . $ticket->ticket_number) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
+        <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim Layanan PT MSN, saya ingin menanyakan status ' . $typeLabel . ' #' . $ticket->ticket_number) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
             <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="text-emerald-600"></iconify-icon>
             <span>Tanya via WhatsApp</span>
         </a>
@@ -209,7 +209,7 @@
                 <p class="text-[11px] text-slate-500">
                     Sebutkan nomor tiket <strong class="text-sky-600 font-mono">#{{ $ticket->ticket_number }}</strong> ke petugas kami.
                 </p>
-                <a href="https://wa.me/6281214878436?text=Halo%20NOC%20PT%20MSN,%20saya%20ingin%20update%20Tiket%20%23{{ $ticket->ticket_number }}" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 mt-2">
+                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20NOC%20PT%20MSN,%20saya%20ingin%20update%20Tiket%20%23{{ $ticket->ticket_number }}" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 mt-2">
                     <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
                     <span>Hubungi Hotline WhatsApp</span>
                 </a>

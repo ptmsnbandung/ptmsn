@@ -71,7 +71,7 @@
                 <p class="text-[11px] text-slate-600 leading-relaxed">
                     Tingkatkan kecepatan internet hingga 100 Mbps tanpa biaya penarikan ulang kabel fiber.
                 </p>
-                <a href="https://wa.me/6281214878436?text=Halo%20Admin,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20upgrade%20paket" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1 mt-2 shadow-sm">
+                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20Admin,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20upgrade%20paket" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1 mt-2 shadow-sm">
                     <span>Chat Admin Upgrade</span>
                     <iconify-icon icon="solar:arrow-right-up-linear" width="14"></iconify-icon>
                 </a>
