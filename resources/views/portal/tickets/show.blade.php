@@ -58,7 +58,7 @@
                 
                 <!-- Step 1: Laporan Diterima -->
                 <div class="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
-                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 {{ $currentStep >= 1 ? 'bg-sky-600 text-white shadow-md shadow-sky-500/30 font-bold' : 'bg-slate-100 text-slate-400 border border-slate-200' }}">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 {{ $currentStep >= 1 ? ($currentStep >= 3 ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20 font-bold' : 'bg-sky-600 text-white shadow-md shadow-sky-500/30 font-bold') : 'bg-slate-100 text-slate-400 border border-slate-200' }}">
                         <iconify-icon icon="solar:inbox-in-bold" width="20"></iconify-icon>
                     </div>
                     <div>
@@ -69,8 +69,8 @@
 
                 <!-- Step 2: Sedang Ditangani / Investigasi -->
                 <div class="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
-                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 {{ $currentStep >= 2 ? 'bg-sky-600 text-white shadow-md shadow-sky-500/30 font-bold animate-pulse' : 'bg-slate-100 text-slate-400 border border-slate-200' }}">
-                        <iconify-icon icon="solar:wrench-bold" width="20"></iconify-icon>
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 {{ $currentStep >= 2 ? ($currentStep >= 3 ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20 font-bold' : 'bg-sky-600 text-white shadow-md shadow-sky-500/30 font-bold animate-pulse') : 'bg-slate-100 text-slate-400 border border-slate-200' }}">
+                        <iconify-icon icon="solar:settings-bold" width="20"></iconify-icon>
                     </div>
                     <div>
                         <div class="text-xs font-heading font-bold {{ $currentStep >= 2 ? 'text-slate-900' : 'text-slate-400' }}">2. Sedang Ditangani</div>
@@ -116,32 +116,38 @@
             </div>
 
             <!-- Technician Action / Resolution Box -->
-            @if($ticket->resolution_notes || $ticket->technician_name)
-                <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border-sky-200 bg-gradient-to-br from-sky-50/90 to-blue-50/60 space-y-2.5 sm:space-y-3 shadow-xs">
+            @if($currentStep >= 2 || $ticket->resolution_notes || $ticket->technician_name)
+                <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 {{ $currentStep >= 3 ? 'border-emerald-200 bg-gradient-to-br from-emerald-50/90 to-teal-50/60' : 'border-sky-200 bg-gradient-to-br from-sky-50/90 to-blue-50/60' }} space-y-2.5 sm:space-y-3 shadow-xs">
                     <div class="flex items-center justify-between">
-                        <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-800 flex items-center gap-1.5">
+                        <div class="text-xs font-mono font-bold uppercase tracking-wider {{ $currentStep >= 3 ? 'text-emerald-800' : 'text-sky-800' }} flex items-center gap-1.5">
                             <iconify-icon icon="solar:user-hand-up-bold"></iconify-icon>
-                            <span>Tindakan Tim Teknis PT MSN</span>
+                            <span>Tindakan & Solusi Tim Teknis PT MSN</span>
                         </div>
                         @if($ticket->resolved_at)
-                            <span class="text-[10px] sm:text-[11px] font-mono text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <span class="text-[10px] sm:text-[11px] font-mono text-emerald-700 font-semibold bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
                                 Selesai: {{ $ticket->resolved_at->translatedFormat('d M Y, H:i') }} WIB
+                            </span>
+                        @elseif($currentStep >= 3)
+                            <span class="text-[10px] sm:text-[11px] font-mono text-emerald-700 font-semibold bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
+                                Status: Selesai
                             </span>
                         @endif
                     </div>
 
-                    @if($ticket->technician_name)
-                        <div class="text-xs text-slate-700">
-                            <span class="text-slate-500">Teknisi Bertugas:</span>
-                            <span class="font-bold text-slate-900 ml-1">{{ $ticket->technician_name }}</span>
-                        </div>
-                    @endif
+                    <div class="text-xs text-slate-700">
+                        <span class="text-slate-500">Petugas / Teknisi:</span>
+                        <span class="font-bold text-slate-900 ml-1">{{ $ticket->technician_name ?: 'Tim NOC & Lapangan PT MSN' }}</span>
+                    </div>
 
-                    @if($ticket->resolution_notes)
-                        <div class="text-xs text-slate-800 bg-white/90 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 whitespace-pre-line leading-relaxed shadow-xs">
+                    <div class="text-xs text-slate-800 bg-white/90 p-3 sm:p-4 rounded-xl sm:rounded-2xl border {{ $currentStep >= 3 ? 'border-emerald-200/80' : 'border-slate-200' }} whitespace-pre-line leading-relaxed shadow-xs">
+                        @if($ticket->resolution_notes)
                             {{ $ticket->resolution_notes }}
-                        </div>
-                    @endif
+                        @elseif($currentStep >= 3)
+                            Kendala pada layanan internet telah selesai diperbaiki dan jaringan kembali beroperasi secara normal. Terima kasih atas kesabaran Anda.
+                        @else
+                            Laporan gangguan Anda telah diverifikasi oleh tim NOC PT MSN dan saat ini sedang dalam proses penanganan / perbaikan teknis.
+                        @endif
+                    </div>
                 </div>
             @endif
 

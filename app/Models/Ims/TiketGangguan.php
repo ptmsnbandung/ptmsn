@@ -100,12 +100,12 @@ class TiketGangguan extends Model
 
     public function getTechnicianNameAttribute()
     {
-        return $this->user_update ?: ($this->penanganan ? 'Tim NOC PT MSN' : null);
+        return $this->user_update ?: ($this->penanganan || $this->note ? 'Tim NOC PT MSN' : null);
     }
 
     public function getResolutionNotesAttribute()
     {
-        return $this->penanganan;
+        return !empty($this->penanganan) ? trim($this->penanganan) : (!empty($this->note) && $this->note !== 'Dikirim dari Portal Pelanggan Website' ? trim($this->note) : null);
     }
 
     public function getCreatedAtAttribute()
