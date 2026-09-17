@@ -115,12 +115,12 @@
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.04)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+            <div class="flex items-center justify-between h-14 sm:h-16">
                 
                 <!-- Left: Logo & Portal Badge -->
                 <div class="flex items-center gap-3">
                     <a href="{{ route('portal.dashboard') }}" class="flex items-center transition-transform hover:opacity-90">
-                        <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-8 sm:h-9 w-auto object-contain">
+                        <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-7 sm:h-9 w-auto object-contain">
                     </a>
                     <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200/80 text-[10px] font-mono font-bold tracking-wider uppercase">
@@ -266,31 +266,31 @@
     </header>
 
     <!-- Main Body Container -->
-    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-8">
         
         <!-- Flash Alerts -->
         @if(session('success'))
-            <div class="mb-6 p-4 rounded-3xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-sm">
-                <div class="flex items-center gap-3">
-                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-xl shrink-0"></iconify-icon>
+            <div class="mb-3 sm:mb-6 p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-lg sm:text-xl shrink-0"></iconify-icon>
                     <span class="font-medium">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
 
         @if(session('info'))
-            <div class="mb-6 p-4 rounded-3xl bg-sky-50/90 backdrop-blur-md border border-sky-200 text-sky-800 flex items-center justify-between gap-3 text-xs sm:text-sm font-sans shadow-sm">
-                <div class="flex items-center gap-3">
-                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-xl shrink-0"></iconify-icon>
+            <div class="mb-3 sm:mb-6 p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-sky-50/90 backdrop-blur-md border border-sky-200 text-sky-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-lg sm:text-xl shrink-0"></iconify-icon>
                     <span class="font-medium">{{ session('info') }}</span>
                 </div>
             </div>
         @endif
 
         @if(isset($errors) && $errors->any())
-            <div class="mb-6 p-4 rounded-3xl bg-rose-50/90 backdrop-blur-md border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-sm">
+            <div class="mb-3 sm:mb-6 p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-rose-50/90 backdrop-blur-md border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-sm">
                 <div class="font-bold mb-1 flex items-center gap-2">
-                    <iconify-icon icon="solar:danger-circle-bold" class="text-lg text-rose-500"></iconify-icon>
+                    <iconify-icon icon="solar:danger-circle-bold" class="text-base sm:text-lg text-rose-500"></iconify-icon>
                     <span>Harap perhatikan input berikut:</span>
                 </div>
                 <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-700 pl-1">

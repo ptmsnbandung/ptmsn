@@ -3,40 +3,40 @@
 @section('title', 'Daftar Laporan Gangguan')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-sky-700 uppercase tracking-wider mb-1">
+            <div class="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-wider mb-1">
                 <iconify-icon icon="solar:shield-warning-bold"></iconify-icon>
                 <span>LAYANAN PENGADUAN</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Daftar Laporan Gangguan</h1>
+            <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Daftar Laporan Gangguan</h1>
             <p class="text-xs sm:text-sm text-slate-600">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda</p>
         </div>
 
-        <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all self-start sm:self-auto">
-            <iconify-icon icon="solar:danger-triangle-bold" width="18"></iconify-icon>
+        <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all self-start sm:self-auto">
+            <iconify-icon icon="solar:danger-triangle-bold" width="16" class="sm:w-[18px]"></iconify-icon>
             <span>Buat Laporan Baru</span>
         </a>
     </div>
 
     <!-- Filter & Search Bar -->
-    <div class="portal-card rounded-3xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
         
         <!-- Status Filter Tabs -->
-        <div class="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0 scrollbar-none bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
-            <a href="{{ route('portal.tickets.index') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ !request('status') ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
+        <div class="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0 scrollbar-none bg-slate-100/80 p-1 rounded-xl sm:rounded-2xl border border-slate-200/60">
+            <a href="{{ route('portal.tickets.index') }}" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ !request('status') ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
                 Semua
             </a>
-            <a href="{{ route('portal.tickets.index', ['status' => 'open']) }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'open' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
+            <a href="{{ route('portal.tickets.index', ['status' => 'open']) }}" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'open' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
                 Menunggu Verifikasi
             </a>
-            <a href="{{ route('portal.tickets.index', ['status' => 'in_progress']) }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'in_progress' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
+            <a href="{{ route('portal.tickets.index', ['status' => 'in_progress']) }}" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'in_progress' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
                 Sedang Ditangani
             </a>
-            <a href="{{ route('portal.tickets.index', ['status' => 'resolved']) }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'resolved' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
+            <a href="{{ route('portal.tickets.index', ['status' => 'resolved']) }}" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-all {{ request('status') === 'resolved' ? 'bg-white text-sky-700 font-bold shadow-sm' : 'text-slate-600 hover:text-slate-900' }}">
                 Selesai
             </a>
         </div>
@@ -52,12 +52,12 @@
                     name="search" 
                     value="{{ request('search') }}" 
                     placeholder="Cari nomor tiket / kendala..." 
-                    class="w-full pl-9 pr-3 py-2 rounded-2xl bg-white/80 border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
+                    class="w-full pl-9 pr-3 py-2 rounded-xl sm:rounded-2xl bg-white/80 border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
                 >
                 <iconify-icon icon="solar:magnifer-linear" class="absolute left-3 top-2.5 text-slate-400 text-sm pointer-events-none"></iconify-icon>
             </div>
             @if(request('search'))
-                <a href="{{ route('portal.tickets.index', request()->only('status')) }}" class="p-2 rounded-2xl bg-white border border-slate-200 text-slate-400 hover:text-slate-700 shadow-sm" title="Reset pencarian">
+                <a href="{{ route('portal.tickets.index', request()->only('status')) }}" class="p-2 rounded-xl sm:rounded-2xl bg-white border border-slate-200 text-slate-400 hover:text-slate-700 shadow-sm" title="Reset pencarian">
                     <iconify-icon icon="solar:close-circle-bold" width="16"></iconify-icon>
                 </a>
             @endif
@@ -67,9 +67,9 @@
 
     <!-- Tickets List -->
     @if($tickets->count() > 0)
-        <div class="space-y-3">
+        <div class="space-y-2.5 sm:space-y-3">
             @foreach($tickets as $ticket)
-                <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-3xl p-5 block group">
+                <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 block group">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="space-y-2 flex-1">
                             <div class="flex items-center gap-2 flex-wrap">

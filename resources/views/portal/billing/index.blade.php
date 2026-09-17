@@ -3,30 +3,30 @@
 @section('title', 'Tagihan & Pembayaran')
 
 @section('content')
-<div class="space-y-6" x-data="{ midtransModal: false }">
+<div class="space-y-4 sm:space-y-6" x-data="{ midtransModal: false }">
 
     <!-- Breadcrumb & Header Title -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
             <div class="flex items-center gap-2 text-xs font-mono text-slate-500 mb-1">
                 <a href="{{ route('portal.dashboard') }}" class="hover:text-sky-600 transition-colors">Portal</a>
                 <span>/</span>
                 <span class="text-sky-600 font-bold">Tagihan & Pembayaran</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
+            <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
                 Tagihan & Pembayaran
             </h1>
-            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5 sm:mt-1">
                 Pantau rincian biaya langganan bulanan dan lakukan pembayaran online mudah & instan melalui Midtrans.
             </p>
         </div>
 
         <!-- ID Pelanggan Badge -->
         <div class="flex items-center gap-3">
-            <div class="px-4 py-2 rounded-2xl bg-white/80 border border-slate-200/80 shadow-sm flex items-center gap-2.5">
-                <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-lg"></iconify-icon>
+            <div class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl bg-white/80 border border-slate-200/80 shadow-sm flex items-center gap-2 sm:gap-2.5">
+                <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-base sm:text-lg"></iconify-icon>
                 <div>
-                    <div class="text-[10px] font-mono uppercase text-slate-400 font-bold leading-none">Nomor Internet</div>
+                    <div class="text-[9px] sm:text-[10px] font-mono uppercase text-slate-400 font-bold leading-none">Nomor Internet</div>
                     <div class="text-xs sm:text-sm font-mono font-bold text-slate-800 leading-tight mt-0.5">{{ $customer->customer_id }}</div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Active Invoice Card (Hero Section) -->
-    <div class="portal-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 relative overflow-hidden">
         <!-- Glow accents -->
         <div class="absolute -top-24 -right-24 w-80 h-80 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"></div>
@@ -184,8 +184,8 @@
     </div>
 
     <!-- History Invoices Table -->
-    <div class="portal-card rounded-3xl p-6 sm:p-7">
-        <div class="flex items-center justify-between mb-5">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
             <div>
                 <h3 class="text-base sm:text-lg font-heading font-bold text-slate-900">
                     Riwayat Pembayaran & Tagihan
