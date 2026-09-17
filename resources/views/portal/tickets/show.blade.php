@@ -140,8 +140,12 @@
                     </div>
 
                     <div class="text-xs text-slate-800 bg-white/90 p-3 sm:p-4 rounded-xl sm:rounded-2xl border {{ $currentStep >= 3 ? 'border-emerald-200/80' : 'border-slate-200' }} whitespace-pre-line leading-relaxed shadow-xs">
-                        @if($ticket->resolution_notes)
+                        @if(!empty($ticket->solusi))
+                            {{ $ticket->solusi }}
+                        @elseif(!empty($ticket->resolution_notes))
                             {{ $ticket->resolution_notes }}
+                        @elseif(!empty($ticket->penanganan))
+                            {{ $ticket->penanganan }}
                         @elseif($currentStep >= 3)
                             Kendala pada layanan internet telah selesai diperbaiki dan jaringan kembali beroperasi secara normal. Terima kasih atas kesabaran Anda.
                         @else

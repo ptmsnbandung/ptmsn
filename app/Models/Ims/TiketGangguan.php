@@ -105,7 +105,19 @@ class TiketGangguan extends Model
 
     public function getResolutionNotesAttribute()
     {
-        return !empty($this->penanganan) ? trim($this->penanganan) : (!empty($this->note) && $this->note !== 'Dikirim dari Portal Pelanggan Website' ? trim($this->note) : null);
+        if (!empty($this->solusi)) {
+            return trim($this->solusi);
+        }
+        if (!empty($this->penanganan)) {
+            return trim($this->penanganan);
+        }
+        if (!empty($this->tindakan)) {
+            return trim($this->tindakan);
+        }
+        if (!empty($this->note) && $this->note !== 'Dikirim dari Portal Pelanggan Website') {
+            return trim($this->note);
+        }
+        return null;
     }
 
     public function getCreatedAtAttribute()
