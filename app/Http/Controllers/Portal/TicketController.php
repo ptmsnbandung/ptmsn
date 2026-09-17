@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ims\TiketGangguan;
+use App\Models\Ims\UbahLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -265,6 +266,28 @@ class TicketController extends Controller
             'user_create' => 'Portal Pelanggan',
             'hide' => null,
         ]);
+
+        // Jika kategori Ubah Layanan (17), simpan juga ke tabel trx_ubah_layanan IMS
+        if ($katTiket === '17') {
+            try {
+                $targetPkg = isset($targetPkg) ? $targetPkg : null;
+                $kodeTrxUbah = 'UB-' . $customer->nomor_internet . rand(1000, 9999);
+                UbahLayanan::create([
+                    'kode_trx_ubah_layanan' => $kodeTrxUbah,
+                    'nomor_internet' => $customer->nomor_internet,
+                    'kode_bandwith_lama' => $customer->pelanggan?->kode_bandwith,
+                    'kode_bandwith_baru' => $targetPkg?->slug ?: ($targetPkg?->id ? 'AG' . $targetPkg->id : null),
+                    'status_ubah_layanan' => '11', // Status 11 = Request
+                    'date_request' => date('Y-m-d'),
+                    'note_request' => $keluhan,
+                    'date_create' => now(),
+                    'user_create' => 'Portal Pelanggan',
+                    'hide' => '0',
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning("Gagal simpan trx_ubah_layanan: " . $e->getMessage());
+            }
+        }
 
         return redirect()->route('portal.tickets.show', $ticket->tiket)
             ->with('success', "Laporan tiket #{$ticket->tiket} berhasil dikirim ke sistem IMS! Tim teknisi NOC kami akan segera menindaklanjuti.");
