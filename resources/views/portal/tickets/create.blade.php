@@ -561,7 +561,7 @@
                         <!-- Checkbox Kesiapan Pengembalian Modem -->
                         <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
                             <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
-                                <input type="checkbox" name="agree_return_device" value="1" required class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
+                                <input type="checkbox" name="agree_return_device" value="1" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
                                 <span>Saya memahami bahwa perangkat Modem ONT & Adaptor adalah aset milik PT MSN dan bersedia diserahterimakan kembali kepada teknisi resmi saat proses penarikan. <span class="text-rose-500 font-bold">*</span></span>
                             </label>
                         </div>
