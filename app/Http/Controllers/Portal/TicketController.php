@@ -263,7 +263,7 @@ class TicketController extends Controller
             'note' => 'Dikirim dari Portal Pelanggan Website',
             'date_create' => now(),
             'user_create' => 'Portal Pelanggan',
-            'hide' => '0',
+            'hide' => null,
         ]);
 
         return redirect()->route('portal.tickets.show', $ticket->tiket)
