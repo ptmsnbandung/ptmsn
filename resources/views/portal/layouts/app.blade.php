@@ -306,21 +306,32 @@
     </main>
 
     <!-- Portal Footer -->
-    <footer class="relative z-10 mt-auto border-t border-slate-200/80 bg-white/65 backdrop-blur-xl py-5 text-center text-xs text-slate-500 font-mono shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-                <span>&copy; {{ date('Y') }} PT Media Solusi Network</span>
-                <span>•</span>
-                <span class="text-slate-600 font-semibold">Helpdesk NOC 24/7</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="https://wa.me/6281214878436" target="_blank" class="text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1 font-semibold">
-                    <iconify-icon icon="solar:chat-round-dots-bold"></iconify-icon>
-                    <span>WA Helpdesk (0812-1487-8436)</span>
-                </a>
-                <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition-colors">
-                    Beranda Website
-                </a>
+    <footer class="relative z-10 mt-auto border-t border-slate-200/80 bg-white/85 backdrop-blur-xl py-3.5 sm:py-4 text-xs text-slate-500 font-sans shadow-[0_-4px_20px_-4px_rgba(15,23,42,0.03)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 text-center sm:text-left">
+                
+                <!-- Left: Copyright & Operational Status -->
+                <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+                    <span class="font-medium text-slate-600">&copy; {{ date('Y') }} <strong class="text-slate-800 font-bold">PT Media Solusi Network</strong></span>
+                    <span class="hidden sm:inline text-slate-300">•</span>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-semibold font-mono">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Helpdesk NOC 24/7</span>
+                    </span>
+                </div>
+
+                <!-- Right: Quick Action Links -->
+                <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
+                    <a href="https://wa.me/6281214878436" target="_blank" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
+                        <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
+                        <span>WhatsApp NOC</span>
+                    </a>
+                    <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
+                        <iconify-icon icon="solar:globe-linear" class="text-slate-400 text-sm"></iconify-icon>
+                        <span>Website Utama</span>
+                    </a>
+                </div>
+
             </div>
         </div>
     </footer>
