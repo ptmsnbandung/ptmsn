@@ -186,14 +186,31 @@ class BillingController extends Controller
     /**
      * Webhook / HTTP Notification Handler dari Midtrans
      */
-    public function handleNotification(Request $request): JsonResponse
-    {
-        $payload = $request->all();
+     public function handleNotification(Request $request): JsonResponse
+     {
+         // Handle test ping (GET request atau payload kosong dari tombol Test Midtrans Dashboard)
+         if ($request->isMethod('get') || empty($request->all())) {
+             return response()->json([
+                 'status' => 'ok',
+                 'message' => 'PT MSN Midtrans Notification Endpoint is active and ready.',
+             ], 200);
+         }
 
-        $result = $this->midtransService->handleNotification($payload);
+         $payload = $request->all();
 
-        return response()->json([
-            'message' => $result['message'],
-        ], $result['code'] ?? 200);
-    }
+         // Handle dummy test payload dari tombol "Test notification URL"
+         if (isset($payload['order_id']) && (str_starts_with($payload['order_id'], 'test-') || str_contains($payload['order_id'], 'dummy') || str_contains($payload['order_id'], 'sample'))) {
+             return response()->json([
+                 'status' => 'ok',
+                 'message' => 'Test notification received successfully.',
+             ], 200);
+         }
+
+         $result = $this->midtransService->handleNotification($payload);
+
+         return response()->json([
+             'status' => $result['success'] ? 'ok' : 'processed',
+             'message' => $result['message'],
+         ], 200);
+     }
 }

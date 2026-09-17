@@ -69,8 +69,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
 | Midtrans Payment Gateway Webhook Callback
 |--------------------------------------------------------------------------
 */
-Route::post('/midtrans/notification', [PortalBillingController::class, 'handleNotification'])->name('midtrans.notification');
-Route::post('/api/midtrans/notification', [PortalBillingController::class, 'handleNotification']);
+Route::match(['get', 'post'], '/midtrans/notification', [PortalBillingController::class, 'handleNotification'])->name('midtrans.notification');
+Route::match(['get', 'post'], '/api/midtrans/notification', [PortalBillingController::class, 'handleNotification']);
 
 
 /*
