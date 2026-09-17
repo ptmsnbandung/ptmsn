@@ -412,9 +412,44 @@ class TicketController extends Controller
             }
         }
 
-        // Redirect ke subdomain IMS resmi (https://ims.ptmsn.co.id/uploads/up_downgrade/{filename})
-        $remoteBase = config('company.ims_upload_url', env('IMS_UPLOAD_URL', 'https://ims.ptmsn.co.id/uploads/up_downgrade'));
-        return redirect(rtrim($remoteBase, '/') . '/' . $filename);
+        // Coba ambil dari server IMS secara server-to-server (Proxy stream agar bebas dari mixed-content / SSL mismatch di browser)
+        $remoteBases = array_unique(array_filter([
+            config('company.ims_upload_url'),
+            env('IMS_UPLOAD_URL'),
+            'https://ims.ptmsn.co.id/uploads/up_downgrade',
+            'http://ims.ptmsn.co.id/uploads/up_downgrade',
+            'https://ims.ptmsn.co.id/public/uploads/up_downgrade',
+            'http://ims.ptmsn.co.id/public/uploads/up_downgrade',
+            'https://billing.ptmsn.co.id/uploads/up_downgrade',
+            'http://billing.ptmsn.co.id/uploads/up_downgrade',
+        ]));
+
+        foreach ($remoteBases as $remoteBase) {
+            $remoteUrl = rtrim($remoteBase, '/') . '/' . $filename;
+            try {
+                $ch = curl_init($remoteUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                $content = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+                curl_close($ch);
+
+                if ($httpCode === 200 && !empty($content) && str_starts_with((string)$contentType, 'image/')) {
+                    return response($content, 200, [
+                        'Content-Type' => $contentType,
+                        'Cache-Control' => 'public, max-age=86400',
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                // Lanjutkan ke kandidat URL berikutnya
+            }
+        }
+
+        abort(404, 'Gambar screenshot bukti tidak ditemukan.');
     }
 }
 
