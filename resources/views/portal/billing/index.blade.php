@@ -3,30 +3,37 @@
 @section('title', 'Tagihan & Pembayaran')
 
 @section('content')
-<div class="space-y-4 sm:space-y-6" x-data="{ midtransModal: false }">
+<div class="space-y-3.5 sm:space-y-6" x-data="{ midtransModal: false }">
 
     <!-- Breadcrumb & Header Title -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
         <div>
-            <div class="flex items-center gap-2 text-xs font-mono text-slate-500 mb-1">
+            <div class="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono text-slate-500 mb-0.5 sm:mb-1">
                 <a href="{{ route('portal.dashboard') }}" class="hover:text-sky-600 transition-colors">Portal</a>
                 <span>/</span>
-                <span class="text-sky-600 font-bold">Tagihan & Pembayaran</span>
+                <span class="text-sky-600 font-bold">Tagihan</span>
             </div>
-            <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
-                Tagihan & Pembayaran
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-600 mt-0.5 sm:mt-1">
+            <div class="flex items-center justify-between sm:block">
+                <h1 class="text-lg sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
+                    Tagihan & Pembayaran
+                </h1>
+                <!-- Mobile only compact customer ID pill -->
+                <div class="sm:hidden px-2.5 py-1 rounded-lg bg-white/90 border border-slate-200/90 shadow-2xs flex items-center gap-1.5">
+                    <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-xs"></iconify-icon>
+                    <span class="text-[11px] font-mono font-bold text-slate-800">{{ $customer->customer_id }}</span>
+                </div>
+            </div>
+            <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-1">
                 Pantau rincian biaya langganan bulanan dan lakukan pembayaran online mudah & instan melalui Midtrans.
             </p>
         </div>
 
-        <!-- ID Pelanggan Badge -->
-        <div class="flex items-center gap-3">
-            <div class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl bg-white/80 border border-slate-200/80 shadow-sm flex items-center gap-2 sm:gap-2.5">
-                <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-base sm:text-lg"></iconify-icon>
+        <!-- ID Pelanggan Badge (Desktop) -->
+        <div class="hidden sm:flex items-center gap-3">
+            <div class="px-4 py-2 rounded-2xl bg-white/80 border border-slate-200/80 shadow-sm flex items-center gap-2.5">
+                <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-lg"></iconify-icon>
                 <div>
-                    <div class="text-[9px] sm:text-[10px] font-mono uppercase text-slate-400 font-bold leading-none">Nomor Internet</div>
+                    <div class="text-[10px] font-mono uppercase text-slate-400 font-bold leading-none">Nomor Internet</div>
                     <div class="text-xs sm:text-sm font-mono font-bold text-slate-800 leading-tight mt-0.5">{{ $customer->customer_id }}</div>
                 </div>
             </div>
@@ -34,55 +41,55 @@
     </div>
 
     <!-- Active Invoice Card (Hero Section) -->
-    <div class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 relative overflow-hidden">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 relative overflow-hidden">
         <!-- Glow accents -->
         <div class="absolute -top-24 -right-24 w-80 h-80 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10">
+        <div class="relative z-10 space-y-3 sm:space-y-6">
             <!-- Top Status Bar -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 border-b border-slate-200/70">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <span class="px-3 py-1 rounded-xl bg-slate-100 font-mono text-xs font-bold text-slate-700 border border-slate-200">
+            <div class="flex items-center justify-between gap-2 pb-2.5 sm:pb-6 border-b border-slate-200/70">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg sm:rounded-xl bg-slate-100 font-mono text-[10px] sm:text-xs font-bold text-slate-700 border border-slate-200">
                         {{ $currentInvoice->invoice_number }}
                     </span>
-                    <span class="text-xs font-heading font-semibold text-slate-500">
+                    <span class="text-[10px] sm:text-xs font-heading font-semibold text-slate-500">
                         Periode: <strong class="text-slate-800">{{ $currentInvoice->period }}</strong>
                     </span>
                 </div>
 
-                <div>
+                <div class="shrink-0">
                     @if($currentInvoice->is_paid)
-                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold font-mono shadow-sm">
-                            <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-sm"></iconify-icon>
-                            <span>LUNAS (SUDAH DIBAYAR)</span>
+                        <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] sm:text-xs font-bold font-mono shadow-2xs">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-xs sm:text-sm"></iconify-icon>
+                            <span>LUNAS</span>
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold font-mono shadow-sm animate-pulse">
-                            <iconify-icon icon="solar:danger-triangle-bold" class="text-rose-500 text-sm"></iconify-icon>
-                            <span>MENUNGGU PEMBAYARAN</span>
+                        <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] sm:text-xs font-bold font-mono shadow-2xs animate-pulse">
+                            <iconify-icon icon="solar:danger-triangle-bold" class="text-rose-500 text-xs sm:text-sm"></iconify-icon>
+                            <span>BELUM BAYAR</span>
                         </span>
                     @endif
                 </div>
             </div>
 
             <!-- Invoice Body Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 pt-6 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2.5 sm:gap-8 items-stretch">
                 
                 <!-- Col 1: Service Package Info -->
-                <div class="space-y-4">
+                <div class="space-y-2 sm:space-y-4 flex flex-col justify-between">
                     <div>
-                        <div class="text-[11px] font-mono uppercase text-slate-400 font-bold tracking-wider mb-1">Layanan Berlangganan</div>
-                        <h3 class="text-xl font-heading font-extrabold text-slate-900 leading-tight">
+                        <div class="text-[10px] sm:text-[11px] font-mono uppercase text-slate-400 font-bold tracking-wider mb-0.5">Layanan Berlangganan</div>
+                        <h3 class="text-sm sm:text-xl font-heading font-extrabold text-slate-900 leading-tight">
                             {{ $currentInvoice->package_name }}
                         </h3>
-                        <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-                            <iconify-icon icon="solar:transfer-horizontal-bold" class="text-sky-500"></iconify-icon>
+                        <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 flex items-center gap-1">
+                            <iconify-icon icon="solar:transfer-horizontal-bold" class="text-sky-500 shrink-0"></iconify-icon>
                             <span>Kecepatan Simetris 1:1 Fiber Optic Unlimited</span>
                         </p>
                     </div>
 
-                    <div class="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/60 space-y-2 text-xs">
+                    <div class="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-50/80 border border-slate-200/60 space-y-1 sm:space-y-2 text-[10px] sm:text-xs">
                         <div class="flex justify-between">
                             <span class="text-slate-500">Jatuh Tempo:</span>
                             <span class="font-mono font-bold text-rose-600">{{ $currentInvoice->due_date?->translatedFormat('d F Y') ?? 'Tgl ' . $customer->due_date . ' / bulan' }}</span>
@@ -93,29 +100,29 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Alamat Pasang:</span>
-                            <span class="text-slate-700 text-right truncate max-w-[180px]">{{ $customer->address ?: '-' }}</span>
+                            <span class="text-slate-700 text-right truncate max-w-[180px] sm:max-w-[200px]">{{ $customer->address ?: '-' }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Col 2: Breakdown Price Detail -->
-                <div class="p-5 rounded-2xl bg-white/90 border border-slate-200/80 shadow-sm space-y-3">
-                    <div class="text-xs font-mono uppercase text-slate-400 font-bold tracking-wider pb-2 border-b border-slate-100">
+                <div class="p-2.5 sm:p-5 rounded-xl sm:rounded-2xl bg-white/90 border border-slate-200/80 shadow-xs space-y-1.5 sm:space-y-3 flex flex-col justify-between">
+                    <div class="text-[10px] sm:text-xs font-mono uppercase text-slate-400 font-bold tracking-wider pb-1 sm:pb-2 border-b border-slate-100">
                         Rincian Tagihan
                     </div>
 
-                    <div class="space-y-2 text-xs">
+                    <div class="space-y-1 sm:space-y-2 text-[11px] sm:text-xs">
                         <div class="flex justify-between text-slate-600">
                             <span>Biaya Internet (1 Bulan)</span>
                             <span class="font-mono font-semibold">{{ $currentInvoice->formatted_amount }}</span>
                         </div>
                         <div class="flex justify-between text-slate-600">
-                            <span>Biaya Administrasi & Pajak</span>
+                            <span>Biaya Admin & Pajak</span>
                             <span class="font-mono font-semibold text-emerald-600">Termasuk (Rp 0)</span>
                         </div>
-                        <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
-                            <span class="font-heading font-bold text-slate-800 text-sm">Total Bayar:</span>
-                            <span class="font-heading font-black text-xl sm:text-2xl text-sky-600 tracking-tight">
+                        <div class="pt-1 sm:pt-2 border-t border-slate-100 flex justify-between items-baseline">
+                            <span class="font-heading font-bold text-slate-800 text-xs sm:text-sm">Total Bayar:</span>
+                            <span class="font-heading font-black text-base sm:text-2xl text-sky-600 tracking-tight">
                                 {{ $currentInvoice->formatted_total }}
                             </span>
                         </div>
@@ -123,31 +130,33 @@
                 </div>
 
                 <!-- Col 3: Action & Midtrans Checkout Button -->
-                <div class="flex flex-col justify-center space-y-3">
+                <div class="flex flex-col justify-center space-y-2 sm:space-y-3">
                     @if(!$currentInvoice->is_paid)
                         <!-- Button Bayar Sekarang (Trigger Midtrans Payment) -->
                         <button 
                             type="button" 
                             id="btnPayMain"
                             onclick="payWithMidtrans('{{ $currentInvoice->kode_billing_layanan }}', 'btnPayMain')"
-                            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-center disabled:opacity-60 disabled:cursor-not-allowed"
+                            class="w-full py-2.5 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-md sm:shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-center disabled:opacity-60 disabled:cursor-not-allowed"
                         >
-                            <iconify-icon icon="solar:card-recive-bold" width="22"></iconify-icon>
+                            <iconify-icon icon="solar:card-recive-bold" width="18" class="sm:w-[22px]"></iconify-icon>
                             <span>Bayar Sekarang (Midtrans)</span>
                         </button>
 
-                        <p class="text-[11px] text-center text-slate-500 font-sans">
-                            Pembayaran instan terverifikasi otomatis 24 jam via QRIS, Virtual Account Bank & Gerai Retail.
+                        <p class="text-[9px] sm:text-[11px] text-center text-slate-500 font-sans">
+                            Pembayaran instan otomatis 24 jam via QRIS, VA Bank & Retail.
                         </p>
                     @else
-                        <!-- Paid State Notification -->
-                        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                                <iconify-icon icon="solar:check-circle-bold" width="24"></iconify-icon>
+                        <!-- Paid State Notification (Compact) -->
+                        <div class="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50/90 border border-emerald-200 text-center space-y-0.5 sm:space-y-1.5 flex flex-col items-center justify-center">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-5 h-5 sm:w-10 sm:h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:check-circle-bold" class="text-xs sm:text-2xl"></iconify-icon>
+                                </div>
+                                <div class="text-xs sm:text-sm font-heading font-bold text-emerald-900">Tagihan Sudah Lunas</div>
                             </div>
-                            <div class="text-sm font-heading font-bold text-emerald-900">Tagihan Sudah Lunas</div>
-                            <div class="text-xs text-emerald-700">
-                                Terima kasih! Layanan internet Anda aktif lancar tanpa kendala.
+                            <div class="text-[10px] sm:text-xs text-emerald-700">
+                                Layanan internet Anda aktif lancar tanpa kendala.
                             </div>
                         </div>
                     @endif
@@ -156,9 +165,9 @@
                     <a 
                         href="{{ route('portal.billing.show', urlencode($currentInvoice->kode_billing_layanan)) }}" 
                         target="_blank"
-                        class="w-full py-2.5 px-4 rounded-2xl bg-white/90 hover:bg-white border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-semibold text-xs shadow-2xs hover:shadow transition-all flex items-center justify-center gap-2 text-center"
+                        class="w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl sm:rounded-2xl bg-white/90 hover:bg-white border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-semibold text-xs shadow-2xs hover:shadow transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-center"
                     >
-                        <iconify-icon icon="solar:printer-minimalistic-bold" width="16"></iconify-icon>
+                        <iconify-icon icon="solar:printer-minimalistic-bold" width="14" class="sm:w-[16px]"></iconify-icon>
                         <span>Cetak / Unduh Bukti Invoice</span>
                     </a>
                 </div>
@@ -166,18 +175,18 @@
             </div>
 
             <!-- Supported Midtrans Payment Channels Banner -->
-            <div class="mt-8 pt-5 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500">
-                <div class="flex items-center gap-2 text-xs font-heading font-semibold text-slate-600">
-                    <iconify-icon icon="solar:shield-check-bold" class="text-emerald-500 text-base"></iconify-icon>
+            <div class="mt-2.5 sm:mt-8 pt-2.5 sm:pt-5 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-4 text-slate-500">
+                <div class="flex items-center gap-1.5 text-[10px] sm:text-xs font-heading font-semibold text-slate-600">
+                    <iconify-icon icon="solar:shield-check-bold" class="text-emerald-500 text-sm sm:text-base"></iconify-icon>
                     <span>Metode Pembayaran Online yang Didukung:</span>
                 </div>
 
-                <div class="flex items-center gap-2 flex-wrap justify-center text-xs font-mono font-bold">
-                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">QRIS (GoPay/OVO/Dana)</span>
-                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">BCA VA</span>
-                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">Mandiri</span>
-                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">BRI</span>
-                    <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">Alfamart / Indomaret</span>
+                <div class="flex items-center gap-1 sm:gap-2 flex-wrap justify-center text-[9px] sm:text-xs font-mono font-bold">
+                    <span class="px-2 py-0.5 rounded-md sm:rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">QRIS</span>
+                    <span class="px-2 py-0.5 rounded-md sm:rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">BCA VA</span>
+                    <span class="px-2 py-0.5 rounded-md sm:rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">Mandiri</span>
+                    <span class="px-2 py-0.5 rounded-md sm:rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">BRI</span>
+                    <span class="px-2 py-0.5 rounded-md sm:rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">Alfamart / Indomaret</span>
                 </div>
             </div>
         </div>

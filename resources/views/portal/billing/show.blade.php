@@ -17,11 +17,11 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen py-6 sm:py-10 px-4 text-slate-800">
+<body class="bg-slate-100 min-h-screen py-3.5 sm:py-10 px-3 sm:px-4 text-slate-800">
 
     <!-- Action Bar (Hidden on Print) -->
-    <div class="max-w-3xl mx-auto mb-5 flex flex-wrap items-center justify-between gap-3 no-print">
-        <a href="{{ route('portal.billing.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-sky-600 bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm transition-all">
+    <div class="max-w-3xl mx-auto mb-3.5 sm:mb-5 flex flex-wrap items-center justify-between gap-2 sm:gap-3 no-print">
+        <a href="{{ route('portal.billing.index') }}" class="inline-flex items-center gap-1.5 sm:gap-2 text-xs font-semibold text-slate-600 hover:text-sky-600 bg-white px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-slate-200 shadow-2xs transition-all">
             &larr; Kembali ke Portal Tagihan
         </a>
         <div class="flex items-center gap-2">
@@ -30,13 +30,13 @@
                     type="button" 
                     id="btnPayInvoice"
                     onclick="payWithMidtrans('{{ $invoice->kode_billing_layanan }}')"
-                    class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-60"
+                    class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-60"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     <span>Bayar Sekarang (Midtrans)</span>
                 </button>
             @endif
-            <button onclick="window.print()" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer">
+            <button onclick="window.print()" class="inline-flex items-center gap-1.5 sm:gap-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-md transition-all cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 <span>Cetak / Simpan PDF</span>
             </button>
@@ -44,10 +44,10 @@
     </div>
 
     <!-- Official Invoice Container -->
-    <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 sm:p-12 print-shadow-none relative overflow-hidden">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-slate-200/80 p-4 sm:p-12 print-shadow-none relative overflow-hidden">
         
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start gap-6 pb-8 border-b border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 pb-4 sm:pb-8 border-b border-slate-200">
             <div>
                 <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT Media Solusi Network" class="h-10 w-auto mb-2">
                 <div class="text-xs text-slate-500 space-y-0.5">
