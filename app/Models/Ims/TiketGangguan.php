@@ -100,7 +100,13 @@ class TiketGangguan extends Model
 
     public function getTechnicianNameAttribute()
     {
-        return $this->user_update ?: ($this->penanganan || $this->note ? 'Tim NOC PT MSN' : null);
+        if (!empty($this->user_update)) {
+            return trim($this->user_update);
+        }
+        if (!empty($this->solusi) || !empty($this->penanganan)) {
+            return 'Tim NOC PT MSN';
+        }
+        return null;
     }
 
     public function getResolutionNotesAttribute()

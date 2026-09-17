@@ -115,13 +115,13 @@
                 </div>
             </div>
 
-            <!-- Technician Action / Resolution Box -->
-            @if($currentStep >= 2 || $ticket->resolution_notes || $ticket->technician_name)
+            <!-- Technician Action / Resolution Box (Hanya tampil jika tiket sedang ditangani, sudah selesai, atau ada catatan teknisi) -->
+            @if($currentStep >= 2 || !empty($ticket->solusi) || !empty($ticket->penanganan))
                 <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 {{ $currentStep >= 3 ? 'border-emerald-200 bg-gradient-to-br from-emerald-50/90 to-teal-50/60' : 'border-sky-200 bg-gradient-to-br from-sky-50/90 to-blue-50/60' }} space-y-2.5 sm:space-y-3 shadow-xs">
                     <div class="flex items-center justify-between">
                         <div class="text-xs font-mono font-bold uppercase tracking-wider {{ $currentStep >= 3 ? 'text-emerald-800' : 'text-sky-800' }} flex items-center gap-1.5">
                             <iconify-icon icon="solar:user-hand-up-bold"></iconify-icon>
-                            <span>Tindakan & Solusi Tim Teknis PT MSN</span>
+                            <span>{{ $currentStep >= 3 ? 'Tindakan & Solusi Penyelesaian NOC' : 'Progres Penanganan Tim Teknis' }}</span>
                         </div>
                         @if($ticket->resolved_at)
                             <span class="text-[10px] sm:text-[11px] font-mono text-emerald-700 font-semibold bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
@@ -134,22 +134,24 @@
                         @endif
                     </div>
 
-                    <div class="text-xs text-slate-700">
-                        <span class="text-slate-500">Petugas / Teknisi:</span>
-                        <span class="font-bold text-slate-900 ml-1">{{ $ticket->technician_name ?: 'Tim NOC & Lapangan PT MSN' }}</span>
-                    </div>
+                    @if($ticket->technician_name)
+                        <div class="text-xs text-slate-700">
+                            <span class="text-slate-500">Petugas / Teknisi:</span>
+                            <span class="font-bold text-slate-900 ml-1">{{ $ticket->technician_name }}</span>
+                        </div>
+                    @endif
 
                     <div class="text-xs text-slate-800 bg-white/90 p-3 sm:p-4 rounded-xl sm:rounded-2xl border {{ $currentStep >= 3 ? 'border-emerald-200/80' : 'border-slate-200' }} whitespace-pre-line leading-relaxed shadow-xs">
                         @if(!empty($ticket->solusi))
                             {{ $ticket->solusi }}
-                        @elseif(!empty($ticket->resolution_notes))
-                            {{ $ticket->resolution_notes }}
                         @elseif(!empty($ticket->penanganan))
                             {{ $ticket->penanganan }}
+                        @elseif(!empty($ticket->resolution_notes))
+                            {{ $ticket->resolution_notes }}
                         @elseif($currentStep >= 3)
                             Kendala pada layanan internet telah selesai diperbaiki dan jaringan kembali beroperasi secara normal. Terima kasih atas kesabaran Anda.
                         @else
-                            Laporan gangguan Anda telah diverifikasi oleh tim NOC PT MSN dan saat ini sedang dalam proses penanganan / perbaikan teknis.
+                            Laporan Anda telah diterima dan saat ini sedang dalam penanganan aktif oleh tim teknisi NOC PT MSN.
                         @endif
                     </div>
                 </div>
