@@ -38,7 +38,7 @@ Route::post('/coverage/check', [CoverageController::class, 'check'])->name('cove
 Route::prefix('portal')->name('portal.')->group(function () {
     // Guest customer routes
     Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [PortalAuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [PortalAuthController::class, 'login'])->middleware('throttle:15,1')->name('login.submit');
     Route::match(['get', 'post'], '/logout', [PortalAuthController::class, 'logout'])->name('logout');
 
     // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
