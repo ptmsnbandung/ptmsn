@@ -13,7 +13,7 @@ return [
     'maps_embed' => env('COMPANY_MAPS_EMBED', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.677568579998!2d107.62943027587609!3d-6.937003767905814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e8666588e463%3A0xddd296d9a427e333!2sPT.MSN%20(%20Media%20Solusi%20Network%20)!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid'),
     'operational_hours' => env('COMPANY_HOURS', 'Senin - Jumat: 08.30 - 21.00 WIB'),
     'ims_url' => env('IMS_URL', 'https://ims.ptmsn.co.id'),
-    'ims_upload_url' => env('IMS_UPLOAD_URL', 'https://ims.ptmsn.co.id/uploads/up_downgrade'),
+    'ims_upload_url' => env('IMS_UPLOAD_URL', 'https://www.ptmsn.co.id/uploads/up_downgrade'),
     'instagram' => env('COMPANY_INSTAGRAM', 'https://instagram.com/ptmediasolusinetwork'),
     'facebook' => env('COMPANY_FACEBOOK', 'https://facebook.com/ptmediasolusinetwork'),
     'linkedin' => env('COMPANY_LINKEDIN', 'https://linkedin.com/company/ptmediasolusinetwork'),
