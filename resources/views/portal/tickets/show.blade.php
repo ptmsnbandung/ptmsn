@@ -195,7 +195,7 @@
                             alt="Bukti Screenshot NOC" 
                             class="w-full max-h-[360px] sm:max-h-[440px] object-contain rounded-xl sm:rounded-2xl transition-transform duration-300 group-hover:scale-[1.01]"
                             loading="lazy"
-                            @error="imgError = true"
+                            x-on:error="imgError = true"
                         >
                         <div class="absolute inset-0 bg-slate-950/35 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 backdrop-blur-[2px]">
                             <span class="px-3 py-1.5 rounded-xl bg-white/95 text-slate-900 font-heading font-bold text-xs shadow-lg flex items-center gap-1.5">
