@@ -3,37 +3,37 @@
 @section('title', 'Detail Tiket #' . $ticket->ticket_number)
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6">
+<div class="max-w-4xl mx-auto space-y-3.5 sm:space-y-6">
 
     <!-- Back Link & Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
         <div>
-            <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-sky-600 transition-colors mb-2 font-mono font-semibold">
+            <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 hover:text-sky-600 transition-colors mb-1 sm:mb-2 font-mono font-semibold">
                 <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
                 <span>Kembali ke Daftar Laporan</span>
             </a>
-            <div class="flex items-center gap-3 flex-wrap">
-                <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
                     Tiket #{{ $ticket->ticket_number }}
                 </h1>
-                <span class="text-xs px-3 py-1 rounded-full {{ $ticket->status_badge_class }} font-semibold">
+                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-full {{ $ticket->status_badge_class }} font-semibold">
                     {{ $ticket->status_label }}
                 </span>
             </div>
-            <div class="text-xs text-slate-500 mt-1 font-mono">
+            <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 font-mono">
                 Dibuat pada: {{ $ticket->created_at->translatedFormat('d F Y, H:i') }} WIB
             </div>
         </div>
 
-        <a href="https://wa.me/6281214878436?text=Halo%20NOC%20PT%20MSN,%20saya%20ingin%20menanyakan%20progres%20Tiket%20Gangguan%20%23{{ $ticket->ticket_number }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-sm">
-            <iconify-icon icon="solar:chat-round-dots-bold" width="16" class="text-emerald-600"></iconify-icon>
+        <a href="https://wa.me/6281214878436?text=Halo%20NOC%20PT%20MSN,%20saya%20ingin%20menanyakan%20progres%20Tiket%20Gangguan%20%23{{ $ticket->ticket_number }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
+            <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="text-emerald-600"></iconify-icon>
             <span>Tanya via WhatsApp</span>
         </a>
     </div>
 
     <!-- Live Status Tracker (Visual Stepper) -->
-    <div class="portal-card rounded-3xl p-6 sm:p-8">
-        <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-700 mb-6 flex items-center gap-2">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-8">
+        <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-700 mb-3 sm:mb-6 flex items-center gap-1.5">
             <iconify-icon icon="solar:history-bold"></iconify-icon>
             <span>Status Progres Penanganan:</span>
         </div>
@@ -98,18 +98,18 @@
     </div>
 
     <!-- Ticket Detail Cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
         
         <!-- Left 2 Cols: Issue Content & Technician Notes -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 space-y-3 sm:space-y-6">
             
             <!-- Issue Details -->
-            <div class="portal-card rounded-3xl p-6 sm:p-7 space-y-4">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Informasi Kendala</div>
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 space-y-2.5 sm:space-y-4">
+                <div class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Informasi Kendala</div>
                 
                 <div>
-                    <h2 class="text-lg font-heading font-bold text-slate-900 mb-2">{{ $ticket->subject }}</h2>
-                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80">
+                    <h2 class="text-sm sm:text-lg font-heading font-bold text-slate-900 mb-1.5 sm:mb-2">{{ $ticket->subject }}</h2>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/80 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80">
                         {{ $ticket->description }}
                     </p>
                 </div>
@@ -117,14 +117,14 @@
 
             <!-- Technician Action / Resolution Box -->
             @if($ticket->resolution_notes || $ticket->technician_name)
-                <div class="portal-card rounded-3xl p-6 sm:p-7 border-sky-200 bg-gradient-to-br from-sky-50/90 to-blue-50/60 space-y-3 shadow-sm">
+                <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border-sky-200 bg-gradient-to-br from-sky-50/90 to-blue-50/60 space-y-2.5 sm:space-y-3 shadow-xs">
                     <div class="flex items-center justify-between">
                         <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-800 flex items-center gap-1.5">
                             <iconify-icon icon="solar:user-hand-up-bold"></iconify-icon>
                             <span>Tindakan Tim Teknis PT MSN</span>
                         </div>
                         @if($ticket->resolved_at)
-                            <span class="text-[11px] font-mono text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <span class="text-[10px] sm:text-[11px] font-mono text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                                 Selesai: {{ $ticket->resolved_at->translatedFormat('d M Y, H:i') }} WIB
                             </span>
                         @endif
@@ -138,7 +138,7 @@
                     @endif
 
                     @if($ticket->resolution_notes)
-                        <div class="text-xs text-slate-800 bg-white/90 p-4 rounded-2xl border border-slate-200 whitespace-pre-line leading-relaxed shadow-sm">
+                        <div class="text-xs text-slate-800 bg-white/90 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 whitespace-pre-line leading-relaxed shadow-xs">
                             {{ $ticket->resolution_notes }}
                         </div>
                     @endif
@@ -148,10 +148,10 @@
         </div>
 
         <!-- Right 1 Col: Metadata & Customer Reference -->
-        <div class="space-y-4">
+        <div class="space-y-3 sm:space-y-4">
             
-            <div class="portal-card rounded-3xl p-5 space-y-3.5 text-xs">
-                <div class="font-mono font-bold uppercase tracking-wider text-sky-700">Detail Pengaduan</div>
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 text-xs">
+                <div class="font-mono font-bold uppercase tracking-wider text-sky-700 text-[11px] sm:text-xs">Detail Pengaduan</div>
                 
                 <div class="space-y-2.5 divide-y divide-slate-100">
                     <div class="pt-1">
