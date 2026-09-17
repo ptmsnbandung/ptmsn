@@ -412,7 +412,71 @@ class TicketController extends Controller
             }
         }
 
-        // Coba ambil dari server IMS secara server-to-server (Proxy stream agar bebas dari mixed-content / SSL mismatch di browser)
+        // 1. Coba ambil dari Endpoint API IMS: /api/up-downgrade/{kode_trx}/bukti
+        $kodeTrx = request('kode_trx');
+        if (empty($kodeTrx)) {
+            try {
+                $trx = \DB::connection('ims')->table('trx_ubah_layanan')
+                    ->where('foto_ss', $filename)
+                    ->orWhere('foto_ss', 'like', '%' . $filename . '%')
+                    ->first();
+                if ($trx && !empty($trx->kode_trx_ubah_layanan)) {
+                    $kodeTrx = $trx->kode_trx_ubah_layanan;
+                }
+            } catch (\Throwable $e) {
+                // Abaikan error db lookup
+            }
+        }
+
+        if (!empty($kodeTrx)) {
+            $apiCandidates = [
+                rtrim(config('company.ims_url', 'http://ims.ptmsn.co.id'), '/') . '/api/up-downgrade/' . $kodeTrx . '/bukti',
+                rtrim(config('company.ims_url', 'https://ims.ptmsn.co.id'), '/') . '/api/up-downgrade/' . $kodeTrx . '/bukti',
+                'http://ims.ptmsn.co.id/api/up-downgrade/' . $kodeTrx . '/bukti',
+                'https://ims.ptmsn.co.id/api/up-downgrade/' . $kodeTrx . '/bukti',
+            ];
+
+            foreach ($apiCandidates as $apiUrl) {
+                try {
+                    $ch = curl_init($apiUrl);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                    $content = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+                    curl_close($ch);
+
+                    if ($httpCode === 200 && !empty($content)) {
+                        if (str_starts_with((string)$contentType, 'image/')) {
+                            return response($content, 200, [
+                                'Content-Type' => $contentType,
+                                'Cache-Control' => 'public, max-age=86400',
+                            ]);
+                        }
+
+                        $json = json_decode($content, true);
+                        if (is_array($json)) {
+                            if (!empty($json['data']) && base64_decode($json['data'], true)) {
+                                return response(base64_decode($json['data']), 200, [
+                                    'Content-Type' => 'image/jpeg',
+                                    'Cache-Control' => 'public, max-age=86400',
+                                ]);
+                            }
+                            if (!empty($json['url'])) {
+                                return redirect($json['url']);
+                            }
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Coba kandidat berikutnya
+                }
+            }
+        }
+
+        // 2. Coba ambil langsung dari file statis / uploads jika ada
         $remoteBases = array_unique(array_filter([
             config('company.ims_upload_url'),
             env('IMS_UPLOAD_URL'),

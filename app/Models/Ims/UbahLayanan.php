@@ -155,12 +155,14 @@ class UbahLayanan extends Model
             return asset('storage/' . $file);
         }
 
-        // 2. Stream lewat route portal internal atau URL upload IMS
+        // 2. Gunakan route stream portal dengan menyertakan kode_trx untuk API
         try {
-            return route('portal.tickets.image', ['filename' => $file]);
+            return route('portal.tickets.image', [
+                'filename' => $file,
+                'kode_trx' => $this->kode_trx_ubah_layanan,
+            ]);
         } catch (\Throwable $e) {
-            $baseUrl = config('company.ims_upload_url', env('IMS_UPLOAD_URL', 'https://www.ptmsn.co.id/uploads/up_downgrade'));
-            return rtrim($baseUrl, '/') . '/' . ltrim($file, '/');
+            return rtrim(config('company.ims_url', 'http://ims.ptmsn.co.id'), '/') . '/api/up-downgrade/' . $this->kode_trx_ubah_layanan . '/bukti';
         }
     }
 
