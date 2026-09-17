@@ -63,6 +63,11 @@ class Customer extends Authenticatable
         return $this->hasMany(TiketGangguan::class, 'nomor_internet', 'nomor_internet')->orderBy('date_create', 'desc');
     }
 
+    public function ubahLayanan()
+    {
+        return $this->hasMany(\App\Models\Ims\UbahLayanan::class, 'nomor_internet', 'nomor_internet')->orderBy('date_create', 'desc');
+    }
+
     public function imsTickets()
     {
         return $this->tickets();

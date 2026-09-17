@@ -6,47 +6,78 @@ use App\Http\Controllers\Controller;
 use App\Models\Ims\TiketGangguan;
 use App\Models\Ims\UbahLayanan;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     /**
-     * Tampilkan semua daftar tiket gangguan pelanggan
+     * Tampilkan semua daftar tiket gangguan & ubah layanan pelanggan
      */
     public function index(Request $request)
     {
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
-        $query = $customer->tickets();
+        $ticketsQuery = $customer->tickets();
+        $ubahQuery = $customer->ubahLayanan();
 
         if ($request->filled('status')) {
             $status = $request->status;
             if ($status === 'open') {
-                $query->whereIn('status', ['11', 'open', 'antrian']);
+                $ticketsQuery->whereIn('status', ['11', 'open', 'antrian']);
+                $ubahQuery->whereIn('status_ubah_layanan', ['11', 'open', 'antrian']);
             } elseif ($status === 'in_progress') {
-                $query->whereIn('status', ['12', 'in_progress', 'proses', 'konfirmasi']);
+                $ticketsQuery->whereIn('status', ['12', 'in_progress', 'proses', 'konfirmasi']);
+                $ubahQuery->whereIn('status_ubah_layanan', ['12', 'in_progress', 'proses']);
             } elseif ($status === 'resolved') {
-                $query->whereIn('status', ['13', '14', 'resolved', 'done', 'close', 'closed']);
+                $ticketsQuery->whereIn('status', ['13', '14', 'resolved', 'done', 'close', 'closed']);
+                $ubahQuery->whereIn('status_ubah_layanan', ['13', '14', 'resolved', 'done']);
             } else {
-                $query->where('status', $status);
+                $ticketsQuery->where('status', $status);
+                $ubahQuery->where('status_ubah_layanan', $status);
             }
         }
 
         if ($request->filled('category')) {
-            $query->where('kat_tiket', $request->category);
+            $cat = $request->category;
+            if ($cat === '17') {
+                $ticketsQuery->whereRaw('1 = 0');
+            } else {
+                $ticketsQuery->where('kat_tiket', $cat);
+                $ubahQuery->whereRaw('1 = 0');
+            }
         }
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
+            $ticketsQuery->where(function ($q) use ($search) {
                 $q->where('tiket', 'like', "%{$search}%")
                   ->orWhere('indikasi', 'like', "%{$search}%")
                   ->orWhere('keluhan', 'like', "%{$search}%");
             });
+            $ubahQuery->where(function ($q) use ($search) {
+                $q->where('kode_trx_ubah_layanan', 'like', "%{$search}%")
+                  ->orWhere('note_request', 'like', "%{$search}%");
+            });
         }
 
-        $tickets = $query->paginate(10)->withQueryString();
+        $allTickets = $ticketsQuery->get();
+        $allUbah = $ubahQuery->get();
+
+        $merged = $allTickets->concat($allUbah)->sortByDesc(function ($item) {
+            return $item->created_at ? $item->created_at->timestamp : 0;
+        })->values();
+
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 10;
+        $tickets = new LengthAwarePaginator(
+            $merged->forPage($page, $perPage),
+            $merged->count(),
+            $perPage,
+            $page,
+            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+        );
 
         return view('portal.tickets.index', compact('tickets', 'customer'));
     }
@@ -246,7 +277,51 @@ class TicketController extends Controller
             $subject = 'Laporan Pelanggan';
         }
 
-        // Generate nomor tiket format IMS: [kat_tiket][YYYYMMDD][RANDOM]
+        // Jika kategori Ubah Layanan (17), HANYA simpan ke tabel trx_ubah_layanan IMS
+        if ($katTiket === '17') {
+            $packageId = $request->input('target_package_id');
+            $targetPkg = \App\Models\Package::find($packageId);
+            $speedNumber = (int) preg_replace('/[^0-9]/', '', $targetPkg?->speed ?? '20');
+            $matchingBw = \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->where('hide', '0')->first()
+                ?: \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->first();
+            $kodeBandwithBaru = $matchingBw?->kode_bandwith ?: ($customer->pelanggan?->kode_bandwith ?: 'AG167632');
+
+            $kodeTrxUbah = 'UB-' . $customer->nomor_internet . rand(1000, 9999);
+            
+            UbahLayanan::create([
+                'kode_trx_ubah_layanan' => $kodeTrxUbah,
+                'nomor_internet' => $customer->nomor_internet,
+                'kode_bandwith_lama' => $customer->pelanggan?->kode_bandwith ?: ($customer->kode_bandwith ?: 'AG167632'),
+                'kode_bandwith_baru' => $kodeBandwithBaru,
+                'status_ubah_layanan' => '11', // Status 11 = Request
+                'date_request' => date('Y-m-d'),
+                'note_request' => $keluhan,
+                'date_create' => now(),
+                'user_create' => 'Portal Pelanggan',
+                'hide' => '0',
+            ]);
+
+            // Sinkronkan juga ke database ims_v3 jika ada
+            try {
+                \Illuminate\Support\Facades\DB::statement("
+                    INSERT INTO `ims_v3`.`trx_ubah_layanan` 
+                    (`kode_trx_ubah_layanan`, `nomor_internet`, `kode_bandwith_lama`, `kode_bandwith_baru`, `status_ubah_layanan`, `date_request`, `note_request`, `date_create`, `user_create`, `hide`)
+                    VALUES (?, ?, ?, ?, '11', ?, ?, NOW(), 'Portal Pelanggan', '0')
+                ", [
+                    $kodeTrxUbah,
+                    $customer->nomor_internet,
+                    $customer->pelanggan?->kode_bandwith ?: ($customer->kode_bandwith ?: 'AG167632'),
+                    $kodeBandwithBaru,
+                    date('Y-m-d'),
+                    $keluhan
+                ]);
+            } catch (\Exception $exV3) {}
+
+            return redirect()->route('portal.tickets.show', $kodeTrxUbah)
+                ->with('success', "Permintaan Ubah Layanan ({$kodeTrxUbah}) berhasil dikirim ke sistem IMS! Tim administrasi layanan kami akan segera memproses penyesuaian paket Anda.");
+        }
+
+        // Untuk kategori gangguan teknis, WiFi, relokasi, dll: simpan ke tabel trx_tiket_gangguan
         $datePrefix = date('Ymd');
         $randomSuffix = rand(100, 999);
         $ticketNumber = $katTiket . '1' . $datePrefix . $randomSuffix;
@@ -267,52 +342,7 @@ class TicketController extends Controller
             'hide' => null,
         ]);
 
-        // Jika kategori Ubah Layanan (17), simpan ke tabel trx_ubah_layanan IMS
-        if ($katTiket === '17') {
-            try {
-                $targetPkg = isset($targetPkg) ? $targetPkg : null;
-                $speedNumber = (int) preg_replace('/[^0-9]/', '', $targetPkg?->speed ?? '20');
-                $matchingBw = \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->where('hide', '0')->first()
-                    ?: \App\Models\Ims\Bandwith::where('nominal_bandwith', $speedNumber)->first();
-                $kodeBandwithBaru = $matchingBw?->kode_bandwith ?: ($customer->pelanggan?->kode_bandwith ?: 'AG167632');
-
-                $kodeTrxUbah = 'UB-' . $customer->nomor_internet . rand(1000, 9999);
-                UbahLayanan::create([
-                    'kode_trx_ubah_layanan' => $kodeTrxUbah,
-                    'nomor_internet' => $customer->nomor_internet,
-                    'kode_bandwith_lama' => $customer->pelanggan?->kode_bandwith ?: $customer->kode_bandwith,
-                    'kode_bandwith_baru' => $kodeBandwithBaru,
-                    'status_ubah_layanan' => '11', // Status 11 = Request
-                    'date_request' => date('Y-m-d'),
-                    'note_request' => $keluhan,
-                    'date_create' => now(),
-                    'user_create' => 'Portal Pelanggan',
-                    'hide' => '0',
-                ]);
-
-                // Sinkronkan juga ke database ims_v3 jika ada
-                try {
-                    \Illuminate\Support\Facades\DB::statement("
-                        INSERT INTO `ims_v3`.`trx_ubah_layanan` 
-                        (`kode_trx_ubah_layanan`, `nomor_internet`, `kode_bandwith_lama`, `kode_bandwith_baru`, `status_ubah_layanan`, `date_request`, `note_request`, `date_create`, `user_create`, `hide`)
-                        VALUES (?, ?, ?, ?, '11', ?, ?, NOW(), 'Portal Pelanggan', '0')
-                    ", [
-                        $kodeTrxUbah,
-                        $customer->nomor_internet,
-                        $customer->pelanggan?->kode_bandwith ?: $customer->kode_bandwith,
-                        $kodeBandwithBaru,
-                        date('Y-m-d'),
-                        $keluhan
-                    ]);
-                } catch (\Exception $exV3) {}
-
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::warning("Gagal simpan trx_ubah_layanan: " . $e->getMessage());
-            }
-        }
-
         $successMsg = match ($katTiket) {
-            '17' => "Permintaan Ubah Layanan / Perubahan Paket (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim administrasi layanan kami akan segera memproses penyesuaian paket Anda.",
             '12' => "Permintaan Ubah Password WiFi (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim teknisi NOC kami akan segera memperbarui konfigurasi modem ONT Anda.",
             '13' => "Pengajuan Relokasi Alamat (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim survei kami akan segera menghubungi Anda.",
             '14', '15' => "Permohonan administrasi layanan (#{$ticket->tiket}) berhasil dikirim ke sistem IMS! Tim kami akan segera menindaklanjuti.",
@@ -331,7 +361,12 @@ class TicketController extends Controller
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
 
-        $ticket = $customer->tickets()->where('tiket', $id)->firstOrFail();
+        if (str_starts_with($id, 'UB-')) {
+            $ticket = $customer->ubahLayanan()->where('kode_trx_ubah_layanan', $id)->firstOrFail();
+        } else {
+            $ticket = $customer->tickets()->where('tiket', $id)->first()
+                ?: $customer->ubahLayanan()->where('kode_trx_ubah_layanan', $id)->firstOrFail();
+        }
 
         return view('portal.tickets.show', compact('ticket', 'customer'));
     }
