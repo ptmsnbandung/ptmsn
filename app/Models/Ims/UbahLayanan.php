@@ -131,6 +131,25 @@ class UbahLayanan extends Model
         return $this->note_schedule ?: null;
     }
 
+    public function getHasFotoAttribute(): bool
+    {
+        return !empty($this->foto_ss) || !empty($this->doc_ubahlayanan);
+    }
+
+    public function getFotoSsUrlAttribute(): ?string
+    {
+        $file = $this->foto_ss ?: $this->doc_ubahlayanan;
+        if (empty($file)) {
+            return null;
+        }
+
+        if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
+            return $file;
+        }
+
+        return route('portal.tickets.image', ['filename' => $file]);
+    }
+
     public function getCreatedAtAttribute()
     {
         return !empty($this->date_create) ? Carbon::parse($this->date_create) : now();

@@ -370,5 +370,44 @@ class TicketController extends Controller
 
         return view('portal.tickets.show', compact('ticket', 'customer'));
     }
+
+    /**
+     * Tampilkan / stream gambar bukti screenshot yang diupload oleh NOC
+     */
+    public function showImage($filename)
+    {
+        $filename = basename($filename);
+
+        $possibleDirs = [
+            public_path('storage'),
+            public_path('storage/ubah_layanan'),
+            public_path('storage/proof-mutations'),
+            public_path('uploads'),
+            public_path('uploads/ubah_layanan'),
+            public_path('assets/images'),
+            storage_path('app/public'),
+            storage_path('app/public/proof-mutations'),
+            storage_path('app/public/ubah_layanan'),
+            'c:/xampp/htdocs/ims-new/storage/app/public',
+            'c:/xampp/htdocs/ims-new/storage/app/public/proof-mutations',
+            'c:/xampp/htdocs/ims-new/public/uploads',
+            'c:/xampp/htdocs/ims2/public/uploads',
+            'c:/xampp/htdocs/ims2/public/assets/images',
+            'c:/xampp/htdocs/imscjp/storage/app/public',
+        ];
+
+        foreach ($possibleDirs as $dir) {
+            $fullPath = $dir . '/' . $filename;
+            if (file_exists($fullPath) && is_file($fullPath)) {
+                $mime = mime_content_type($fullPath) ?: 'image/jpeg';
+                return response()->file($fullPath, [
+                    'Content-Type' => $mime,
+                    'Cache-Control' => 'public, max-age=86400',
+                ]);
+            }
+        }
+
+        abort(404, 'Foto SS bukti NOC tidak ditemukan di server.');
+    }
 }
 

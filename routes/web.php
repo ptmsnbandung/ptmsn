@@ -50,6 +50,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('/tickets', [PortalTicketController::class, 'index'])->name('tickets.index');
         Route::get('/tickets/create', [PortalTicketController::class, 'create'])->name('tickets.create');
         Route::post('/tickets', [PortalTicketController::class, 'store'])->name('tickets.store');
+        Route::get('/tickets/image/{filename}', [PortalTicketController::class, 'showImage'])->where('filename', '.*')->name('tickets.image');
         Route::get('/tickets/{ticket}', [PortalTicketController::class, 'show'])->name('tickets.show');
 
         // Tagihan & Pembayaran (Billing)
