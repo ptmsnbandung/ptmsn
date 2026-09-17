@@ -147,7 +147,17 @@ class UbahLayanan extends Model
             return $file;
         }
 
-        return route('portal.tickets.image', ['filename' => $file]);
+        // 1. Jika ada file lokal di project saat pengembangan
+        if (file_exists(public_path('uploads/up_downgrade/' . $file))) {
+            return asset('uploads/up_downgrade/' . $file);
+        }
+        if (file_exists(public_path('storage/' . $file))) {
+            return asset('storage/' . $file);
+        }
+
+        // 2. URL utama dari subdomain IMS (https://ims.ptmsn.co.id/uploads/up_downgrade/{file})
+        $baseUrl = config('company.ims_upload_url', env('IMS_UPLOAD_URL', 'https://ims.ptmsn.co.id/uploads/up_downgrade'));
+        return rtrim($baseUrl, '/') . '/' . ltrim($file, '/');
     }
 
     public function getCreatedAtAttribute()

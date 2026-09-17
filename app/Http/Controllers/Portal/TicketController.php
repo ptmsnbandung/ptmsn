@@ -379,6 +379,7 @@ class TicketController extends Controller
         $filename = basename($filename);
 
         $possibleDirs = [
+            public_path('uploads/up_downgrade'),
             public_path('storage'),
             public_path('storage/ubah_layanan'),
             public_path('storage/proof-mutations'),
@@ -387,6 +388,7 @@ class TicketController extends Controller
             public_path('assets/images'),
             public_path('images'),
             storage_path('app/public'),
+            storage_path('app/public/up_downgrade'),
             storage_path('app/public/proof-mutations'),
             storage_path('app/public/ubah_layanan'),
             'c:/xampp/htdocs/ims-new/public/storage/proof-mutations',
@@ -410,13 +412,9 @@ class TicketController extends Controller
             }
         }
 
-        // Jika ada konfigurasi URL server IMS terpusat
-        $remoteBase = env('IMS_ASSETS_URL') ?: env('IMS_BASE_URL');
-        if ($remoteBase) {
-            return redirect(rtrim($remoteBase, '/') . '/' . $filename);
-        }
-
-        abort(404, 'Foto SS bukti NOC tidak ditemukan di direktori server lokal.');
+        // Redirect ke subdomain IMS resmi (https://ims.ptmsn.co.id/uploads/up_downgrade/{filename})
+        $remoteBase = config('company.ims_upload_url', env('IMS_UPLOAD_URL', 'https://ims.ptmsn.co.id/uploads/up_downgrade'));
+        return redirect(rtrim($remoteBase, '/') . '/' . $filename);
     }
 }
 
