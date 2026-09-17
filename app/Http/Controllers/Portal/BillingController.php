@@ -66,6 +66,12 @@ class BillingController extends Controller
             $invoices = $customer->billingLayanan()->get();
         }
 
+        // Cek sinkronisasi status otomatis dengan Midtrans jika tagihan belum lunas tapi pernah dibuat sesi bayar
+        if ($currentInvoice && !$currentInvoice->is_paid && !empty($currentInvoice->payment_post)) {
+            $this->midtransService->syncTransactionStatus($currentInvoice);
+            $currentInvoice->refresh();
+        }
+
         $snapJsUrl = $this->midtransService->getSnapJsUrl();
         $clientKey = $this->midtransService->getClientKey();
 
@@ -99,10 +105,44 @@ class BillingController extends Controller
             abort(403, 'Akses tidak diizinkan.');
         }
 
+        // Sinkronisasi status dengan Midtrans jika belum lunas
+        if (!$invoice->is_paid && !empty($invoice->payment_post)) {
+            $this->midtransService->syncTransactionStatus($invoice);
+            $invoice->refresh();
+        }
+
         $snapJsUrl = $this->midtransService->getSnapJsUrl();
         $clientKey = $this->midtransService->getClientKey();
 
         return view('portal.billing.show', compact('customer', 'invoice', 'snapJsUrl', 'clientKey'));
+    }
+
+    /**
+     * Endpoint Cek & Sinkronkan Status Pembayaran dari Frontend / Popup
+     */
+    public function sync(string $invoiceCode): JsonResponse
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+        $decodedCode = urldecode($invoiceCode);
+
+        $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
+            ->orWhere('kode_billing_layanan', $invoiceCode)
+            ->first();
+
+        if (!$invoice || $invoice->nomor_internet !== $customer->customer_id) {
+            return response()->json(['success' => false, 'message' => 'Tagihan tidak ditemukan'], 404);
+        }
+
+        $this->midtransService->syncTransactionStatus($invoice);
+        $invoice->refresh();
+
+        return response()->json([
+            'success' => true,
+            'is_paid' => $invoice->is_paid,
+            'status' => $invoice->status_bill_lay,
+            'message' => $invoice->is_paid ? 'Tagihan berhasil dikonfirmasi LUNAS.' : 'Status tagihan diperbarui.',
+        ]);
     }
 
     /**

@@ -173,12 +173,21 @@
                         if (typeof window.snap !== 'undefined') {
                             window.snap.pay(data.token, {
                                 onSuccess: function(result) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Pembayaran Berhasil!',
-                                        text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
-                                        confirmButtonColor: '#0ea5e9'
-                                    }).then(() => window.location.reload());
+                                    fetch(`{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/sync`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Accept': 'application/json'
+                                        }
+                                    }).finally(() => {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Pembayaran Berhasil!',
+                                            text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
+                                            confirmButtonColor: '#0ea5e9'
+                                        }).then(() => window.location.reload());
+                                    });
                                 },
                                 onPending: function(result) {
                                     Swal.fire({

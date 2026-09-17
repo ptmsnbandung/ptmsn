@@ -55,6 +55,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
         // Tagihan & Pembayaran (Billing)
         Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
         Route::post('/tagihan/{invoice}/pay', [PortalBillingController::class, 'pay'])->where('invoice', '.*')->name('billing.pay');
+        Route::post('/tagihan/{invoice}/sync', [PortalBillingController::class, 'sync'])->where('invoice', '.*')->name('billing.sync');
         Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->where('invoice', '.*')->name('billing.show');
 
         // Profile & Service Settings

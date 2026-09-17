@@ -256,6 +256,8 @@ class MidtransService
         }
 
         $billing->payment_respond_paid = $payload;
+        $billing->date_update = Carbon::now();
+        $billing->user_update = 'Midtrans Webhook';
         $billing->save();
 
         Log::info('Midtrans Webhook: Billing status updated', [
@@ -270,5 +272,80 @@ class MidtransService
             'code' => 200,
             'message' => 'Notification processed successfully',
         ];
+    }
+
+    /**
+     * URL API Status Midtrans v2
+     */
+    public function getStatusApiUrl(string $orderId): string
+    {
+        return $this->isProduction()
+            ? "https://api.midtrans.com/v2/{$orderId}/status"
+            : "https://api.sandbox.midtrans.com/v2/{$orderId}/status";
+    }
+
+    /**
+     * Cek & Sinkronkan Status Transaksi Langsung ke Midtrans API
+     * (Menjamin status terupdate walau Webhook terlambat/belum sampai)
+     */
+    public function syncTransactionStatus(BillingLayanan $billing): bool
+    {
+        if ($billing->is_paid) {
+            return true;
+        }
+
+        if (empty($this->getServerKey())) {
+            return false;
+        }
+
+        // Ambil order_id dari data payment_post yang tersimpan saat klik bayar
+        $orderId = null;
+        if (!empty($billing->payment_post)) {
+            $postData = is_array($billing->payment_post) ? $billing->payment_post : json_decode($billing->payment_post, true);
+            $orderId = $postData['transaction_details']['order_id'] ?? null;
+        }
+
+        if (!$orderId) {
+            return false;
+        }
+
+        try {
+            $url = $this->getStatusApiUrl($orderId);
+            $response = Http::withBasicAuth($this->getServerKey(), '')
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                ])
+                ->timeout(8)
+                ->get($url);
+
+            if ($response->successful()) {
+                $payload = $response->json();
+                $transactionStatus = $payload['transaction_status'] ?? '';
+                $fraudStatus = $payload['fraud_status'] ?? '';
+                $grossAmount = $payload['gross_amount'] ?? $billing->total_layanan;
+                $paymentType = $payload['payment_type'] ?? 'midtrans';
+
+                $isSettled = ($transactionStatus === 'settlement') ||
+                    ($transactionStatus === 'capture' && $fraudStatus === 'accept');
+
+                if ($isSettled) {
+                    $billing->status_bill_lay = 15; // Lunas
+                    $billing->merchant_type = $paymentType;
+                    $billing->amount_paid = (float) $grossAmount;
+                    $billing->payment_paid = $payload['settlement_time'] ?? Carbon::now();
+                    $billing->payment_respond_paid = $payload;
+                    $billing->date_update = Carbon::now();
+                    $billing->user_update = 'Midtrans Sync';
+                    $billing->save();
+
+                    Log::info("Midtrans Status Synced: {$billing->kode_billing_layanan} updated to PAID (15)");
+                    return true;
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning("Midtrans Sync Error for {$billing->kode_billing_layanan}: " . $e->getMessage());
+        }
+
+        return false;
     }
 }
