@@ -3,25 +3,25 @@
 @section('title', 'Buat Laporan / Tiket Layanan')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6" x-data="{
+<div class="max-w-4xl mx-auto space-y-3.5 sm:space-y-6" x-data="{
     katTiket: '{{ old('kat_tiket', '11') }}',
     showPassword: false
 }">
 
     <!-- Breadcrumb & Header -->
     <div>
-        <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-sky-600 transition-colors mb-2 font-mono font-semibold">
+        <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 hover:text-sky-600 transition-colors mb-1 sm:mb-2 font-mono font-semibold">
             <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
             <span>Kembali ke Daftar Laporan</span>
         </a>
-        <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Formulir Pengaduan / Tiket Layanan</h1>
-        <p class="text-xs sm:text-sm text-slate-600">Pilih kategori layanan di bawah ini. Formulir akan otomatis menyesuaikan informasi yang dibutuhkan oleh tim NOC & teknisi PT MSN.</p>
+        <h1 class="text-lg sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Formulir Tiket Layanan</h1>
+        <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-0.5">Pilih kategori layanan di bawah ini. Formulir akan otomatis menyesuaikan informasi yang dibutuhkan oleh tim NOC & teknisi PT MSN.</p>
     </div>
 
     <!-- Error Summary if Any -->
     @if (isset($errors) && $errors->any())
-        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
-            <iconify-icon icon="solar:danger-triangle-bold" class="text-rose-500 text-xl shrink-0 mt-0.5"></iconify-icon>
+        <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5 sm:gap-3 shadow-xs">
+            <iconify-icon icon="solar:danger-triangle-bold" class="text-rose-500 text-lg sm:text-xl shrink-0 mt-0.5"></iconify-icon>
             <div class="space-y-1">
                 <p class="font-bold">Mohon lengkapi data formulir berikut:</p>
                 <ul class="list-disc list-inside text-rose-700 text-xs space-y-0.5">
@@ -34,115 +34,115 @@
     @endif
 
     <!-- Main Form Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5 sm:gap-6">
         
         <!-- Left 2 Cols: The Form -->
         <div class="lg:col-span-2">
-            <div class="portal-card rounded-3xl p-6 sm:p-8">
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-8">
                 
-                <form action="{{ route('portal.tickets.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('portal.tickets.store') }}" method="POST" enctype="multipart/form-data" class="space-y-3.5 sm:space-y-6">
                     @csrf
 
                     <!-- 1. Kategori Tiket IMS (Visual Radio Cards) -->
-                    <div class="space-y-2.5">
-                        <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
+                    <div class="space-y-2 sm:space-y-2.5">
+                        <label class="block text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-700">
                             1. Pilih Kategori Pengaduan / Permintaan <span class="text-rose-500">*</span>
                         </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2.5">
                             
                             <!-- Kat 11: Gangguan Layanan -->
                             <label 
                                 @click="katTiket = '11'"
-                                :class="katTiket === '11' ? 'border-sky-500 bg-sky-50/90 ring-2 ring-sky-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-sky-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '11' ? 'border-sky-500 bg-sky-50/90 ring-2 ring-sky-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-sky-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="11" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:shield-warning-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:shield-warning-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Gangguan Layanan</div>
-                                    <div class="text-[10px] text-slate-500">LOS merah, mati total, lemot</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Gangguan Layanan</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">LOS merah / lemot</div>
                                 </div>
                             </label>
 
                             <!-- Kat 12: Ubah Password -->
                             <label 
                                 @click="katTiket = '12'"
-                                :class="katTiket === '12' ? 'border-pink-500 bg-pink-50/90 ring-2 ring-pink-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-pink-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '12' ? 'border-pink-500 bg-pink-50/90 ring-2 ring-pink-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-pink-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="12" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:key-minimalistic-square-3-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:key-minimalistic-square-3-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Ubah Password WiFi</div>
-                                    <div class="text-[10px] text-slate-500">Ganti SSID / password router</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Ubah WiFi</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Ganti password</div>
                                 </div>
                             </label>
 
                             <!-- Kat 17: Ubah Layanan -->
                             <label 
                                 @click="katTiket = '17'"
-                                :class="katTiket === '17' ? 'border-emerald-500 bg-emerald-50/90 ring-2 ring-emerald-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-emerald-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '17' ? 'border-emerald-500 bg-emerald-50/90 ring-2 ring-emerald-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-emerald-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="17" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:round-transfer-vertical-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:round-transfer-vertical-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Ubah Layanan</div>
-                                    <div class="text-[10px] text-slate-500">Upgrade / downgrade kecepatan</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Ubah Paket</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Upgrade speed</div>
                                 </div>
                             </label>
 
                             <!-- Kat 13: Cek Coverage / Relokasi -->
                             <label 
                                 @click="katTiket = '13'"
-                                :class="katTiket === '13' ? 'border-amber-500 bg-amber-50/90 ring-2 ring-amber-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-amber-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '13' ? 'border-amber-500 bg-amber-50/90 ring-2 ring-amber-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-amber-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="13" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:map-point-wave-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:map-point-wave-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Cek Coverage / Relokasi</div>
-                                    <div class="text-[10px] text-slate-500">Pindah alamat / cek jangkauan</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Relokasi</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Pindah alamat FO</div>
                                 </div>
                             </label>
 
                             <!-- Kat 15: Suspend Layanan -->
                             <label 
                                 @click="katTiket = '15'"
-                                :class="katTiket === '15' ? 'border-purple-500 bg-purple-50/90 ring-2 ring-purple-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-purple-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '15' ? 'border-purple-500 bg-purple-50/90 ring-2 ring-purple-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-purple-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="15" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:pause-circle-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:pause-circle-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Suspend Layanan</div>
-                                    <div class="text-[10px] text-slate-500">Jeda sementara koneksi</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Suspend</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Jeda koneksi</div>
                                 </div>
                             </label>
 
                             <!-- Kat 14: Terminasi -->
                             <label 
                                 @click="katTiket = '14'"
-                                :class="katTiket === '14' ? 'border-rose-500 bg-rose-50/90 ring-2 ring-rose-500/20 shadow-sm' : 'border-slate-200 bg-white/70 hover:border-rose-300'"
-                                class="relative flex items-center gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all"
+                                :class="katTiket === '14' ? 'border-rose-500 bg-rose-50/90 ring-2 ring-rose-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-rose-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
                             >
                                 <input type="radio" name="kat_tiket" value="14" x-model="katTiket" class="sr-only">
-                                <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                                    <iconify-icon icon="solar:user-cross-bold" width="18"></iconify-icon>
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:user-cross-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                                 </div>
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-slate-900">Terminasi</div>
-                                    <div class="text-[10px] text-slate-500">Penghentian berlangganan</div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Terminasi</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Berhenti langganan</div>
                                 </div>
                             </label>
 
@@ -152,20 +152,20 @@
                     <!-- ================================================================= -->
                     <!-- FORM KONDISIONAL 1: GANGGUAN LAYANAN (11)                        -->
                     <!-- ================================================================= -->
-                    <div x-show="katTiket === '11'" class="space-y-4 pt-3 border-t border-slate-200/80">
-                        <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
+                    <div x-show="katTiket === '11'" class="space-y-3 sm:space-y-4 pt-2.5 sm:pt-3 border-t border-slate-200/80">
+                        <div class="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
                             <iconify-icon icon="solar:shield-warning-bold"></iconify-icon>
                             <span>Rincian Kendala Gangguan Internet</span>
                         </div>
 
                         <!-- Pilihan Jenis Gangguan Populer -->
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">
+                        <div class="space-y-1">
+                            <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
                                 Indikasi Utama Gangguan: <span class="text-rose-500">*</span>
                             </label>
                             <select 
                                 name="gangguan_type" 
-                                class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all shadow-sm"
+                                class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all shadow-2xs"
                             >
                                 <option value="Lampu LOS Modem Merah / Berkedip" {{ old('gangguan_type') === 'Lampu LOS Modem Merah / Berkedip' ? 'selected' : '' }}>Lampu LOS Modem Merah / Berkedip (Kabel FO Putus)</option>
                                 <option value="Mati Total (No Internet Access)" {{ old('gangguan_type') === 'Mati Total (No Internet Access)' ? 'selected' : '' }}>Mati Total / Tidak Ada Internet</option>
@@ -177,68 +177,68 @@
                         </div>
 
                         <!-- Status Lampu Modem ONT -->
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">
+                        <div class="space-y-1">
+                            <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
                                 Lampu Indikator Modem yang Menyala Saat Ini:
                             </label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+                                <label class="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
                                     <input type="checkbox" name="indikator_lampu[]" value="Power Hijau" checked class="rounded text-sky-600 focus:ring-sky-500">
                                     <span class="font-medium text-slate-800">Power</span>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
+                                <label class="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
                                     <input type="checkbox" name="indikator_lampu[]" value="PON Hijau" class="rounded text-sky-600 focus:ring-sky-500">
                                     <span class="font-medium text-slate-800">PON (Hijau)</span>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 cursor-pointer transition-all">
+                                <label class="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 cursor-pointer transition-all">
                                     <input type="checkbox" name="indikator_lampu[]" value="LOS Merah Berkedip" class="rounded text-rose-600 focus:ring-rose-500">
                                     <span class="font-medium text-rose-700">LOS (Merah)</span>
                                 </label>
-                                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
+                                <label class="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-slate-200 bg-white/70 hover:bg-white cursor-pointer transition-all">
                                     <input type="checkbox" name="indikator_lampu[]" value="WLAN / WiFi Menyala" checked class="rounded text-sky-600 focus:ring-sky-500">
                                     <span class="font-medium text-slate-800">WLAN / WiFi</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4">
                             <!-- Sudah restart modem -->
-                            <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
+                            <div class="space-y-1">
+                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
                                     Sudah Coba Restart Modem?
                                 </label>
-                                <select name="restart_modem" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 shadow-sm">
+                                <select name="restart_modem" class="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-lg sm:rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 shadow-2xs">
                                     <option value="Sudah direstart, kendala tetap sama">Sudah direstart, kendala tetap sama</option>
                                     <option value="Belum dicoba restart">Belum dicoba restart</option>
                                 </select>
                             </div>
 
                             <!-- Waktu Mulai Kendala -->
-                            <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
+                            <div class="space-y-1">
+                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
                                     Sejak Kapan Kendala Terjadi?
                                 </label>
                                 <input 
                                     type="text" 
                                     name="waktu_mulai" 
-                                    placeholder="Contoh: Pagi ini sekitar jam 07:30" 
+                                    placeholder="Contoh: Pagi ini jam 07:30" 
                                     value="{{ old('waktu_mulai', 'Hari ini') }}"
-                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 shadow-sm"
+                                    class="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-lg sm:rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 shadow-2xs"
                                 >
                             </div>
                         </div>
 
                         <!-- Kronologi / Deskripsi Tambahan -->
-                        <div class="space-y-1.5">
-                            <label for="description_gangguan" class="block text-xs font-bold text-slate-800">
+                        <div class="space-y-1">
+                            <label for="description_gangguan" class="block text-[11px] sm:text-xs font-bold text-slate-800">
                                 Penjelasan / Kronologi Lengkap:
                             </label>
                             <textarea 
                                 id="description_gangguan" 
                                 name="description" 
-                                rows="3" 
-                                placeholder="Tuliskan keterangan detail tambahan untuk membantu teknisi menganalisa masalah lebih cepat..."
-                                class="w-full px-4 py-3 rounded-2xl bg-white border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all resize-none shadow-sm"
+                                rows="2" 
+                                placeholder="Keterangan detail tambahan untuk membantu teknisi..."
+                                class="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all resize-none shadow-2xs"
                             >{{ old('description') }}</textarea>
                         </div>
                     </div>
@@ -578,15 +578,15 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="pt-4 border-t border-slate-200 flex items-center justify-between gap-4">
-                        <a href="{{ route('portal.tickets.index') }}" class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-xs font-heading font-bold text-slate-700 transition-colors">
+                    <div class="pt-3 sm:pt-4 border-t border-slate-200 flex items-center justify-between gap-3 sm:gap-4">
+                        <a href="{{ route('portal.tickets.index') }}" class="px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 text-xs font-heading font-bold text-slate-700 transition-colors">
                             Batal
                         </a>
                         <button 
                             type="submit" 
-                            class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                            class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer"
                         >
-                            <iconify-icon icon="solar:plain-bold" width="18"></iconify-icon>
+                            <iconify-icon icon="solar:plain-bold" width="16" class="sm:w-[18px]"></iconify-icon>
                             <span>Kirim Laporan Tiket</span>
                         </button>
                     </div>
@@ -597,50 +597,50 @@
         </div>
 
         <!-- Right 1 Col: Customer Info & SLA Notes -->
-        <div class="space-y-4">
+        <div class="space-y-3 sm:space-y-4">
             
             <!-- Customer Data Snapshot -->
-            <div class="portal-card rounded-3xl p-5 space-y-3">
-                <div class="text-xs font-mono font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
+                <div class="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
                     <iconify-icon icon="solar:user-id-bold"></iconify-icon>
                     <span>Data Pelapor:</span>
                 </div>
                 <div class="space-y-1.5 text-xs text-slate-600">
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Nama:</span>
-                        <span class="text-slate-900 font-bold block">{{ $customer->name }}</span>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">Nama:</span>
+                        <span class="text-slate-900 font-bold block text-xs">{{ $customer->name }}</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">ID Pelanggan:</span>
-                        <span class="text-sky-600 font-mono font-bold block">{{ $customer->customer_id }}</span>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">ID Pelanggan:</span>
+                        <span class="text-sky-600 font-mono font-bold block text-xs">{{ $customer->customer_id }}</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">No. WhatsApp:</span>
-                        <span class="text-slate-700 font-mono block">{{ $customer->phone }}</span>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">No. WhatsApp:</span>
+                        <span class="text-slate-700 font-mono block text-xs">{{ $customer->phone }}</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Paket Aktif:</span>
-                        <span class="text-slate-800 font-semibold block">{{ $customer->package->name ?? 'Broadband' }} ({{ $customer->package->speed ?? '25 Mbps' }})</span>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">Paket Aktif:</span>
+                        <span class="text-slate-800 font-semibold block text-xs">{{ $customer->package->name ?? 'Broadband' }} ({{ $customer->package->speed ?? '25 Mbps' }})</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Alamat Pemasangan:</span>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">Alamat Pemasangan:</span>
                         <span class="text-slate-700 block text-[11px] leading-relaxed">{{ $customer->address ?? 'Bekasi, Jawa Barat' }}</span>
                     </div>
                 </div>
             </div>
 
             <!-- Service Level Agreement (SLA) Guarantee -->
-            <div class="portal-card rounded-3xl p-5 bg-sky-50/80 border-sky-200 space-y-2.5 text-xs">
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 bg-sky-50/80 border-sky-200 space-y-2 text-xs">
                 <div class="font-heading font-bold text-sky-800 flex items-center gap-1.5">
-                    <iconify-icon icon="solar:clock-circle-bold" class="text-base"></iconify-icon>
+                    <iconify-icon icon="solar:clock-circle-bold" class="text-sm sm:text-base"></iconify-icon>
                     <span>Komitmen Respon Cepat (SLA)</span>
                 </div>
-                <p class="text-[11px] text-slate-600 leading-relaxed">
+                <p class="text-[10px] sm:text-[11px] text-slate-600 leading-relaxed">
                     Setelah laporan dikirim:
                 </p>
-                <ul class="space-y-1.5 text-[11px] text-slate-600 list-disc list-inside">
-                    <li><strong class="text-slate-800">&lt; 15 Menit:</strong> Respon awal NOC & analisa jarak jauh (remote check).</li>
-                    <li><strong class="text-white bg-sky-600 px-1 py-0.5 rounded text-[10px]">&lt; 2 Jam:</strong> Penugasan teknisi ke lokasi jika kendala fisik kabel/modem.</li>
+                <ul class="space-y-1 text-[10px] sm:text-[11px] text-slate-600 list-disc list-inside">
+                    <li><strong class="text-slate-800">&lt; 15 Menit:</strong> Respon awal & remote check NOC.</li>
+                    <li><strong class="text-white bg-sky-600 px-1 py-0.5 rounded text-[9px] sm:text-[10px]">&lt; 2 Jam:</strong> Penugasan teknisi ke lokasi.</li>
                 </ul>
             </div>
 
