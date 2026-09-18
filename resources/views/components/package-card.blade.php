@@ -15,23 +15,6 @@
         $speedNumber = $package->speed;
     }
 
-    // Recommendation pill per tier
-    $recommendations = [
-        'paket basic' => '1 - 4 Perangkat • Ringan',
-        'paket hemat' => '3 - 6 Perangkat • Hemat',
-        'paket keluarga' => '5 - 8 Perangkat • Terfavorit',
-        'paket premium' => '8 - 10 Perangkat • Kecepatan Tinggi',
-        'umkm basic' => 'Operasional UMKM & Toko',
-        'umkm plus' => 'Kantor & Usaha Berkembang',
-        'bisnis pro' => 'Perusahaan & High Traffic',
-        'bisnis enterprise' => 'Korporat & Instansi Besar',
-        'bronze' => '1 - 4 Perangkat • Ringan',
-        'silver' => '3 - 6 Perangkat • Hemat',
-        'gold' => '5 - 8 Perangkat • Terfavorit',
-        'platinum' => '8 - 10 Perangkat • Kecepatan Tinggi',
-    ];
-    $recText = $package->ideal_devices ?? ($recommendations[$nameLower] ?? 'Koneksi Stabil & Cepat');
-
     // Tier badge styles
     $tierBadgeStyles = [
         'paket basic' => 'bg-amber-500/10 text-amber-800 border-amber-300',
@@ -79,14 +62,6 @@
                     <iconify-icon icon="solar:transfer-horizontal-bold" class="text-[#0284c7] text-xs"></iconify-icon>
                     <span>Fiber Optic Unlimited</span>
                 </div>
-            </div>
-
-            <!-- Recommendation Pill -->
-            <div class="text-center my-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-heading font-semibold bg-sky-50 text-[#0284c7] border border-sky-200 shadow-2xs">
-                    <iconify-icon icon="solar:devices-linear" width="13"></iconify-icon>
-                    <span>{{ $recText }}</span>
-                </span>
             </div>
 
             <!-- Price Display Section -->
@@ -175,14 +150,6 @@
                     <iconify-icon icon="solar:transfer-horizontal-bold" class="text-[#0284c7] text-xs"></iconify-icon>
                     <span>Fiber Optic Unlimited</span>
                 </div>
-            </div>
-
-            <!-- Recommendation Pill -->
-            <div class="text-center my-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-heading font-semibold bg-slate-100 text-slate-600 shadow-2xs">
-                    <iconify-icon icon="solar:devices-linear" width="13"></iconify-icon>
-                    <span>{{ $recText }}</span>
-                </span>
             </div>
 
             <!-- Price Display Section -->
