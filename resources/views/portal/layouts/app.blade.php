@@ -101,6 +101,35 @@
 </head>
 <body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-20 md:pb-8" x-data="{ userDropdown: false }">
 
+    <!-- Custom Portal Preloader (Rotating Tab Logo) -->
+    <div id="portal-preloader">
+        <div class="flex flex-col items-center gap-4">
+            <!-- Rotating Spinner Ring with Center Favicon Logo -->
+            <div class="loader-spinner-ring">
+                <div class="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center p-2.5 z-10 border border-slate-100">
+                    <img src="{{ asset('images/logo/logo-icon.png') }}" alt="PT MSN" class="w-full h-full object-contain loader-logo-pulse">
+                </div>
+            </div>
+
+            <!-- Brand & Loading Status -->
+            <div class="text-center space-y-1">
+                <div class="flex items-center justify-center gap-1">
+                    <span class="font-brand font-extrabold text-base text-sky-600 tracking-tight">My</span>
+                    <span class="font-brand font-black text-base text-slate-900 tracking-tight">MSN</span>
+                    <span class="text-[10px] font-heading font-bold text-slate-400 uppercase tracking-widest ml-1">Self-Care</span>
+                </div>
+                <div class="flex items-center justify-center gap-1.5 text-xs font-mono text-slate-500">
+                    <span>Memuat Portal</span>
+                    <span class="inline-flex gap-0.5">
+                        <span class="w-1 h-1 rounded-full bg-sky-500 animate-bounce"></span>
+                        <span class="w-1 h-1 rounded-full bg-sky-500 animate-bounce" style="animation-delay: 0.15s"></span>
+                        <span class="w-1 h-1 rounded-full bg-sky-500 animate-bounce" style="animation-delay: 0.3s"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -348,6 +377,24 @@
 
             resetIdleTimer();
         })();
+
+        // Preloader Dismissal Handler
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('portal-preloader');
+            if (preloader) {
+                setTimeout(function() {
+                    preloader.classList.add('loaded');
+                }, 300);
+            }
+        });
+
+        // Safety fallback: dismiss preloader after 2.5s if not already dismissed
+        setTimeout(function() {
+            const preloader = document.getElementById('portal-preloader');
+            if (preloader && !preloader.classList.contains('loaded')) {
+                preloader.classList.add('loaded');
+            }
+        }, 2500);
     </script>
 
     @stack('scripts')

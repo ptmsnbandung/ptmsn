@@ -25,6 +25,78 @@
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+/* Custom Portal Preloader Overlay */
+#portal-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(248, 250, 252, 0.92);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#portal-preloader.loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-spinner-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-spinner-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #0284c7;
+    border-right-color: #38bdf8;
+    animation: loader-spin 1.2s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.loader-spinner-ring::after {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom-color: #10b981;
+    border-left-color: rgba(14, 165, 233, 0.5);
+    animation: loader-spin-reverse 1.8s linear infinite;
+}
+
+@keyframes loader-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes loader-spin-reverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.loader-logo-pulse {
+    animation: logo-rotate-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes logo-rotate-pulse {
+    0%, 100% { transform: scale(0.94); opacity: 0.92; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+
 /* Dynamic Glassmorphism ISP Ambient Mesh Background */
 .portal-bg {
     background-color: #f8fafc;
