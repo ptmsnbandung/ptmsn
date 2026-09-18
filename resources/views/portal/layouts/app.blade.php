@@ -99,7 +99,7 @@
         }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-16 md:pb-0" x-data="{ mobileMenu: false, userDropdown: false }">
+<body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-16 md:pb-0" x-data="{ userDropdown: false }">
 
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
@@ -214,43 +214,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Mobile Menu Button -->
-                    <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-xs hover:bg-slate-50">
-                        <iconify-icon icon="solar:hamburger-menu-bold" width="20"></iconify-icon>
-                    </button>
                 </div>
 
-            </div>
-        </div>
-
-        <!-- Mobile Drawer / Menu -->
-        <div x-show="mobileMenu" @click.outside="mobileMenu = false" class="md:hidden px-4 pt-2 pb-4 border-t border-slate-200 bg-white space-y-1.5 shadow-lg" style="display: none;">
-            <a href="{{ route('portal.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.dashboard') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
-                <iconify-icon icon="solar:home-smile-bold" width="16"></iconify-icon>
-                <span>Beranda</span>
-            </a>
-            <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.billing.*') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
-                <iconify-icon icon="solar:wallet-money-bold" width="16"></iconify-icon>
-                <span>Tagihan</span>
-            </a>
-            <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
-                <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
-                <span>Bantuan & Tiket</span>
-            </a>
-            <a href="{{ route('portal.profile') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold {{ request()->routeIs('portal.profile') ? 'bg-sky-600 text-white font-bold shadow-xs' : 'text-slate-700 bg-slate-50 hover:bg-slate-100' }}">
-                <iconify-icon icon="solar:user-circle-bold" width="16"></iconify-icon>
-                <span>Profil Akun</span>
-            </a>
-            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-heading font-bold text-xs shadow-xs">
-                <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
-                <span>+ Lapor Gangguan Baru</span>
-            </a>
-            <div class="pt-2 border-t border-slate-200">
-                <a href="{{ route('portal.logout') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors">
-                    <iconify-icon icon="solar:logout-2-bold" width="16"></iconify-icon>
-                    <span>Keluar (Logout)</span>
-                </a>
             </div>
         </div>
     </header>
