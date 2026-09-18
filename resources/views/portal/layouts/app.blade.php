@@ -122,9 +122,8 @@
                     </a>
                     <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-2xs">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="font-brand font-extrabold text-xs text-sky-600">My</span><span class="font-brand font-black text-xs text-slate-800">MSN</span>
-                            <span class="text-[9px] font-heading font-bold text-slate-500 uppercase tracking-wider ml-0.5">Self-Care</span>
+                            <span class="font-brand font-black text-xs tracking-tight"><span class="text-sky-600 font-extrabold">My</span><span class="text-slate-800">MSN</span></span>
+                            <span class="text-[9px] font-heading font-bold text-slate-500 uppercase tracking-wider">Self-Care</span>
                         </span>
                     </div>
                 </div>
