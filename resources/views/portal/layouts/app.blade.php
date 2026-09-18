@@ -54,28 +54,32 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
         }
 
-        /* Solid White Crisp Portal Card */
+        /* Glassmorphic Portal Card */
         .portal-card {
-            background-color: #ffffff !important;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+            background: rgba(255, 255, 255, 0.78) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .portal-card-hover:hover {
-            border-color: #bae6fd;
-            box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.08);
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(56, 189, 248, 0.45) !important;
+            box-shadow: 0 14px 34px -4px rgba(2, 132, 199, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
             transform: translateY(-2px);
         }
 
-        /* Hero Network Pass (Solid Executive Dark Card) */
+        /* Hero Network Pass (Dark Oceanic Glassmorphism) */
         .hero-network-card {
-            background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #1e293b 100%) !important;
-            border: 1px solid #1e3a5f !important;
-            box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(56, 189, 248, 0.15);
+            background: linear-gradient(135deg, rgba(9, 19, 34, 0.95) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(14, 116, 144, 0.85) 100%) !important;
+            backdrop-filter: blur(20px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+            border: 1px solid rgba(56, 189, 248, 0.35) !important;
+            box-shadow: 0 16px 36px -8px rgba(2, 132, 199, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
             border-radius: 20px;
             position: relative;
             overflow: hidden;
@@ -98,9 +102,9 @@
 <body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-16 md:pb-0" x-data="{ mobileMenu: false, userDropdown: false }">
 
     <!-- Top Portal Header -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-14 sm:h-16">
+    <header class="sticky top-0 z-40 glass-header shadow-xs">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-13 sm:h-16">
                 
                 <!-- Left: Brand Logo & Portal Badge -->
                 <div class="flex items-center gap-3">
@@ -252,29 +256,29 @@
     </header>
 
     <!-- Main Body Container -->
-    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6">
         
         <!-- Flash Alerts -->
         @if(session('success'))
-            <div class="mb-4 sm:mb-6 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
+            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
                 <div class="flex items-center gap-2.5">
-                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-lg sm:text-xl shrink-0"></iconify-icon>
+                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-base sm:text-xl shrink-0"></iconify-icon>
                     <span class="font-medium">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
 
         @if(session('info'))
-            <div class="mb-4 sm:mb-6 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-sky-50 border border-sky-200 text-sky-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
+            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-sky-50/90 backdrop-blur-md border border-sky-200 text-sky-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
                 <div class="flex items-center gap-2.5">
-                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-lg sm:text-xl shrink-0"></iconify-icon>
+                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-base sm:text-xl shrink-0"></iconify-icon>
                     <span class="font-medium">{{ session('info') }}</span>
                 </div>
             </div>
         @endif
 
         @if(isset($errors) && $errors->any())
-            <div class="mb-4 sm:mb-6 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-xs">
+            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50/90 backdrop-blur-md border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-xs">
                 <div class="font-bold mb-1 flex items-center gap-2">
                     <iconify-icon icon="solar:danger-circle-bold" class="text-base sm:text-lg text-rose-500"></iconify-icon>
                     <span>Harap perhatikan input berikut:</span>
@@ -291,8 +295,8 @@
 
     </main>
 
-    <!-- Mobile Sticky Bottom Quick Bar (Native App Style) -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 py-2 px-3 shadow-lg">
+    <!-- Mobile Sticky Bottom Quick Bar (Native App Style Glassmorphism) -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-bottom-bar py-1.5 px-3 shadow-lg">
         <div class="grid grid-cols-4 gap-1 items-center text-center">
             <a href="{{ route('portal.dashboard') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.dashboard') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
                 <iconify-icon icon="solar:home-smile-bold" width="20" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
