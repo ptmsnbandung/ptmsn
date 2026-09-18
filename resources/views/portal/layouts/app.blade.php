@@ -157,13 +157,8 @@
                     </a>
                 </nav>
 
-                <!-- Right: Quick Action & User Menu -->
+                <!-- Right: User Menu -->
                 <div class="flex items-center gap-2 sm:gap-3">
-                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs transition-all shadow-xs active:scale-95">
-                        <iconify-icon icon="solar:danger-triangle-bold" width="15" class="text-amber-300"></iconify-icon>
-                        <span>Lapor Gangguan</span>
-                    </a>
-
                     <!-- User Profile Dropdown -->
                     <div class="relative" @click.outside="userDropdown = false">
                         <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white/90 border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all">
