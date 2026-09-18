@@ -144,9 +144,8 @@
                 @csrf
 
                 <div>
-                    <label for="login" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
-                        <span>Nomor Internet / WhatsApp</span>
-                        <span class="text-[10px] text-sky-600 font-semibold normal-case">ID Pelanggan / No. HP</span>
+                    <label for="login" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                        Nomor Internet / WhatsApp
                     </label>
                     
                     <div class="relative">
