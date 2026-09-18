@@ -38,11 +38,6 @@
                                 <span>Status: {{ ucfirst($customer->status) }}</span>
                             </span>
                         @endif
-
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-lg bg-slate-800/80 border border-slate-700/80 text-slate-300 font-mono text-[10px] sm:text-[11px]">
-                            <iconify-icon icon="solar:server-path-bold" class="text-sky-400"></iconify-icon>
-                            <span>GPON OLT Online</span>
-                        </span>
                     </div>
 
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
