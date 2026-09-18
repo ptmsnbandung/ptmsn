@@ -1,320 +1,182 @@
 /* ==========================================================================
-   MyMSN Customer Portal - Premium Network & ISP Theme CSS v3.0
+   MyMSN Customer Portal - Executive Network & ISP Theme CSS v4.0
    PT Media Solusi Network
    ========================================================================== */
 
 :root {
-    --msn-sky: #0ea5e9;
+    --msn-sky: #0284c7;
     --msn-blue: #2563eb;
-    --msn-cyan: #06b6d4;
+    --msn-cyan: #0ea5e9;
     --msn-navy: #0f172a;
     --msn-dark: #090d16;
     --msn-emerald: #10b981;
     --msn-rose: #f43f5e;
     --msn-amber: #f59e0b;
-    --msn-purple: #8b5cf6;
+    --msn-purple: #7c3aed;
     
-    --grad-primary: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-    --grad-network: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #3b82f6 100%);
-    --grad-dark-hero: linear-gradient(135deg, #090d16 0%, #0f1d36 50%, #0c2b4d 100%);
-    
-    --glass-bg: rgba(255, 255, 255, 0.78);
-    --glass-border: rgba(255, 255, 255, 0.85);
-    --glass-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95);
-    --glass-glow: 0 0 25px -4px rgba(14, 165, 233, 0.18);
-    
-    --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-    --trans: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    --grad-primary: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    --grad-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --trans: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.45); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.7); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* Animated Network Background Grid & Floating Orbs */
-.network-grid-bg {
+/* Clean Network Background */
+.portal-bg {
+    background-color: #f8fafc;
     background-image: 
-        radial-gradient(circle at 1px 1px, rgba(14, 165, 233, 0.12) 1px, transparent 0),
-        linear-gradient(to right, rgba(14, 165, 233, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
-    background-size: 24px 24px, 48px 48px, 48px 48px;
+        radial-gradient(#cbd5e1 0.75px, transparent 0.75px),
+        radial-gradient(#e2e8f0 0.75px, #f8fafc 0.75px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
 }
 
-.bg-orb { 
-    position: fixed; 
-    border-radius: 50%; 
-    filter: blur(80px); 
-    pointer-events: none; 
-    z-index: 0; 
-    animation: orb-float 16s ease-in-out infinite; 
-}
-.bg-orb-1 { 
-    width: 520px; 
-    height: 520px; 
-    top: -120px; 
-    left: -120px; 
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%); 
-    animation-delay: 0s; 
-}
-.bg-orb-2 { 
-    width: 450px; 
-    height: 450px; 
-    top: 35%; 
-    right: -120px; 
-    background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, transparent 70%); 
-    animation-delay: -5s; 
-}
-.bg-orb-3 { 
-    width: 480px; 
-    height: 480px; 
-    bottom: -120px; 
-    left: 25%; 
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.11) 0%, transparent 70%); 
-    animation-delay: -10s; 
-}
-
-@keyframes orb-float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(24px, -20px) scale(1.04); }
-    66% { transform: translate(-16px, 14px) scale(0.97); }
-}
-
-/* Glassmorphism Portal Cards */
+/* Solid White Crisp Portal Card */
 .portal-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    transition: all var(--trans);
-}
-
-.portal-card-hover {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
     transition: all var(--trans);
 }
 
 .portal-card-hover:hover {
-    background: rgba(255, 255, 255, 0.94);
-    border-color: rgba(14, 165, 233, 0.45);
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.16), 0 0 0 1px rgba(14, 165, 233, 0.25), inset 0 1px 0 #fff;
+    border-color: #bae6fd;
+    box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.08), 0 8px 10px -6px rgba(2, 132, 199, 0.04);
+    transform: translateY(-2px);
 }
 
-/* Cyber Network Hero Pass */
-.network-hero-pass {
-    background: linear-gradient(135deg, #090d16 0%, #0d1e38 45%, #082442 80%, #090d16 100%);
-    border-radius: 24px;
-    border: 1px solid rgba(56, 189, 248, 0.22);
-    box-shadow: 
-        0 20px 45px -12px rgba(2, 132, 199, 0.28),
-        0 0 0 1px rgba(56, 189, 248, 0.12),
-        inset 0 1px 2px 0 rgba(255, 255, 255, 0.15);
+/* Executive Dark Network Hero Card (100% Solid & High Contrast) */
+.hero-network-card {
+    background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #1e293b 100%) !important;
+    border: 1px solid #1e3a5f !important;
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(56, 189, 248, 0.15);
+    border-radius: 20px;
     position: relative;
     overflow: hidden;
 }
 
-.network-hero-pass::before {
+.hero-network-card::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image: 
-        radial-gradient(circle at 1px 1px, rgba(56, 189, 248, 0.15) 1px, transparent 0),
-        linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px, 40px 40px, 40px 40px;
+        radial-gradient(circle at 1px 1px, rgba(56, 189, 248, 0.12) 1px, transparent 0);
+    background-size: 20px 20px;
     pointer-events: none;
 }
 
-.network-hero-pass::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 65%);
-    border-radius: 50%;
-    filter: blur(40px);
-    pointer-events: none;
-    animation: hero-glow 8s ease-in-out infinite alternate;
+/* Telemetry Box (Dark Translucent inside Hero) */
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+}
+@media (min-width: 640px) {
+    .telemetry-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }
 
-@keyframes hero-glow {
-    0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
-    100% { transform: scale(1.2) translate(-20px, 20px); opacity: 1; }
-}
-
-/* Telemetry Badge & Live Bar */
-.telemetry-bar {
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+.telemetry-box {
+    background: rgba(15, 23, 42, 0.75);
     border: 1px solid rgba(56, 189, 248, 0.2);
-    border-radius: 14px;
-}
-
-.telemetry-item {
+    border-radius: 12px;
+    padding: 0.625rem 0.875rem;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    justify-content: space-between;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: #cbd5e1;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.75rem;
 }
 
 /* Stat KPI Cards */
-.stat-kpi-card {
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 
-        0 10px 25px -5px rgba(15, 23, 42, 0.06), 
-        0 1px 3px 0 rgba(0, 0, 0, 0.02),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+.kpi-stat-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03);
     transition: all var(--trans);
     position: relative;
     overflow: hidden;
 }
 
-.stat-kpi-card::before {
+.kpi-stat-card:hover {
+    border-color: #7dd3fc;
+    box-shadow: 0 12px 24px -6px rgba(14, 165, 233, 0.12);
+    transform: translateY(-2px);
+}
+
+.kpi-stat-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 3px;
-    opacity: 0.8;
-    transition: all 0.25s;
 }
+.kpi-stat-card.kpi-sky::before     { background: #0284c7; }
+.kpi-stat-card.kpi-emerald::before { background: #10b981; }
+.kpi-stat-card.kpi-amber::before   { background: #f59e0b; }
+.kpi-stat-card.kpi-purple::before  { background: #8b5cf6; }
 
-.stat-kpi-card:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 
-        0 20px 35px -8px rgba(14, 165, 233, 0.18),
-        0 0 0 1px rgba(14, 165, 233, 0.22),
-        inset 0 1px 1px 0 #fff;
-}
-
-.stat-kpi-card.kpi-blue::before    { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
-.stat-kpi-card.kpi-emerald::before { background: linear-gradient(90deg, #10b981, #34d399); }
-.stat-kpi-card.kpi-amber::before   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.stat-kpi-card.kpi-purple::before  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-.stat-kpi-card.kpi-rose::before    { background: linear-gradient(90deg, #f43f5e, #fb7185); }
-
-/* Fiber Pulse Animation */
-.fiber-pulse-dot {
-    position: relative;
-    display: inline-flex;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-.fiber-pulse-dot::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    background: inherit;
-    opacity: 0.6;
-    animation: fiber-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-@keyframes fiber-ping {
-    0% { transform: scale(1); opacity: 0.8; }
-    75%, 100% { transform: scale(2.6); opacity: 0; }
-}
-
-/* Copy Tooltip Animation */
-.copy-badge {
+/* Copy Badge Button */
+.copy-btn {
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: all 0.15s ease;
     user-select: none;
 }
-.copy-badge:hover {
-    filter: brightness(1.08);
-    transform: scale(1.02);
+.copy-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
 }
-.copy-badge:active {
+.copy-btn:active {
     transform: scale(0.96);
 }
 
-/* Glowing Network Action Button */
-.btn-network-action {
-    background: linear-gradient(135deg, #0284c7 0%, #0284c7 40%, #06b6d4 100%);
-    color: #ffffff;
-    font-weight: 700;
-    box-shadow: 0 4px 16px -2px rgba(2, 132, 199, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all var(--trans);
-}
-.btn-network-action:hover {
-    background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%);
-    box-shadow: 0 8px 24px -2px rgba(14, 165, 233, 0.55), 0 0 0 2px rgba(56, 189, 248, 0.4);
-    transform: translateY(-2px);
-    color: #fff;
-}
-.btn-network-action:active {
-    transform: scale(0.97);
-}
-
-/* NOC WhatsApp Button */
-.btn-noc-action {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
-    font-weight: 700;
-    box-shadow: 0 4px 16px -2px rgba(16, 185, 129, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all var(--trans);
-}
-.btn-noc-action:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    box-shadow: 0 8px 24px -2px rgba(16, 185, 129, 0.5), 0 0 0 2px rgba(52, 211, 153, 0.4);
-    transform: translateY(-2px);
-    color: #fff;
-}
-.btn-noc-action:active {
-    transform: scale(0.97);
-}
-
-/* Glass Pill Buttons */
-.btn-glass-subtle {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(226, 232, 240, 0.95);
-    color: #1e293b;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-    transition: all var(--trans);
-}
-.btn-glass-subtle:hover {
-    background: #ffffff;
-    border-color: rgba(14, 165, 233, 0.4);
-    color: #0284c7;
-    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.12);
-    transform: translateY(-1px);
-}
-
 /* Badges */
-.badge-paid      { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-.badge-unpaid    { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; animation: unpaid-pulse 2.5s ease-in-out infinite; }
+.badge-paid {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-unpaid {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+    animation: unpaid-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes unpaid-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.35); }
+    50%      { box-shadow: 0 0 0 3px rgba(244, 63, 94, 0); }
+}
+
 .badge-open      { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
 .badge-progress  { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
 .badge-resolved  { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
 .badge-closed    { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
-.badge-cancelled { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-.badge-active    { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
 
-@keyframes unpaid-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.35); }
-    50%      { box-shadow: 0 0 0 4px rgba(244, 63, 94, 0); }
-}
-
-/* Network Signal Visual Bar */
+/* Signal Bars */
 .signal-bars {
     display: inline-flex;
     align-items: flex-end;
@@ -331,14 +193,3 @@
 .signal-bars.signal-full span:nth-child(3) { height: 75%; background: #10b981; }
 .signal-bars.signal-full span:nth-child(4) { height: 100%; background: #10b981; }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-    .network-hero-pass {
-        border-radius: 20px;
-        padding: 1.25rem 1.2rem;
-    }
-    .stat-kpi-card {
-        border-radius: 18px;
-        padding: 1rem 0.9rem;
-    }
-}
