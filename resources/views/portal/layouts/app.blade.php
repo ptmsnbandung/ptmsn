@@ -99,7 +99,7 @@
         }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-16 md:pb-0" x-data="{ userDropdown: false }">
+<body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-20 md:pb-8" x-data="{ userDropdown: false }">
 
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
@@ -281,37 +281,6 @@
             </a>
         </div>
     </div>
-
-    <!-- Portal Footer -->
-    <footer class="relative z-10 mt-auto border-t border-slate-200 bg-white py-4 sm:py-5 text-xs text-slate-500 font-sans shadow-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
-                
-                <!-- Left: Copyright & Operational Status -->
-                <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-                    <span class="font-medium text-slate-600">&copy; {{ date('Y') }} <strong class="text-slate-800 font-bold">PT Media Solusi Network</strong></span>
-                    <span class="hidden sm:inline text-slate-300">•</span>
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-semibold font-mono">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>NOC 24/7 Standby</span>
-                    </span>
-                </div>
-
-                <!-- Right: Quick Action Links -->
-                <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
-                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-medium text-[11px] sm:text-xs transition-all">
-                        <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                        <span>WhatsApp NOC (24 Jam)</span>
-                    </a>
-                    <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-medium text-[11px] sm:text-xs transition-all">
-                        <iconify-icon icon="solar:globe-linear" class="text-slate-400 text-sm"></iconify-icon>
-                        <span>Website Resmi</span>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </footer>
 
     <!-- Toast Notification for Copy / Actions -->
     <div id="portal-toast" class="fixed bottom-20 md:bottom-8 right-1/2 translate-x-1/2 md:translate-x-0 md:right-8 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-heading font-medium shadow-2xl border border-slate-700 pointer-events-none">
