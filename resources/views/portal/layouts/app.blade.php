@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-50 text-slate-800">
+<html lang="id" class="h-full bg-slate-900 text-slate-800">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,7 +56,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
             background-image: 
-                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.15) 0px, transparent 40%),
+                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.16) 0px, transparent 40%),
                 radial-gradient(at 85% 20%, rgba(56, 189, 248, 0.18) 0px, transparent 45%),
                 radial-gradient(at 50% 85%, rgba(99, 102, 241, 0.10) 0px, transparent 50%),
                 radial-gradient(at 90% 85%, rgba(14, 165, 233, 0.12) 0px, transparent 40%),
@@ -66,14 +66,14 @@
 
         /* Glassmorphism Classes */
         .portal-card {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.92);
             box-shadow: 
                 0 10px 30px -5px rgba(15, 23, 42, 0.06), 
                 0 1px 3px 0 rgba(0, 0, 0, 0.03),
-                inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
         }
 
         .portal-card-hover {
@@ -81,33 +81,30 @@
         }
 
         .portal-card-hover:hover {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             border-color: rgba(56, 189, 248, 0.6);
             transform: translateY(-3px);
             box-shadow: 
-                0 20px 35px -10px rgba(14, 165, 233, 0.16), 
+                0 20px 35px -10px rgba(14, 165, 233, 0.18), 
                 0 0 0 1px rgba(56, 189, 248, 0.35),
                 inset 0 1px 1px 0 rgba(255, 255, 255, 1);
         }
 
-        .glass-pill {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        /* Toast notification */
+        #portal-toast {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px);
         }
-
-        .glass-input {
-            background: rgba(255, 255, 255, 0.78);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(203, 213, 225, 0.85);
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+        #portal-toast.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans antialiased text-slate-800" x-data="{ mobileMenu: false, userDropdown: false }">
+<body class="min-h-full flex flex-col font-sans antialiased text-slate-800 network-grid-bg pb-16 md:pb-0" x-data="{ mobileMenu: false, userDropdown: false }">
 
     <!-- Network Themed Glowing Orbs Background -->
     <div class="bg-orb bg-orb-1"></div>
@@ -122,7 +119,7 @@
     </div>
 
     <!-- Top Portal Header -->
-    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.04)]">
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14 sm:h-16">
                 
@@ -131,11 +128,15 @@
                     <a href="{{ route('portal.dashboard') }}" class="flex items-center transition-transform hover:opacity-90">
                         <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-7 sm:h-9 w-auto object-contain">
                     </a>
-                    <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
+                    <div class="hidden sm:flex items-center pl-3 border-l border-slate-200 gap-2">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-sky-50 to-blue-50/70 border border-sky-200/80 shadow-2xs">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             <span class="font-brand font-extrabold text-xs text-sky-500">My</span><span class="font-brand font-black text-xs text-slate-800">MSN</span>
                             <span class="text-[9px] font-heading font-bold text-sky-600 uppercase tracking-wide ml-0.5">Self-Care</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 font-mono text-[10px]">
+                            <iconify-icon icon="solar:server-path-bold" class="text-sky-500"></iconify-icon>
+                            <span>FTTH GPON</span>
                         </span>
                     </div>
                 </div>
@@ -170,9 +171,9 @@
 
                 <!-- Right: Quick Action & User Menu -->
                 <div class="flex items-center gap-2 sm:gap-3">
-                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-heading font-semibold text-xs transition-all shadow-sm shadow-sky-500/20 active:scale-95">
-                        <iconify-icon icon="solar:add-circle-bold" width="15"></iconify-icon>
-                        <span>+ Buat Tiket</span>
+                    <a href="{{ route('portal.tickets.create') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs transition-all shadow-sm shadow-sky-500/25 active:scale-95">
+                        <iconify-icon icon="solar:danger-triangle-bold" width="15"></iconify-icon>
+                        <span>Lapor Gangguan</span>
                     </a>
 
                     <!-- User Profile Dropdown -->
@@ -201,7 +202,7 @@
                             x-transition:leave="transition ease-in duration-100"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute right-0 mt-2 w-60 rounded-2xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-xl p-2 z-50 divide-y divide-slate-100"
+                            class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-xl p-2 z-50 divide-y divide-slate-100"
                             style="display: none;"
                         >
                             <div class="px-3 py-2.5">
@@ -262,9 +263,9 @@
                 <iconify-icon icon="solar:user-circle-bold" width="16"></iconify-icon>
                 <span>Profil Akun</span>
             </a>
-            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-heading font-bold text-xs shadow-xs">
-                <iconify-icon icon="solar:add-circle-bold" width="16"></iconify-icon>
-                <span>+ Buat Tiket Baru</span>
+            <a href="{{ route('portal.tickets.create') }}" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-heading font-bold text-xs shadow-xs">
+                <iconify-icon icon="solar:danger-triangle-bold" width="16"></iconify-icon>
+                <span>+ Lapor Gangguan Baru</span>
             </a>
             <div class="pt-2 border-t border-slate-200/80">
                 <a href="{{ route('portal.logout') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-heading font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 transition-colors">
@@ -315,30 +316,52 @@
 
     </main>
 
+    <!-- Mobile Sticky Bottom Quick Bar (Native App Style) -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-2xl border-t border-slate-200/90 py-2 px-3 shadow-[0_-4px_20px_-2px_rgba(15,23,42,0.08)]">
+        <div class="grid grid-cols-4 gap-1 items-center text-center">
+            <a href="{{ route('portal.dashboard') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.dashboard') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
+                <iconify-icon icon="solar:home-smile-bold" width="20" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                <span class="text-[10px] font-heading">Beranda</span>
+            </a>
+            <a href="{{ route('portal.billing.index') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.billing.*') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
+                <iconify-icon icon="solar:wallet-money-bold" width="20" class="{{ request()->routeIs('portal.billing.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                <span class="text-[10px] font-heading">Tagihan</span>
+            </a>
+            <a href="{{ route('portal.tickets.index') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.tickets.*') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
+                <iconify-icon icon="solar:chat-round-dots-bold" width="20" class="{{ request()->routeIs('portal.tickets.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                <span class="text-[10px] font-heading">Tiket NOC</span>
+            </a>
+            <a href="{{ route('portal.profile') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.profile') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
+                <iconify-icon icon="solar:user-circle-bold" width="20" class="{{ request()->routeIs('portal.profile') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                <span class="text-[10px] font-heading">Profil</span>
+            </a>
+        </div>
+    </div>
+
     <!-- Portal Footer -->
-    <footer class="relative z-10 mt-auto border-t border-slate-200/80 bg-white/85 backdrop-blur-xl py-3.5 sm:py-4 text-xs text-slate-500 font-sans shadow-[0_-4px_20px_-4px_rgba(15,23,42,0.03)]">
+    <footer class="relative z-10 mt-auto border-t border-slate-200/80 bg-white/85 backdrop-blur-xl py-4 sm:py-5 text-xs text-slate-500 font-sans shadow-[0_-4px_20px_-4px_rgba(15,23,42,0.03)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
                 
                 <!-- Left: Copyright & Operational Status -->
                 <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
                     <span class="font-medium text-slate-600">&copy; {{ date('Y') }} <strong class="text-slate-800 font-bold">PT Media Solusi Network</strong></span>
                     <span class="hidden sm:inline text-slate-300">•</span>
-                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-semibold font-mono">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-semibold font-mono">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>Helpdesk NOC 24/7</span>
+                        <span>NOC & Helpdesk 24/7 Standby</span>
                     </span>
                 </div>
 
                 <!-- Right: Quick Action Links -->
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
-                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}" target="_blank" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
+                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
                         <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                        <span>WhatsApp NOC</span>
+                        <span>WhatsApp NOC (24 Jam)</span>
                     </a>
                     <a href="{{ route('home') }}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 font-medium text-[11px] sm:text-xs transition-all shadow-2xs">
                         <iconify-icon icon="solar:globe-linear" class="text-slate-400 text-sm"></iconify-icon>
-                        <span>Website Utama</span>
+                        <span>Website Resmi</span>
                     </a>
                 </div>
 
@@ -346,17 +369,50 @@
         </div>
     </footer>
 
-    <!-- Auto Logout 1 Jam Inaktivitas -->
+    <!-- Toast Notification for Copy / Actions -->
+    <div id="portal-toast" class="fixed bottom-20 md:bottom-8 right-1/2 translate-x-1/2 md:translate-x-0 md:right-8 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-slate-900/95 text-white text-xs font-heading font-medium shadow-2xl border border-sky-500/30 backdrop-blur-xl pointer-events-none">
+        <iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base shrink-0"></iconify-icon>
+        <span id="portal-toast-msg">Tersalin ke clipboard</span>
+    </div>
+
+    <!-- Global Scripts: Clipboard & Auto Logout -->
     <script>
+        // Global Copy to Clipboard Helper
+        window.copyToClipboard = function(text, label = 'Teks') {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+            }
+
+            const toast = document.getElementById('portal-toast');
+            const toastMsg = document.getElementById('portal-toast-msg');
+            if (toast && toastMsg) {
+                toastMsg.innerText = label + ' berhasil disalin!';
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2200);
+            }
+        };
+
+        // Batas waktu inaktivitas 1 jam (3600 detik)
         (function() {
-            // Batas waktu inaktivitas 1 jam (3600 detik = 3.600.000 ms)
             const TIMEOUT_MS = 3600 * 1000;
             let idleTimer;
 
             function resetIdleTimer() {
                 clearTimeout(idleTimer);
                 idleTimer = setTimeout(function() {
-                    // Otomatis logout ketika 1 jam tidak ada interaksi
                     window.location.href = '{{ route("portal.logout") }}';
                 }, TIMEOUT_MS);
             }
@@ -366,7 +422,7 @@
                 window.addEventListener(evt, resetIdleTimer, { passive: true });
             });
 
-        resetIdleTimer();
+            resetIdleTimer();
         })();
     </script>
 

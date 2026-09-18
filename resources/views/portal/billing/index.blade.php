@@ -18,10 +18,16 @@
                     Tagihan & Pembayaran
                 </h1>
                 <!-- Mobile only compact customer ID pill -->
-                <div class="sm:hidden px-2.5 py-1 rounded-lg bg-white/90 border border-slate-200/90 shadow-2xs flex items-center gap-1.5">
+                <button 
+                    type="button" 
+                    onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan')"
+                    class="sm:hidden px-2.5 py-1 rounded-lg bg-white/90 border border-slate-200/90 shadow-2xs flex items-center gap-1.5 hover:bg-white"
+                    title="Salin ID"
+                >
                     <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-xs"></iconify-icon>
                     <span class="text-[11px] font-mono font-bold text-slate-800">{{ $customer->customer_id }}</span>
-                </div>
+                    <iconify-icon icon="solar:copy-linear" class="text-[10px] text-slate-400"></iconify-icon>
+                </button>
             </div>
             <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-1">
                 Pantau rincian biaya langganan bulanan dan lakukan pembayaran online mudah & instan melalui Midtrans.
@@ -30,13 +36,21 @@
 
         <!-- ID Pelanggan Badge (Desktop) -->
         <div class="hidden sm:flex items-center gap-3">
-            <div class="px-4 py-2 rounded-2xl bg-white/80 border border-slate-200/80 shadow-sm flex items-center gap-2.5">
+            <button 
+                type="button"
+                onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan')"
+                class="copy-badge px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-slate-200/80 shadow-sm flex items-center gap-2.5 text-left"
+                title="Klik untuk salin ID Pelanggan"
+            >
                 <iconify-icon icon="solar:user-id-bold" class="text-sky-500 text-lg"></iconify-icon>
                 <div>
                     <div class="text-[10px] font-mono uppercase text-slate-400 font-bold leading-none">Nomor Internet</div>
-                    <div class="text-xs sm:text-sm font-mono font-bold text-slate-800 leading-tight mt-0.5">{{ $customer->customer_id }}</div>
+                    <div class="text-xs sm:text-sm font-mono font-bold text-slate-800 leading-tight mt-0.5 flex items-center gap-1">
+                        <span>{{ $customer->customer_id }}</span>
+                        <iconify-icon icon="solar:copy-linear" class="text-xs text-slate-400 opacity-60"></iconify-icon>
+                    </div>
                 </div>
-            </div>
+            </button>
         </div>
     </div>
 

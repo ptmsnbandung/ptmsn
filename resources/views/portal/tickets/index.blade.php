@@ -10,14 +10,14 @@
         <div>
             <div class="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-wider mb-0.5">
                 <iconify-icon icon="solar:shield-warning-bold"></iconify-icon>
-                <span>LAYANAN PENGADUAN</span>
+                <span>LAYANAN PENGADUAN & TIKET NOC</span>
             </div>
             <h1 class="text-lg sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Daftar Laporan Gangguan</h1>
             <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-0.5">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda</p>
         </div>
 
-        <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-sm sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all shrink-0">
-            <iconify-icon icon="solar:danger-triangle-bold" width="15" class="sm:w-[18px] shrink-0"></iconify-icon>
+        <a href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0">
+            <iconify-icon icon="solar:danger-triangle-bold" width="15" class="sm:w-[18px] shrink-0 text-amber-300"></iconify-icon>
             <span class="hidden sm:inline">Buat Laporan Baru</span>
             <span class="sm:hidden">+ Lapor Baru</span>
         </a>
@@ -77,7 +77,7 @@
                                 <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg">
                                     #{{ $ticket->ticket_number }}
                                 </span>
-                                <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold">
+                                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold">
                                     {{ $ticket->status_label }}
                                 </span>
                                 <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
@@ -124,9 +124,9 @@
         </div>
     @else
         <!-- Compact Empty State on Mobile -->
-        <div class="portal-card rounded-2xl sm:rounded-3xl p-5 sm:p-12 text-center space-y-2.5 sm:space-y-4">
-            <div class="w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-3xl bg-sky-50 border border-sky-200 text-sky-600 mx-auto flex items-center justify-center shadow-xs">
-                <iconify-icon icon="solar:ticket-sale-linear" width="22" class="sm:w-[32px] sm:h-[32px]"></iconify-icon>
+        <div class="portal-card rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center space-y-3 sm:space-y-4">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-sky-50 border border-sky-200 text-sky-600 mx-auto flex items-center justify-center shadow-xs">
+                <iconify-icon icon="solar:ticket-sale-linear" width="24" class="sm:w-[32px] sm:h-[32px]"></iconify-icon>
             </div>
             <div>
                 <h3 class="text-sm sm:text-base font-heading font-bold text-slate-900">Tidak Ada Laporan Ditemukan</h3>
@@ -135,8 +135,8 @@
                 </p>
             </div>
             <div class="pt-1">
-                <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs shadow-sm sm:shadow-md">
-                    <iconify-icon icon="solar:add-circle-bold" width="15"></iconify-icon>
+                <a href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-bold text-xs shadow-md">
+                    <iconify-icon icon="solar:add-circle-bold" width="16"></iconify-icon>
                     <span>Buat Laporan Baru</span>
                 </a>
             </div>
