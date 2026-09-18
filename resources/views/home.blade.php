@@ -415,7 +415,7 @@
             broadbandContainer.classList.add('hidden');
 
             if (desc) {
-                desc.textContent = 'Koneksi rasio 1:1 simetris berkinerja tinggi khusus UMKM, bisnis, dan perkantoran dengan IP Dedicated dan SLA Bisnis.';
+                desc.textContent = 'Koneksi internet andal berkinerja tinggi khusus UMKM, bisnis, dan perkantoran dengan IP Dedicated dan SLA Bisnis.';
             }
         }
 
