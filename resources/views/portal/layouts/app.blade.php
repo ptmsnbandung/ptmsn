@@ -48,6 +48,9 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Portal Custom CSS (Network & ISP Theme) -->
+    <link rel="stylesheet" href="{{ asset('css/portal.css') }}">
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -105,6 +108,11 @@
     </style>
 </head>
 <body class="min-h-full flex flex-col font-sans antialiased text-slate-800" x-data="{ mobileMenu: false, userDropdown: false }">
+
+    <!-- Network Themed Glowing Orbs Background -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
 
     <!-- Ambient Glowing Orbs Background -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
