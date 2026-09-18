@@ -59,23 +59,11 @@
 .loader-spinner-ring::before {
     content: '';
     position: absolute;
-    inset: -4px;
+    inset: -6px;
     border-radius: 50%;
-    border: 3px solid transparent;
+    border: 3.5px solid rgba(2, 132, 199, 0.15);
     border-top-color: #0284c7;
-    border-right-color: #38bdf8;
-    animation: loader-spin 1.2s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-}
-
-.loader-spinner-ring::after {
-    content: '';
-    position: absolute;
-    inset: -9px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    border-bottom-color: #10b981;
-    border-left-color: rgba(14, 165, 233, 0.5);
-    animation: loader-spin-reverse 1.8s linear infinite;
+    animation: loader-spin 1s linear infinite;
 }
 
 @keyframes loader-spin {
@@ -83,18 +71,8 @@
     100% { transform: rotate(360deg); }
 }
 
-@keyframes loader-spin-reverse {
-    0% { transform: rotate(360deg); }
-    100% { transform: rotate(0deg); }
-}
-
-.loader-logo-pulse {
-    animation: logo-rotate-pulse 2.2s ease-in-out infinite;
-}
-
-@keyframes logo-rotate-pulse {
-    0%, 100% { transform: scale(0.94); opacity: 0.92; }
-    50% { transform: scale(1.06); opacity: 1; }
+.loader-logo-spin {
+    animation: loader-spin 2s linear infinite;
 }
 
 /* Dynamic Glassmorphism ISP Ambient Mesh Background */
