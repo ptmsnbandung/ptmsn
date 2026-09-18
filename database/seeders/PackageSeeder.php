@@ -23,7 +23,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Solusi ideal untuk kebutuhan internet harian rumah tangga, browsing, dan 1 - 4 perangkat.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'Termasuk Modem ONT / WiFi',
                     'Ideal untuk 1 - 4 Perangkat',
                 ],
@@ -40,7 +40,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Paket hemat untuk keluarga dengan streaming lancar untuk 3 - 6 perangkat.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'Termasuk Modem ONT / WiFi',
                     'Ideal untuk 3 - 6 Perangkat',
                 ],
@@ -57,7 +57,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Paket paling populer untuk seluruh anggota keluarga, gaming, dan video streaming HD.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'Termasuk Modem ONT / WiFi',
                     'Ideal untuk 5 - 8 Perangkat',
                 ],
@@ -74,7 +74,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Performa kecepatan tinggi tanpa kompromi untuk smart home dan multi-device 8 - 10 perangkat.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'Termasuk Modem ONT / WiFi',
                     'Ideal untuk 8 - 10 Perangkat',
                 ],
@@ -93,7 +93,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Koneksi stabil rasio simetris untuk operasional kasir POS, toko, kafe, dan UMKM.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'Router Gigabit Dual-Band ONT',
                     'Bantuan Prioritas 24/7',
                 ],
@@ -110,7 +110,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Paling populer untuk kantor berkembang, studio kreatif, dan bisnis dengan transfer data intensif.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'IP Static / Dedicated Ready',
                     'SLA Bisnis Terjamin',
                 ],
@@ -127,7 +127,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Kecepatan super tinggi dan bandwidth konsisten untuk perusahaan dan multi-workstation.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'IP Dedicated Bisnis',
                     'SLA Bisnis 99.5%',
                 ],
@@ -144,7 +144,7 @@ class PackageSeeder extends Seeder
                 'description' => 'Kapasitas maksimal enterprise untuk korporat, instansi, dan kebutuhan cloud computing skala besar.',
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
-                    'Fiber Optic 1:1 Simetris',
+                    'Fast Network Fiber Optic',
                     'IP Dedicated Bisnis',
                     'Dedicated NOC & SLA 99.8%',
                 ],

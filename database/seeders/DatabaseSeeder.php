@@ -110,7 +110,7 @@ class DatabaseSeeder extends Seeder
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
                     'IP Static / Dedicated SOHO',
-                    'Rasio 1:1 Simetris Fiber Optic',
+                    'Koneksi Fiber Optic Cepat',
                     'Router Dual-Band Gigabit ONT',
                 ],
                 'is_popular' => false,
@@ -127,7 +127,7 @@ class DatabaseSeeder extends Seeder
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
                     'IP Static / Dedicated SOHO',
-                    'Rasio 1:1 Simetris Fiber Optic',
+                    'Koneksi Fiber Optic Cepat',
                     'Router Dual-Band Gigabit ONT',
                 ],
                 'is_popular' => false,
@@ -144,7 +144,7 @@ class DatabaseSeeder extends Seeder
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
                     'IP Static / Dedicated SOHO',
-                    'Rasio 1:1 Simetris Fiber Optic',
+                    'Koneksi Fiber Optic Cepat',
                     'Router Dual-Band Gigabit ONT',
                 ],
                 'is_popular' => true,
@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
                     'IP Static / Dedicated SOHO',
-                    'Rasio 1:1 Simetris Fiber Optic',
+                    'Koneksi Fiber Optic Cepat',
                     'Router Dual-Band Gigabit ONT',
                 ],
                 'is_popular' => false,
@@ -178,7 +178,7 @@ class DatabaseSeeder extends Seeder
                 'features' => [
                     'Unlimited Akses (Tanpa FUP)',
                     'IP Static / Dedicated SOHO',
-                    'Rasio 1:1 Simetris Fiber Optic',
+                    'Koneksi Fiber Optic Cepat',
                     'Router Dual-Band Gigabit ONT',
                 ],
                 'is_popular' => false,

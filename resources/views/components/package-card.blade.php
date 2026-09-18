@@ -77,7 +77,7 @@
 
                 <div class="text-[10px] sm:text-[11px] font-mono text-slate-500 mt-1 flex items-center justify-center gap-1">
                     <iconify-icon icon="solar:transfer-horizontal-bold" class="text-[#0284c7] text-xs"></iconify-icon>
-                    <span>Fiber 1:1 Simetris</span>
+                    <span>Fiber Optic Unlimited</span>
                 </div>
             </div>
 
@@ -173,7 +173,7 @@
 
                 <div class="text-[10px] sm:text-[11px] font-mono text-slate-500 mt-1 flex items-center justify-center gap-1">
                     <iconify-icon icon="solar:transfer-horizontal-bold" class="text-[#0284c7] text-xs"></iconify-icon>
-                    <span>Fiber 1:1 Simetris</span>
+                    <span>Fiber Optic Unlimited</span>
                 </div>
             </div>
 

@@ -39,10 +39,10 @@ class HomeController extends Controller
         // Fallback: If broadband packages are empty, generate default list
         if ($broadbandPackages->isEmpty()) {
             $broadbandList = [
-                ['name' => 'PAKET BASIC', 'category' => 'broadband', 'speed' => '15 Mbps', 'price' => 125000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fiber Optic 1:1 Simetris', 'Termasuk Modem WiFi ONT', 'Bantuan CS 24/7']],
-                ['name' => 'PAKET HEMAT', 'category' => 'broadband', 'speed' => '25 Mbps', 'price' => 165000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fiber Optic 1:1 Simetris', 'Termasuk Modem WiFi ONT', 'Bantuan CS 24/7']],
-                ['name' => 'PAKET KELUARGA', 'category' => 'broadband', 'speed' => '30 Mbps', 'price' => 199000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fiber Optic 1:1 Simetris', 'Termasuk Modem WiFi ONT', 'Bantuan Prioritas 24/7']],
-                ['name' => 'PAKET PREMIUM', 'category' => 'broadband', 'speed' => '50 Mbps', 'price' => 249000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fiber Optic 1:1 Simetris', 'Termasuk Modem WiFi ONT', 'Bantuan Prioritas 24/7']],
+                ['name' => 'PAKET BASIC', 'category' => 'broadband', 'speed' => '15 Mbps', 'price' => 125000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fast Fiber Optic', 'Termasuk Modem WiFi ONT', 'Bantuan CS 24/7']],
+                ['name' => 'PAKET HEMAT', 'category' => 'broadband', 'speed' => '25 Mbps', 'price' => 165000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fast Fiber Optic', 'Termasuk Modem WiFi ONT', 'Bantuan CS 24/7']],
+                ['name' => 'PAKET KELUARGA', 'category' => 'broadband', 'speed' => '30 Mbps', 'price' => 199000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fast Fiber Optic', 'Termasuk Modem WiFi ONT', 'Bantuan Prioritas 24/7']],
+                ['name' => 'PAKET PREMIUM', 'category' => 'broadband', 'speed' => '50 Mbps', 'price' => 249000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Fast Fiber Optic', 'Termasuk Modem WiFi ONT', 'Bantuan Prioritas 24/7']],
             ];
             $broadbandPackages = collect($broadbandList)->map(fn($item) => new Package($item));
         }
@@ -50,8 +50,8 @@ class HomeController extends Controller
         // Fallback: If SOHO/Bisnis packages are empty, generate default list
         if ($sohoPackages->isEmpty()) {
             $sohoList = [
-                ['name' => 'UMKM BASIC', 'category' => 'soho', 'speed' => '50 Mbps', 'price' => 399000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Fiber 1:1 Simetris Stabil', 'Router Gigabit ONT']],
-                ['name' => 'UMKM PLUS', 'category' => 'soho', 'speed' => '100 Mbps', 'price' => 699000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Fiber 1:1 Simetris Stabil', 'Router Gigabit Dual-Band']],
+                ['name' => 'UMKM BASIC', 'category' => 'soho', 'speed' => '50 Mbps', 'price' => 399000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Koneksi Fiber Cepat', 'Router Gigabit ONT']],
+                ['name' => 'UMKM PLUS', 'category' => 'soho', 'speed' => '100 Mbps', 'price' => 699000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Koneksi Fiber Cepat', 'Router Gigabit Dual-Band']],
                 ['name' => 'BISNIS PRO', 'category' => 'soho', 'speed' => '200 Mbps', 'price' => 999000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Dedicated Bisnis', 'SLA 99.5% Perusahaan', 'Router Gigabit Dual-Band']],
                 ['name' => 'BISNIS ENTERPRISE', 'category' => 'soho', 'speed' => '300 Mbps', 'price' => 1299000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Dedicated Bisnis', 'SLA 99.8% Korporat', 'Dukungan Dedicated NOC 24/7']],
             ];
