@@ -68,43 +68,6 @@
 
             </div>
 
-            <!-- Bottom: Telemetry Bar -->
-            <div class="telemetry-grid pt-2.5 sm:pt-3 border-t border-slate-700/60">
-                
-                <div class="telemetry-box">
-                    <div class="flex items-center gap-1 text-slate-300">
-                        <iconify-icon icon="solar:graph-up-linear" class="text-sky-400 text-xs sm:text-sm"></iconify-icon>
-                        <span>Latensi:</span>
-                    </div>
-                    <span class="text-emerald-400 font-bold">~8 ms</span>
-                </div>
-
-                <div class="telemetry-box">
-                    <div class="flex items-center gap-1 text-slate-300">
-                        <iconify-icon icon="solar:server-square-bold" class="text-cyan-400 text-xs sm:text-sm"></iconify-icon>
-                        <span>Sinyal Rx:</span>
-                    </div>
-                    <span class="text-cyan-400 font-bold">-18.5 dBm</span>
-                </div>
-
-                <div class="telemetry-box">
-                    <div class="flex items-center gap-1 text-slate-300">
-                        <iconify-icon icon="solar:shield-check-bold" class="text-emerald-400 text-xs sm:text-sm"></iconify-icon>
-                        <span>Packet Loss:</span>
-                    </div>
-                    <span class="text-emerald-400 font-bold">0.0%</span>
-                </div>
-
-                <div class="telemetry-box">
-                    <div class="flex items-center gap-1 text-slate-300">
-                        <iconify-icon icon="solar:routing-2-bold" class="text-purple-400 text-xs sm:text-sm"></iconify-icon>
-                        <span>DNS:</span>
-                    </div>
-                    <span class="text-sky-300 font-bold truncate">MSN Primary</span>
-                </div>
-
-            </div>
-
         </div>
 
     </div>
