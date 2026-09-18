@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Portal Pelanggan') — PT Media Solusi Network</title>
+    <title>@yield('title', 'MyMSN') — Customer Self-Care | PT Media Solusi Network</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
@@ -123,9 +123,10 @@
                         <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-7 sm:h-9 w-auto object-contain">
                     </a>
                     <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200/80 text-[10px] font-mono font-bold tracking-wider uppercase">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 text-sky-800 border border-sky-200/80 text-[10px] font-mono font-bold tracking-wider uppercase">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Portal Pelanggan</span>
+                            <span>MyMSN</span>
+                            <span class="text-[9px] text-sky-600 font-semibold lowercase">/ self-care</span>
                         </span>
                     </div>
                 </div>

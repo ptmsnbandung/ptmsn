@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Portal Pelanggan — PT Media Solusi Network</title>
+    <title>MyMSN — Customer Self-Care | PT Media Solusi Network</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
@@ -93,9 +93,17 @@
             
             <!-- Card Header -->
             <div class="mb-5">
-                <h1 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight mb-1">
-                    Masuk ke Portal
-                </h1>
+                <div class="flex items-center justify-between mb-1">
+                    <h1 class="font-heading font-extrabold text-2xl text-slate-900 tracking-tight">
+                        MyMSN
+                    </h1>
+                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200">
+                        Self-Care
+                    </span>
+                </div>
+                <div class="text-[10px] font-mono font-bold tracking-widest uppercase text-sky-600 mb-2">
+                    CUSTOMER SELF-CARE
+                </div>
                 <p class="text-xs text-slate-500 leading-relaxed">
                     Gunakan Nomor Internet (ID Pelanggan) atau Nomor WhatsApp yang terdaftar
                 </p>

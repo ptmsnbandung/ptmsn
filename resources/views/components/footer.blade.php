@@ -82,7 +82,7 @@
                 <div class="col-span-2 sm:col-span-1 pt-4 sm:pt-0 border-t border-white/10 sm:border-t-0">
                     <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Bantuan & NOC</div>
                     <ul class="grid grid-cols-2 sm:grid-cols-1 gap-2.5 text-xs text-slate-300 font-medium">
-                        <li><a href="{{ route('portal.login') }}" class="text-[#38bdf8] hover:underline font-semibold flex items-center gap-1"><iconify-icon icon="solar:user-circle-bold"></iconify-icon> Portal Pelanggan</a></li>
+                        <li><a href="{{ route('portal.login') }}" class="text-[#38bdf8] hover:underline font-semibold flex items-center gap-1"><iconify-icon icon="solar:user-circle-bold"></iconify-icon> MyMSN (Self-Care)</a></li>
                         <li><a href="{{ route('portal.login') }}" class="hover:text-white transition-colors">Lapor Gangguan (Ticket)</a></li>
                         <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
                         <li><a href="#kontak" class="hover:text-white transition-colors">Support 24/7</a></li>

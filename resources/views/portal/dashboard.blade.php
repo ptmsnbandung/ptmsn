@@ -34,7 +34,7 @@
                     Halo, {{ $customer->name }}! 👋
                 </h1>
                 <p class="hidden sm:block text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-                    Selamat datang di Portal Pelanggan PT Media Solusi Network. Pantau performa internet Anda atau laporkan kendala jaringan langsung ke tim NOC kami.
+                    Selamat datang di <strong class="font-semibold text-slate-800">MyMSN</strong> (Customer Self-Care) PT Media Solusi Network. Pantau performa internet Anda atau laporkan kendala jaringan langsung ke tim NOC kami.
                 </p>
                 <p class="sm:hidden text-xs text-slate-500">
                     Pantau internet dan rincian layanan Anda secara real-time.

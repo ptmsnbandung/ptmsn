@@ -134,7 +134,7 @@
         <!-- Footer / Notes -->
         <div class="mt-10 pt-6 border-t border-slate-200 text-[11px] text-slate-500 leading-relaxed">
             <p class="font-bold text-slate-700 mb-1">Catatan Pembayaran:</p>
-            <p>1. Pembayaran tagihan dapat dilakukan melalui Portal Pelanggan resmi PT MSN via QRIS, Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Gerai Retail.</p>
+            <p>1. Pembayaran tagihan dapat dilakukan melalui MyMSN (Customer Self-Care) resmi PT MSN via QRIS, Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Gerai Retail.</p>
             <p>2. Tagihan ini merupakan bukti sah penagihan dari PT Media Solusi Network dan diterbitkan secara elektronik oleh sistem.</p>
         </div>
     </div>
