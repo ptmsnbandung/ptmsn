@@ -242,25 +242,54 @@
 
     </main>
 
-    <!-- Mobile Sticky Bottom Quick Bar (Native App Style Glassmorphism) -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-bottom-bar py-1.5 px-3 shadow-lg">
-        <div class="grid grid-cols-4 gap-1 items-center text-center">
-            <a href="{{ route('portal.dashboard') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.dashboard') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
-                <iconify-icon icon="solar:home-smile-bold" width="20" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                <span class="text-[10px] font-heading">Beranda</span>
-            </a>
-            <a href="{{ route('portal.billing.index') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.billing.*') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
-                <iconify-icon icon="solar:wallet-money-bold" width="20" class="{{ request()->routeIs('portal.billing.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                <span class="text-[10px] font-heading">Tagihan</span>
-            </a>
-            <a href="{{ route('portal.tickets.index') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.tickets.*') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
-                <iconify-icon icon="solar:chat-round-dots-bold" width="20" class="{{ request()->routeIs('portal.tickets.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                <span class="text-[10px] font-heading">Tiket NOC</span>
-            </a>
-            <a href="{{ route('portal.profile') }}" class="flex flex-col items-center gap-0.5 py-1 rounded-xl transition-all {{ request()->routeIs('portal.profile') ? 'text-sky-600 font-bold' : 'text-slate-500 hover:text-slate-800' }}">
-                <iconify-icon icon="solar:user-circle-bold" width="20" class="{{ request()->routeIs('portal.profile') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                <span class="text-[10px] font-heading">Profil</span>
-            </a>
+    <!-- Floating Mobile Island Dock (iOS Style Glassmorphism) -->
+    <div class="md:hidden fixed bottom-3 left-3 right-3 z-40 max-w-sm mx-auto">
+        <div class="floating-mobile-dock">
+            <div class="grid grid-cols-4 gap-1 items-center text-center">
+                <!-- Beranda -->
+                <a href="{{ route('portal.dashboard') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.dashboard') ? 'dock-item-active' : 'dock-item-inactive' }}">
+                    <div class="relative flex items-center justify-center">
+                        <iconify-icon icon="solar:home-smile-bold" width="21" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                        @if(request()->routeIs('portal.dashboard'))
+                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
+                        @endif
+                    </div>
+                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.dashboard') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Beranda</span>
+                </a>
+
+                <!-- Tagihan -->
+                <a href="{{ route('portal.billing.index') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.billing.*') ? 'dock-item-active' : 'dock-item-inactive' }}">
+                    <div class="relative flex items-center justify-center">
+                        <iconify-icon icon="solar:wallet-money-bold" width="21" class="{{ request()->routeIs('portal.billing.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                        @if(request()->routeIs('portal.billing.*'))
+                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
+                        @endif
+                    </div>
+                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.billing.*') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Tagihan</span>
+                </a>
+
+                <!-- Tiket NOC -->
+                <a href="{{ route('portal.tickets.index') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.tickets.*') ? 'dock-item-active' : 'dock-item-inactive' }}">
+                    <div class="relative flex items-center justify-center">
+                        <iconify-icon icon="solar:chat-round-dots-bold" width="21" class="{{ request()->routeIs('portal.tickets.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                        @if(request()->routeIs('portal.tickets.*'))
+                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
+                        @endif
+                    </div>
+                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.tickets.*') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Tiket NOC</span>
+                </a>
+
+                <!-- Profil -->
+                <a href="{{ route('portal.profile') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.profile') ? 'dock-item-active' : 'dock-item-inactive' }}">
+                    <div class="relative flex items-center justify-center">
+                        <iconify-icon icon="solar:user-circle-bold" width="21" class="{{ request()->routeIs('portal.profile') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                        @if(request()->routeIs('portal.profile'))
+                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
+                        @endif
+                    </div>
+                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.profile') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Profil</span>
+                </a>
+            </div>
         </div>
     </div>
 

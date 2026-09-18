@@ -132,6 +132,36 @@
     border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
 }
 
+/* Floating iOS-style Mobile Dock */
+.floating-mobile-dock {
+    background: rgba(255, 255, 255, 0.90) !important;
+    backdrop-filter: blur(20px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 
+        0 20px 40px -10px rgba(15, 23, 42, 0.18),
+        0 0 0 1px rgba(226, 232, 240, 0.9),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 1) !important;
+    border-radius: 28px;
+    padding: 6px 8px;
+}
+
+.dock-item-active {
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(14, 165, 233, 0.18) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #0284c7 !important;
+    box-shadow: 0 4px 12px -2px rgba(2, 132, 199, 0.15);
+}
+
+.dock-item-inactive {
+    color: #64748b;
+    border: 1px solid transparent;
+}
+.dock-item-inactive:hover {
+    color: #0f172a;
+    background: rgba(241, 245, 249, 0.7);
+}
+
 /* Copy Badge Button */
 .copy-btn {
     cursor: pointer;
