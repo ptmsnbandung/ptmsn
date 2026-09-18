@@ -103,16 +103,16 @@
 
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-13 sm:h-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-18">
                 
                 <!-- Left: Brand Logo & Portal Badge -->
                 <div class="flex items-center gap-3">
                     <a href="{{ route('portal.dashboard') }}" class="flex items-center transition-transform hover:opacity-90">
-                        <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-7 sm:h-8 w-auto object-contain">
+                        <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-8 sm:h-9 w-auto object-contain">
                     </a>
                     <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/80 shadow-2xs">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-2xs">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                             <span class="font-brand font-extrabold text-xs text-sky-600">My</span><span class="font-brand font-black text-xs text-slate-800">MSN</span>
                             <span class="text-[9px] font-heading font-bold text-slate-500 uppercase tracking-wider ml-0.5">Self-Care</span>
@@ -157,8 +157,8 @@
 
                     <!-- User Profile Dropdown -->
                     <div class="relative" @click.outside="userDropdown = false">
-                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-xs transition-all">
-                            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-bold text-xs shadow-xs ring-1 ring-sky-100">
+                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white/90 border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all">
+                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-xs ring-1 ring-sky-100">
                                 {{ strtoupper(substr(Auth::guard('customer')->user()->name ?? 'P', 0, 1)) }}
                             </div>
                             <div class="hidden lg:block text-left pr-0.5">
@@ -172,7 +172,7 @@
                             <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-xs transition-transform duration-200 ml-0.5 hidden sm:block" :class="userDropdown ? 'rotate-180' : ''"></iconify-icon>
                         </button>
 
-                        <!-- Dropdown Content -->
+                        <!-- Dropdown Content (Logout Only) -->
                         <div 
                             x-show="userDropdown" 
                             x-transition:enter="transition ease-out duration-150"
@@ -181,30 +181,12 @@
                             x-transition:leave="transition ease-in duration-100"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 divide-y divide-slate-100"
+                            class="absolute right-0 mt-2 w-56 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl p-2 z-50 divide-y divide-slate-100"
                             style="display: none;"
                         >
                             <div class="px-3 py-2.5">
-                                <div class="text-xs font-bold text-slate-800 leading-tight">{{ Auth::guard('customer')->user()->name }}</div>
+                                <div class="text-xs font-heading font-bold text-slate-800 leading-tight truncate">{{ Auth::guard('customer')->user()->name }}</div>
                                 <div class="text-[11px] font-mono text-sky-600 font-semibold mt-0.5">ID: {{ Auth::guard('customer')->user()->customer_id ?? '-' }}</div>
-                            </div>
-                            <div class="py-1">
-                                <a href="{{ route('portal.billing.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50 rounded-xl transition-colors font-medium">
-                                    <iconify-icon icon="solar:wallet-money-bold" class="text-emerald-500" width="16"></iconify-icon>
-                                    <span>Tagihan Saya</span>
-                                </a>
-                                <a href="{{ route('portal.tickets.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50 rounded-xl transition-colors font-medium">
-                                    <iconify-icon icon="solar:chat-round-dots-bold" class="text-amber-500" width="16"></iconify-icon>
-                                    <span>Bantuan & Tiket</span>
-                                </a>
-                                <a href="{{ route('portal.profile') }}" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50 rounded-xl transition-colors font-medium">
-                                    <iconify-icon icon="solar:user-bold" class="text-sky-500" width="16"></iconify-icon>
-                                    <span>Informasi Akun</span>
-                                </a>
-                                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:text-sky-700 hover:bg-sky-50 rounded-xl transition-colors font-medium">
-                                    <iconify-icon icon="solar:globe-bold" class="text-indigo-500" width="16"></iconify-icon>
-                                    <span>Website Utama PT MSN</span>
-                                </a>
                             </div>
                             <div class="pt-1">
                                 <a href="{{ route('portal.logout') }}" class="w-full flex items-center gap-2 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl text-left font-semibold transition-colors">
