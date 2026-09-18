@@ -25,10 +25,10 @@
     <meta property="og:description" content="Nikmati koneksi internet cepat, stabil, dan terpercaya dengan teknologi fiber optic dan dukungan teknis 24/7.">
     <meta property="og:image" content="{{ asset('images/hero/hero-illustration.png') }}">
 
-    <!-- Google Fonts: Geist (Headings & UI) and Inter (Body) -->
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Geist, Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,7 +46,8 @@
                         }
                     },
                     fontFamily: {
-                        heading: ['Geist', 'sans-serif'],
+                        brand: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Geist', 'Plus Jakarta Sans', 'sans-serif'],
                         sans: ['Inter', 'sans-serif'],
                     }
                 }

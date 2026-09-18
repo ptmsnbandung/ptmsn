@@ -9,10 +9,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
-    <!-- Google Fonts: Inter, Manrope, JetBrains Mono -->
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,7 +29,8 @@
                         }
                     },
                     fontFamily: {
-                        heading: ['Manrope', 'sans-serif'],
+                        brand: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     }
@@ -123,10 +124,10 @@
                         <img src="{{ asset('images/logo/logo-msn.png') }}" alt="PT MSN" class="h-7 sm:h-9 w-auto object-contain">
                     </a>
                     <div class="hidden sm:flex items-center pl-3 border-l border-slate-200">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-50 text-sky-800 border border-sky-200/80 text-[10px] font-mono font-bold tracking-wider uppercase">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-sky-50 to-blue-50/70 border border-sky-200/80 shadow-2xs">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>MyMSN</span>
-                            <span class="text-[9px] text-sky-600 font-semibold lowercase">/ self-care</span>
+                            <span class="font-brand font-extrabold text-xs text-sky-500">My</span><span class="font-brand font-black text-xs text-slate-800">MSN</span>
+                            <span class="text-[9px] font-heading font-bold text-sky-600 uppercase tracking-wide ml-0.5">Self-Care</span>
                         </span>
                     </div>
                 </div>

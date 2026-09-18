@@ -9,10 +9,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
-    <!-- Google Fonts: Inter, Manrope, JetBrains Mono -->
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,7 +29,8 @@
                         }
                     },
                     fontFamily: {
-                        heading: ['Manrope', 'sans-serif'],
+                        brand: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     }
@@ -93,18 +94,19 @@
             
             <!-- Card Header -->
             <div class="mb-5">
-                <div class="flex items-center justify-between mb-1">
-                    <h1 class="font-heading font-extrabold text-2xl text-slate-900 tracking-tight">
-                        MyMSN
-                    </h1>
-                    <span class="text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200">
+                <div class="flex items-center justify-between mb-1.5">
+                    <div class="flex items-center gap-1">
+                        <span class="font-brand font-extrabold text-3xl tracking-tight text-sky-500">My</span><span class="font-brand font-black text-3xl tracking-tight text-slate-900">MSN</span>
+                    </div>
+                    <span class="text-[10px] font-heading font-bold tracking-wide uppercase px-2.5 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs">
                         Self-Care
                     </span>
                 </div>
-                <div class="text-[10px] font-mono font-bold tracking-widest uppercase text-sky-600 mb-2">
-                    CUSTOMER SELF-CARE
+                <div class="text-[10.5px] font-heading font-bold tracking-wider uppercase text-sky-600 mb-2 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                    <span>CUSTOMER SELF-CARE</span>
                 </div>
-                <p class="text-xs text-slate-500 leading-relaxed">
+                <p class="text-xs text-slate-500 leading-relaxed font-sans">
                     Gunakan Nomor Internet (ID Pelanggan) atau Nomor WhatsApp yang terdaftar
                 </p>
             </div>
