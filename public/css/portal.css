@@ -187,36 +187,36 @@
     border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
 }
 
-/* Floating iOS-style Mobile Dock */
+/* Floating Mobile Dock (Dark Oceanic Glassmorphism - Matching Hero Card) */
 .floating-mobile-dock {
-    background: rgba(255, 255, 255, 0.88) !important;
+    background: linear-gradient(135deg, rgba(9, 19, 34, 0.96) 0%, rgba(15, 23, 42, 0.93) 50%, rgba(14, 116, 144, 0.90) 100%) !important;
     backdrop-filter: blur(24px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
     box-shadow: 
-        0 14px 32px -4px rgba(15, 23, 42, 0.12),
-        0 4px 12px -2px rgba(15, 23, 42, 0.04),
-        0 0 0 1px rgba(226, 232, 240, 0.85),
-        inset 0 1px 1.5px 0 rgba(255, 255, 255, 1) !important;
+        0 20px 40px -8px rgba(2, 132, 199, 0.38),
+        0 4px 16px -2px rgba(15, 23, 42, 0.5),
+        0 0 0 1px rgba(14, 165, 233, 0.2),
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25) !important;
     border-radius: 9999px;
-    padding: 5px 6px;
+    padding: 6px 8px;
 }
 
 .dock-icon-capsule-active {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 10px -1px rgba(2, 132, 199, 0.35);
+    box-shadow: 0 4px 14px -1px rgba(14, 165, 233, 0.55);
 }
 
 .dock-icon-capsule-inactive {
-    color: #64748b;
+    color: #94a3b8;
     background: transparent;
     transition: all 0.2s ease;
 }
 
 .dock-item:hover .dock-icon-capsule-inactive {
-    color: #0f172a;
-    background: rgba(241, 245, 249, 0.9);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* Copy Badge Button */
