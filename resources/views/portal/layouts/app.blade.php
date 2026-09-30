@@ -174,19 +174,19 @@
                 <div class="flex items-center gap-2 sm:gap-3">
                     <!-- User Profile Dropdown -->
                     <div class="relative" @click.outside="userDropdown = false">
-                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white/90 border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all">
-                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-xs ring-1 ring-sky-100">
+                        <button @click="userDropdown = !userDropdown" class="flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white/90 border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-heading font-extrabold text-xs sm:text-sm shadow-xs ring-1 ring-sky-100 shrink-0">
                                 {{ Auth::guard('customer')->user()->initial ?? 'P' }}
                             </div>
-                            <div class="hidden lg:block text-left pr-0.5">
-                                <div class="text-xs font-heading font-bold text-slate-800 max-w-[120px] truncate leading-tight">
+                            <div class="text-left pr-0.5">
+                                <div class="text-[11px] sm:text-xs font-heading font-bold text-slate-800 max-w-[90px] sm:max-w-[140px] truncate leading-tight">
                                     {{ explode(' ', trim(Auth::guard('customer')->user()->name ?? 'Pelanggan'))[0] }}
                                 </div>
-                                <div class="text-[10px] font-mono text-slate-500 leading-tight">
+                                <div class="text-[9px] sm:text-[10px] font-mono text-slate-500 leading-tight truncate max-w-[90px] sm:max-w-[140px]">
                                     {{ Auth::guard('customer')->user()->customer_id ? 'ID: ' . Auth::guard('customer')->user()->customer_id : Auth::guard('customer')->user()->phone }}
                                 </div>
                             </div>
-                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-xs transition-transform duration-200 ml-0.5 hidden sm:block" :class="userDropdown ? 'rotate-180' : ''"></iconify-icon>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-slate-400 text-[10px] sm:text-xs transition-transform duration-200 ml-0.5" :class="userDropdown ? 'rotate-180' : ''"></iconify-icon>
                         </button>
 
                         <!-- Dropdown Content (Logout Only) -->
