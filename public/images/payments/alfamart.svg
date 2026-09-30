@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 35" fill="none">
+  <!-- Alfamart Red Badge with Yellow & Blue Stripe -->
+  <rect x="2" y="3" width="106" height="29" rx="6" fill="#DC2626" />
+  
+  <!-- Yellow & Blue accent bottom bar -->
+  <rect x="2" y="27" width="53" height="5" rx="0 0 0 6" fill="#FACC15" />
+  <rect x="55" y="27" width="53" height="5" rx="0 0 6 0" fill="#2563EB" />
+
+  <!-- Alfamart text in white bold -->
+  <g fill="#FFFFFF" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="14" letter-spacing="-0.5">
+    <text x="54" y="20" text-anchor="middle" dominant-baseline="middle" font-style="italic">Alfamart</text>
+  </g>
+</svg>

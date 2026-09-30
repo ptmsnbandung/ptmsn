@@ -220,14 +220,26 @@
                                 <span>Bayar Sekarang (Midtrans)</span>
                             </button>
 
-                            <!-- Channel Badges -->
-                            <div class="pt-1.5 border-t border-slate-100 flex items-center gap-1 flex-wrap justify-center text-[10px] font-mono font-bold text-slate-600">
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">QRIS</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">BCA VA</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">Mandiri VA</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">BRI VA</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">BNI VA</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200">Alfamart</span>
+                            <!-- Channel Logos -->
+                            <div class="pt-2 border-t border-slate-100 flex items-center gap-1.5 flex-wrap justify-center">
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="QRIS (Gopay, OVO, Dana, ShopeePay)">
+                                    <img src="{{ asset('images/payments/qris.svg') }}" alt="QRIS" class="h-4 w-auto object-contain">
+                                </div>
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="BCA Virtual Account">
+                                    <img src="{{ asset('images/payments/bca.svg') }}" alt="BCA" class="h-3.5 w-auto object-contain">
+                                </div>
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank Mandiri Virtual Account">
+                                    <img src="{{ asset('images/payments/mandiri.svg') }}" alt="Mandiri" class="h-3.5 w-auto object-contain">
+                                </div>
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank BRI Virtual Account">
+                                    <img src="{{ asset('images/payments/bri.svg') }}" alt="BRI" class="h-3.5 w-auto object-contain">
+                                </div>
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank BNI Virtual Account">
+                                    <img src="{{ asset('images/payments/bni.svg') }}" alt="BNI" class="h-3.5 w-auto object-contain">
+                                </div>
+                                <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Gerai Alfamart Retail">
+                                    <img src="{{ asset('images/payments/alfamart.svg') }}" alt="Alfamart" class="h-4 w-auto object-contain">
+                                </div>
                             </div>
                         </div>
 
@@ -243,11 +255,25 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     @foreach($bankAccounts as $bank)
+                                        @php
+                                            $bankKey = strtolower($bank['bank_name']);
+                                            $bankLogo = null;
+                                            if (str_contains($bankKey, 'bca')) $bankLogo = 'bca.svg';
+                                            elseif (str_contains($bankKey, 'mandiri')) $bankLogo = 'mandiri.svg';
+                                            elseif (str_contains($bankKey, 'bri')) $bankLogo = 'bri.svg';
+                                            elseif (str_contains($bankKey, 'bni')) $bankLogo = 'bni.svg';
+                                        @endphp
                                         <div class="p-2.5 rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-xs space-y-1 relative border border-slate-700/80">
                                             <div class="flex items-center justify-between">
-                                                <span class="px-1.5 py-0.5 rounded bg-white/20 text-[9px] font-mono font-extrabold uppercase tracking-wider text-sky-200">
-                                                    {{ $bank['bank_name'] }}
-                                                </span>
+                                                @if($bankLogo)
+                                                    <div class="h-5 px-1.5 py-0.5 rounded bg-white flex items-center justify-center shadow-2xs">
+                                                        <img src="{{ asset('images/payments/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3 w-auto object-contain">
+                                                    </div>
+                                                @else
+                                                    <span class="px-1.5 py-0.5 rounded bg-white/20 text-[9px] font-mono font-extrabold uppercase tracking-wider text-sky-200">
+                                                        {{ $bank['bank_name'] }}
+                                                    </span>
+                                                @endif
                                                 <button 
                                                     type="button" 
                                                     onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')"
@@ -660,9 +686,23 @@
             <!-- Rekening PT MSN -->
             <div class="grid grid-cols-2 gap-2 text-xs">
                 @foreach($bankAccounts as $bank)
+                    @php
+                        $mBankKey = strtolower($bank['bank_name']);
+                        $mBankLogo = null;
+                        if (str_contains($mBankKey, 'bca')) $mBankLogo = 'bca.svg';
+                        elseif (str_contains($mBankKey, 'mandiri')) $mBankLogo = 'mandiri.svg';
+                        elseif (str_contains($mBankKey, 'bri')) $mBankLogo = 'bri.svg';
+                        elseif (str_contains($mBankKey, 'bni')) $mBankLogo = 'bni.svg';
+                    @endphp
                     <div class="p-2.5 rounded-xl bg-slate-900 text-white space-y-1">
                         <div class="flex items-center justify-between">
-                            <span class="text-[9px] font-mono font-bold text-sky-300 uppercase">{{ $bank['bank_name'] }}</span>
+                            @if($mBankLogo)
+                                <div class="h-4.5 px-1 py-0.5 rounded bg-white flex items-center justify-center">
+                                    <img src="{{ asset('images/payments/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
+                                </div>
+                            @else
+                                <span class="text-[9px] font-mono font-bold text-sky-300 uppercase">{{ $bank['bank_name'] }}</span>
+                            @endif
                             <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No Rekening')" class="text-[9px] text-slate-300 hover:text-white underline cursor-pointer">Salin</button>
                         </div>
                         <div class="font-mono font-bold text-xs select-all">{{ $bank['account_number'] }}</div>
