@@ -13,29 +13,30 @@
     filePreview: null 
 }">
 
-    <!-- Header Section -->
-    <div class="flex items-center justify-between gap-3">
-        <div>
-            <div class="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 mb-0.5">
-                <a href="{{ route('portal.dashboard') }}" class="hover:text-sky-600 transition-colors">Portal</a>
-                <span>/</span>
-                <span class="text-sky-600 font-bold">Tagihan</span>
+    <!-- Header Banner Section (Dark Oceanic Blue Hero Style) -->
+    <div class="hero-network-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+        <div class="relative z-10 space-y-1">
+            <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                <span class="text-cyan-400/60">/</span>
+                <span class="text-cyan-300 font-bold">Tagihan</span>
             </div>
-            <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-slate-900 tracking-tight">
+            <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
                 Tagihan & Pembayaran
             </h1>
+            <p class="text-xs text-slate-300">Rincian invoice, riwayat transaksi, dan pilihan pembayaran online atau transfer bank.</p>
         </div>
 
         <!-- ID Pelanggan Pill -->
         <button 
             type="button" 
             onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
-            class="copy-btn px-2.5 py-1.5 rounded-xl bg-white/90 border border-slate-200/90 shadow-2xs hover:border-sky-400 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
+            class="copy-btn relative z-10 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 hover:border-cyan-400 text-cyan-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-2xs self-start sm:self-center"
             title="Klik untuk menyalin ID"
         >
-            <iconify-icon icon="solar:hashtag-bold" class="text-sky-500 text-xs"></iconify-icon>
-            <span class="text-xs font-mono font-bold text-slate-800">{{ $customer->customer_id }}</span>
-            <iconify-icon icon="solar:copy-linear" class="text-[11px] text-slate-400"></iconify-icon>
+            <iconify-icon icon="solar:hashtag-bold" class="text-cyan-400 text-xs"></iconify-icon>
+            <span class="text-xs font-mono font-bold">{{ $customer->customer_id }}</span>
+            <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-[11px]"></iconify-icon>
         </button>
     </div>
 
