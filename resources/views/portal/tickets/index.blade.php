@@ -18,9 +18,9 @@
             <p class="text-xs text-slate-300">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda.</p>
         </div>
 
-        <a id="tour-step-create-ticket" href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0 self-start sm:self-center">
+        <a id="tour-step-create-ticket" href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/25 border border-white/20 active:scale-95 transition-all shrink-0 self-start sm:self-center">
             <iconify-icon icon="solar:danger-triangle-bold" width="16" class="shrink-0 text-amber-300"></iconify-icon>
-            <span>Buat Laporan Baru</span>
+            <span class="text-white">Buat Laporan Baru</span>
         </a>
     </div>
 </div>
