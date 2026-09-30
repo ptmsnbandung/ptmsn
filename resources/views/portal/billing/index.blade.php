@@ -229,7 +229,7 @@
                             <div class="pt-3 border-t border-slate-100 flex items-center justify-center gap-4 sm:gap-6 flex-wrap">
                                 <img src="{{ asset('images/logo/qris.jpg') }}" alt="QRIS" class="h-6 sm:h-7 w-auto object-contain transition-transform hover:scale-105" title="QRIS (Gopay, OVO, Dana, ShopeePay)" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-slate-700 tracking-tight\'>QRIS</span>';">
                                 <img src="{{ asset('images/logo/bca.png') }}" alt="BCA" class="h-7 sm:h-8 w-auto object-contain transition-transform hover:scale-105" title="BCA Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-800 tracking-tight\'>BCA</span>';">
-                                <img src="{{ asset('images/logo/mandiri.png') }}" alt="Mandiri" class="h-8 sm:h-9 w-auto object-contain transition-transform hover:scale-105" title="Bank Mandiri Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-sky-900 tracking-tight\'>MANDIRI</span>';">
+                                <img src="{{ asset('images/logo/mandiri.png') }}" alt="Mandiri" class="h-10 sm:h-11 scale-115 w-auto object-contain transition-transform hover:scale-120" title="Bank Mandiri Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-sky-900 tracking-tight\'>MANDIRI</span>';">
                                 <img src="{{ asset('images/logo/bri.png') }}" alt="BRI" class="h-7 sm:h-8 w-auto object-contain transition-transform hover:scale-105" title="Bank BRI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-900 tracking-tight\'>BRI</span>';">
                                 <img src="{{ asset('images/logo/bni.png') }}" alt="BNI" class="h-7 sm:h-8 w-auto object-contain transition-transform hover:scale-105" title="Bank BNI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-teal-800 tracking-tight\'>BNI</span>';">
                                 <img src="{{ asset('images/logo/alfamart.png') }}" alt="Alfamart" class="h-6 sm:h-7 w-auto object-contain transition-transform hover:scale-105" title="Gerai Alfamart Retail" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-red-600 tracking-tight\'>ALFAMART</span>';">
@@ -261,18 +261,24 @@
                                                 $bankLogo = 'bca.png';
                                                 $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                                 $accentBorder = 'border-sky-500/30';
+                                                $cardLogoClass = 'h-6 sm:h-6.5 scale-110';
                                             } elseif (str_contains($bankKey, 'mandiri')) {
                                                 $bankLogo = 'mandiri.png';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
+                                                $cardLogoClass = 'h-8 sm:h-9 scale-140';
                                             } elseif (str_contains($bankKey, 'bri')) {
                                                 $bankLogo = 'bri.png';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                                 $accentBorder = 'border-sky-400/30';
+                                                $cardLogoClass = 'h-6 sm:h-6.5';
                                             } elseif (str_contains($bankKey, 'bni')) {
                                                 $bankLogo = 'bni.png';
                                                 $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                                 $accentBorder = 'border-teal-400/30';
+                                                $cardLogoClass = 'h-6 sm:h-6.5';
+                                            } else {
+                                                $cardLogoClass = 'h-5.5 sm:h-6';
                                             }
 
                                             $rawAcc = preg_replace('/\s+/', '', $bank['account_number']);
@@ -286,10 +292,10 @@
                                             <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
                                             <div class="absolute -left-10 -bottom-10 w-28 h-28 bg-sky-400/10 rounded-full blur-xl pointer-events-none"></div>
 
-                                            <!-- Top Row: EMV Chip + NFC Contactless Wave & Bank Logo -->
+                                            <!-- Top Row: EMV Chip & Bank Logo -->
                                             <div class="relative z-10 flex items-center justify-between gap-2">
                                                 <div class="flex items-center gap-2">
-                                                    <!-- Realistic Gold Smart Chip -->
+                                                     <!-- Realistic Gold Smart Chip -->
                                                     <div class="w-8 h-6 rounded-[5px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-inner flex flex-col justify-center items-center relative overflow-hidden shrink-0">
                                                         <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
                                                         <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
@@ -298,9 +304,9 @@
                                                 </div>
 
                                                 <!-- Official Bank Logo Badge -->
-                                                <div class="h-8 px-3 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+                                                <div class="h-9 px-3.5 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 min-w-[90px] overflow-hidden">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-5 sm:h-5.5 w-auto max-w-[85px] sm:max-w-[100px] object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $cardLogoClass }} w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
                                                         <span class="text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
@@ -706,18 +712,24 @@
                             $mBankLogo = 'bca.png';
                             $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                             $mAccentBorder = 'border-sky-500/30';
+                            $mCardLogoClass = 'h-5 sm:h-5.5 scale-110';
                         } elseif (str_contains($mBankKey, 'mandiri')) {
                             $mBankLogo = 'mandiri.png';
                             $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                             $mAccentBorder = 'border-amber-500/30';
+                            $mCardLogoClass = 'h-6.5 sm:h-7 scale-135';
                         } elseif (str_contains($mBankKey, 'bri')) {
                             $mBankLogo = 'bri.png';
                             $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                             $mAccentBorder = 'border-sky-400/30';
+                            $mCardLogoClass = 'h-4.5 sm:h-5';
                         } elseif (str_contains($mBankKey, 'bni')) {
                             $mBankLogo = 'bni.png';
                             $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                             $mAccentBorder = 'border-teal-400/30';
+                            $mCardLogoClass = 'h-4.5 sm:h-5';
+                        } else {
+                            $mCardLogoClass = 'h-4 sm:h-4.5';
                         }
 
                         $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
@@ -731,9 +743,9 @@
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                 </div>
                             </div>
-                            <div class="h-6 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0">
+                            <div class="h-7 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 min-w-[70px] overflow-hidden">
                                 @if($mBankLogo)
-                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-4 w-auto max-w-[70px] object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
+                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $mCardLogoClass }} w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
                                 @else
                                     <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                 @endif
