@@ -209,6 +209,8 @@
             ],
 
             initTour() {
+                this.adaptStepsForCurrentPage();
+
                 window.startPortalTour = () => {
                     window.location.href = `${this.routes.dashboard}?tour_step=1`;
                 };
@@ -220,7 +222,35 @@
                 }
             },
 
+            adaptStepsForCurrentPage() {
+                const currentPage = this.getCurrentPageName();
+                if (currentPage === 'billing') {
+                    const isPaid = document.querySelector('#tour-step-billing-status') !== null || !document.querySelector('#tour-step-midtrans-pay');
+                    if (isPaid && document.querySelector('#tour-step-billing-status')) {
+                        this.steps[3] = {
+                            page: 'billing',
+                            pageLabel: 'Tagihan',
+                            target: '#tour-step-billing-status',
+                            title: 'Status Tagihan & Rincian',
+                            subtitle: 'Tagihan Lunas & Terverifikasi',
+                            icon: 'solar:check-circle-bold',
+                            description: 'Status tagihan periode ini telah terbayar lunas. Anda dapat mengunduh invoice digital atau menghubungi WhatsApp Billing jika memerlukan bantuan.'
+                        };
+                        this.steps[4] = {
+                            page: 'billing',
+                            pageLabel: 'Tagihan',
+                            target: '#tour-step-billing-history',
+                            title: 'Riwayat Tagihan & Struk',
+                            subtitle: 'Arsip Transaksi Bulanan',
+                            icon: 'solar:history-bold',
+                            description: 'Daftar riwayat seluruh tagihan dan pembayaran periode lampau tersimpan rapi di sini. Anda dapat mencetak ulang struk resmi kapan saja.'
+                        };
+                    }
+                }
+            },
+
             startTour() {
+                this.adaptStepsForCurrentPage();
                 this.isOpen = true;
                 this.$nextTick(() => {
                     this.showStep(this.currentStep);
@@ -236,6 +266,7 @@
 
             goToStep(stepIdx) {
                 if (stepIdx < 0 || stepIdx >= this.steps.length) return;
+                this.adaptStepsForCurrentPage();
                 const targetStep = this.steps[stepIdx];
                 const currentPage = this.getCurrentPageName();
 
@@ -275,26 +306,38 @@
                 }
             },
 
+            findTargetElement(selectorString) {
+                if (!selectorString) return null;
+                const selectors = selectorString.split(',').map(s => s.trim());
+                for (const sel of selectors) {
+                    const el = document.querySelector(sel);
+                    if (el) return el;
+                }
+                return null;
+            },
+
             showStep(stepIdx) {
+                this.adaptStepsForCurrentPage();
                 this.currentStep = stepIdx;
                 const step = this.steps[stepIdx];
                 if (!step) return;
 
-                // Khusus halaman tagihan: aktifkan tab yang sesuai
+                // Khusus halaman tagihan: aktifkan tab yang sesuai jika mode belum lunas
                 if (step.page === 'billing') {
-                    if (stepIdx === 3) {
-                        // Switch ke tab midtrans jika ada elemennya
-                        const midtransBtn = document.querySelector("button[\\@click*=\"paymentTab = 'midtrans'\"]");
-                        if (midtransBtn) midtransBtn.click();
-                    } else if (stepIdx === 4) {
-                        // Switch ke tab transfer jika ada elemennya
-                        const transferBtn = document.querySelector("#tour-step-transfer-tab");
-                        if (transferBtn) transferBtn.click();
+                    const isPaid = document.querySelector('#tour-step-billing-status') !== null;
+                    if (!isPaid) {
+                        if (stepIdx === 3) {
+                            const midtransBtn = document.querySelector("button[\\@click*=\"paymentTab = 'midtrans'\"]");
+                            if (midtransBtn) midtransBtn.click();
+                        } else if (stepIdx === 4) {
+                            const transferBtn = document.querySelector("#tour-step-transfer-tab");
+                            if (transferBtn) transferBtn.click();
+                        }
                     }
                 }
 
                 setTimeout(() => {
-                    const targetEl = document.querySelector(step.target);
+                    const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
                         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         setTimeout(() => {
@@ -303,7 +346,7 @@
                     } else {
                         this.calculateFallbackPosition();
                     }
-                }, 100);
+                }, 120);
             },
 
             calculatePosition(el) {

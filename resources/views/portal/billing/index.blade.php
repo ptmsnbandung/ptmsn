@@ -65,7 +65,7 @@
     @endif
 
     <!-- Active Invoice Card -->
-    <div class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden space-y-3.5 sm:space-y-4">
+    <div id="tour-step-invoice-card" class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden space-y-3.5 sm:space-y-4">
         
         <!-- Header Strip: No Invoice, Periode & Status -->
         <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80 flex-wrap">
@@ -427,7 +427,7 @@
                         </div>
                     @else
                         <!-- Lunas Box -->
-                        <div class="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
+                        <div id="tour-step-billing-status" class="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
                             <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm shadow-emerald-500/20">
                                 <iconify-icon icon="solar:check-circle-bold" class="text-xl"></iconify-icon>
                             </div>
@@ -475,7 +475,7 @@
     </div>
 
     <!-- Riwayat Pembayaran & Tagihan -->
-    <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-3">
+    <div id="tour-step-billing-history" class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-3">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
