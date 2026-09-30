@@ -3,7 +3,7 @@
 @section('title', 'Tagihan & Pembayaran')
 
 @section('content')
-<div class="max-w-5xl mx-auto space-y-4 sm:space-y-5" x-data="{ 
+<div class="space-y-3.5 sm:space-y-5" x-data="{ 
     paymentTab: 'midtrans', 
     showTransferModal: false, 
     modalInvoiceCode: '', 
