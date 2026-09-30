@@ -333,9 +333,9 @@
                 <p class="text-[11px] sm:text-xs text-emerald-800 leading-relaxed">
                     Tim NOC siap siaga melayani konsultasi dan penanganan teknis Anda.
                 </p>
-                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20NOC%20PT%20MSN,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20membutuhkan%20bantuan%20teknis" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-xs">
-                    <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
-                    <span>WhatsApp NOC ({{ config('company.phone', '+62 896-9662-9955') }})</span>
+                <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20NOC%20PT%20MSN,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20membutuhkan%20bantuan%20teknis" target="_blank" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-xs">
+                    <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
+                    <span>WhatsApp NOC</span>
                 </a>
             </div>
 
