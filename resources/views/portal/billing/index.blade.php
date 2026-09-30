@@ -30,7 +30,7 @@
         <button 
             type="button" 
             onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
-            class="copy-btn px-3 py-1.5 rounded-xl bg-white/90 border border-slate-200/90 shadow-2xs hover:border-sky-400 flex items-center gap-1.5 shrink-0 transition-all"
+            class="copy-btn px-3 py-1.5 rounded-xl bg-white/90 border border-slate-200/90 shadow-2xs hover:border-sky-400 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
             title="Klik untuk menyalin ID"
         >
             <iconify-icon icon="solar:hashtag-bold" class="text-sky-500 text-xs"></iconify-icon>
@@ -84,7 +84,7 @@
                     @endphp
                     @if($activeConf && $activeConf->status === 'pending')
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-bold bg-amber-50 text-amber-800 border border-amber-300">
-                            <iconify-icon icon="solar:clock-circle-bold" class="text-amber-600 text-sm animate-pulse"></iconify-icon>
+                            <iconify-icon icon="solar:clock-circle-bold" class="text-amber-600 text-sm"></iconify-icon>
                             <span>MENUNGGU VERIFIKASI</span>
                         </span>
                     @else
@@ -250,7 +250,7 @@
                                                 <button 
                                                     type="button" 
                                                     onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')"
-                                                    class="copy-btn text-[10px] font-heading font-semibold text-sky-300 hover:text-white flex items-center gap-1 bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-lg transition-all"
+                                                    class="copy-btn text-[10px] font-heading font-semibold text-sky-300 hover:text-white flex items-center gap-1 bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-lg transition-all cursor-pointer"
                                                     title="Salin No. Rekening"
                                                 >
                                                     <iconify-icon icon="solar:copy-linear" class="text-xs"></iconify-icon>
@@ -526,16 +526,16 @@
 
         <!-- Desktop Table View (hidden sm:block) -->
         <div class="hidden sm:block overflow-x-auto rounded-2xl border border-slate-200/80 bg-white/70">
-            <table class="w-full text-left text-xs sm:text-sm">
+            <table class="w-full text-left text-xs sm:text-sm table-auto">
                 <thead>
                     <tr class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
-                        <th class="py-3 px-4">No. Invoice</th>
-                        <th class="py-3 px-4">Periode</th>
-                        <th class="py-3 px-4">Paket Layanan</th>
-                        <th class="py-3 px-4">Jatuh Tempo</th>
-                        <th class="py-3 px-4 text-right">Total</th>
-                        <th class="py-3 px-4 text-center">Status</th>
-                        <th class="py-3 px-4 text-center">Aksi Pembayaran</th>
+                        <th class="py-3 px-4 whitespace-nowrap min-w-[170px]">No. Invoice</th>
+                        <th class="py-3 px-4 whitespace-nowrap min-w-[120px]">Periode</th>
+                        <th class="py-3 px-4 whitespace-nowrap min-w-[180px]">Paket Layanan</th>
+                        <th class="py-3 px-4 whitespace-nowrap min-w-[110px]">Jatuh Tempo</th>
+                        <th class="py-3 px-4 text-right whitespace-nowrap min-w-[130px]">Total</th>
+                        <th class="py-3 px-4 text-center whitespace-nowrap min-w-[130px]">Status</th>
+                        <th class="py-3 px-4 text-center whitespace-nowrap min-w-[200px]">Aksi Pembayaran</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-sans">
@@ -544,22 +544,22 @@
                             $invConf = $confirmations->get($inv->kode_billing_layanan);
                         @endphp
                         <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-3 px-4 font-mono font-bold text-slate-800">
+                            <td class="py-3 px-4 font-mono font-bold text-slate-800 whitespace-nowrap">
                                 #{{ $inv->invoice_number }}
                             </td>
-                            <td class="py-3 px-4 font-semibold text-slate-700">
+                            <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">
                                 {{ $inv->period }}
                             </td>
-                            <td class="py-3 px-4 text-slate-600 text-xs">
+                            <td class="py-3 px-4 text-slate-600 text-xs whitespace-nowrap">
                                 {{ $inv->package_name }}
                             </td>
-                            <td class="py-3 px-4 font-mono text-xs text-slate-500">
+                            <td class="py-3 px-4 font-mono text-xs text-slate-500 whitespace-nowrap">
                                 {{ $inv->due_date?->format('d/m/Y') }}
                             </td>
-                            <td class="py-3 px-4 text-right font-mono font-bold text-sky-600">
+                            <td class="py-3 px-4 text-right font-mono font-bold text-sky-600 whitespace-nowrap">
                                 {{ $inv->formatted_total }}
                             </td>
-                            <td class="py-3 px-4 text-center">
+                            <td class="py-3 px-4 text-center whitespace-nowrap">
                                 @if($inv->is_paid)
                                     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
@@ -577,14 +577,14 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-3 px-4 text-center">
-                                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                            <td class="py-3 px-4 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-1.5">
                                     @if(!$inv->is_paid)
                                         <button 
                                             type="button" 
                                             id="btnPayHist-{{ $loop->index }}"
                                             onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
                                             title="Bayar tagihan ini via Midtrans"
                                         >
                                             <iconify-icon icon="solar:bolt-circle-bold" width="13"></iconify-icon>
@@ -593,7 +593,7 @@
                                         <button 
                                             type="button" 
                                             @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
                                             title="Upload bukti transfer untuk tagihan ini"
                                         >
                                             <iconify-icon icon="solar:upload-track-bold" width="13"></iconify-icon>
@@ -603,7 +603,7 @@
                                     <a 
                                         href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
                                         target="_blank"
-                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs whitespace-nowrap"
                                         title="Cetak struk resmi"
                                     >
                                         <iconify-icon icon="solar:document-text-bold" width="13"></iconify-icon>
