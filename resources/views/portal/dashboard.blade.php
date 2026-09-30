@@ -6,7 +6,7 @@
 <div class="space-y-3 sm:space-y-5">
 
     <!-- Executive Dark Glassmorphism Hero Card -->
-    <div class="hero-network-card p-3.5 sm:p-6 lg:p-7 relative">
+    <div id="tour-step-hero" class="hero-network-card p-3.5 sm:p-6 lg:p-7 relative">
         
         <div class="relative z-10 space-y-3 sm:space-y-4">
             
@@ -71,7 +71,7 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5">
         
         <!-- Card 1: Paket Internet -->
-        <div class="kpi-stat-card kpi-sky flex flex-col justify-between">
+        <div id="tour-step-package" class="kpi-stat-card kpi-sky flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Paket</span>
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Card 2: Status Tagihan -->
-        <div class="kpi-stat-card kpi-emerald flex flex-col justify-between">
+        <div id="tour-step-billing" class="kpi-stat-card kpi-emerald flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Tagihan</span>
@@ -128,7 +128,7 @@
         </div>
 
         <!-- Card 3: Tiket Kendala Aktif -->
-        <div class="kpi-stat-card kpi-amber flex flex-col justify-between">
+        <div id="tour-step-tickets" class="kpi-stat-card kpi-amber flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Tiket</span>
@@ -267,7 +267,7 @@
         </div>
 
         <!-- Right 1 Col: Speedtest & Quick Diagnostics -->
-        <div class="space-y-2.5 sm:space-y-4">
+        <div id="tour-step-help" class="space-y-2.5 sm:space-y-4">
             
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">

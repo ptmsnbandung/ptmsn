@@ -40,4 +40,46 @@ class DashboardController extends Controller
             'resolvedTicketsCount'
         ));
     }
+
+    /**
+     * Tandai tutorial onboarding telah diselesaikan oleh pelanggan (update is_login = 1)
+     */
+    public function completeOnboarding(Request $request)
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+        if ($customer) {
+            try {
+                $customer->is_login = 1;
+                $customer->save();
+            } catch (\Throwable $e) {
+                try {
+                    \Illuminate\Support\Facades\DB::connection($customer->getConnectionName() ?: 'ims')
+                        ->table($customer->getTable())
+                        ->where($customer->getKeyName(), $customer->getKey())
+                        ->update(['is_login' => 1]);
+                } catch (\Throwable $inner) {
+                    //
+                }
+            }
+
+            // Sync ke tabel customers di default connection jika ada
+            try {
+                if (\Illuminate\Support\Facades\Schema::connection('mysql')->hasTable('customers')) {
+                    \Illuminate\Support\Facades\DB::connection('mysql')->table('customers')
+                        ->where('customer_id', $customer->customer_id)
+                        ->orWhere('phone', $customer->phone)
+                        ->update(['is_login' => 1]);
+                }
+            } catch (\Throwable $e) {
+                //
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tutorial onboarding berhasil diselesaikan.',
+            'is_login' => 1,
+        ]);
+    }
 }

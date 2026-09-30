@@ -63,6 +63,9 @@ Route::prefix('portal')->name('portal.')->group(function () {
         // Profile & Service Settings
         Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
         Route::put('/profile', [PortalProfileController::class, 'update'])->name('profile.update');
+
+        // Interactive Onboarding Tour Completion
+        Route::post('/onboarding/complete', [PortalDashboardController::class, 'completeOnboarding'])->name('onboarding.complete');
     });
 });
 

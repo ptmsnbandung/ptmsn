@@ -284,6 +284,10 @@
         </div>
     </div>
 
+    @auth('customer')
+        @include('portal.components.onboarding-tour')
+    @endauth
+
     <!-- Toast Notification for Copy / Actions -->
     <div id="portal-toast" class="fixed bottom-20 md:bottom-8 right-1/2 translate-x-1/2 md:translate-x-0 md:right-8 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-heading font-medium shadow-2xl border border-slate-700 pointer-events-none">
         <iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base shrink-0"></iconify-icon>

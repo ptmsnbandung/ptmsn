@@ -94,6 +94,21 @@
                     <iconify-icon icon="solar:arrow-right-up-linear" width="14"></iconify-icon>
                 </a>
             </div>
+
+            <!-- Tour Replay Card -->
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 bg-slate-50/90 border-slate-200 space-y-2 text-xs">
+                <div class="font-heading font-bold text-slate-800 flex items-center gap-1.5">
+                    <iconify-icon icon="solar:star-fall-minimalistic-2-bold" class="text-sky-600 text-base"></iconify-icon>
+                    <span>Panduan Fitur Aplikasi</span>
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                    Ingin melihat kembali panduan interaktif cara menggunakan fitur-fitur portal pelanggan?
+                </p>
+                <a href="{{ route('portal.dashboard') }}?tour=1" class="w-full py-2 px-3 rounded-xl bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs">
+                    <iconify-icon icon="solar:play-circle-bold" class="text-sky-600"></iconify-icon>
+                    <span>Mulai Ulang Panduan</span>
+                </a>
+            </div>
         </div>
 
         <!-- Right 2 Cols: Profile Edit Form -->
