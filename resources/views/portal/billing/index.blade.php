@@ -295,10 +295,6 @@
                                                         <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
                                                         <div class="absolute inset-x-2 top-0 bottom-0 border-x border-amber-700/50"></div>
                                                     </div>
-                                                    <!-- Contactless NFC Wave -->
-                                                    <div class="text-white/60 flex items-center rotate-90" title="Contactless Payment">
-                                                        <iconify-icon icon="solar:transmission-bold" class="text-sm"></iconify-icon>
-                                                    </div>
                                                 </div>
 
                                                 <!-- Official Bank Logo Badge -->
@@ -734,7 +730,6 @@
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                 </div>
-                                <iconify-icon icon="solar:transmission-bold" class="text-white/60 rotate-90 text-xs"></iconify-icon>
                             </div>
                             <div class="h-6 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0">
                                 @if($mBankLogo)
