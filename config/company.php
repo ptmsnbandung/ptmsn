@@ -23,16 +23,16 @@ return [
     'bank_accounts' => [
         [
             'bank_name' => 'BCA',
-            'account_number' => env('BANK_BCA_NUMBER', '7771899555'),
-            'account_name' => env('BANK_BCA_NAME', 'PT Media Solusi Network'),
-            'color' => 'from-blue-600 to-indigo-700',
+            'account_number' => env('BANK_BCA_NUMBER', '0860796023'),
+            'account_name' => env('BANK_BCA_NAME', 'Media Solusi Network'),
+            'color' => 'from-[#002f6c] via-[#004b93] to-[#001f4d]',
             'badge' => 'BCA',
         ],
         [
             'bank_name' => 'Bank Mandiri',
-            'account_number' => env('BANK_MANDIRI_NUMBER', '1300019882991'),
-            'account_name' => env('BANK_MANDIRI_NAME', 'PT Media Solusi Network'),
-            'color' => 'from-amber-600 to-blue-800',
+            'account_number' => env('BANK_MANDIRI_NUMBER', '1310017148976'),
+            'account_name' => env('BANK_MANDIRI_NAME', 'Media Solusi Network'),
+            'color' => 'from-[#002244] via-[#003870] to-[#0b1c30]',
             'badge' => 'Mandiri',
         ],
     ],

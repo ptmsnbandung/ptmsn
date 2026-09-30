@@ -246,50 +246,106 @@
                         <!-- Tab 2: Manual Bank Transfer & Proof Upload -->
                         <div x-show="paymentTab === 'transfer'" x-transition:enter="transition ease-out duration-150" class="space-y-3" style="display: none;">
                             
-                            <!-- Official Bank Accounts List -->
-                            <div class="space-y-1.5">
+                            <!-- Official Bank Accounts List (Realistic Debit/Credit Card UI) -->
+                            <div class="space-y-2">
                                 <div class="text-[10px] font-mono uppercase font-bold text-slate-500 flex items-center justify-between">
-                                    <span>Rekening Tujuan PT MSN:</span>
+                                    <span class="flex items-center gap-1.5">
+                                        <iconify-icon icon="solar:card-bold" class="text-sky-600 text-xs"></iconify-icon>
+                                        <span>REKENING TUJUAN RESMI PT MSN</span>
+                                    </span>
                                     <span class="text-sky-600 font-sans font-semibold text-[10px]">Klik salin untuk transfer</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     @foreach($bankAccounts as $bank)
                                         @php
                                             $bankKey = strtolower($bank['bank_name']);
                                             $bankLogo = null;
-                                            if (str_contains($bankKey, 'bca')) $bankLogo = 'bca.svg';
-                                            elseif (str_contains($bankKey, 'mandiri')) $bankLogo = 'mandiri.svg';
-                                            elseif (str_contains($bankKey, 'bri')) $bankLogo = 'bri.svg';
-                                            elseif (str_contains($bankKey, 'bni')) $bankLogo = 'bni.svg';
+                                            $cardGradient = 'from-slate-900 via-slate-800 to-slate-900';
+                                            $accentBorder = 'border-slate-700/80';
+
+                                            if (str_contains($bankKey, 'bca')) {
+                                                $bankLogo = 'bca.svg';
+                                                $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
+                                                $accentBorder = 'border-sky-500/30';
+                                            } elseif (str_contains($bankKey, 'mandiri')) {
+                                                $bankLogo = 'mandiri.svg';
+                                                $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
+                                                $accentBorder = 'border-amber-500/30';
+                                            } elseif (str_contains($bankKey, 'bri')) {
+                                                $bankLogo = 'bri.svg';
+                                                $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
+                                                $accentBorder = 'border-sky-400/30';
+                                            } elseif (str_contains($bankKey, 'bni')) {
+                                                $bankLogo = 'bni.svg';
+                                                $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
+                                                $accentBorder = 'border-teal-400/30';
+                                            }
+
+                                            $rawAcc = preg_replace('/\s+/', '', $bank['account_number']);
+                                            $formattedAcc = trim(chunk_split($rawAcc, 4, ' '));
                                         @endphp
-                                        <div class="p-2.5 rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-xs space-y-1 relative border border-slate-700/80">
-                                            <div class="flex items-center justify-between">
-                                                @if($bankLogo)
-                                                    <div class="h-5 px-1.5 py-0.5 rounded bg-white flex items-center justify-center shadow-2xs">
-                                                        <img src="{{ asset('images/payments/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3 w-auto object-contain">
+                                        
+                                        <!-- Real ATM / Credit Card Design -->
+                                        <div class="relative rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br {{ $cardGradient }} text-white shadow-md {{ $accentBorder }} border overflow-hidden flex flex-col justify-between min-h-[140px] group transition-all duration-200 hover:shadow-lg">
+                                            
+                                            <!-- Glossy / Metallic Sheen Background Decor -->
+                                            <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+                                            <div class="absolute -left-10 -bottom-10 w-28 h-28 bg-sky-400/10 rounded-full blur-xl pointer-events-none"></div>
+
+                                            <!-- Top Row: EMV Chip + NFC Contactless Wave & Bank Logo -->
+                                            <div class="relative z-10 flex items-center justify-between gap-2">
+                                                <div class="flex items-center gap-2">
+                                                    <!-- Realistic Gold Smart Chip -->
+                                                    <div class="w-8 h-6 rounded-[5px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-inner flex flex-col justify-center items-center relative overflow-hidden shrink-0">
+                                                        <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
+                                                        <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
+                                                        <div class="absolute inset-x-2 top-0 bottom-0 border-x border-amber-700/50"></div>
                                                     </div>
-                                                @else
-                                                    <span class="px-1.5 py-0.5 rounded bg-white/20 text-[9px] font-mono font-extrabold uppercase tracking-wider text-sky-200">
-                                                        {{ $bank['bank_name'] }}
-                                                    </span>
-                                                @endif
+                                                    <!-- Contactless NFC Wave -->
+                                                    <div class="text-white/60 flex items-center rotate-90" title="Contactless Payment">
+                                                        <iconify-icon icon="solar:transmission-bold" class="text-sm"></iconify-icon>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Official Bank Logo Badge -->
+                                                <div class="h-6 px-2 py-0.5 rounded-lg bg-white/95 shadow-2xs flex items-center justify-center shrink-0">
+                                                    @if($bankLogo)
+                                                        <img src="{{ asset('images/payments/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3.5 w-auto object-contain">
+                                                    @else
+                                                        <span class="text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <!-- Middle Row: Spaced Card Account Number -->
+                                            <div class="relative z-10 my-2 space-y-0.5">
+                                                <div class="text-[8px] font-mono tracking-widest text-slate-300/80 uppercase font-semibold">Nomor Rekening Tujuan</div>
+                                                <div class="font-mono font-black text-sm sm:text-base tracking-widest text-white drop-shadow-sm select-all">
+                                                    {{ $formattedAcc }}
+                                                </div>
+                                            </div>
+
+                                            <!-- Bottom Row: Cardholder Name & Quick Copy Button -->
+                                            <div class="relative z-10 flex items-end justify-between gap-2 pt-1.5 border-t border-white/10">
+                                                <div class="overflow-hidden pr-1">
+                                                    <div class="text-[7px] font-mono uppercase tracking-wider text-slate-400">Atas Nama</div>
+                                                    <div class="font-heading font-extrabold text-[11px] sm:text-xs text-slate-100 uppercase tracking-wide truncate">
+                                                        {{ $bank['account_name'] }}
+                                                    </div>
+                                                </div>
+
                                                 <button 
                                                     type="button" 
                                                     onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')"
-                                                    class="copy-btn text-[9px] font-heading font-semibold text-sky-300 hover:text-white flex items-center gap-1 bg-white/10 hover:bg-white/20 px-1.5 py-0.5 rounded transition-all cursor-pointer"
+                                                    class="copy-btn px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/30 border border-white/25 text-white text-[10px] font-heading font-bold flex items-center gap-1 shadow-2xs transition-all active:scale-95 shrink-0 cursor-pointer"
                                                     title="Salin No. Rekening"
                                                 >
-                                                    <iconify-icon icon="solar:copy-linear" class="text-[10px]"></iconify-icon>
+                                                    <iconify-icon icon="solar:copy-bold" class="text-[11px] text-sky-300"></iconify-icon>
                                                     <span>Salin</span>
                                                 </button>
                                             </div>
-                                            <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all">
-                                                {{ $bank['account_number'] }}
-                                            </div>
-                                            <div class="text-[9px] text-slate-300 truncate">
-                                                a.n. {{ $bank['account_name'] }}
-                                            </div>
+
                                         </div>
                                     @endforeach
                                 </div>
@@ -683,30 +739,60 @@
                 </button>
             </div>
 
-            <!-- Rekening PT MSN -->
-            <div class="grid grid-cols-2 gap-2 text-xs">
+            <!-- Rekening PT MSN (Mini ATM Cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                 @foreach($bankAccounts as $bank)
                     @php
                         $mBankKey = strtolower($bank['bank_name']);
                         $mBankLogo = null;
-                        if (str_contains($mBankKey, 'bca')) $mBankLogo = 'bca.svg';
-                        elseif (str_contains($mBankKey, 'mandiri')) $mBankLogo = 'mandiri.svg';
-                        elseif (str_contains($mBankKey, 'bri')) $mBankLogo = 'bri.svg';
-                        elseif (str_contains($mBankKey, 'bni')) $mBankLogo = 'bni.svg';
+                        $mCardGradient = 'from-slate-900 via-slate-800 to-slate-900';
+                        $mAccentBorder = 'border-slate-700/80';
+
+                        if (str_contains($mBankKey, 'bca')) {
+                            $mBankLogo = 'bca.svg';
+                            $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
+                            $mAccentBorder = 'border-sky-500/30';
+                        } elseif (str_contains($mBankKey, 'mandiri')) {
+                            $mBankLogo = 'mandiri.svg';
+                            $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
+                            $mAccentBorder = 'border-amber-500/30';
+                        } elseif (str_contains($mBankKey, 'bri')) {
+                            $mBankLogo = 'bri.svg';
+                            $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
+                            $mAccentBorder = 'border-sky-400/30';
+                        } elseif (str_contains($mBankKey, 'bni')) {
+                            $mBankLogo = 'bni.svg';
+                            $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
+                            $mAccentBorder = 'border-teal-400/30';
+                        }
+
+                        $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
+                        $mFormattedAcc = trim(chunk_split($mRawAcc, 4, ' '));
                     @endphp
-                    <div class="p-2.5 rounded-xl bg-slate-900 text-white space-y-1">
+                    <div class="p-3 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-md space-y-1.5 relative overflow-hidden">
                         <div class="flex items-center justify-between">
-                            @if($mBankLogo)
-                                <div class="h-4.5 px-1 py-0.5 rounded bg-white flex items-center justify-center">
-                                    <img src="{{ asset('images/payments/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-6 h-4.5 rounded-[3px] bg-gradient-to-br from-amber-200 to-amber-500 border border-amber-300 flex flex-col justify-center">
+                                    <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
+                                    <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                 </div>
-                            @else
-                                <span class="text-[9px] font-mono font-bold text-sky-300 uppercase">{{ $bank['bank_name'] }}</span>
-                            @endif
-                            <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No Rekening')" class="text-[9px] text-slate-300 hover:text-white underline cursor-pointer">Salin</button>
+                                <iconify-icon icon="solar:transmission-bold" class="text-white/60 rotate-90 text-xs"></iconify-icon>
+                            </div>
+                            <div class="h-5 px-1.5 py-0.5 rounded-md bg-white flex items-center justify-center">
+                                @if($mBankLogo)
+                                    <img src="{{ asset('images/payments/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
+                                @else
+                                    <span class="text-[9px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="font-mono font-bold text-xs select-all">{{ $bank['account_number'] }}</div>
-                        <div class="text-[9px] text-slate-400 truncate">{{ $bank['account_name'] }}</div>
+                        <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all">
+                            {{ $mFormattedAcc }}
+                        </div>
+                        <div class="flex items-center justify-between text-[9px] pt-1 border-t border-white/10 text-slate-300">
+                            <span class="truncate">a.n. {{ $bank['account_name'] }}</span>
+                            <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')" class="copy-btn text-sky-300 hover:text-white font-bold ml-1 cursor-pointer">Salin</button>
+                        </div>
                     </div>
                 @endforeach
             </div>
