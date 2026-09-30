@@ -198,7 +198,7 @@
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                 >
                                     <iconify-icon icon="solar:card-recive-bold" class="text-sm text-emerald-500"></iconify-icon>
-                                    <span>Transfer Bank</span>
+                                    <span>Konfirmasi Bukti Transfer</span>
                                 </button>
                             </div>
                         </div>
@@ -369,8 +369,10 @@
                                         </span>
                                     </div>
                                     <div class="text-slate-600 text-[11px] space-y-0.5">
-                                        <p>Pengirim: <strong class="text-slate-800">{{ $activeConf->bank_sender }} (a.n {{ $activeConf->sender_name }})</strong></p>
-                                        <p>Nominal: <strong class="text-slate-800">{{ $activeConf->formatted_amount }}</strong> &bull; Tgl: {{ $activeConf->transfer_date?->format('d/m/Y') }}</p>
+                                        <p>Waktu Unggah: <strong class="text-slate-800">{{ $activeConf->created_at?->translatedFormat('d F Y, H:i') }} WIB</strong></p>
+                                        @if($activeConf->notes)
+                                            <p>Catatan: <span class="text-slate-700 italic">"{{ $activeConf->notes }}"</span></p>
+                                        @endif
                                     </div>
                                     <div class="pt-0.5 flex items-center gap-2">
                                         <a href="{{ $activeConf->proof_url }}" target="_blank" class="text-[11px] font-heading font-bold text-sky-600 hover:underline flex items-center gap-1">
@@ -381,61 +383,23 @@
                                 </div>
                             @endif
 
-                            <!-- Upload Proof Form -->
+                            <!-- Upload Proof Form (Simplified: Bukti & Catatan Saja) -->
                             <form 
                                 action="{{ route('portal.billing.transfer.confirm', urlencode($currentInvoice->kode_billing_layanan)) }}" 
                                 method="POST" 
                                 enctype="multipart/form-data" 
-                                class="space-y-2.5 pt-2 border-t border-slate-100"
+                                class="space-y-3 pt-2 border-t border-slate-100"
                             >
                                 @csrf
                                 <div class="text-xs font-heading font-bold text-slate-800 flex items-center gap-1.5">
                                     <iconify-icon icon="solar:upload-track-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                                    <span>Formulir Konfirmasi Bukti Transfer</span>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                                    <!-- Bank Tujuan -->
-                                    <div>
-                                        <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Transfer ke Bank:</label>
-                                        <select name="bank_destination" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs font-semibold">
-                                            @foreach($bankAccounts as $bank)
-                                                <option value="{{ $bank['bank_name'] }} - {{ $bank['account_number'] }}">
-                                                    {{ $bank['bank_name'] }} ({{ $bank['account_number'] }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <!-- Bank Pengirim -->
-                                    <div>
-                                        <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Bank Pengirim Anda:</label>
-                                        <input type="text" name="bank_sender" placeholder="Contoh: BCA / Mandiri / BRI" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs">
-                                    </div>
-
-                                    <!-- Atas Nama Pengirim -->
-                                    <div>
-                                        <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Atas Nama Rekening Pengirim:</label>
-                                        <input type="text" name="sender_name" value="{{ $customer->name }}" placeholder="Nama di rekening" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs">
-                                    </div>
-
-                                    <!-- Jumlah Transfer -->
-                                    <div>
-                                        <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Jumlah Ditransfer (Rp):</label>
-                                        <input type="number" name="transfer_amount" value="{{ (int)$currentInvoice->total_layanan }}" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs font-mono font-bold">
-                                    </div>
-
-                                    <!-- Tanggal Transfer -->
-                                    <div class="sm:col-span-2">
-                                        <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Tanggal Transfer:</label>
-                                        <input type="date" name="transfer_date" value="{{ date('Y-m-d') }}" required class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs">
-                                    </div>
+                                    <span>Konfirmasi Bukti Transfer</span>
                                 </div>
 
                                 <!-- File Upload Box -->
                                 <div>
-                                    <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
-                                    <div class="relative border border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-2.5 text-center bg-slate-50/60 hover:bg-emerald-50/20 transition-all cursor-pointer">
+                                    <label class="block text-slate-600 text-xs font-medium mb-1">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
+                                    <div class="relative border border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-3 text-center bg-slate-50/60 hover:bg-emerald-50/20 transition-all cursor-pointer">
                                         <input 
                                             type="file" 
                                             name="proof_file" 
@@ -445,19 +409,19 @@
                                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                         >
                                         <div class="flex flex-col items-center justify-center gap-0.5 pointer-events-none">
-                                            <iconify-icon icon="solar:upload-line-duotone" class="text-xl text-emerald-600"></iconify-icon>
+                                            <iconify-icon icon="solar:upload-line-duotone" class="text-2xl text-emerald-600"></iconify-icon>
                                             <div class="text-xs font-semibold text-slate-700">
                                                 <span x-text="filePreview ? filePreview : 'Pilih Foto / Dokumen Bukti Transfer'"></span>
                                             </div>
-                                            <p class="text-[10px] text-slate-400">Klik untuk mengambil foto struk / file</p>
+                                            <p class="text-[10px] text-slate-400">Klik untuk mengambil foto struk / memilih file</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Catatan Opsional -->
                                 <div>
-                                    <label class="block text-slate-500 text-[10px] font-medium mb-0.5">Catatan Tambahan (Opsional):</label>
-                                    <textarea name="notes" rows="1" placeholder="Contoh: Sudah ditransfer via BCA" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs"></textarea>
+                                    <label class="block text-slate-600 text-xs font-medium mb-1">Catatan Tambahan (Opsional):</label>
+                                    <textarea name="notes" rows="2" placeholder="Contoh: Sudah ditransfer via BCA..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs resize-none"></textarea>
                                 </div>
 
                                 <!-- Submit Button -->
@@ -810,43 +774,14 @@
                 class="space-y-3"
             >
                 @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div>
-                        <label class="block text-slate-500 text-[11px] font-medium mb-1">Transfer ke Bank:</label>
-                        <select name="bank_destination" required class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold">
-                            @foreach($bankAccounts as $bank)
-                                <option value="{{ $bank['bank_name'] }} - {{ $bank['account_number'] }}">
-                                    {{ $bank['bank_name'] }} ({{ $bank['account_number'] }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-slate-500 text-[11px] font-medium mb-1">Bank Pengirim Anda:</label>
-                        <input type="text" name="bank_sender" placeholder="Contoh: BCA / Mandiri / BRI" required class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-slate-500 text-[11px] font-medium mb-1">Atas Nama Rekening Pengirim:</label>
-                        <input type="text" name="sender_name" value="{{ $customer->name }}" required class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-slate-500 text-[11px] font-medium mb-1">Jumlah Ditransfer (Rp):</label>
-                        <input type="number" name="transfer_amount" :value="modalInvoiceAmount" required class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-mono font-bold">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-slate-500 text-[11px] font-medium mb-1">Tanggal Transfer:</label>
-                        <input type="date" name="transfer_date" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs">
-                    </div>
+                <div>
+                    <label class="block text-slate-600 text-xs font-medium mb-1">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
+                    <input type="file" name="proof_file" accept="image/*,.pdf" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
                 </div>
 
                 <div>
-                    <label class="block text-slate-500 text-[11px] font-medium mb-1">Foto Bukti Resi Transfer (JPG, PNG, PDF max 5MB):</label>
-                    <input type="file" name="proof_file" accept="image/*,.pdf" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                </div>
-
-                <div>
-                    <label class="block text-slate-500 text-[11px] font-medium mb-1">Catatan Tambahan (Opsional):</label>
-                    <textarea name="notes" rows="1" placeholder="Catatan transaksi..." class="w-full px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs"></textarea>
+                    <label class="block text-slate-600 text-xs font-medium mb-1">Catatan Tambahan (Opsional):</label>
+                    <textarea name="notes" rows="2" placeholder="Catatan transaksi..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:border-sky-500 resize-none"></textarea>
                 </div>
 
                 <div class="pt-2 flex items-center justify-end gap-2">

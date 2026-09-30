@@ -64,16 +64,35 @@ VALUES
 ('BISNIS ENTERPRISE', 'bisnis', '300 Mbps', 1299000, 'bln', 'Kapasitas maksimal enterprise untuk korporat, instansi, dan kebutuhan cloud computing skala besar.', '["Unlimited Akses (Tanpa FUP)", "Fiber Optic 1:1 Simetris", "IP Dedicated Bisnis", "Dedicated NOC & SLA 99.8%"]', 0, 1, 8, NOW(), NOW());
 
 -- ==========================================================
--- 3. INTEGRASI BILLING & MIDTRANS (MENGGUNAKAN IMS-V2)
+-- 4. TABEL KONFIRMASI BUKTI TRANSFER (DATABASE `ptmsn`)
 -- ==========================================================
--- Menu Tagihan & Pembayaran Midtrans di Portal Pelanggan terhubung langsung secara real-time
--- ke database `ims_v2` pada tabel bawaan:
--- 1. `trx_billing_layanan` (Penyimpanan tagihan, status bayar, token & respon Midtrans)
--- 2. `trx_billing_layanan_detail` (Rincian komponen tagihan)
--- 3. `m_status_bill_lay` (Master status tagihan)
--- 4. `m_midtrans` (Master channel pembayaran Midtrans)
--- 
--- Karena sudah ada di database `ims_v2`, Anda TIDAK PERLU membuat tabel baru di database `ptmsn`.
+-- Tabel ini menyimpan unggahan bukti transfer & catatan pelanggan dari portal pelanggan.
+CREATE TABLE IF NOT EXISTS `payment_confirmations` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` varchar(100) NOT NULL COMMENT 'Nomor Internet / ID Pelanggan di database ims_v2',
+  `kode_billing_layanan` varchar(255) NOT NULL,
+  `customer_name` varchar(255) DEFAULT NULL,
+  `proof_file` varchar(255) NOT NULL COMMENT 'Lokasi file bukti di public/uploads/bukti_transfer',
+  `notes` text DEFAULT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'pending' COMMENT 'pending, approved, rejected',
+  `admin_notes` text DEFAULT NULL,
+  `verified_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `payment_confirmations_customer_id_index` (`customer_id`),
+  KEY `payment_confirmations_kode_billing_layanan_index` (`kode_billing_layanan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Jika tabel payment_confirmations sebelumnya sudah pernah dibuat di database server:
+-- Jalankan query ALTER TABLE berikut untuk menghapus kolom yang sudah tidak digunakan:
+-- ALTER TABLE `payment_confirmations` 
+--   DROP COLUMN IF EXISTS `bank_destination`,
+--   DROP COLUMN IF EXISTS `bank_sender`,
+--   DROP COLUMN IF EXISTS `sender_name`,
+--   DROP COLUMN IF EXISTS `transfer_amount`,
+--   DROP COLUMN IF EXISTS `transfer_date`;
+
 
 
 

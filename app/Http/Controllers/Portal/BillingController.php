@@ -119,19 +119,9 @@ class BillingController extends Controller
         }
 
         $request->validate([
-            'bank_destination' => 'required|string|max:100',
-            'bank_sender' => 'required|string|max:100',
-            'sender_name' => 'required|string|max:150',
-            'transfer_amount' => 'required|numeric|min:1000',
-            'transfer_date' => 'required|date',
             'proof_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'notes' => 'nullable|string|max:500',
         ], [
-            'bank_destination.required' => 'Pilih bank tujuan transfer.',
-            'bank_sender.required' => 'Nama bank pengirim wajib diisi.',
-            'sender_name.required' => 'Nama pemilik rekening pengirim wajib diisi.',
-            'transfer_amount.required' => 'Nominal transfer wajib diisi.',
-            'transfer_date.required' => 'Tanggal transfer wajib diisi.',
             'proof_file.required' => 'Bukti transfer (foto/PDF) wajib diunggah.',
             'proof_file.mimes' => 'Format file bukti harus berupa JPG, JPEG, PNG, atau PDF.',
             'proof_file.max' => 'Ukuran file bukti maksimal 5MB.',
@@ -157,11 +147,6 @@ class BillingController extends Controller
             ],
             [
                 'customer_name' => $customer->name,
-                'bank_destination' => $request->input('bank_destination'),
-                'bank_sender' => $request->input('bank_sender'),
-                'sender_name' => $request->input('sender_name'),
-                'transfer_amount' => $request->input('transfer_amount'),
-                'transfer_date' => $request->input('transfer_date'),
                 'proof_file' => $filePath,
                 'notes' => $request->input('notes'),
                 'status' => 'pending',
@@ -170,11 +155,11 @@ class BillingController extends Controller
         );
 
         $billingWa = config('company.billing_whatsapp', '6289696629955');
-        $formattedTotal = 'Rp ' . number_format((float) $request->input('transfer_amount'), 0, ',', '.');
-        $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Nominal:* {$formattedTotal}%0A• *Bank Pengirim:* " . urlencode($request->input('bank_sender') . ' a.n ' . $request->input('sender_name')) . "%0A• *Bank Tujuan:* " . urlencode($request->input('bank_destination')) . "%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
+        $formattedTotal = $invoice->formatted_total ?? ('Rp ' . number_format((float) $invoice->total_layanan, 0, ',', '.'));
+        $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Periode:* {$invoice->period}%0A• *Total Tagihan:* {$formattedTotal}%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
         $waUrl = "https://wa.me/{$billingWa}?text={$waMsg}";
 
-        return back()->with('success', 'Bukti transfer pembayaran berhasil diunggah! Tim Billing PT MSN akan segera memverifikasi transaksi Anda.')
+        return back()->with('success', 'Bukti transfer pembayaran berhasil dikirim! Tim Billing PT MSN akan segera memverifikasi transaksi Anda.')
             ->with('wa_confirm_url', $waUrl);
     }
 
