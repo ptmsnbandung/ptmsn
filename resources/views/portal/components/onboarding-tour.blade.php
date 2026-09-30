@@ -230,22 +230,35 @@
                             title: 'Status Tagihan & Rincian',
                             subtitle: 'Tagihan Lunas & Terverifikasi',
                             icon: 'solar:check-circle-bold',
-                            description: 'Tagihan periode ini telah lunas. Anda dapat mengunduh invoice digital atau chat Tim Billing.'
+                            description: 'Tagihan periode ini telah lunas sehingga layanan internet Anda aktif lancar.'
                         };
                         this.steps[4] = {
                             page: 'billing',
                             pageLabel: 'Tagihan',
-                            target: '#tour-step-billing-history',
-                            title: 'Riwayat Tagihan & Struk',
-                            subtitle: 'Arsip Transaksi Bulanan',
-                            icon: 'solar:history-bold',
-                            description: 'Arsip seluruh riwayat tagihan dan pembayaran tersimpan lengkap beserta akses cetak struk.'
+                            target: '#tour-step-billing-actions',
+                            title: 'Cetak Invoice & Bantuan',
+                            subtitle: 'Akses Dokumen Resmi',
+                            icon: 'solar:printer-minimalistic-bold',
+                            description: 'Unduh invoice digital resmi atau hubungi WhatsApp Billing jika memerlukan bantuan.'
                         };
                     }
                 }
             },
 
             lockScroll() {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+                document.body.style.touchAction = 'none';
+
+                this._preventScroll = (e) => {
+                    if (this.isOpen) {
+                        e.preventDefault();
+                    }
+                };
+                window.addEventListener('wheel', this._preventScroll, { passive: false });
+                window.addEventListener('touchmove', this._preventScroll, { passive: false });
+
                 this._keyHandler = (e) => {
                     if (this.isOpen && ['Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
                         e.preventDefault();
@@ -255,6 +268,13 @@
             },
 
             unlockScroll() {
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                document.body.style.touchAction = '';
+                if (this._preventScroll) {
+                    window.removeEventListener('wheel', this._preventScroll);
+                    window.removeEventListener('touchmove', this._preventScroll);
+                }
                 if (this._keyHandler) {
                     window.removeEventListener('keydown', this._keyHandler);
                 }
@@ -346,11 +366,7 @@
                 this.$nextTick(() => {
                     const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'auto', block: 'center' });
                         this.calculatePosition(targetEl);
-                        setTimeout(() => {
-                            this.calculatePosition(targetEl);
-                        }, 50);
                     } else {
                         this.calculateFallbackPosition();
                     }

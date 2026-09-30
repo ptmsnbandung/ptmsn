@@ -444,7 +444,7 @@
                         $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6285188358385') . "?text=" . urlencode($waText);
                     @endphp
 
-                    <div class="pt-2.5 border-t border-slate-100">
+                    <div id="tour-step-billing-actions" class="pt-2.5 border-t border-slate-100">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <a 
                                 href="{{ route('portal.billing.show', urlencode($currentInvoice->kode_billing_layanan)) }}" 
