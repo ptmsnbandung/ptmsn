@@ -24,7 +24,7 @@
             <div class="portal-card rounded-2xl sm:rounded-3xl p-5 sm:p-6 space-y-4">
                 <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
                     <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-heading font-extrabold text-lg shadow-md shadow-sky-500/20">
-                        {{ strtoupper(substr($customer->name, 0, 1)) }}
+                        {{ $customer->initial }}
                     </div>
                     <div class="overflow-hidden">
                         <div class="text-sm font-heading font-bold text-slate-900 truncate">{{ $customer->name }}</div>

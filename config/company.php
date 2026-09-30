@@ -18,4 +18,22 @@ return [
     'facebook' => env('COMPANY_FACEBOOK', 'https://facebook.com/ptmediasolusinetwork'),
     'linkedin' => env('COMPANY_LINKEDIN', 'https://linkedin.com/company/ptmediasolusinetwork'),
     'youtube' => env('COMPANY_YOUTUBE', 'https://youtube.com/@ptmediasolusinetwork'),
+    'billing_whatsapp' => env('COMPANY_BILLING_WHATSAPP', '6289696629955'),
+    'billing_whatsapp_display' => env('COMPANY_BILLING_WHATSAPP_DISPLAY', '+62 896-9662-9955'),
+    'bank_accounts' => [
+        [
+            'bank_name' => 'BCA',
+            'account_number' => env('BANK_BCA_NUMBER', '7771899555'),
+            'account_name' => env('BANK_BCA_NAME', 'PT Media Solusi Network'),
+            'color' => 'from-blue-600 to-indigo-700',
+            'badge' => 'BCA',
+        ],
+        [
+            'bank_name' => 'Bank Mandiri',
+            'account_number' => env('BANK_MANDIRI_NUMBER', '1300019882991'),
+            'account_name' => env('BANK_MANDIRI_NAME', 'PT Media Solusi Network'),
+            'color' => 'from-amber-600 to-blue-800',
+            'badge' => 'Mandiri',
+        ],
+    ],
 ];

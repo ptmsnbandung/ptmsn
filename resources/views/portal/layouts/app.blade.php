@@ -162,7 +162,7 @@
                     <div class="relative" @click.outside="userDropdown = false">
                         <button @click="userDropdown = !userDropdown" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-white/90 border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all">
                             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-heading font-extrabold text-sm shadow-xs ring-1 ring-sky-100">
-                                {{ strtoupper(substr(Auth::guard('customer')->user()->name ?? 'P', 0, 1)) }}
+                                {{ Auth::guard('customer')->user()->initial ?? 'P' }}
                             </div>
                             <div class="hidden lg:block text-left pr-0.5">
                                 <div class="text-xs font-heading font-bold text-slate-800 max-w-[120px] truncate leading-tight">
@@ -206,7 +206,7 @@
     </header>
 
     <!-- Main Body Container -->
-    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6">
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 pb-24 md:pb-6">
         
         <!-- Flash Alerts -->
         @if(session('success'))
@@ -246,51 +246,39 @@
     </main>
 
     <!-- Floating Mobile Island Dock (iOS Style Glassmorphism) -->
-    <div class="md:hidden fixed bottom-3 left-3 right-3 z-40 max-w-sm mx-auto">
+    <div class="md:hidden fixed bottom-4 inset-x-0 z-40 max-w-[360px] mx-auto px-4">
         <div class="floating-mobile-dock">
             <div class="grid grid-cols-4 gap-1 items-center text-center">
                 <!-- Beranda -->
-                <a href="{{ route('portal.dashboard') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.dashboard') ? 'dock-item-active' : 'dock-item-inactive' }}">
-                    <div class="relative flex items-center justify-center">
-                        <iconify-icon icon="solar:home-smile-bold" width="21" class="{{ request()->routeIs('portal.dashboard') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                        @if(request()->routeIs('portal.dashboard'))
-                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
-                        @endif
+                <a href="{{ route('portal.dashboard') }}" class="group dock-item flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 active:scale-90">
+                    <div class="w-11 h-7 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.dashboard') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
+                        <iconify-icon icon="solar:home-smile-bold" width="19"></iconify-icon>
                     </div>
-                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.dashboard') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Beranda</span>
+                    <span class="text-[10px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.dashboard') ? 'font-extrabold text-sky-700' : 'font-medium text-slate-500 group-hover:text-slate-700' }}">Beranda</span>
                 </a>
 
                 <!-- Tagihan -->
-                <a href="{{ route('portal.billing.index') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.billing.*') ? 'dock-item-active' : 'dock-item-inactive' }}">
-                    <div class="relative flex items-center justify-center">
-                        <iconify-icon icon="solar:wallet-money-bold" width="21" class="{{ request()->routeIs('portal.billing.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                        @if(request()->routeIs('portal.billing.*'))
-                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
-                        @endif
+                <a href="{{ route('portal.billing.index') }}" class="group dock-item flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 active:scale-90">
+                    <div class="w-11 h-7 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.billing.*') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
+                        <iconify-icon icon="solar:wallet-money-bold" width="19"></iconify-icon>
                     </div>
-                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.billing.*') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Tagihan</span>
+                    <span class="text-[10px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.billing.*') ? 'font-extrabold text-sky-700' : 'font-medium text-slate-500 group-hover:text-slate-700' }}">Tagihan</span>
                 </a>
 
                 <!-- Tiket NOC -->
-                <a href="{{ route('portal.tickets.index') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.tickets.*') ? 'dock-item-active' : 'dock-item-inactive' }}">
-                    <div class="relative flex items-center justify-center">
-                        <iconify-icon icon="solar:chat-round-dots-bold" width="21" class="{{ request()->routeIs('portal.tickets.*') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                        @if(request()->routeIs('portal.tickets.*'))
-                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
-                        @endif
+                <a href="{{ route('portal.tickets.index') }}" class="group dock-item flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 active:scale-90">
+                    <div class="w-11 h-7 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.tickets.*') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
+                        <iconify-icon icon="solar:chat-round-dots-bold" width="19"></iconify-icon>
                     </div>
-                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.tickets.*') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Tiket NOC</span>
+                    <span class="text-[10px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.tickets.*') ? 'font-extrabold text-sky-700' : 'font-medium text-slate-500 group-hover:text-slate-700' }}">Tiket NOC</span>
                 </a>
 
                 <!-- Profil -->
-                <a href="{{ route('portal.profile') }}" class="flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-2xl transition-all duration-200 active:scale-90 {{ request()->routeIs('portal.profile') ? 'dock-item-active' : 'dock-item-inactive' }}">
-                    <div class="relative flex items-center justify-center">
-                        <iconify-icon icon="solar:user-circle-bold" width="21" class="{{ request()->routeIs('portal.profile') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
-                        @if(request()->routeIs('portal.profile'))
-                            <span class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 ring-2 ring-white"></span>
-                        @endif
+                <a href="{{ route('portal.profile') }}" class="group dock-item flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 active:scale-90">
+                    <div class="w-11 h-7 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.profile') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
+                        <iconify-icon icon="solar:user-circle-bold" width="19"></iconify-icon>
                     </div>
-                    <span class="text-[10px] font-heading {{ request()->routeIs('portal.profile') ? 'font-extrabold text-sky-700' : 'font-medium' }}">Profil</span>
+                    <span class="text-[10px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.profile') ? 'font-extrabold text-sky-700' : 'font-medium text-slate-500 group-hover:text-slate-700' }}">Profil</span>
                 </a>
             </div>
         </div>

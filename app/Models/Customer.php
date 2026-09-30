@@ -95,7 +95,17 @@ class Customer extends Authenticatable
 
     public function getNameAttribute()
     {
-        return $this->nama_pelanggan;
+        $name = trim((string) ($this->nama_pelanggan ?: ($this->pelanggan?->nama_pelanggan ?? '')));
+        return $name !== '' ? $name : ($this->nomor_internet ? 'Pelanggan #' . $this->nomor_internet : 'Pelanggan');
+    }
+
+    public function getInitialAttribute()
+    {
+        $name = trim((string) $this->name);
+        if (preg_match('/[a-zA-Z0-9]/u', $name, $matches)) {
+            return strtoupper($matches[0]);
+        }
+        return 'P';
     }
 
     public function getPhoneAttribute()

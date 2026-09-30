@@ -75,13 +75,107 @@ class BillingController extends Controller
         $snapJsUrl = $this->midtransService->getSnapJsUrl();
         $clientKey = $this->midtransService->getClientKey();
 
+        $bankAccounts = config('company.bank_accounts', []);
+        $billingWhatsapp = config('company.billing_whatsapp', '6289696629955');
+        $billingWhatsappDisplay = config('company.billing_whatsapp_display', '+62 896-9662-9955');
+
+        $confirmations = \App\Models\PaymentConfirmation::where('customer_id', $customer->customer_id)
+            ->latest()
+            ->get()
+            ->keyBy('kode_billing_layanan');
+
         return view('portal.billing.index', compact(
             'customer',
             'currentInvoice',
             'invoices',
             'snapJsUrl',
-            'clientKey'
+            'clientKey',
+            'bankAccounts',
+            'billingWhatsapp',
+            'billingWhatsappDisplay',
+            'confirmations'
         ));
+    }
+
+    /**
+     * Proses Upload Bukti Pembayaran Transfer Bank Manual
+     */
+    public function confirmTransfer(Request $request, string $invoiceCode)
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+        $decodedCode = urldecode($invoiceCode);
+
+        $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
+            ->orWhere('kode_billing_layanan', $invoiceCode)
+            ->firstOrFail();
+
+        if ($invoice->nomor_internet !== $customer->customer_id) {
+            return back()->withErrors(['transfer' => 'Akses ditolak: Tagihan bukan milik akun Anda.']);
+        }
+
+        if ($invoice->is_paid) {
+            return back()->with('info', 'Tagihan ini sudah tercatat LUNAS.');
+        }
+
+        $request->validate([
+            'bank_destination' => 'required|string|max:100',
+            'bank_sender' => 'required|string|max:100',
+            'sender_name' => 'required|string|max:150',
+            'transfer_amount' => 'required|numeric|min:1000',
+            'transfer_date' => 'required|date',
+            'proof_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'notes' => 'nullable|string|max:500',
+        ], [
+            'bank_destination.required' => 'Pilih bank tujuan transfer.',
+            'bank_sender.required' => 'Nama bank pengirim wajib diisi.',
+            'sender_name.required' => 'Nama pemilik rekening pengirim wajib diisi.',
+            'transfer_amount.required' => 'Nominal transfer wajib diisi.',
+            'transfer_date.required' => 'Tanggal transfer wajib diisi.',
+            'proof_file.required' => 'Bukti transfer (foto/PDF) wajib diunggah.',
+            'proof_file.mimes' => 'Format file bukti harus berupa JPG, JPEG, PNG, atau PDF.',
+            'proof_file.max' => 'Ukuran file bukti maksimal 5MB.',
+        ]);
+
+        $file = $request->file('proof_file');
+        $cleanId = preg_replace('/[^a-zA-Z0-9]/', '', $customer->customer_id);
+        $filename = 'tf_' . $cleanId . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $destinationPath = public_path('uploads/bukti_transfer');
+
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $file->move($destinationPath, $filename);
+        $filePath = 'uploads/bukti_transfer/' . $filename;
+
+        // Simpan atau update data konfirmasi
+        \App\Models\PaymentConfirmation::updateOrCreate(
+            [
+                'customer_id' => $customer->customer_id,
+                'kode_billing_layanan' => $invoice->kode_billing_layanan,
+            ],
+            [
+                'customer_name' => $customer->name,
+                'bank_destination' => $request->input('bank_destination'),
+                'bank_sender' => $request->input('bank_sender'),
+                'sender_name' => $request->input('sender_name'),
+                'transfer_amount' => $request->input('transfer_amount'),
+                'transfer_date' => $request->input('transfer_date'),
+                'proof_file' => $filePath,
+                'notes' => $request->input('notes'),
+                'status' => 'pending',
+                'verified_at' => null,
+            ]
+        );
+
+        $billingWa = config('company.billing_whatsapp', '6289696629955');
+        $formattedTotal = 'Rp ' . number_format((float) $request->input('transfer_amount'), 0, ',', '.');
+        $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Nominal:* {$formattedTotal}%0A• *Bank Pengirim:* " . urlencode($request->input('bank_sender') . ' a.n ' . $request->input('sender_name')) . "%0A• *Bank Tujuan:* " . urlencode($request->input('bank_destination')) . "%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
+        $waUrl = "https://wa.me/{$billingWa}?text={$waMsg}";
+
+        return back()->with('success', 'Bukti transfer pembayaran berhasil diunggah! Tim Billing PT MSN akan segera memverifikasi transaksi Anda.')
+            ->with('wa_confirm_url', $waUrl);
     }
 
     /**
@@ -113,8 +207,22 @@ class BillingController extends Controller
 
         $snapJsUrl = $this->midtransService->getSnapJsUrl();
         $clientKey = $this->midtransService->getClientKey();
+        $billingWhatsapp = config('company.billing_whatsapp', '6289696629955');
+        $bankAccounts = config('company.bank_accounts', []);
+        $confirmation = \App\Models\PaymentConfirmation::where('customer_id', $customer->customer_id)
+            ->where('kode_billing_layanan', $invoice->kode_billing_layanan)
+            ->latest()
+            ->first();
 
-        return view('portal.billing.show', compact('customer', 'invoice', 'snapJsUrl', 'clientKey'));
+        return view('portal.billing.show', compact(
+            'customer', 
+            'invoice', 
+            'snapJsUrl', 
+            'clientKey',
+            'billingWhatsapp',
+            'bankAccounts',
+            'confirmation'
+        ));
     }
 
     /**

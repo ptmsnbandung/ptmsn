@@ -189,32 +189,34 @@
 
 /* Floating iOS-style Mobile Dock */
 .floating-mobile-dock {
-    background: rgba(255, 255, 255, 0.90) !important;
-    backdrop-filter: blur(20px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.95) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    backdrop-filter: blur(24px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
     box-shadow: 
-        0 20px 40px -10px rgba(15, 23, 42, 0.18),
-        0 0 0 1px rgba(226, 232, 240, 0.9),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 1) !important;
-    border-radius: 28px;
-    padding: 6px 8px;
+        0 14px 32px -4px rgba(15, 23, 42, 0.12),
+        0 4px 12px -2px rgba(15, 23, 42, 0.04),
+        0 0 0 1px rgba(226, 232, 240, 0.85),
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 1) !important;
+    border-radius: 9999px;
+    padding: 5px 6px;
 }
 
-.dock-item-active {
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(14, 165, 233, 0.18) 100%);
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    color: #0284c7 !important;
-    box-shadow: 0 4px 12px -2px rgba(2, 132, 199, 0.15);
+.dock-icon-capsule-active {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px -1px rgba(2, 132, 199, 0.35);
 }
 
-.dock-item-inactive {
+.dock-icon-capsule-inactive {
     color: #64748b;
-    border: 1px solid transparent;
+    background: transparent;
+    transition: all 0.2s ease;
 }
-.dock-item-inactive:hover {
+
+.dock-item:hover .dock-icon-capsule-inactive {
     color: #0f172a;
-    background: rgba(241, 245, 249, 0.7);
+    background: rgba(241, 245, 249, 0.9);
 }
 
 /* Copy Badge Button */
