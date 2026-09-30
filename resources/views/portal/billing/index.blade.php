@@ -453,7 +453,7 @@
                                 target="_blank"
                                 class="py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/90 text-emerald-800 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs text-center"
                             >
-                                <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-xs sm:text-sm"></iconify-icon>
+                                <iconify-icon icon="logos:whatsapp-icon" class="text-sm sm:text-base"></iconify-icon>
                                 <span>Chat WhatsApp Billing</span>
                             </a>
                         </div>
