@@ -439,15 +439,16 @@
                 if (window.Swal) {
                     Swal.fire({
                         imageUrl: '{{ asset('images/logo/berhasil1.png') }}',
-                        imageWidth: 110,
-                        imageHeight: 110,
+                        imageWidth: 200,
+                        imageHeight: 200,
                         imageAlt: 'Selamat Datang',
                         title: 'Selamat Datang',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
-                            popup: 'rounded-3xl shadow-2xl p-6 border border-sky-100',
-                            title: 'font-heading font-extrabold text-xl sm:text-2xl text-slate-800 tracking-tight mt-2'
+                            popup: 'rounded-3xl shadow-2xl p-6 sm:p-8 border border-sky-100 max-w-sm sm:max-w-md',
+                            image: '!w-48 !h-48 sm:!w-56 sm:!h-56 object-contain mx-auto my-2',
+                            title: 'font-heading font-extrabold text-2xl sm:text-3xl text-slate-800 tracking-tight mt-2'
                         }
                     }).then(() => {
                         window.location.href = this.routes.dashboard;
