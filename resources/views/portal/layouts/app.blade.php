@@ -178,11 +178,11 @@
                             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center font-heading font-extrabold text-xs sm:text-sm shadow-xs ring-1 ring-sky-100 shrink-0">
                                 {{ Auth::guard('customer')->user()->initial ?? 'P' }}
                             </div>
-                            <div class="text-left pr-0.5">
-                                <div class="text-[11px] sm:text-xs font-heading font-bold text-slate-800 max-w-[90px] sm:max-w-[140px] truncate leading-tight">
-                                    {{ explode(' ', trim(Auth::guard('customer')->user()->name ?? 'Pelanggan'))[0] }}
+                            <div class="text-left pr-0.5 min-w-0">
+                                <div class="text-[11px] sm:text-xs font-heading font-bold text-slate-800 max-w-[95px] sm:max-w-[160px] truncate leading-tight" title="{{ Auth::guard('customer')->user()->name }}">
+                                    {{ Auth::guard('customer')->user()->name ?? 'Pelanggan' }}
                                 </div>
-                                <div class="text-[9px] sm:text-[10px] font-mono text-slate-500 leading-tight truncate max-w-[90px] sm:max-w-[140px]">
+                                <div class="text-[9px] sm:text-[10px] font-mono text-slate-500 leading-tight truncate max-w-[95px] sm:max-w-[160px]">
                                     {{ Auth::guard('customer')->user()->customer_id ? 'ID: ' . Auth::guard('customer')->user()->customer_id : Auth::guard('customer')->user()->phone }}
                                 </div>
                             </div>
