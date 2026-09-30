@@ -302,11 +302,11 @@
                                                 </div>
 
                                                 <!-- Official Bank Logo Badge -->
-                                                <div class="h-6 px-2 py-0.5 rounded-lg bg-white/95 shadow-2xs flex items-center justify-center shrink-0">
+                                                <div class="h-8 px-3 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3.5 w-auto object-contain">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-5 sm:h-5.5 w-auto max-w-[85px] sm:max-w-[100px] object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
-                                                        <span class="text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
+                                                        <span class="text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -736,11 +736,11 @@
                                 </div>
                                 <iconify-icon icon="solar:transmission-bold" class="text-white/60 rotate-90 text-xs"></iconify-icon>
                             </div>
-                            <div class="h-5 px-1.5 py-0.5 rounded-md bg-white flex items-center justify-center">
+                            <div class="h-6 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0">
                                 @if($mBankLogo)
-                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-4 w-auto max-w-[70px] object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
                                 @else
-                                    <span class="text-[9px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
+                                    <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                 @endif
                             </div>
                         </div>
