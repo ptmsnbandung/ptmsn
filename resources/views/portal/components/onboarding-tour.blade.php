@@ -246,15 +246,18 @@
             },
 
             lockScroll() {
-                document.documentElement.style.overflow = 'hidden';
-                document.body.style.overflow = 'hidden';
-                document.body.style.touchAction = 'none';
+                this._keyHandler = (e) => {
+                    if (this.isOpen && ['Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+                        e.preventDefault();
+                    }
+                };
+                window.addEventListener('keydown', this._keyHandler, { passive: false });
             },
 
             unlockScroll() {
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
-                document.body.style.touchAction = '';
+                if (this._keyHandler) {
+                    window.removeEventListener('keydown', this._keyHandler);
+                }
             },
 
             startTour() {
@@ -343,7 +346,11 @@
                 this.$nextTick(() => {
                     const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'auto', block: 'center' });
                         this.calculatePosition(targetEl);
+                        setTimeout(() => {
+                            this.calculatePosition(targetEl);
+                        }, 50);
                     } else {
                         this.calculateFallbackPosition();
                     }
