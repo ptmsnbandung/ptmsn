@@ -36,7 +36,8 @@
     style="display: none;"
     @keydown.escape.window="skipTour()"
     @resize.window="updatePosition()"
-    @scroll.window="updatePosition()"
+    @wheel.window="if(isOpen) { $event.preventDefault(); }"
+    @touchmove.window="if(isOpen) { $event.preventDefault(); }"
 >
     <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
     <div 
@@ -244,8 +245,21 @@
                 }
             },
 
+            lockScroll() {
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+                document.body.style.touchAction = 'none';
+            },
+
+            unlockScroll() {
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                document.body.style.touchAction = '';
+            },
+
             startTour() {
                 this.adaptStepsForCurrentPage();
+                this.lockScroll();
                 this.isOpen = true;
                 this.$nextTick(() => {
                     this.showStep(this.currentStep);
@@ -268,6 +282,7 @@
                 if (targetStep.page === currentPage) {
                     this.showStep(stepIdx);
                 } else {
+                    this.unlockScroll();
                     // Navigasi antar halaman
                     const targetUrl = this.routes[targetStep.page] || this.routes.dashboard;
                     window.location.href = `${targetUrl}?tour_step=${stepIdx + 1}`;
@@ -328,7 +343,6 @@
                 this.$nextTick(() => {
                     const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'auto', block: 'center' });
                         this.calculatePosition(targetEl);
                     } else {
                         this.calculateFallbackPosition();
@@ -385,7 +399,7 @@
                 if (!this.isOpen) return;
                 const step = this.steps[this.currentStep];
                 if (step) {
-                    const targetEl = document.querySelector(step.target);
+                    const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
                         this.calculatePosition(targetEl);
                     }
@@ -393,6 +407,7 @@
             },
 
             finishTour() {
+                this.unlockScroll();
                 this.isOpen = false;
                 this.markCompletedOnServer();
 
@@ -416,6 +431,7 @@
             },
 
             skipTour() {
+                this.unlockScroll();
                 this.isOpen = false;
                 this.markCompletedOnServer();
             },
