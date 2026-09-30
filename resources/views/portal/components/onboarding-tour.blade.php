@@ -38,14 +38,11 @@
     @resize.window="updatePosition()"
     @scroll.window="updatePosition()"
 >
-    <!-- Darkened Backdrop with cutout spotlight focus ring -->
+    <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
     <div 
-        class="fixed transition-all duration-300 pointer-events-auto rounded-2xl ring-4 ring-sky-400/90 shadow-[0_0_0_9999px_rgba(15,23,42,0.78),0_0_30px_rgba(56,189,248,0.5)]"
+        class="fixed transition-all duration-200 pointer-events-auto rounded-2xl ring-2 ring-sky-400 shadow-[0_0_0_9999px_rgba(15,23,42,0.80)]"
         :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px;`"
-    >
-        <!-- Pulsing focus halo -->
-        <div class="absolute -inset-1.5 rounded-2xl border-2 border-sky-400/70 animate-pulse pointer-events-none"></div>
-    </div>
+    ></div>
 
     <!-- Floating Interactive Popover Tooltip Card -->
     <div 
