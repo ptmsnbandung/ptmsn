@@ -3,7 +3,7 @@
 @section('title', 'Tagihan & Pembayaran')
 
 @section('content')
-<div class="space-y-3.5 sm:space-y-5" x-data="{ 
+<div class="relative" x-data="{ 
     paymentTab: 'midtrans', 
     showTransferModal: false, 
     modalInvoiceCode: '', 
@@ -13,32 +13,37 @@
     filePreview: null 
 }">
 
-    <!-- Header Banner Section (Dark Oceanic Blue Hero Style) -->
-    <div class="hero-network-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-        <div class="relative z-10 space-y-1">
-            <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
-                <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
-                <span class="text-cyan-400/60">/</span>
-                <span class="text-cyan-300 font-bold">Tagihan</span>
+    <!-- Full-Width Dark Oceanic Blue Hero Backdrop (Extends down behind the top of invoice card) -->
+    <div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+            <div class="space-y-1">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                    <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                    <span class="text-cyan-400/60">/</span>
+                    <span class="text-cyan-300 font-bold">Tagihan</span>
+                </div>
+                <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
+                    Tagihan & Pembayaran
+                </h1>
+                <p class="text-xs text-slate-300">Rincian invoice, riwayat transaksi, dan pilihan pembayaran online atau transfer bank.</p>
             </div>
-            <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
-                Tagihan & Pembayaran
-            </h1>
-            <p class="text-xs text-slate-300">Rincian invoice, riwayat transaksi, dan pilihan pembayaran online atau transfer bank.</p>
-        </div>
 
-        <!-- ID Pelanggan Pill -->
-        <button 
-            type="button" 
-            onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
-            class="copy-btn relative z-10 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 hover:border-cyan-400 text-cyan-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-2xs self-start sm:self-center"
-            title="Klik untuk menyalin ID"
-        >
-            <iconify-icon icon="solar:hashtag-bold" class="text-cyan-400 text-xs"></iconify-icon>
-            <span class="text-xs font-mono font-bold">{{ $customer->customer_id }}</span>
-            <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-[11px]"></iconify-icon>
-        </button>
+            <!-- ID Pelanggan Pill -->
+            <button 
+                type="button" 
+                onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
+                class="copy-btn px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 hover:border-cyan-400 text-cyan-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-2xs self-start sm:self-center"
+                title="Klik untuk menyalin ID"
+            >
+                <iconify-icon icon="solar:hashtag-bold" class="text-cyan-400 text-xs"></iconify-icon>
+                <span class="text-xs font-mono font-bold">{{ $customer->customer_id }}</span>
+                <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-[11px]"></iconify-icon>
+            </button>
+        </div>
     </div>
+
+    <!-- Main Content Container Overlapping the Blue Backdrop -->
+    <div class="-mt-14 sm:-mt-16 relative z-10 space-y-3.5 sm:space-y-5">
 
     <!-- Quick Action Banner for WA Confirmation -->
     @if(session('wa_confirm_url'))
@@ -706,6 +711,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
 
     <!-- Modal Upload Bukti Transfer untuk Invoice Riwayat -->
