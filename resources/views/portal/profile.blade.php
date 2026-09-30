@@ -3,21 +3,38 @@
 @section('title', 'Profil & Layanan Pelanggan')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-
-    <!-- Header -->
-    <div class="flex items-center justify-between gap-3">
-        <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-sky-700 uppercase tracking-wider mb-1">
-                <iconify-icon icon="solar:user-circle-bold"></iconify-icon>
-                <span>INFORMASI AKUN & JARINGAN</span>
+<!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
+<div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+        <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                <span class="text-cyan-400/60">/</span>
+                <span class="text-cyan-300 font-bold">Profil</span>
             </div>
-            <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Profil & Paket Langganan</h1>
-            <p class="text-xs sm:text-sm text-slate-600">Rincian parameter koneksi fiber optic dan kontak akun pelanggan PT MSN</p>
+            <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
+                Profil & Paket Langganan
+            </h1>
+            <p class="text-xs text-slate-300">Rincian parameter koneksi fiber optic dan kontak akun pelanggan PT MSN.</p>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <!-- ID Pelanggan Pill -->
+        <button 
+            type="button" 
+            onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
+            class="copy-btn px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 hover:border-cyan-400 text-cyan-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-2xs self-start sm:self-center"
+            title="Klik untuk menyalin ID"
+        >
+            <iconify-icon icon="solar:hashtag-bold" class="text-cyan-400 text-xs"></iconify-icon>
+            <span class="text-xs font-mono font-bold">{{ $customer->customer_id }}</span>
+            <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-[11px]"></iconify-icon>
+        </button>
+    </div>
+</div>
+
+<!-- Main Content Container Overlapping the Blue Backdrop -->
+<div class="-mt-14 sm:-mt-16 relative z-10 space-y-3.5 sm:space-y-5">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         
         <!-- Left 1 Col: Subscription Info Card -->
         <div class="space-y-4">

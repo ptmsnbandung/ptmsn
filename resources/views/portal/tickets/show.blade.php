@@ -3,43 +3,54 @@
 @section('title', 'Detail Tiket #' . $ticket->ticket_number)
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-3.5 sm:space-y-6">
+@php
+    $typeLabel = match((string) $ticket->kat_tiket) {
+        '17' => 'Pengajuan Ubah Layanan',
+        '12' => 'Permintaan Ubah WiFi',
+        '13' => 'Pengajuan Relokasi',
+        '14' => 'Permohonan Terminasi',
+        '15' => 'Pengajuan Suspend',
+        default => 'Tiket Gangguan',
+    };
+@endphp
 
-    <!-- Back Link & Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
-        @php
-            $typeLabel = match((string) $ticket->kat_tiket) {
-                '17' => 'Pengajuan Ubah Layanan',
-                '12' => 'Permintaan Ubah WiFi',
-                '13' => 'Pengajuan Relokasi',
-                '14' => 'Permohonan Terminasi',
-                '15' => 'Pengajuan Suspend',
-                default => 'Tiket Gangguan',
-            };
-        @endphp
-        <div>
-            <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 hover:text-sky-600 transition-colors mb-1 sm:mb-2 font-mono font-semibold">
-                <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
-                <span>Kembali ke Daftar Laporan</span>
-            </a>
+<!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
+<div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+        <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                <span class="text-cyan-400/60">/</span>
+                <a href="{{ route('portal.tickets.index') }}" class="hover:text-white transition-colors">Tiket</a>
+                <span class="text-cyan-400/60">/</span>
+                <span class="text-cyan-300 font-bold">#{{ $ticket->ticket_number }}</span>
+            </div>
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-                <h1 class="text-xl sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
+                <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
                     {{ $typeLabel }} #{{ $ticket->ticket_number }}
                 </h1>
-                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-full {{ $ticket->status_badge_class }} font-semibold">
+                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold shadow-xs">
                     {{ $ticket->status_label }}
                 </span>
             </div>
-            <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 sm:mt-1 font-mono">
-                Dibuat pada: {{ $ticket->created_at->translatedFormat('d F Y, H:i') }} WIB
-            </div>
+            <p class="text-xs text-slate-300 font-mono">Dibuat pada: {{ $ticket->created_at->translatedFormat('d F Y, H:i') }} WIB</p>
         </div>
 
-        <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim Layanan PT MSN, saya ingin menanyakan status ' . $typeLabel . ' #' . $ticket->ticket_number) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-heading font-bold text-xs transition-all self-start sm:self-auto shadow-2xs">
-            <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="text-emerald-600"></iconify-icon>
-            <span>Tanya via WhatsApp</span>
-        </a>
+        <div class="flex items-center gap-2 self-start sm:self-center">
+            <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 text-slate-200 text-xs font-heading font-semibold transition-all shadow-2xs">
+                <iconify-icon icon="solar:arrow-left-linear" class="text-sm text-cyan-400"></iconify-icon>
+                <span>Kembali</span>
+            </a>
+            <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim Layanan PT MSN, saya ingin menanyakan status ' . $typeLabel . ' #' . $ticket->ticket_number) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all">
+                <iconify-icon icon="logos:whatsapp-icon" class="text-sm"></iconify-icon>
+                <span>Tanya NOC</span>
+            </a>
+        </div>
     </div>
+</div>
+
+<!-- Main Content Container Overlapping the Blue Backdrop -->
+<div class="-mt-14 sm:-mt-16 relative z-10 max-w-4xl mx-auto space-y-3.5 sm:space-y-6">
 
     <!-- Live Status Tracker (Visual Stepper) -->
     <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-8">

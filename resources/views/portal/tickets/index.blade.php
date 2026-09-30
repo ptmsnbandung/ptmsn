@@ -3,25 +3,30 @@
 @section('title', 'Daftar Laporan Gangguan')
 
 @section('content')
-<div class="space-y-3.5 sm:space-y-6">
-
-    <!-- Header Section -->
-    <div class="flex items-center justify-between gap-2.5 sm:gap-4">
-        <div>
-            <div class="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-wider mb-0.5">
-                <iconify-icon icon="solar:shield-warning-bold"></iconify-icon>
-                <span>LAYANAN PENGADUAN & TIKET NOC</span>
+<!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
+<div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+        <div class="space-y-1">
+            <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                <span class="text-cyan-400/60">/</span>
+                <span class="text-cyan-300 font-bold">Laporan Gangguan</span>
             </div>
-            <h1 class="text-lg sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Daftar Laporan Gangguan</h1>
-            <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-0.5">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda</p>
+            <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
+                Daftar Laporan Gangguan
+            </h1>
+            <p class="text-xs text-slate-300">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda.</p>
         </div>
 
-        <a href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0">
-            <iconify-icon icon="solar:danger-triangle-bold" width="15" class="sm:w-[18px] shrink-0 text-amber-300"></iconify-icon>
-            <span class="hidden sm:inline">Buat Laporan Baru</span>
-            <span class="sm:hidden">+ Lapor Baru</span>
+        <a href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0 self-start sm:self-center">
+            <iconify-icon icon="solar:danger-triangle-bold" width="16" class="shrink-0 text-amber-300"></iconify-icon>
+            <span>Buat Laporan Baru</span>
         </a>
     </div>
+</div>
+
+<!-- Main Content Container Overlapping the Blue Backdrop -->
+<div class="-mt-14 sm:-mt-16 relative z-10 space-y-3.5 sm:space-y-5">
 
     <!-- Filter & Search Bar -->
     <div class="portal-card rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">

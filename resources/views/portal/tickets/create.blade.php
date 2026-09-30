@@ -3,20 +3,37 @@
 @section('title', 'Buat Laporan / Tiket Layanan')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-3.5 sm:space-y-6" x-data="{
+<div x-data="{
     katTiket: '{{ old('kat_tiket', '11') }}',
     showPassword: false
 }">
 
-    <!-- Breadcrumb & Header -->
-    <div>
-        <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 hover:text-sky-600 transition-colors mb-1 sm:mb-2 font-mono font-semibold">
-            <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
-            <span>Kembali ke Daftar Laporan</span>
-        </a>
-        <h1 class="text-lg sm:text-3xl font-heading font-extrabold text-slate-900 tracking-tight">Formulir Tiket Layanan</h1>
-        <p class="hidden sm:block text-xs sm:text-sm text-slate-600 mt-0.5">Pilih kategori layanan di bawah ini. Formulir akan otomatis menyesuaikan informasi yang dibutuhkan oleh tim NOC & teknisi PT MSN.</p>
+    <!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
+    <div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+            <div class="space-y-1">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono text-cyan-300 font-medium">
+                    <a href="{{ route('portal.dashboard') }}" class="hover:text-white transition-colors">Portal</a>
+                    <span class="text-cyan-400/60">/</span>
+                    <a href="{{ route('portal.tickets.index') }}" class="hover:text-white transition-colors">Tiket</a>
+                    <span class="text-cyan-400/60">/</span>
+                    <span class="text-cyan-300 font-bold">Buat Laporan</span>
+                </div>
+                <h1 class="text-lg sm:text-2xl font-heading font-extrabold text-white tracking-tight">
+                    Formulir Tiket Layanan
+                </h1>
+                <p class="text-xs text-slate-300">Pilih kategori layanan. Formulir otomatis menyesuaikan informasi untuk tim NOC & teknisi PT MSN.</p>
+            </div>
+
+            <a href="{{ route('portal.tickets.index') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 text-slate-200 text-xs font-heading font-semibold transition-all shadow-2xs self-start sm:self-center">
+                <iconify-icon icon="solar:arrow-left-linear" class="text-sm text-cyan-400"></iconify-icon>
+                <span>Kembali ke Daftar</span>
+            </a>
+        </div>
     </div>
+
+    <!-- Main Content Container Overlapping the Blue Backdrop -->
+    <div class="-mt-14 sm:-mt-16 relative z-10 max-w-4xl mx-auto space-y-3.5 sm:space-y-6">
 
     <!-- Error Summary if Any -->
     @if (isset($errors) && $errors->any())
