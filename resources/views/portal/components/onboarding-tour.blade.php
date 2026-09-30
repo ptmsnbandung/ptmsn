@@ -437,14 +437,16 @@
 
                 if (window.Swal) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Selamat Datang di MyMSN!',
-                        text: 'Tutorial selesai! Anda sekarang siap menggunakan seluruh fitur portal pelanggan PT Media Solusi Network.',
-                        confirmButtonText: 'Mulai Jelajah',
-                        confirmButtonColor: '#0284c7',
+                        imageUrl: '{{ asset('images/logo/berhasil1.png') }}',
+                        imageWidth: 110,
+                        imageHeight: 110,
+                        imageAlt: 'Selamat Datang',
+                        title: 'Selamat Datang',
+                        showConfirmButton: false,
+                        timer: 2000,
                         customClass: {
-                            popup: 'rounded-3xl shadow-2xl',
-                            confirmButton: 'rounded-xl font-heading font-bold'
+                            popup: 'rounded-3xl shadow-2xl p-6 border border-sky-100',
+                            title: 'font-heading font-extrabold text-xl sm:text-2xl text-slate-800 tracking-tight mt-2'
                         }
                     }).then(() => {
                         window.location.href = this.routes.dashboard;
