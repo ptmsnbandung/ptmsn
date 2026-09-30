@@ -48,9 +48,9 @@
                         <iconify-icon icon="solar:danger-triangle-bold" class="text-amber-300 text-sm sm:text-base shrink-0"></iconify-icon>
                         <span>Lapor Gangguan</span>
                     </a>
-                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20NOC%20PT%20MSN,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20({{ urlencode($customer->name) }})%20ingin%20konsultasi%20layanan" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 text-center">
-                        <iconify-icon icon="solar:chat-round-dots-bold" class="text-white text-sm sm:text-base shrink-0"></iconify-icon>
-                        <span>Hubungi NOC</span>
+                    <a href="{{ route('portal.tickets.create', ['category' => '17']) }}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all active:scale-95 text-center">
+                        <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-white text-sm sm:text-base shrink-0"></iconify-icon>
+                        <span>Upgrade Paket</span>
                     </a>
                 </div>
 

@@ -4,7 +4,7 @@
 
 @section('content')
 <div x-data="{
-    katTiket: '{{ old('kat_tiket', '11') }}',
+    katTiket: '{{ old('kat_tiket', request('category', request('kat_tiket', '11'))) }}',
     showPassword: false
 }">
 
