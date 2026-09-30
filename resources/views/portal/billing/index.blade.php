@@ -475,8 +475,8 @@
     </div>
 
     <!-- Riwayat Pembayaran & Tagihan -->
-    <div id="tour-step-billing-history" class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-3">
-        <div class="flex items-center justify-between">
+    <div class="portal-card rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 space-y-3">
+        <div id="tour-step-billing-history" class="flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
                     <iconify-icon icon="solar:history-bold" class="text-sm sm:text-base"></iconify-icon>
