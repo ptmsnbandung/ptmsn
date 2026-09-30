@@ -18,7 +18,7 @@
             <p class="text-xs text-slate-300">Pantau tiket pengaduan teknis dan riwayat perbaikan koneksi internet Anda.</p>
         </div>
 
-        <a href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0 self-start sm:self-center">
+        <a id="tour-step-create-ticket" href="{{ route('portal.tickets.create') }}" class="btn-network-action inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-bold text-xs sm:text-sm shadow-md shrink-0 self-start sm:self-center">
             <iconify-icon icon="solar:danger-triangle-bold" width="16" class="shrink-0 text-amber-300"></iconify-icon>
             <span>Buat Laporan Baru</span>
         </a>
@@ -26,7 +26,7 @@
 </div>
 
 <!-- Main Content Container Overlapping the Blue Backdrop -->
-<div class="-mt-14 sm:-mt-16 relative z-10 space-y-3.5 sm:space-y-5">
+<div id="tour-step-tickets-list" class="-mt-14 sm:-mt-16 relative z-10 space-y-3.5 sm:space-y-5">
 
     <!-- Filter & Search Bar -->
     <div class="portal-card rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">

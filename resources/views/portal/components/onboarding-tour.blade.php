@@ -1,11 +1,33 @@
 @php
     $isFirstLogin = (int)(auth('customer')->user()->is_login ?? 0) === 0;
-    $shouldAutoStart = $isFirstLogin || request()->has('tour');
+    $currentRouteName = request()->route()?->getName() ?? '';
+    $requestedStep = request()->query('tour_step');
+    
+    // Tentukan apakah tour harus aktif otomatis di halaman saat ini
+    $shouldActive = false;
+    $initialStepIdx = 0;
+
+    if ($requestedStep !== null && is_numeric($requestedStep)) {
+        $initialStepIdx = max(0, min(4, ((int)$requestedStep) - 1));
+        $shouldActive = true;
+    } elseif ($isFirstLogin && ($currentRouteName === 'portal.dashboard' || request()->is('portal') || request()->is('portal/dashboard'))) {
+        $initialStepIdx = 0;
+        $shouldActive = true;
+    }
 @endphp
 
-<!-- Interactive Product Tour / Onboarding Component -->
+<!-- Interactive Product Tour / Onboarding Component (5 Langkah untuk 1 Aplikasi) -->
 <div 
-    x-data="portalOnboardingTour({{ $shouldAutoStart ? 'true' : 'false' }})"
+    x-data="portalOnboardingTour({
+        shouldActive: {{ $shouldActive ? 'true' : 'false' }},
+        initialStep: {{ $initialStepIdx }},
+        routes: {
+            dashboard: '{{ route('portal.dashboard') }}',
+            tickets: '{{ route('portal.tickets.index') }}',
+            billing: '{{ route('portal.billing.index') }}',
+            complete: '{{ route('portal.onboarding.complete') }}'
+        }
+    })"
     x-init="initTour()"
     x-show="isOpen"
     x-cloak
@@ -13,14 +35,12 @@
     :class="isOpen ? 'opacity-100' : 'opacity-0'"
     style="display: none;"
     @keydown.escape.window="skipTour()"
-    @keydown.right.window="nextStep()"
-    @keydown.left.window="prevStep()"
     @resize.window="updatePosition()"
     @scroll.window="updatePosition()"
 >
-    <!-- Darkened Backdrop with cutout mask via massive box-shadow -->
+    <!-- Darkened Backdrop with cutout spotlight focus ring -->
     <div 
-        class="fixed transition-all duration-300 pointer-events-auto rounded-2xl ring-4 ring-sky-400/90 shadow-[0_0_0_9999px_rgba(15,23,42,0.78),0_0_30px_rgba(56,189,248,0.45)]"
+        class="fixed transition-all duration-300 pointer-events-auto rounded-2xl ring-4 ring-sky-400/90 shadow-[0_0_0_9999px_rgba(15,23,42,0.78),0_0_30px_rgba(56,189,248,0.5)]"
         :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px;`"
     >
         <!-- Pulsing focus halo -->
@@ -49,6 +69,7 @@
                         <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
                         <span x-text="`Langkah ${currentStep + 1} dari ${steps.length}`"></span>
                     </span>
+                    <span class="text-[10px] font-mono text-slate-400 font-medium" x-text="steps[currentStep]?.pageLabel"></span>
                 </div>
 
                 <button 
@@ -80,7 +101,7 @@
             <!-- Footer: Progress Dots & Action Buttons -->
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                 
-                <!-- Progress Dots (Clickable) -->
+                <!-- 5 Clickable Progress Dots -->
                 <div class="flex items-center gap-1.5">
                     <template x-for="(step, idx) in steps" :key="idx">
                         <button 
@@ -88,7 +109,7 @@
                             @click="goToStep(idx)"
                             class="h-2 rounded-full transition-all duration-300 cursor-pointer"
                             :class="currentStep === idx ? 'w-6 bg-sky-600' : 'w-2 bg-slate-200 hover:bg-slate-300'"
-                            :title="`Buka langkah ${idx + 1}`"
+                            :title="`Buka langkah ${idx + 1}: ${step.title}`"
                         ></button>
                     </template>
                 </div>
@@ -113,7 +134,7 @@
                             ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-emerald-600/20' 
                             : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white shadow-sky-600/20'"
                     >
-                        <span x-text="currentStep === steps.length - 1 ? 'Mulai Menggunakan Aplikasi' : 'Lanjut'"></span>
+                        <span x-text="getNextButtonText()"></span>
                         <iconify-icon :icon="currentStep === steps.length - 1 ? 'solar:check-circle-bold' : 'solar:arrow-right-linear'" class="text-sm"></iconify-icon>
                     </button>
                 </div>
@@ -126,77 +147,123 @@
 
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data('portalOnboardingTour', (autoStart = false) => ({
+        Alpine.data('portalOnboardingTour', (config) => ({
             isOpen: false,
-            currentStep: 0,
+            currentStep: config.initialStep || 0,
             spotlight: { top: 0, left: 0, width: 0, height: 0 },
             popover: { top: 0, left: 0 },
+            routes: config.routes,
+            
+            // 5 Langkah Terpadu untuk Seluruh Aplikasi Portal
             steps: [
+                // 1. Dashboard (1 Langkah)
                 {
+                    page: 'dashboard',
+                    pageLabel: 'Dashboard',
                     target: '#tour-step-hero',
-                    title: 'Profil & Status Koneksi',
-                    subtitle: 'Akun & Status Internet Real-time',
+                    title: 'Beranda & Status Koneksi',
+                    subtitle: 'Dashboard Utama MyMSN',
                     icon: 'solar:shield-check-bold',
-                    description: 'Pantau status aktif koneksi fiber optic Anda secara langsung. Anda dapat menyalin ID Pelanggan hanya dengan satu klik untuk keperluan bantuan.'
+                    description: 'Pantau performa koneksi fiber optic secara real-time, salin nomor ID Pelanggan Anda dengan cepat, dan akses seluruh ringkasan layanan.'
                 },
+                // 2. Halaman Gangguan (Langkah 1 Gangguan)
                 {
-                    target: '#tour-step-package',
-                    title: 'Paket & Kecepatan Bandwidth',
-                    subtitle: 'Internet Unlimited Tanpa FUP',
-                    icon: 'solar:bolt-circle-bold',
-                    description: 'Lihat rincian paket broadband yang sedang Anda gunakan. Seluruh koneksi PT MSN berkecepatan tinggi tanpa batasan kuota (True Unlimited).'
+                    page: 'tickets',
+                    pageLabel: 'Laporan Gangguan',
+                    target: '#tour-step-create-ticket',
+                    title: 'Buat Laporan Kendala',
+                    subtitle: 'Pengaduan Teknis 24 Jam',
+                    icon: 'solar:danger-triangle-bold',
+                    description: 'Jika internet Anda lambat atau modem mengalami kendala, klik tombol ini untuk mengajukan tiket laporan langsung ke tim teknisi NOC.'
                 },
+                // 3. Halaman Gangguan (Langkah 2 Gangguan)
                 {
-                    target: '#tour-step-billing',
-                    title: 'Tagihan & Pembayaran Instan',
-                    subtitle: 'QRIS, Virtual Account & Transfer',
-                    icon: 'solar:wallet-money-bold',
-                    description: 'Pantau tanggal jatuh tempo invoice bulanan. Anda dapat membayar langsung via Midtrans (QRIS, VA BCA/Mandiri/BRI/BNI) atau upload bukti transfer bank.'
-                },
-                {
-                    target: '#tour-step-tickets',
-                    title: 'Lapor Kendala & Tiket NOC',
-                    subtitle: 'Layanan Pengaduan 24 Jam',
+                    page: 'tickets',
+                    pageLabel: 'Laporan Gangguan',
+                    target: '#tour-step-tickets-list',
+                    title: 'Pantau Progres Penanganan',
+                    subtitle: 'Transparan & Real-time',
                     icon: 'solar:ticket-sale-bold',
-                    description: 'Mengalami gangguan teknis? Buat laporan tiket langsung ke tim NOC. Anda dapat melacak progres penanganan dan nama teknisi yang bertugas secara transparan.'
+                    description: 'Lacak status perbaikan laporan Anda secara transparan mulai dari verifikasi, penugasan teknisi, hingga tiket dinyatakan selesai.'
                 },
+                // 4. Halaman Pembayaran (Langkah 1 Pembayaran)
                 {
-                    target: '#tour-step-help',
-                    title: 'Diagnostik & Bantuan Cepat',
-                    subtitle: 'Speedtest & WhatsApp Siaga',
-                    icon: 'solar:headphones-round-sound-bold',
-                    description: 'Gunakan fitur Fast.com Speedtest, panduan troubleshooting modem, atau hubungi Helpdesk & Billing kami kapan saja via WhatsApp resmi.'
+                    page: 'billing',
+                    pageLabel: 'Tagihan',
+                    target: '#tour-step-midtrans-pay',
+                    title: 'Pembayaran Online Instan',
+                    subtitle: 'QRIS & Virtual Account 24 Jam',
+                    icon: 'solar:bolt-circle-bold',
+                    description: 'Bayar tagihan bulanan otomatis tanpa konfirmasi manual via QRIS (GoPay, OVO, Dana) atau Virtual Account Bank (BCA, Mandiri, BRI, BNI).'
+                },
+                // 5. Halaman Pembayaran (Langkah 2 Pembayaran)
+                {
+                    page: 'billing',
+                    pageLabel: 'Tagihan',
+                    target: '#tour-step-transfer-tab',
+                    title: 'Transfer Bank & Konfirmasi',
+                    subtitle: 'Rekening Resmi PT MSN',
+                    icon: 'solar:card-recive-bold',
+                    description: 'Anda juga dapat mentransfer langsung ke nomor rekening resmi PT MSN dan mengunggah foto bukti struk transfer di menu ini.'
                 }
             ],
 
             initTour() {
-                window.startPortalTour = () => this.startTour();
+                window.startPortalTour = () => {
+                    window.location.href = `${this.routes.dashboard}?tour_step=1`;
+                };
 
-                if (autoStart) {
-                    // Delay sejenak agar preloader selesai dan elemen halaman ter-render sempurna
+                if (config.shouldActive) {
                     setTimeout(() => {
                         this.startTour();
-                    }, 800);
+                    }, 500);
                 }
             },
 
             startTour() {
-                this.currentStep = 0;
                 this.isOpen = true;
                 this.$nextTick(() => {
-                    this.showStep(0);
+                    this.showStep(this.currentStep);
                 });
             },
 
+            getCurrentPageName() {
+                const path = window.location.pathname;
+                if (path.includes('/tagihan') || path.includes('/billing')) return 'billing';
+                if (path.includes('/tickets') || path.includes('/tiket')) return 'tickets';
+                return 'dashboard';
+            },
+
             goToStep(stepIdx) {
-                if (stepIdx >= 0 && stepIdx < this.steps.length) {
+                if (stepIdx < 0 || stepIdx >= this.steps.length) return;
+                const targetStep = this.steps[stepIdx];
+                const currentPage = this.getCurrentPageName();
+
+                if (targetStep.page === currentPage) {
                     this.showStep(stepIdx);
+                } else {
+                    // Navigasi antar halaman
+                    const targetUrl = this.routes[targetStep.page] || this.routes.dashboard;
+                    window.location.href = `${targetUrl}?tour_step=${stepIdx + 1}`;
                 }
+            },
+
+            getNextButtonText() {
+                if (this.currentStep === this.steps.length - 1) {
+                    return 'Mulai Menggunakan Aplikasi';
+                }
+                if (this.currentStep === 0) {
+                    return 'Lanjut ke Menu Gangguan';
+                }
+                if (this.currentStep === 2) {
+                    return 'Lanjut ke Menu Pembayaran';
+                }
+                return 'Lanjut';
             },
 
             nextStep() {
                 if (this.currentStep < this.steps.length - 1) {
-                    this.showStep(this.currentStep + 1);
+                    this.goToStep(this.currentStep + 1);
                 } else {
                     this.finishTour();
                 }
@@ -204,7 +271,7 @@
 
             prevStep() {
                 if (this.currentStep > 0) {
-                    this.showStep(this.currentStep - 1);
+                    this.goToStep(this.currentStep - 1);
                 }
             },
 
@@ -213,17 +280,30 @@
                 const step = this.steps[stepIdx];
                 if (!step) return;
 
-                const targetEl = document.querySelector(step.target);
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Berikan sedikit waktu untuk smooth scrolling selesai sebelum menghitung bounding box
-                    setTimeout(() => {
-                        this.calculatePosition(targetEl);
-                    }, 250);
-                } else {
-                    // Jika elemen target di halaman ini tidak ditemukan, fallback ke posisi tengah
-                    this.calculateFallbackPosition();
+                // Khusus halaman tagihan: aktifkan tab yang sesuai
+                if (step.page === 'billing') {
+                    if (stepIdx === 3) {
+                        // Switch ke tab midtrans jika ada elemennya
+                        const midtransBtn = document.querySelector("button[\\@click*=\"paymentTab = 'midtrans'\"]");
+                        if (midtransBtn) midtransBtn.click();
+                    } else if (stepIdx === 4) {
+                        // Switch ke tab transfer jika ada elemennya
+                        const transferBtn = document.querySelector("#tour-step-transfer-tab");
+                        if (transferBtn) transferBtn.click();
+                    }
                 }
+
+                setTimeout(() => {
+                    const targetEl = document.querySelector(step.target);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        setTimeout(() => {
+                            this.calculatePosition(targetEl);
+                        }, 250);
+                    } else {
+                        this.calculateFallbackPosition();
+                    }
+                }, 100);
             },
 
             calculatePosition(el) {
@@ -238,20 +318,17 @@
                 };
 
                 const popoverWidth = Math.min(window.innerWidth * 0.92, 420);
-                const popoverHeight = 260; // estimasi tinggi popover
+                const popoverHeight = 260;
                 const margin = 14;
 
-                // Hitung posisi horizontal (center terhadap spotlight, atau dijaga agar tidak offscreen)
                 let popLeft = this.spotlight.left + (this.spotlight.width / 2) - (popoverWidth / 2);
                 popLeft = Math.max(margin, Math.min(popLeft, window.innerWidth - popoverWidth - margin));
 
-                // Hitung posisi vertikal (prioritaskan di bawah target, jika tidak cukup ruang letakkan di atas)
                 let popTop = this.spotlight.top + this.spotlight.height + margin;
                 if (popTop + popoverHeight > window.innerHeight && this.spotlight.top > popoverHeight + margin) {
                     popTop = this.spotlight.top - popoverHeight - margin;
                 }
 
-                // Proteksi batas layar atas/bawah
                 popTop = Math.max(margin, Math.min(popTop, window.innerHeight - popoverHeight - margin));
 
                 this.popover = {
@@ -288,19 +365,23 @@
             finishTour() {
                 this.isOpen = false;
                 this.markCompletedOnServer();
-                
+
                 if (window.Swal) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Selamat Datang di MyMSN!',
-                        text: 'Anda sekarang siap menggunakan seluruh layanan portal pelanggan PT Media Solusi Network.',
+                        text: 'Tutorial selesai! Anda sekarang siap menggunakan seluruh fitur portal pelanggan PT Media Solusi Network.',
                         confirmButtonText: 'Mulai Jelajah',
                         confirmButtonColor: '#0284c7',
                         customClass: {
                             popup: 'rounded-3xl shadow-2xl',
                             confirmButton: 'rounded-xl font-heading font-bold'
                         }
+                    }).then(() => {
+                        window.location.href = this.routes.dashboard;
                     });
+                } else {
+                    window.location.href = this.routes.dashboard;
                 }
             },
 
@@ -311,7 +392,7 @@
 
             markCompletedOnServer() {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                fetch('{{ route("portal.onboarding.complete") }}', {
+                fetch(this.routes.complete, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

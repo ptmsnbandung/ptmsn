@@ -121,7 +121,7 @@
                 <p class="text-[11px] text-slate-500 leading-relaxed">
                     Ingin melihat kembali panduan interaktif cara menggunakan fitur-fitur portal pelanggan?
                 </p>
-                <a href="{{ route('portal.dashboard') }}?tour=1" class="w-full py-2 px-3 rounded-xl bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs">
+                <a href="{{ route('portal.dashboard') }}?tour_step=1" class="w-full py-2 px-3 rounded-xl bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs">
                     <iconify-icon icon="solar:play-circle-bold" class="text-sky-600"></iconify-icon>
                     <span>Mulai Ulang Panduan</span>
                 </a>

@@ -193,6 +193,7 @@
                                 </button>
                                 <button 
                                     type="button" 
+                                    id="tour-step-transfer-tab"
                                     @click="paymentTab = 'transfer'"
                                     :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
@@ -204,7 +205,7 @@
                         </div>
 
                         <!-- Tab 1: Midtrans Payment -->
-                        <div x-show="paymentTab === 'midtrans'" x-transition:enter="transition ease-out duration-150" class="space-y-3">
+                        <div id="tour-step-midtrans-pay" x-show="paymentTab === 'midtrans'" x-transition:enter="transition ease-out duration-150" class="space-y-3">
                             <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-100 text-xs space-y-1">
                                 <div class="flex items-center gap-1.5 font-heading font-bold text-sky-950 text-xs">
                                     <iconify-icon icon="solar:shield-check-bold" class="text-sky-600 text-sm"></iconify-icon>
