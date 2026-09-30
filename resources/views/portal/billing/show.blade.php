@@ -6,7 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Invoice {{ $invoice->invoice_number }} — PT Media Solusi Network</title>
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
