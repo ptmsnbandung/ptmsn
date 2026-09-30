@@ -30,7 +30,7 @@
         <button 
             type="button" 
             onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
-            class="copy-btn px-3 py-1.5 rounded-xl bg-white/90 border border-slate-200/90 shadow-2xs hover:border-sky-400 flex items-center gap-1.5 shrink-0"
+            class="copy-btn px-3 py-1.5 rounded-xl bg-white/90 border border-slate-200/90 shadow-2xs hover:border-sky-400 flex items-center gap-1.5 shrink-0 transition-all"
             title="Klik untuk menyalin ID"
         >
             <iconify-icon icon="solar:hashtag-bold" class="text-sky-500 text-xs"></iconify-icon>
@@ -41,14 +41,14 @@
 
     <!-- Quick Action Banner for WA Confirmation -->
     @if(session('wa_confirm_url'))
-        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300/80 text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-emerald-50 border border-emerald-300/80 text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                     <iconify-icon icon="solar:check-circle-bold" class="text-xl"></iconify-icon>
                 </div>
                 <div class="text-xs">
                     <span class="font-bold text-sm block text-emerald-950">Bukti Transfer Berhasil Dikirim!</span>
-                    <span class="text-emerald-800">Ingin konfirmasi instan? Klik tombol untuk membuka chat dengan Tim Billing PT MSN via WhatsApp.</span>
+                    <span class="text-emerald-800">Ingin konfirmasi instan? Hubungi Tim Billing PT MSN via WhatsApp.</span>
                 </div>
             </div>
             <a href="{{ session('wa_confirm_url') }}" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 transition-all active:scale-95 shrink-0 text-center">
@@ -97,11 +97,11 @@
             </div>
         </div>
 
-        <!-- Body Grid: Package & Service Details -->
+        <!-- Body Grid: Package & Service Details (Left 5 Cols) vs Payment Section (Right 7 Cols) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
             
-            <!-- Left Info: Package & Subscriber Details (6 Cols) -->
-            <div class="lg:col-span-6 space-y-3.5">
+            <!-- Left Info: Package & Subscriber Details (5 Cols) -->
+            <div class="lg:col-span-5 space-y-3.5">
                 <div>
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-400">Layanan Berlangganan</span>
                     <h2 class="text-base sm:text-xl font-heading font-extrabold text-slate-900 leading-snug mt-0.5">
@@ -114,7 +114,7 @@
                 </div>
 
                 <!-- Detail Meta Box -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 text-xs">
                     <div class="space-y-0.5">
                         <span class="text-slate-400 text-[11px] block">Jatuh Tempo:</span>
                         <span class="font-mono font-bold {{ $currentInvoice->is_paid ? 'text-slate-700' : 'text-rose-600' }}">
@@ -125,21 +125,22 @@
                         <span class="text-slate-400 text-[11px] block">Nama Pelanggan:</span>
                         <span class="font-heading font-semibold text-slate-800 truncate block">{{ $customer->name }}</span>
                     </div>
-                    <div class="sm:col-span-2 space-y-0.5 pt-1.5 border-t border-slate-200/60">
+                    <div class="sm:col-span-2 space-y-0.5 pt-2 border-t border-slate-200/60">
                         <span class="text-slate-400 text-[11px] block">Alamat Pemasangan:</span>
                         <span class="text-slate-700 text-[11px] leading-relaxed block">{{ $customer->address ?: '-' }}</span>
                     </div>
                 </div>
 
                 <!-- Price Breakdown Box -->
-                <div class="p-3.5 sm:p-4 rounded-2xl bg-white/90 border border-slate-200/90 shadow-2xs space-y-2">
-                    <div class="text-[11px] font-mono uppercase text-slate-400 font-bold tracking-wider pb-1.5 border-b border-slate-100">
-                        Rincian Tagihan
+                <div class="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-2.5">
+                    <div class="text-[11px] font-mono uppercase text-slate-400 font-bold tracking-wider pb-1.5 border-b border-slate-100 flex items-center justify-between">
+                        <span>Rincian Tagihan</span>
+                        <span class="text-sky-600 font-mono text-[10px] font-bold">1 Bulan</span>
                     </div>
 
                     <div class="space-y-1.5 text-xs">
                         <div class="flex justify-between text-slate-600">
-                            <span>Biaya Paket (1 Bulan)</span>
+                            <span>Biaya Paket Internet</span>
                             <span class="font-mono font-semibold text-slate-800">{{ $currentInvoice->formatted_amount }}</span>
                         </div>
                         <div class="flex justify-between text-slate-600">
@@ -148,57 +149,38 @@
                         </div>
                         <div class="pt-2 border-t border-slate-100 flex justify-between items-baseline">
                             <span class="font-heading font-bold text-slate-800 text-xs sm:text-sm">Total Tagihan:</span>
-                            <span class="font-heading font-black text-lg sm:text-2xl text-sky-600 tracking-tight">
+                            <span class="font-heading font-black text-xl sm:text-2xl text-sky-600 tracking-tight">
                                 {{ $currentInvoice->formatted_total }}
                             </span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Action Button: Print & Contact WA Billing -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                    <a 
-                        href="{{ route('portal.billing.show', urlencode($currentInvoice->kode_billing_layanan)) }}" 
-                        target="_blank"
-                        class="py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs text-center"
-                    >
-                        <iconify-icon icon="solar:printer-minimalistic-bold" class="text-slate-500 text-sm"></iconify-icon>
-                        <span>Cetak / Unduh Invoice</span>
-                    </a>
-
-                    @php
-                        $waText = "Halo Tim Billing PT MSN,\nSaya ingin konfirmasi pembayaran tagihan internet:\n• ID Pelanggan: {$customer->customer_id}\n• No. Invoice: {$currentInvoice->invoice_number}\n• Nama: {$customer->name}\n• Total: {$currentInvoice->formatted_total}\n• Periode: {$currentInvoice->period}\n\nMohon dibantu proses pengecekan. Terima kasih!";
-                        $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6289696629955') . "?text=" . urlencode($waText);
-                    @endphp
-
-                    <a 
-                        href="{{ $waBillingUrl }}" 
-                        target="_blank"
-                        class="py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs text-center"
-                    >
-                        <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                        <span>Chat WhatsApp Billing</span>
-                    </a>
-                </div>
-
             </div>
 
-            <!-- Right Info: Payment Methods & Actions (6 Cols) -->
-            <div class="lg:col-span-6 space-y-3.5">
+            <!-- Right Info: Payment Methods & Actions (7 Cols) -->
+            <div class="lg:col-span-7 space-y-3.5">
                 
-                @if(!$currentInvoice->is_paid)
-                    <!-- Payment Methods Selector Card -->
-                    <div class="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
-                        
-                        <!-- Tabs Header -->
-                        <div>
-                            <span class="text-[10px] font-mono uppercase font-bold text-slate-400 tracking-wider block mb-2">PILIH CARA PEMBAYARAN</span>
+                <!-- Payment Methods Card -->
+                <div class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4">
+                    
+                    @if(!$currentInvoice->is_paid)
+                        <!-- Card Header & Tab Selector -->
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between flex-wrap gap-1">
+                                <span class="text-[10px] sm:text-xs font-mono uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1.5">
+                                    <iconify-icon icon="solar:card-2-bold" class="text-sky-600 text-sm"></iconify-icon>
+                                    <span>PILIH CARA PEMBAYARAN</span>
+                                </span>
+                                <span class="text-[10px] font-heading text-slate-400">Pilih salah satu metode</span>
+                            </div>
+
+                            <!-- Tabs Switcher -->
                             <div class="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-slate-100/90 border border-slate-200/80">
                                 <button 
                                     type="button" 
                                     @click="paymentTab = 'midtrans'"
                                     :class="paymentTab === 'midtrans' ? 'bg-white text-sky-700 shadow-xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
-                                    class="py-2 px-2.5 rounded-xl text-xs font-heading transition-all flex items-center justify-center gap-1.5"
+                                    class="py-2.5 px-3 rounded-xl text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                 >
                                     <iconify-icon icon="solar:bolt-circle-bold" class="text-sm text-sky-500"></iconify-icon>
                                     <span>Otomatis (Midtrans)</span>
@@ -207,7 +189,7 @@
                                     type="button" 
                                     @click="paymentTab = 'transfer'"
                                     :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
-                                    class="py-2 px-2.5 rounded-xl text-xs font-heading transition-all flex items-center justify-center gap-1.5"
+                                    class="py-2.5 px-3 rounded-xl text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                 >
                                     <iconify-icon icon="solar:card-recive-bold" class="text-sm text-emerald-500"></iconify-icon>
                                     <span>Transfer Bank</span>
@@ -216,14 +198,14 @@
                         </div>
 
                         <!-- Tab 1: Midtrans Payment -->
-                        <div x-show="paymentTab === 'midtrans'" x-transition:enter="transition ease-out duration-150" class="space-y-3">
-                            <div class="p-3.5 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50/50 border border-sky-100 text-xs space-y-2">
-                                <div class="flex items-center gap-2 font-heading font-bold text-sky-900">
+                        <div x-show="paymentTab === 'midtrans'" x-transition:enter="transition ease-out duration-150" class="space-y-3.5">
+                            <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-100 text-xs space-y-1.5">
+                                <div class="flex items-center gap-1.5 font-heading font-bold text-sky-950">
                                     <iconify-icon icon="solar:shield-check-bold" class="text-sky-600 text-base"></iconify-icon>
                                     <span>Verifikasi Otomatis 24 Jam</span>
                                 </div>
                                 <p class="text-slate-600 leading-relaxed text-[11px]">
-                                    Bayar praktis melalui QRIS (Gopay, OVO, Dana, ShopeePay), Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Gerai Retail tanpa perlu konfirmasi manual.
+                                    Pembayaran terverifikasi seketika via QRIS (Gopay, OVO, Dana, ShopeePay), Virtual Account Bank (BCA, Mandiri, BRI, BNI), atau Gerai Retail.
                                 </p>
                             </div>
 
@@ -231,9 +213,9 @@
                                 type="button" 
                                 id="btnPayMain"
                                 onclick="payWithMidtrans('{{ $currentInvoice->kode_billing_layanan }}', 'btnPayMain')"
-                                class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-heading font-extrabold text-sm shadow-md shadow-sky-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 text-center disabled:opacity-60 cursor-pointer"
+                                class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-sky-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 text-center disabled:opacity-60 cursor-pointer"
                             >
-                                <iconify-icon icon="solar:card-recive-bold" class="text-lg"></iconify-icon>
+                                <iconify-icon icon="solar:card-recive-bold" class="text-base sm:text-lg"></iconify-icon>
                                 <span>Bayar Sekarang (Midtrans)</span>
                             </button>
 
@@ -255,12 +237,12 @@
                             <div class="space-y-2">
                                 <div class="text-[11px] font-mono uppercase font-bold text-slate-500 flex items-center justify-between">
                                     <span>Rekening Tujuan PT MSN:</span>
-                                    <span class="text-sky-600 font-sans font-semibold text-[10px]">Klik tombol untuk salin</span>
+                                    <span class="text-sky-600 font-sans font-semibold text-[10px]">Klik salin untuk transfer</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     @foreach($bankAccounts as $bank)
-                                        <div class="p-3 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xs space-y-1.5 relative overflow-hidden">
+                                        <div class="p-3 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-xs space-y-1.5 relative border border-slate-700/80">
                                             <div class="flex items-center justify-between">
                                                 <span class="px-2 py-0.5 rounded-md bg-white/20 text-[10px] font-mono font-extrabold uppercase tracking-wider text-sky-200">
                                                     {{ $bank['bank_name'] }}
@@ -324,7 +306,7 @@
                                     <span>Formulir Konfirmasi Bukti Transfer</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                                     <!-- Bank Tujuan -->
                                     <div>
                                         <label class="block text-slate-500 text-[11px] font-medium mb-1">Transfer ke Bank:</label>
@@ -400,20 +382,48 @@
                                 </button>
                             </form>
                         </div>
-
-                    </div>
-                @else
-                    <!-- Lunas Box -->
-                    <div class="p-6 rounded-3xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md shadow-emerald-500/20">
-                            <iconify-icon icon="solar:check-circle-bold" class="text-2xl"></iconify-icon>
+                    @else
+                        <!-- Lunas Box -->
+                        <div class="p-6 rounded-3xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md shadow-emerald-500/20">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-2xl"></iconify-icon>
+                            </div>
+                            <h3 class="text-base font-heading font-extrabold text-emerald-900">Tagihan Telah Lunas</h3>
+                            <p class="text-xs text-emerald-700 leading-relaxed max-w-sm mx-auto">
+                                Terima kasih! Pembayaran tagihan periode ini telah terkonfirmasi. Layanan internet Anda aktif lancar tanpa kendala.
+                            </p>
                         </div>
-                        <h3 class="text-base font-heading font-extrabold text-emerald-900">Tagihan Telah Lunas</h3>
-                        <p class="text-xs text-emerald-700 leading-relaxed max-w-sm mx-auto">
-                            Terima kasih! Pembayaran tagihan periode ini telah terkonfirmasi. Layanan internet Anda aktif lancar tanpa kendala.
-                        </p>
+                    @endif
+
+                    <!-- Dual Action Buttons: Cetak & WhatsApp Billing (Placed inside payment section) -->
+                    @php
+                        $waText = "Halo Tim Billing PT MSN,\nSaya ingin konfirmasi pembayaran tagihan internet:\n• ID Pelanggan: {$customer->customer_id}\n• No. Invoice: {$currentInvoice->invoice_number}\n• Nama: {$customer->name}\n• Total: {$currentInvoice->formatted_total}\n• Periode: {$currentInvoice->period}\n\nMohon dibantu proses pengecekan. Terima kasih!";
+                        $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6289696629955') . "?text=" . urlencode($waText);
+                    @endphp
+
+                    <div class="pt-3.5 border-t border-slate-100">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <a 
+                                href="{{ route('portal.billing.show', urlencode($currentInvoice->kode_billing_layanan)) }}" 
+                                target="_blank"
+                                class="py-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-slate-700 hover:text-sky-700 font-heading font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs text-center"
+                            >
+                                <iconify-icon icon="solar:printer-minimalistic-bold" class="text-slate-500 text-sm"></iconify-icon>
+                                <span>Cetak / Unduh Invoice</span>
+                            </a>
+
+                            <a 
+                                href="{{ $waBillingUrl }}" 
+                                target="_blank"
+                                class="py-2.5 px-3.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/90 text-emerald-800 font-heading font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs text-center"
+                            >
+                                <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-600 text-sm"></iconify-icon>
+                                <span>Chat WhatsApp Billing</span>
+                            </a>
+                        </div>
                     </div>
-                @endif
+
+                </div>
 
             </div>
 
@@ -483,7 +493,7 @@
                                 type="button" 
                                 id="btnPayMobile-{{ $loop->index }}"
                                 onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
-                                class="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs flex items-center gap-1 shadow-2xs transition-all active:scale-95"
+                                class="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
                             >
                                 <iconify-icon icon="solar:bolt-circle-bold" width="13"></iconify-icon>
                                 <span>Midtrans</span>
@@ -491,7 +501,7 @@
                             <button 
                                 type="button" 
                                 @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1 shadow-2xs transition-all active:scale-95"
+                                class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
                             >
                                 <iconify-icon icon="solar:upload-track-bold" width="13"></iconify-icon>
                                 <span>Upload Bukti</span>
@@ -574,7 +584,7 @@
                                             type="button" 
                                             id="btnPayHist-{{ $loop->index }}"
                                             onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer"
                                             title="Bayar tagihan ini via Midtrans"
                                         >
                                             <iconify-icon icon="solar:bolt-circle-bold" width="13"></iconify-icon>
@@ -583,7 +593,7 @@
                                         <button 
                                             type="button" 
                                             @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all"
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer"
                                             title="Upload bukti transfer untuk tagihan ini"
                                         >
                                             <iconify-icon icon="solar:upload-track-bold" width="13"></iconify-icon>
@@ -641,7 +651,7 @@
                         <p class="text-[11px] text-slate-500">Invoice: <span class="font-mono font-bold text-sky-600" x-text="'#' + modalInvoiceNumber"></span></p>
                     </div>
                 </div>
-                <button @click="showTransferModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-xl">
+                <button @click="showTransferModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-xl cursor-pointer">
                     <iconify-icon icon="solar:close-circle-bold" class="text-xl"></iconify-icon>
                 </button>
             </div>
@@ -652,7 +662,7 @@
                     <div class="p-2.5 rounded-xl bg-slate-900 text-white space-y-1">
                         <div class="flex items-center justify-between">
                             <span class="text-[9px] font-mono font-bold text-sky-300 uppercase">{{ $bank['bank_name'] }}</span>
-                            <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No Rekening')" class="text-[9px] text-slate-300 hover:text-white underline">Salin</button>
+                            <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No Rekening')" class="text-[9px] text-slate-300 hover:text-white underline cursor-pointer">Salin</button>
                         </div>
                         <div class="font-mono font-bold text-xs select-all">{{ $bank['account_number'] }}</div>
                         <div class="text-[9px] text-slate-400 truncate">{{ $bank['account_name'] }}</div>
@@ -707,10 +717,10 @@
                 </div>
 
                 <div class="pt-2 flex items-center justify-end gap-2">
-                    <button type="button" @click="showTransferModal = false" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors">
+                    <button type="button" @click="showTransferModal = false" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer">
                         Batal
                     </button>
-                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer">
                         Kirim Bukti Pembayaran
                     </button>
                 </div>
