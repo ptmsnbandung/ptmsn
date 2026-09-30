@@ -97,18 +97,32 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Bypass preloader during onboarding tutorial navigation */
+        .no-preloader #portal-preloader {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
     </style>
+    <script>
+        if (window.location.search.includes('tour_step')) {
+            document.documentElement.classList.add('no-preloader');
+        }
+    </script>
 </head>
 <body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-20 md:pb-8" x-data="{ userDropdown: false }">
 
-    <!-- Custom Portal Preloader (Stationary Tab Logo + Rotating Ring) -->
-    <div id="portal-preloader">
-        <div class="loader-spinner-ring">
-            <div class="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center p-2.5 z-10 border border-slate-100">
-                <img src="{{ asset('images/logo/logo-icon.png') }}" alt="PT MSN" class="w-full h-full object-contain loader-logo-pulse">
+    <!-- Custom Portal Preloader (Hidden during onboarding tutorial) -->
+    @if(!request()->has('tour_step'))
+        <div id="portal-preloader">
+            <div class="loader-spinner-ring">
+                <div class="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center p-2.5 z-10 border border-slate-100">
+                    <img src="{{ asset('images/logo/logo-icon.png') }}" alt="PT MSN" class="w-full h-full object-contain loader-logo-pulse">
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
