@@ -18,8 +18,8 @@ return [
     'facebook' => env('COMPANY_FACEBOOK', 'https://facebook.com/ptmediasolusinetwork'),
     'linkedin' => env('COMPANY_LINKEDIN', 'https://linkedin.com/company/ptmediasolusinetwork'),
     'youtube' => env('COMPANY_YOUTUBE', 'https://youtube.com/@ptmediasolusinetwork'),
-    'billing_whatsapp' => env('COMPANY_BILLING_WHATSAPP', '6289696629955'),
-    'billing_whatsapp_display' => env('COMPANY_BILLING_WHATSAPP_DISPLAY', '+62 896-9662-9955'),
+    'billing_whatsapp' => env('COMPANY_BILLING_WHATSAPP', '6285188358385'),
+    'billing_whatsapp_display' => env('COMPANY_BILLING_WHATSAPP_DISPLAY', '+62 851-8835-8385'),
     'bank_accounts' => [
         [
             'bank_name' => 'BCA',

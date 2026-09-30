@@ -76,8 +76,8 @@ class BillingController extends Controller
         $clientKey = $this->midtransService->getClientKey();
 
         $bankAccounts = config('company.bank_accounts', []);
-        $billingWhatsapp = config('company.billing_whatsapp', '6289696629955');
-        $billingWhatsappDisplay = config('company.billing_whatsapp_display', '+62 896-9662-9955');
+        $billingWhatsapp = config('company.billing_whatsapp', '6285188358385');
+        $billingWhatsappDisplay = config('company.billing_whatsapp_display', '+62 851-8835-8385');
 
         $confirmations = \App\Models\PaymentConfirmation::where('customer_id', $customer->customer_id)
             ->latest()

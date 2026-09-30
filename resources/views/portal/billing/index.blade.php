@@ -438,7 +438,7 @@
                     <!-- Dual Action Buttons: Cetak & WhatsApp Billing (Placed inside payment section) -->
                     @php
                         $waText = "Halo Tim Billing PT MSN,\nSaya ingin konfirmasi pembayaran tagihan internet:\n• ID Pelanggan: {$customer->customer_id}\n• No. Invoice: {$currentInvoice->invoice_number}\n• Nama: {$customer->name}\n• Total: {$currentInvoice->formatted_total}\n• Periode: {$currentInvoice->period}\n\nMohon dibantu proses pengecekan. Terima kasih!";
-                        $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6289696629955') . "?text=" . urlencode($waText);
+                        $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6285188358385') . "?text=" . urlencode($waText);
                     @endphp
 
                     <div class="pt-2.5 border-t border-slate-100">

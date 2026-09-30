@@ -150,7 +150,7 @@
         <!-- WhatsApp Billing Direct Button -->
         @php
             $waMsg = "Halo Tim Billing PT MSN,\nSaya ingin konfirmasi pembayaran tagihan:\n• ID Pelanggan: {$customer->customer_id}\n• No. Invoice: {$invoice->invoice_number}\n• Nama: {$customer->name}\n• Total: {$invoice->formatted_total}\n• Periode: {$invoice->period}\n\nMohon bantuannya. Terima kasih!";
-            $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6289696629955') . "?text=" . urlencode($waMsg);
+            $waBillingUrl = "https://wa.me/" . ($billingWhatsapp ?: '6285188358385') . "?text=" . urlencode($waMsg);
         @endphp
         <div class="mt-4 no-print flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
             <div class="text-xs text-emerald-900">
