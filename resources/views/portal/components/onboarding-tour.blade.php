@@ -47,13 +47,13 @@
 
     <!-- Floating Interactive Popover Tooltip Card -->
     <div 
-        class="fixed transition-all duration-300 pointer-events-auto z-[102] w-[92vw] max-w-[400px] sm:max-w-[430px]"
+        class="fixed transition-all duration-200 pointer-events-auto z-[102] w-[88vw] max-w-[320px] sm:max-w-[420px]"
         :style="`top: ${popover.top}px; left: ${popover.left}px;`"
     >
-        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-6 shadow-2xl border border-sky-200/90 text-slate-800 space-y-4 relative overflow-hidden">
+        <div class="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-sky-200/90 text-slate-800 space-y-2.5 sm:space-y-3.5 relative overflow-hidden">
             
             <!-- Top Gradient Accent Bar & Progress Tracker -->
-            <div class="absolute top-0 inset-x-0 h-1.5 bg-slate-100 overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 sm:h-1.5 bg-slate-100 overflow-hidden">
                 <div 
                     class="h-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 transition-all duration-300"
                     :style="`width: ${((currentStep + 1) / steps.length) * 100}%`"
@@ -61,79 +61,79 @@
             </div>
 
             <!-- Header: Step Badge & Skip Button -->
-            <div class="flex items-center justify-between pt-1">
-                <div class="flex items-center gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-700 font-heading font-extrabold text-[11px] sm:text-xs">
-                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+            <div class="flex items-center justify-between pt-0.5">
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-700 font-heading font-extrabold text-[10px] sm:text-xs">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
                         <span x-text="`Langkah ${currentStep + 1} dari ${steps.length}`"></span>
                     </span>
-                    <span class="text-[10px] font-mono text-slate-400 font-medium" x-text="steps[currentStep]?.pageLabel"></span>
+                    <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-medium" x-text="steps[currentStep]?.pageLabel"></span>
                 </div>
 
                 <button 
                     type="button" 
                     @click="skipTour()"
-                    class="text-slate-400 hover:text-slate-600 font-heading text-xs font-semibold px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 cursor-pointer"
+                    class="text-slate-400 hover:text-slate-600 font-heading text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 cursor-pointer"
                     title="Lewati panduan interaktif"
                 >
                     <span>Lewati</span>
-                    <iconify-icon icon="solar:close-circle-bold" class="text-sm"></iconify-icon>
+                    <iconify-icon icon="solar:close-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
                 </button>
             </div>
 
             <!-- Content Body: Icon, Title & Description -->
-            <div class="space-y-2.5">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-sky-500/25">
-                        <iconify-icon :icon="steps[currentStep]?.icon || 'solar:star-bold'" class="text-xl sm:text-2xl"></iconify-icon>
+            <div class="space-y-1.5 sm:space-y-2">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs sm:shadow-md shadow-sky-500/25">
+                        <iconify-icon :icon="steps[currentStep]?.icon || 'solar:star-bold'" class="text-sm sm:text-xl"></iconify-icon>
                     </div>
                     <div>
-                        <h3 class="text-base sm:text-lg font-heading font-extrabold text-slate-900 tracking-tight" x-text="steps[currentStep]?.title"></h3>
-                        <p class="text-[11px] font-mono font-medium text-sky-600" x-text="steps[currentStep]?.subtitle"></p>
+                        <h3 class="text-xs sm:text-base font-heading font-extrabold text-slate-900 tracking-tight leading-tight" x-text="steps[currentStep]?.title"></h3>
+                        <p class="text-[9px] sm:text-[11px] font-mono font-medium text-sky-600 leading-tight" x-text="steps[currentStep]?.subtitle"></p>
                     </div>
                 </div>
 
-                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed" x-text="steps[currentStep]?.description"></p>
+                <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed" x-text="steps[currentStep]?.description"></p>
             </div>
 
             <!-- Footer: Progress Dots & Action Buttons -->
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+            <div class="pt-2 sm:pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
                 
                 <!-- 5 Clickable Progress Dots -->
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1 sm:gap-1.5">
                     <template x-for="(step, idx) in steps" :key="idx">
                         <button 
                             type="button" 
                             @click="goToStep(idx)"
-                            class="h-2 rounded-full transition-all duration-300 cursor-pointer"
-                            :class="currentStep === idx ? 'w-6 bg-sky-600' : 'w-2 bg-slate-200 hover:bg-slate-300'"
+                            class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                            :class="currentStep === idx ? 'w-4 sm:w-5 bg-sky-600' : 'w-1.5 bg-slate-200 hover:bg-slate-300'"
                             :title="`Buka langkah ${idx + 1}: ${step.title}`"
                         ></button>
                     </template>
                 </div>
 
                 <!-- Next / Prev Controls -->
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 sm:gap-2">
                     <button 
                         type="button"
                         @click="prevStep()"
                         x-show="currentStep > 0"
-                        class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-xs transition-all cursor-pointer flex items-center gap-1"
+                        class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-[10px] sm:text-xs transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1"
                     >
-                        <iconify-icon icon="solar:arrow-left-linear" class="text-sm"></iconify-icon>
+                        <iconify-icon icon="solar:arrow-left-linear" class="text-xs sm:text-sm"></iconify-icon>
                         <span>Kembali</span>
                     </button>
 
                     <button 
                         type="button"
                         @click="nextStep()"
-                        class="px-4 py-2 rounded-xl font-heading font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+                        class="px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl font-heading font-extrabold text-[10px] sm:text-xs shadow-sm sm:shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1"
                         :class="currentStep === steps.length - 1 
                             ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-emerald-600/20' 
                             : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white shadow-sky-600/20'"
                     >
                         <span x-text="getNextButtonText()"></span>
-                        <iconify-icon :icon="currentStep === steps.length - 1 ? 'solar:check-circle-bold' : 'solar:arrow-right-linear'" class="text-sm"></iconify-icon>
+                        <iconify-icon :icon="currentStep === steps.length - 1 ? 'solar:check-circle-bold' : 'solar:arrow-right-linear'" class="text-xs sm:text-sm"></iconify-icon>
                     </button>
                 </div>
 
@@ -162,7 +162,7 @@
                     title: 'Beranda & Status Koneksi',
                     subtitle: 'Dashboard Utama MyMSN',
                     icon: 'solar:shield-check-bold',
-                    description: 'Pantau performa koneksi fiber optic secara real-time, salin nomor ID Pelanggan Anda dengan cepat, dan akses seluruh ringkasan layanan.'
+                    description: 'Pantau status koneksi fiber optic secara real-time, salin ID Pelanggan, dan akses ringkasan layanan Anda.'
                 },
                 // 2. Halaman Gangguan (Langkah 1 Gangguan)
                 {
@@ -172,7 +172,7 @@
                     title: 'Buat Laporan Kendala',
                     subtitle: 'Pengaduan Teknis 24 Jam',
                     icon: 'solar:danger-triangle-bold',
-                    description: 'Jika internet Anda lambat atau modem mengalami kendala, klik tombol ini untuk mengajukan tiket laporan langsung ke tim teknisi NOC.'
+                    description: 'Klik tombol ini untuk mengajukan tiket laporan kendala koneksi langsung ke tim teknisi NOC.'
                 },
                 // 3. Halaman Gangguan (Langkah 2 Gangguan)
                 {
@@ -182,7 +182,7 @@
                     title: 'Pantau Progres Penanganan',
                     subtitle: 'Transparan & Real-time',
                     icon: 'solar:ticket-sale-bold',
-                    description: 'Lacak status perbaikan laporan Anda secara transparan mulai dari verifikasi, penugasan teknisi, hingga tiket dinyatakan selesai.'
+                    description: 'Lacak status perbaikan laporan teknisi secara transparan, mulai verifikasi hingga penanganan tuntas.'
                 },
                 // 4. Halaman Pembayaran (Langkah 1 Pembayaran)
                 {
@@ -192,7 +192,7 @@
                     title: 'Pembayaran Online Instan',
                     subtitle: 'QRIS & Virtual Account 24 Jam',
                     icon: 'solar:bolt-circle-bold',
-                    description: 'Bayar tagihan bulanan otomatis tanpa konfirmasi manual via QRIS (GoPay, OVO, Dana) atau Virtual Account Bank (BCA, Mandiri, BRI, BNI).'
+                    description: 'Bayar tagihan otomatis 24 jam via QRIS (GoPay/OVO/Dana) atau Virtual Account Bank resmi.'
                 },
                 // 5. Halaman Pembayaran (Langkah 2 Pembayaran)
                 {
@@ -202,7 +202,7 @@
                     title: 'Transfer Bank & Konfirmasi',
                     subtitle: 'Rekening Resmi PT MSN',
                     icon: 'solar:card-recive-bold',
-                    description: 'Anda juga dapat mentransfer langsung ke nomor rekening resmi PT MSN dan mengunggah foto bukti struk transfer di menu ini.'
+                    description: 'Transfer ke nomor rekening resmi PT MSN dan unggah foto struk transfer di menu ini.'
                 }
             ],
 
@@ -230,7 +230,7 @@
                             title: 'Status Tagihan & Rincian',
                             subtitle: 'Tagihan Lunas & Terverifikasi',
                             icon: 'solar:check-circle-bold',
-                            description: 'Status tagihan periode ini telah terbayar lunas. Anda dapat mengunduh invoice digital atau menghubungi WhatsApp Billing jika memerlukan bantuan.'
+                            description: 'Tagihan periode ini telah lunas. Anda dapat mengunduh invoice digital atau chat Tim Billing.'
                         };
                         this.steps[4] = {
                             page: 'billing',
@@ -239,7 +239,7 @@
                             title: 'Riwayat Tagihan & Struk',
                             subtitle: 'Arsip Transaksi Bulanan',
                             icon: 'solar:history-bold',
-                            description: 'Daftar riwayat seluruh tagihan dan pembayaran periode lampau tersimpan rapi di sini. Anda dapat mencetak ulang struk resmi kapan saja.'
+                            description: 'Arsip seluruh riwayat tagihan dan pembayaran tersimpan lengkap beserta akses cetak struk.'
                         };
                     }
                 }
@@ -352,7 +352,7 @@
 
             calculatePosition(el) {
                 const rect = el.getBoundingClientRect();
-                const padding = 8;
+                const padding = window.innerWidth < 640 ? 6 : 8;
 
                 this.spotlight = {
                     top: Math.max(0, rect.top - padding),
@@ -361,9 +361,9 @@
                     height: rect.height + (padding * 2)
                 };
 
-                const popoverWidth = Math.min(window.innerWidth * 0.92, 420);
-                const popoverHeight = 260;
-                const margin = 14;
+                const popoverWidth = Math.min(window.innerWidth * 0.88, window.innerWidth < 640 ? 320 : 420);
+                const popoverHeight = window.innerWidth < 640 ? 175 : 240;
+                const margin = window.innerWidth < 640 ? 10 : 14;
 
                 let popLeft = this.spotlight.left + (this.spotlight.width / 2) - (popoverWidth / 2);
                 popLeft = Math.max(margin, Math.min(popLeft, window.innerWidth - popoverWidth - margin));
@@ -382,15 +382,16 @@
             },
 
             calculateFallbackPosition() {
-                const width = Math.min(window.innerWidth * 0.92, 420);
+                const width = Math.min(window.innerWidth * 0.88, window.innerWidth < 640 ? 320 : 420);
+                const popoverHeight = window.innerWidth < 640 ? 175 : 240;
                 this.spotlight = {
-                    top: window.innerHeight / 2 - 50,
-                    left: window.innerWidth / 2 - 150,
-                    width: 300,
-                    height: 100
+                    top: window.innerHeight / 2 - 40,
+                    left: window.innerWidth / 2 - 130,
+                    width: 260,
+                    height: 80
                 };
                 this.popover = {
-                    top: window.innerHeight / 2 - 130,
+                    top: window.innerHeight / 2 - (popoverHeight / 2),
                     left: window.innerWidth / 2 - (width / 2)
                 };
             },
