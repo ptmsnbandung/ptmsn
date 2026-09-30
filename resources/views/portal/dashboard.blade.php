@@ -209,26 +209,26 @@
             @if($recentTickets->count() > 0)
                 <div class="space-y-2.5 sm:space-y-3">
                     @foreach($recentTickets as $ticket)
-                        <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 block group">
-                            <div class="space-y-1 sm:space-y-1.5 flex-1">
+                        <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 block group overflow-hidden">
+                            <div class="space-y-1 sm:space-y-1.5 flex-1 min-w-0">
                                 <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                    <span class="text-[11px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-md sm:rounded-lg">
+                                    <span class="text-[11px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-md sm:rounded-lg shrink-0">
                                         #{{ $ticket->ticket_number }}
                                     </span>
-                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 sm:px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold">
+                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 sm:px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold shrink-0">
                                         {{ $ticket->status_label }}
                                     </span>
-                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
                                         {{ $ticket->category_label }}
                                     </span>
-                                    <span class="text-[10px] sm:text-[11px] text-slate-400 font-mono">
+                                    <span class="text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0">
                                         {{ $ticket->created_at->diffForHumans() }}
                                     </span>
                                 </div>
-                                <h3 class="text-xs sm:text-sm lg:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors line-clamp-1">
+                                <h3 class="text-xs sm:text-sm lg:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
                                     {{ $ticket->subject }}
                                 </h3>
-                                <p class="text-[11px] sm:text-xs text-slate-500 line-clamp-1">
+                                <p class="text-[11px] sm:text-xs text-slate-500 truncate">
                                     {{ $ticket->description }}
                                 </p>
                             </div>

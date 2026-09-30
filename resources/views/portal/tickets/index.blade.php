@@ -77,35 +77,35 @@
         <!-- First Ticket Item (1 Data Saja Diperlihatkan di Highlight) -->
         @if($tickets->count() > 0)
             @php $firstTicket = $tickets->first(); @endphp
-            <a href="{{ route('portal.tickets.show', $firstTicket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-3xl p-3 sm:p-5 block group">
+            <a href="{{ route('portal.tickets.show', $firstTicket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-3xl p-3 sm:p-5 block group overflow-hidden">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">
-                    <div class="space-y-1 sm:space-y-2 flex-1">
+                    <div class="space-y-1 sm:space-y-2 flex-1 min-w-0">
                         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                            <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg">
+                            <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg shrink-0">
                                 #{{ $firstTicket->ticket_number }}
                             </span>
-                            <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $firstTicket->status_badge_class }} font-semibold">
+                            <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $firstTicket->status_badge_class }} font-semibold shrink-0">
                                 {{ $firstTicket->status_label }}
                             </span>
-                            <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                            <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
                                 {{ $firstTicket->category_label }}
                             </span>
-                            <span class="text-[10px] sm:text-xs text-slate-400 font-mono">
+                            <span class="text-[10px] sm:text-xs text-slate-400 font-mono shrink-0">
                                 {{ $firstTicket->created_at->translatedFormat('d M Y, H:i') }} WIB
                             </span>
                         </div>
 
-                        <h3 class="text-xs sm:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                        <h3 class="text-xs sm:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
                             {{ $firstTicket->subject }}
                         </h3>
 
-                        <p class="text-[11px] sm:text-xs text-slate-600 line-clamp-1 sm:line-clamp-2 leading-relaxed">
+                        <p class="text-[11px] sm:text-xs text-slate-600 truncate leading-relaxed">
                             {{ $firstTicket->description }}
                         </p>
                     </div>
 
                     <!-- Right Info & Action -->
-                    <div class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                    <div class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 shrink-0">
                         @if($firstTicket->technician_name)
                             <div class="text-left md:text-right">
                                 <div class="text-[9px] sm:text-[10px] font-mono text-slate-400">Teknisi:</div>
@@ -150,35 +150,35 @@
     @if($tickets->count() > 1)
         <div class="space-y-2 sm:space-y-3">
             @foreach($tickets->slice(1) as $ticket)
-                <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-3xl p-3 sm:p-5 block group">
+                <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="portal-card portal-card-hover rounded-xl sm:rounded-3xl p-3 sm:p-5 block group overflow-hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">
-                        <div class="space-y-1 sm:space-y-2 flex-1">
+                        <div class="space-y-1 sm:space-y-2 flex-1 min-w-0">
                             <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg">
+                                <span class="text-[10px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg shrink-0">
                                     #{{ $ticket->ticket_number }}
                                 </span>
-                                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold">
+                                <span class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold shrink-0">
                                     {{ $ticket->status_label }}
                                 </span>
-                                <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                                <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
                                     {{ $ticket->category_label }}
                                 </span>
-                                <span class="text-[10px] sm:text-xs text-slate-400 font-mono">
+                                <span class="text-[10px] sm:text-xs text-slate-400 font-mono shrink-0">
                                     {{ $ticket->created_at->translatedFormat('d M Y, H:i') }} WIB
                                 </span>
                             </div>
 
-                            <h3 class="text-xs sm:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                            <h3 class="text-xs sm:text-base font-heading font-bold text-slate-900 group-hover:text-sky-600 transition-colors truncate">
                                 {{ $ticket->subject }}
                             </h3>
 
-                            <p class="text-[11px] sm:text-xs text-slate-600 line-clamp-1 sm:line-clamp-2 leading-relaxed">
+                            <p class="text-[11px] sm:text-xs text-slate-600 truncate leading-relaxed">
                                 {{ $ticket->description }}
                             </p>
                         </div>
 
                         <!-- Right Info & Action -->
-                        <div class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                        <div class="flex items-center justify-between md:justify-end gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 shrink-0">
                             @if($ticket->technician_name)
                                 <div class="text-left md:text-right">
                                     <div class="text-[9px] sm:text-[10px] font-mono text-slate-400">Teknisi:</div>
