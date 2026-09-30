@@ -228,22 +228,22 @@
                             <!-- Channel Logos -->
                             <div class="pt-2 border-t border-slate-100 flex items-center gap-1.5 flex-wrap justify-center">
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="QRIS (Gopay, OVO, Dana, ShopeePay)">
-                                    <img src="{{ asset('images/payments/qris.svg') }}" alt="QRIS" class="h-4 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/qris.jpg') }}" alt="QRIS" class="h-4 w-auto object-contain">
                                 </div>
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="BCA Virtual Account">
-                                    <img src="{{ asset('images/payments/bca.svg') }}" alt="BCA" class="h-3.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/bca.png') }}" alt="BCA" class="h-3.5 w-auto object-contain">
                                 </div>
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank Mandiri Virtual Account">
-                                    <img src="{{ asset('images/payments/mandiri.svg') }}" alt="Mandiri" class="h-3.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/mandiri.png') }}" alt="Mandiri" class="h-3.5 w-auto object-contain">
                                 </div>
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank BRI Virtual Account">
-                                    <img src="{{ asset('images/payments/bri.svg') }}" alt="BRI" class="h-3.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/bri.png') }}" alt="BRI" class="h-3.5 w-auto object-contain">
                                 </div>
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Bank BNI Virtual Account">
-                                    <img src="{{ asset('images/payments/bni.svg') }}" alt="BNI" class="h-3.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/bni.png') }}" alt="BNI" class="h-3.5 w-auto object-contain">
                                 </div>
                                 <div class="h-7 px-2 py-1 rounded-lg bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center hover:border-sky-300 transition-colors" title="Gerai Alfamart Retail">
-                                    <img src="{{ asset('images/payments/alfamart.svg') }}" alt="Alfamart" class="h-4 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/alfamart.png') }}" alt="Alfamart" class="h-4 w-auto object-contain">
                                 </div>
                             </div>
                         </div>
@@ -270,19 +270,19 @@
                                             $accentBorder = 'border-slate-700/80';
 
                                             if (str_contains($bankKey, 'bca')) {
-                                                $bankLogo = 'bca.svg';
+                                                $bankLogo = 'bca.png';
                                                 $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                                 $accentBorder = 'border-sky-500/30';
                                             } elseif (str_contains($bankKey, 'mandiri')) {
-                                                $bankLogo = 'mandiri.svg';
+                                                $bankLogo = 'mandiri.png';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
                                             } elseif (str_contains($bankKey, 'bri')) {
-                                                $bankLogo = 'bri.svg';
+                                                $bankLogo = 'bri.png';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                                 $accentBorder = 'border-sky-400/30';
                                             } elseif (str_contains($bankKey, 'bni')) {
-                                                $bankLogo = 'bni.svg';
+                                                $bankLogo = 'bni.png';
                                                 $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                                 $accentBorder = 'border-teal-400/30';
                                             }
@@ -316,7 +316,7 @@
                                                 <!-- Official Bank Logo Badge -->
                                                 <div class="h-6 px-2 py-0.5 rounded-lg bg-white/95 shadow-2xs flex items-center justify-center shrink-0">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/payments/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3.5 w-auto object-contain">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-3.5 w-auto object-contain">
                                                     @else
                                                         <span class="text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
@@ -755,19 +755,19 @@
                         $mAccentBorder = 'border-slate-700/80';
 
                         if (str_contains($mBankKey, 'bca')) {
-                            $mBankLogo = 'bca.svg';
+                            $mBankLogo = 'bca.png';
                             $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                             $mAccentBorder = 'border-sky-500/30';
                         } elseif (str_contains($mBankKey, 'mandiri')) {
-                            $mBankLogo = 'mandiri.svg';
+                            $mBankLogo = 'mandiri.png';
                             $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                             $mAccentBorder = 'border-amber-500/30';
                         } elseif (str_contains($mBankKey, 'bri')) {
-                            $mBankLogo = 'bri.svg';
+                            $mBankLogo = 'bri.png';
                             $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                             $mAccentBorder = 'border-sky-400/30';
                         } elseif (str_contains($mBankKey, 'bni')) {
-                            $mBankLogo = 'bni.svg';
+                            $mBankLogo = 'bni.png';
                             $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                             $mAccentBorder = 'border-teal-400/30';
                         }
@@ -786,7 +786,7 @@
                             </div>
                             <div class="h-5 px-1.5 py-0.5 rounded-md bg-white flex items-center justify-center">
                                 @if($mBankLogo)
-                                    <img src="{{ asset('images/payments/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
+                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-2.5 w-auto object-contain">
                                 @else
                                     <span class="text-[9px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                 @endif
