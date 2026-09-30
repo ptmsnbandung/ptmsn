@@ -68,7 +68,7 @@
     <div id="tour-step-invoice-card" class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden space-y-3.5 sm:space-y-4">
         
         <!-- Header Strip: No Invoice, Periode & Status -->
-        <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80 flex-wrap">
+        <div id="tour-step-invoice-header" class="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/80 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-2.5 py-0.5 rounded-lg bg-sky-50 border border-sky-200/80 font-mono text-xs font-bold text-sky-700">
                     #{{ $currentInvoice->invoice_number }}
@@ -107,7 +107,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-5 items-start">
             
             <!-- Left Info: Package & Subscriber Details (5 Cols) -->
-            <div class="lg:col-span-5 space-y-3">
+            <div id="tour-step-billing-detail" class="lg:col-span-5 space-y-3">
                 <div>
                     <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Layanan Berlangganan</span>
                     <h2 class="text-base sm:text-lg font-heading font-extrabold text-slate-900 leading-snug mt-0.5">

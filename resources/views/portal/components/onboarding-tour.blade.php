@@ -188,21 +188,21 @@
                 {
                     page: 'billing',
                     pageLabel: 'Tagihan',
-                    target: '#tour-step-midtrans-pay',
-                    title: 'Pembayaran Online Instan',
-                    subtitle: 'QRIS & Virtual Account 24 Jam',
-                    icon: 'solar:bolt-circle-bold',
-                    description: 'Bayar tagihan otomatis 24 jam via QRIS (GoPay/OVO/Dana) atau Virtual Account Bank resmi.'
+                    target: '#tour-step-invoice-header',
+                    title: 'Status & Periode Tagihan',
+                    subtitle: 'Informasi Invoice Aktif',
+                    icon: 'solar:document-text-bold',
+                    description: 'Cek nomor invoice, periode bulan berjalan, dan status pelunasan internet Anda di bagian ini.'
                 },
                 // 5. Halaman Pembayaran (Langkah 2 Pembayaran)
                 {
                     page: 'billing',
                     pageLabel: 'Tagihan',
-                    target: '#tour-step-transfer-tab',
-                    title: 'Transfer Bank & Konfirmasi',
-                    subtitle: 'Rekening Resmi PT MSN',
-                    icon: 'solar:card-recive-bold',
-                    description: 'Transfer ke nomor rekening resmi PT MSN dan unggah foto struk transfer di menu ini.'
+                    target: '#tour-step-billing-detail',
+                    title: 'Rincian Biaya & Paket',
+                    subtitle: 'Paket Layanan & Jatuh Tempo',
+                    icon: 'solar:wallet-money-bold',
+                    description: 'Informasi paket broadband, tanggal jatuh tempo pembayaran, dan rincian total tagihan bulanan.'
                 }
             ],
 
@@ -221,27 +221,25 @@
             adaptStepsForCurrentPage() {
                 const currentPage = this.getCurrentPageName();
                 if (currentPage === 'billing') {
-                    const isPaid = document.querySelector('#tour-step-billing-status') !== null || !document.querySelector('#tour-step-midtrans-pay');
-                    if (isPaid && document.querySelector('#tour-step-billing-status')) {
-                        this.steps[3] = {
-                            page: 'billing',
-                            pageLabel: 'Tagihan',
-                            target: '#tour-step-billing-status',
-                            title: 'Status Tagihan & Rincian',
-                            subtitle: 'Tagihan Lunas & Terverifikasi',
-                            icon: 'solar:check-circle-bold',
-                            description: 'Tagihan periode ini telah lunas sehingga layanan internet Anda aktif lancar.'
-                        };
-                        this.steps[4] = {
-                            page: 'billing',
-                            pageLabel: 'Tagihan',
-                            target: '#tour-step-billing-actions',
-                            title: 'Cetak Invoice & Bantuan',
-                            subtitle: 'Akses Dokumen Resmi',
-                            icon: 'solar:printer-minimalistic-bold',
-                            description: 'Unduh invoice digital resmi atau hubungi WhatsApp Billing jika memerlukan bantuan.'
-                        };
-                    }
+                    // Pastikan langkah 4 dan 5 menargetkan area atas kartu invoice agar tampil optimal di semua layar
+                    this.steps[3] = {
+                        page: 'billing',
+                        pageLabel: 'Tagihan',
+                        target: '#tour-step-invoice-header',
+                        title: 'Status & Periode Tagihan',
+                        subtitle: 'Informasi Invoice Aktif',
+                        icon: 'solar:document-text-bold',
+                        description: 'Cek nomor invoice, periode bulan berjalan, dan status pelunasan internet Anda di bagian ini.'
+                    };
+                    this.steps[4] = {
+                        page: 'billing',
+                        pageLabel: 'Tagihan',
+                        target: '#tour-step-billing-detail',
+                        title: 'Rincian Biaya & Paket',
+                        subtitle: 'Paket Layanan & Jatuh Tempo',
+                        icon: 'solar:wallet-money-bold',
+                        description: 'Informasi paket broadband, tanggal jatuh tempo pembayaran, dan rincian total tagihan bulanan.'
+                    };
                 }
             },
 
