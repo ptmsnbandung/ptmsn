@@ -56,33 +56,33 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Glassmorphic Portal Card */
+        /* High-Performance Portal Card (Instant 60-120 FPS Rendering) */
         .portal-card {
-            background: rgba(255, 255, 255, 0.78) !important;
-            backdrop-filter: blur(16px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.85) !important;
-            box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.94) !important;
+            border: 1px solid rgba(226, 232, 240, 0.85) !important;
+            box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            contain: layout style;
+            transform: translateZ(0);
         }
 
         .portal-card-hover:hover {
-            background: rgba(255, 255, 255, 0.92) !important;
-            border-color: rgba(56, 189, 248, 0.45) !important;
-            box-shadow: 0 14px 34px -4px rgba(2, 132, 199, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
-            transform: translateY(-2px);
+            background: #ffffff !important;
+            border-color: rgba(56, 189, 248, 0.5) !important;
+            box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.12), inset 0 1px 0 0 #ffffff !important;
+            transform: translateY(-2px) translateZ(0);
         }
 
-        /* Hero Network Pass (Dark Oceanic Glassmorphism) */
+        /* Hero Network Pass (Dark Oceanic Gradient) */
         .hero-network-card {
-            background: linear-gradient(135deg, rgba(9, 19, 34, 0.95) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(14, 116, 144, 0.85) 100%) !important;
-            backdrop-filter: blur(20px) saturate(190%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+            background: linear-gradient(135deg, #091322 0%, #0f172a 50%, #0e7490 100%) !important;
             border: 1px solid rgba(56, 189, 248, 0.35) !important;
-            box-shadow: 0 16px 36px -8px rgba(2, 132, 199, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 12px 32px -6px rgba(2, 132, 199, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
             border-radius: 20px;
             position: relative;
             overflow: hidden;
+            contain: paint layout;
+            transform: translateZ(0);
         }
 
         /* Toast notification */

@@ -7,10 +7,10 @@
         <!-- Subtle High-Tech Micro Dot Grid -->
         <div class="absolute inset-0 pointer-events-none z-0 opacity-70" style="background-image: radial-gradient(rgba(2, 132, 199, 0.14) 1px, transparent 1px); background-size: 28px 28px;"></div>
         
-        <!-- Ambient Glowing Tech Lighting Orbs -->
-        <div class="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-sky-200/40 rounded-full blur-[140px] pointer-events-none z-0"></div>
-        <div class="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-blue-200/35 rounded-full blur-[140px] pointer-events-none z-0"></div>
-        <div class="absolute top-2/3 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-cyan-200/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
+        <!-- Ambient Glowing Tech Lighting Orbs (Optimized GPU Containment) -->
+        <div class="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-sky-200/30 rounded-full blur-[80px] pointer-events-none z-0" style="contain: paint; will-change: transform; transform: translateZ(0);"></div>
+        <div class="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-blue-200/25 rounded-full blur-[80px] pointer-events-none z-0" style="contain: paint; will-change: transform; transform: translateZ(0);"></div>
+        <div class="absolute top-2/3 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-cyan-200/25 rounded-full blur-[80px] pointer-events-none z-0" style="contain: paint; will-change: transform; transform: translateZ(0);"></div>
 
         <div class="relative z-10">
             <!-- 2. ABOUT (Tentang PT Media Solusi Network — Siapa Kami, Statistik & Identitas) -->
@@ -25,7 +25,7 @@
     <section id="layanan" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 relative z-10 w-full overflow-hidden" style="background: linear-gradient(160deg, #07172e 0%, #0a1e3b 50%, #07172e 100%);">
         <!-- Ambient Glow & Architectural Grid -->
         <div class="absolute inset-0 pointer-events-none z-0" style="background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 8px);"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#38bdf8]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#38bdf8]/10 rounded-full blur-[80px] pointer-events-none" style="contain: paint; will-change: transform; transform: translateZ(0);"></div>
 
         <div class="max-w-7xl mx-auto relative z-10">
                        <!-- Section Header -->
@@ -205,12 +205,12 @@
     <!-- 6. COVERAGE (Cek Area Jaringan) -->
     <x-coverage-checker />
 
-    <!-- 7. PACKAGES WITH FIXED NETWORK PARALLAX BACKGROUND -->
-    <section id="paket" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 relative z-10 w-full overflow-hidden bg-[#07172e] border-b border-white/10 bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/packages/network-bg.jpg') }}'); background-attachment: fixed; background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <!-- 7. PACKAGES (High-Performance Section Background) -->
+    <section id="paket" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 relative z-10 w-full overflow-hidden bg-[#07172e] border-b border-white/10 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/packages/network-bg.jpg') }}');">
         
         <!-- Ambient Cyber Glow & Translucent Dark Overlay for Optimal Readability -->
         <div class="absolute inset-0 bg-gradient-to-b from-[#07172e]/92 via-[#07172e]/80 to-[#07172e]/95 pointer-events-none z-0"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#38bdf8]/15 rounded-full blur-[130px] pointer-events-none z-0"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#38bdf8]/15 rounded-full blur-[80px] pointer-events-none z-0" style="contain: paint; will-change: transform; transform: translateZ(0);"></div>
 
         <div class="max-w-7xl mx-auto relative z-10">
             <!-- Header Section -->

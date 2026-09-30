@@ -139,15 +139,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavbarOnScroll(window.scrollY);
 
     /* ==========================================================================
-       2. Lenis Smooth Scrolling & Anchor Click Interception
+       2. Lenis Smooth Scrolling & Anchor Click Interception (High-Performance)
        ========================================================================== */
     let lenis = null;
-    if (typeof window.Lenis !== 'undefined') {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (typeof window.Lenis !== 'undefined' && !isTouchDevice) {
         lenis = new window.Lenis({
-            duration: 1.2,
+            duration: 0.85,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            touchMultiplier: 1.8,
+            syncTouch: false,
         });
 
         function raf(time) {

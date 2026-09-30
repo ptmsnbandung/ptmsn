@@ -84,42 +84,41 @@
 .portal-bg {
     background-color: #f8fafc;
     background-image: 
-        radial-gradient(at 10% 15%, rgba(14, 165, 233, 0.14) 0px, transparent 40%),
-        radial-gradient(at 90% 10%, rgba(99, 102, 241, 0.12) 0px, transparent 45%),
-        radial-gradient(at 30% 60%, rgba(56, 189, 248, 0.08) 0px, transparent 40%),
-        radial-gradient(at 80% 85%, rgba(16, 185, 129, 0.10) 0px, transparent 45%),
-        radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.15) 1px, transparent 0);
+        radial-gradient(at 10% 15%, rgba(14, 165, 233, 0.10) 0px, transparent 40%),
+        radial-gradient(at 90% 10%, rgba(99, 102, 241, 0.08) 0px, transparent 45%),
+        radial-gradient(at 30% 60%, rgba(56, 189, 248, 0.06) 0px, transparent 40%),
+        radial-gradient(at 80% 85%, rgba(16, 185, 129, 0.07) 0px, transparent 45%),
+        radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.12) 1px, transparent 0);
     background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
-    background-attachment: fixed;
 }
 
-/* Glassmorphic Portal Card */
+/* High-Performance Portal Card (Instant 60-120 FPS Rendering) */
 .portal-card {
-    background: rgba(255, 255, 255, 0.78) !important;
-    backdrop-filter: blur(16px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.85) !important;
-    box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
-    transition: all var(--trans);
+    background: rgba(255, 255, 255, 0.94) !important;
+    border: 1px solid rgba(226, 232, 240, 0.85) !important;
+    box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    contain: layout style;
+    transform: translateZ(0);
 }
 
 .portal-card-hover:hover {
-    background: rgba(255, 255, 255, 0.92) !important;
-    border-color: rgba(56, 189, 248, 0.45) !important;
-    box-shadow: 0 14px 34px -4px rgba(2, 132, 199, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
-    transform: translateY(-2px);
+    background: #ffffff !important;
+    border-color: rgba(56, 189, 248, 0.5) !important;
+    box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.12), inset 0 1px 0 0 #ffffff !important;
+    transform: translateY(-2px) translateZ(0);
 }
 
-/* Executive Dark Glassmorphic Hero Card */
+/* Executive Dark Hero Card */
 .hero-network-card {
-    background: linear-gradient(135deg, rgba(9, 19, 34, 0.95) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(14, 116, 144, 0.85) 100%) !important;
-    backdrop-filter: blur(20px) saturate(190%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+    background: linear-gradient(135deg, #091322 0%, #0f172a 50%, #0e7490 100%) !important;
     border: 1px solid rgba(56, 189, 248, 0.35) !important;
-    box-shadow: 0 16px 36px -8px rgba(2, 132, 199, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 12px 32px -6px rgba(2, 132, 199, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
     border-radius: 20px;
     position: relative;
     overflow: hidden;
+    contain: paint layout;
+    transform: translateZ(0);
 }
 
 .hero-network-card::before {
@@ -131,18 +130,18 @@
     pointer-events: none;
 }
 
-/* Stat KPI Cards (Glassmorphism & Compact) */
+/* Stat KPI Cards (Optimized GPU Rendering) */
 .kpi-stat-card {
-    background: rgba(255, 255, 255, 0.80) !important;
-    backdrop-filter: blur(16px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
     border-radius: 16px;
     padding: 1rem;
-    box-shadow: 0 6px 20px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
-    transition: all var(--trans);
+    box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     position: relative;
     overflow: hidden;
+    contain: layout style;
+    transform: translateZ(0);
 }
 
 @media (min-width: 640px) {
@@ -153,10 +152,10 @@
 }
 
 .kpi-stat-card:hover {
-    background: rgba(255, 255, 255, 0.94) !important;
+    background: #ffffff !important;
     border-color: rgba(56, 189, 248, 0.5) !important;
-    box-shadow: 0 12px 28px -4px rgba(14, 165, 233, 0.14), inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
-    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -4px rgba(14, 165, 233, 0.12), inset 0 1px 0 0 #ffffff !important;
+    transform: translateY(-2px) translateZ(0);
 }
 
 .kpi-stat-card::before {
