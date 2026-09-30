@@ -35,6 +35,8 @@ Route::post('/coverage/check', [CoverageController::class, 'check'])->name('cove
 | Portal Pelanggan (Customer Portal) Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/portal', [PortalDashboardController::class, 'index'])->middleware(['auth:customer', 'portal.timeout']);
+
 Route::prefix('portal')->name('portal.')->group(function () {
     // Guest customer routes
     Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
@@ -44,7 +46,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
     // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
     Route::middleware(['auth:customer', 'portal.timeout'])->group(function () {
         Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard', [PortalDashboardController::class, 'index']);
+        Route::get('/dashboard', [PortalDashboardController::class, 'index'])->name('dashboard.view');
 
         // Trouble Tickets (Laporan Gangguan)
         Route::get('/tickets', [PortalTicketController::class, 'index'])->name('tickets.index');

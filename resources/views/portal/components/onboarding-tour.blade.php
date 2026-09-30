@@ -16,13 +16,16 @@
     }
 @endphp
 
+<!-- Preload completion image so it appears instantly without delay -->
+<img src="{{ asset('images/logo/berhasil1.png') }}" alt="" class="hidden" style="display:none;" />
+
 <!-- Interactive Product Tour / Onboarding Component (5 Langkah untuk 1 Aplikasi) -->
 <div 
     x-data="portalOnboardingTour({
         shouldActive: {{ $shouldActive ? 'true' : 'false' }},
         initialStep: {{ $initialStepIdx }},
         routes: {
-            dashboard: '{{ route('portal.dashboard') }}',
+            dashboard: '{{ url('/portal') }}',
             tickets: '{{ route('portal.tickets.index') }}',
             billing: '{{ route('portal.billing.index') }}',
             complete: '{{ route('portal.onboarding.complete') }}'
