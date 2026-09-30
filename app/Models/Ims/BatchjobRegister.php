@@ -32,6 +32,14 @@ class BatchjobRegister extends Model
     }
 
     /**
+     * Relasi ke master status registrasi
+     */
+    public function statusRegistrasi()
+    {
+        return $this->belongsTo(StatusRegistrasi::class, 'status_reg', 'status_reg');
+    }
+
+    /**
      * Relasi ke tiket gangguan di IMS
      */
     public function tickets()

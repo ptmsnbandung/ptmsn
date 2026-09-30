@@ -27,17 +27,10 @@
                             <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-xs ml-0.5"></iconify-icon>
                         </button>
 
-                        @if($customer->status === 'active')
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-[11px] sm:text-xs font-semibold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span>Koneksi FTTH Aktif</span>
-                            </span>
-                        @else
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full bg-rose-950/80 border border-rose-500/50 text-rose-300 text-[11px] sm:text-xs font-semibold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
-                                <span>Status: {{ ucfirst($customer->status) }}</span>
-                            </span>
-                        @endif
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full border text-[11px] sm:text-xs font-semibold {{ $customer->status_reg_badge_class }}">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }}"></span>
+                            <span>{{ $customer->status_reg_label }}</span>
+                        </span>
                     </div>
 
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">

@@ -88,10 +88,10 @@
                     </div>
 
                     <div>
-                        <span class="text-slate-400 block text-[11px]">Status Koneksi:</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold text-[11px] mt-1 shadow-2xs">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Koneksi Aktif & Terhubung</span>
+                        <span class="text-slate-400 block text-[11px]">Status Registrasi:</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border font-semibold text-[11px] mt-1 shadow-2xs {{ $customer->status_reg_badge_class }}">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }}"></span>
+                            <span>{{ $customer->status_reg_label }}</span>
                         </span>
                     </div>
                 </div>

@@ -16,7 +16,7 @@ class DashboardController extends Controller
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         if ($customer) {
-            $customer->load(['pelanggan', 'bandwith']);
+            $customer->load(['pelanggan', 'bandwith', 'statusRegistrasi']);
         }
 
         // Ambil tiket & ubah layanan terbaru dari IMS

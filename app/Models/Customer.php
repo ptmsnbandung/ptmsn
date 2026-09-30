@@ -56,6 +56,14 @@ class Customer extends Authenticatable
     }
 
     /**
+     * Relasi ke master status registrasi di IMS
+     */
+    public function statusRegistrasi()
+    {
+        return $this->belongsTo(\App\Models\Ims\StatusRegistrasi::class, 'status_reg', 'status_reg');
+    }
+
+    /**
      * Relasi ke tiket gangguan di IMS
      */
     public function tickets()
@@ -126,6 +134,69 @@ class Customer extends Authenticatable
     public function getStatusAttribute()
     {
         return ($this->is_suspend == '1' || $this->is_suspend == '0' || empty($this->is_suspend)) ? 'active' : 'suspended';
+    }
+
+    /**
+     * Deskripsi status registrasi dari tabel m_status_registrasi kolom desc_registrasi
+     */
+    public function getStatusRegLabelAttribute()
+    {
+        if ($this->statusRegistrasi && !empty($this->statusRegistrasi->desc_registrasi)) {
+            return $this->statusRegistrasi->desc_registrasi;
+        }
+
+        // Fallback jika belum ter-join / nilai status_reg numerik
+        $statusReg = (string) ($this->status_reg ?? '');
+        return match($statusReg) {
+            '20' => 'Aktif',
+            '11' => 'Menunggu verifikasi',
+            '11.1' => 'Belum Valid',
+            '12' => 'Data Input',
+            '13' => 'Jadwal Survey Terbit',
+            '13.1' => 'Reschedule Survey',
+            '14' => 'Tidak Tercover Jaringan',
+            '15' => 'Batal Pasang',
+            '16' => 'Selesai Survey',
+            '17' => 'Jadwal Instalasi Terbit',
+            '17.1' => 'Reschedule Instalasi',
+            '18' => 'Selesai Instalasi',
+            '19' => 'Jadwal Aktivasi Terbit',
+            '19.1' => 'Reschedule Aktivasi',
+            '21' => 'Suspend',
+            '21.1' => 'Req. Suspend',
+            '22' => 'Re-update',
+            '23' => 'Terminasi',
+            '23.1' => 'Req. Terminasi',
+            default => ($this->status === 'active' ? 'Aktif' : ucfirst($this->status)),
+        };
+    }
+
+    /**
+     * Styling badge status registrasi di hero backdrop
+     */
+    public function getStatusRegBadgeClassAttribute()
+    {
+        $statusReg = (string) ($this->status_reg ?? '');
+        return match($statusReg) {
+            '20' => 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300',
+            '11', '11.1', '12', '13', '13.1', '16', '17', '17.1', '18', '19', '19.1', '21.1', '22' => 'bg-amber-950/80 border-amber-500/50 text-amber-300',
+            '14', '15', '21', '23', '23.1' => 'bg-rose-950/80 border-rose-500/50 text-rose-300',
+            default => ($this->status === 'active' ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300' : 'bg-slate-800 border-slate-700 text-slate-300')
+        };
+    }
+
+    /**
+     * Styling titik indikator status registrasi
+     */
+    public function getStatusRegDotClassAttribute()
+    {
+        $statusReg = (string) ($this->status_reg ?? '');
+        return match($statusReg) {
+            '20' => 'bg-emerald-400 animate-pulse',
+            '11', '11.1', '12', '13', '13.1', '16', '17', '17.1', '18', '19', '19.1', '21.1', '22' => 'bg-amber-400 animate-pulse',
+            '14', '15', '21', '23', '23.1' => 'bg-rose-400',
+            default => ($this->status === 'active' ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400')
+        };
     }
 
     public function getBillingAmountAttribute()
