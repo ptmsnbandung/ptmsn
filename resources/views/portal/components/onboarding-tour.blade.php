@@ -216,9 +216,7 @@
                 };
 
                 if (config.shouldActive) {
-                    setTimeout(() => {
-                        this.startTour();
-                    }, 500);
+                    this.startTour();
                 }
             },
 
@@ -281,13 +279,7 @@
 
             getNextButtonText() {
                 if (this.currentStep === this.steps.length - 1) {
-                    return 'Mulai Menggunakan Aplikasi';
-                }
-                if (this.currentStep === 0) {
-                    return 'Lanjut ke Menu Gangguan';
-                }
-                if (this.currentStep === 2) {
-                    return 'Lanjut ke Menu Pembayaran';
+                    return 'Selesai';
                 }
                 return 'Lanjut';
             },
@@ -336,17 +328,15 @@
                     }
                 }
 
-                setTimeout(() => {
+                this.$nextTick(() => {
                     const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        setTimeout(() => {
-                            this.calculatePosition(targetEl);
-                        }, 250);
+                        targetEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+                        this.calculatePosition(targetEl);
                     } else {
                         this.calculateFallbackPosition();
                     }
-                }, 120);
+                });
             },
 
             calculatePosition(el) {
