@@ -89,15 +89,15 @@
     <!-- Main Container: Fits exactly in 100dvh on mobile, and centered card on desktop -->
     <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
-        <!-- LEFT / TOP SECTION: Brand Header with Halo Dashboard Blue Gradient -->
-        <div class="hero-network-gradient flex-1 md:flex-none md:w-5/12 flex flex-col items-center justify-center py-4 px-4 sm:py-6 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20 min-h-0">
+        <!-- LEFT / TOP SECTION: Brand Header with Halo Dashboard Blue Gradient (~35% on Mobile) -->
+        <div class="hero-network-gradient h-[32vh] sm:h-[35vh] md:h-auto md:w-5/12 flex-none flex flex-col items-center justify-center py-3 px-4 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
             
             <!-- Ambient Card Glow -->
-            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-sky-400/20 rounded-full blur-xl pointer-events-none"></div>
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-sky-400/20 rounded-full blur-xl pointer-events-none"></div>
             
             <!-- Logo Icon Container (matching Browser Tab) -->
-            <a href="{{ route('home') }}" class="group block mb-2 sm:mb-3 transform hover:scale-105 transition-transform duration-300 relative z-10">
-                <div class="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-2xl md:rounded-3xl bg-white p-2.5 sm:p-3 shadow-xl shadow-sky-950/50 border border-white/90 flex items-center justify-center">
+            <a href="{{ route('home') }}" class="group block mb-1.5 sm:mb-2 transform hover:scale-105 transition-transform duration-300 relative z-10">
+                <div class="w-13 h-13 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto rounded-2xl md:rounded-3xl bg-white p-2 sm:p-2.5 md:p-3 shadow-xl shadow-sky-950/50 border border-white/90 flex items-center justify-center">
                     <img 
                         src="{{ asset('images/logo/logo-icon.png') }}" 
                         alt="PT Media Solusi Network" 
@@ -108,10 +108,10 @@
 
             <!-- Brand Typography -->
             <div class="relative z-10">
-                <h1 class="text-white font-heading font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1">
+                <h1 class="text-white font-heading font-extrabold text-lg sm:text-xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1">
                     <span>My</span><span class="text-sky-300">MSN</span>
                 </h1>
-                <p class="text-sky-200/90 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mt-0.5">
+                <p class="text-sky-200/90 text-[9.5px] sm:text-[11px] md:text-xs font-semibold tracking-wider uppercase mt-0.5">
                     Customer Self-Care Portal
                 </p>
                 <p class="text-slate-300/80 text-xs font-sans mt-2 max-w-xs hidden md:block leading-relaxed">
@@ -137,8 +137,8 @@
             </div>
         </div>
 
-        <!-- RIGHT / BOTTOM SECTION: White Form Card -->
-        <div class="mobile-login-sheet bg-white md:w-7/12 px-5 sm:px-8 md:px-8 py-4 sm:py-6 md:py-8 flex flex-col justify-center flex-shrink-0 z-20 shadow-2xl md:shadow-none min-h-0">
+        <!-- RIGHT / BOTTOM SECTION: White Form Card (~65% on Mobile) -->
+        <div class="mobile-login-sheet bg-white flex-1 md:flex-none md:w-7/12 px-6 sm:px-8 md:px-8 py-6 sm:py-7 md:py-8 flex flex-col justify-between md:justify-center flex-shrink-0 z-20 shadow-2xl md:shadow-none min-h-0 overflow-y-auto md:overflow-visible">
             
             <!-- Card Header: WELCOME -->
             <div class="text-center mb-3 sm:mb-4">
