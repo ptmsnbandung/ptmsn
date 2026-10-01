@@ -247,18 +247,7 @@ class Customer extends Authenticatable
                             'hide' => '0',
                         ]);
                     }
-
-                    // Update trx_batchjob_register membuka flag isolir
-                    $db->table('trx_batchjob_register')
-                        ->where('nomor_internet', $nomorInternet)
-                        ->update([
-                            'is_suspend' => '0',
-                            'status_reg' => '20',
-                            'date_update' => \Carbon\Carbon::now(),
-                        ]);
-
-                    $this->is_suspend = '0';
-                    $this->status_reg = '20';
+                    // Catatan: status_reg di trx_batchjob_register tidak diubah menjadi 20 di sini (akan diproses oleh sistem eksekutor lain)
                 }
             } catch (\Throwable $e) {
                 // Lanjutkan ke koneksi berikutnya jika ada
