@@ -68,7 +68,7 @@ class BillingController extends Controller
                     'potongan' => '0',
                     'ppn' => '0.11',
                     'status_bill_lay' => ($customer->billing_status === 'paid' ? '15' : '13'),
-                    'expiry' => Carbon::now()->setDay(min(28, (int)($customer->due_date ?: 20)))->setTime(23, 59, 0),
+                    'expiry' => Carbon::now()->setDay(24)->setTime(23, 59, 0),
                     'date_create' => Carbon::now(),
                 ]
             );

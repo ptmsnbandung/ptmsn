@@ -173,15 +173,20 @@ class BillingLayanan extends Model
 
     public function getDueDateAttribute(): ?Carbon
     {
-        if ($this->expiry) {
-            return $this->expiry;
+        // Tagihan terbit tanggal 1-5, jatuh tempo resmi adalah tanggal 24 pada bulan & tahun periode tagihan bersangkutan
+        if (!empty($this->tahun_tagihan) && !empty($this->bulan_tagihan)) {
+            return Carbon::create((int) $this->tahun_tagihan, (int) $this->bulan_tagihan, 24, 23, 59, 59);
         }
 
         if ($this->date_create) {
-            return $this->date_create->copy()->setDay(20);
+            return $this->date_create->copy()->setDay(24)->setTime(23, 59, 59);
         }
 
-        return Carbon::now()->setDay(20);
+        if ($this->expiry) {
+            return $this->expiry->copy()->setDay(24)->setTime(23, 59, 59);
+        }
+
+        return Carbon::now()->setDay(24)->setTime(23, 59, 59);
     }
 
     public function getPackageNameAttribute(): string
