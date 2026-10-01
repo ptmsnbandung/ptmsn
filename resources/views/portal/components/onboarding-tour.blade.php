@@ -49,8 +49,7 @@
     style="display: none;"
     @keydown.escape.window="skipTour()"
     @resize.window="updatePosition()"
-    @wheel.window="if(isOpen) { $event.preventDefault(); }"
-    @touchmove.window="if(isOpen) { $event.preventDefault(); }"
+    @scroll.window.passive="updatePosition()"
 >
     <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
     <div 
@@ -280,38 +279,48 @@
             },
 
             lockScroll() {
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                document.documentElement.style.overflow = 'hidden';
-                document.body.style.overflow = 'hidden';
-                document.body.style.touchAction = 'none';
-
-                this._preventScroll = (e) => {
-                    if (this.isOpen) {
-                        e.preventDefault();
-                    }
-                };
-                window.addEventListener('wheel', this._preventScroll, { passive: false });
-                window.addEventListener('touchmove', this._preventScroll, { passive: false });
-
                 this._keyHandler = (e) => {
-                    if (this.isOpen && ['Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
-                        e.preventDefault();
+                    if (this.isOpen && e.code === 'Escape') {
+                        this.skipTour();
                     }
                 };
                 window.addEventListener('keydown', this._keyHandler, { passive: false });
             },
 
             unlockScroll() {
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
-                document.body.style.touchAction = '';
-                if (this._preventScroll) {
-                    window.removeEventListener('wheel', this._preventScroll);
-                    window.removeEventListener('touchmove', this._preventScroll);
-                }
                 if (this._keyHandler) {
                     window.removeEventListener('keydown', this._keyHandler);
                 }
+            },
+
+            scrollToElement(el, callback) {
+                if (!el) {
+                    if (callback) callback();
+                    return;
+                }
+                const rect = el.getBoundingClientRect();
+                const absoluteTop = rect.top + window.pageYOffset;
+                const isMobile = window.innerWidth < 640;
+                
+                // Beri ruang yang nyaman di atas elemen agar tidak terpotong navbar
+                const headerOffset = isMobile ? 72 : 90;
+                const targetScrollY = Math.max(0, Math.round(absoluteTop - headerOffset));
+
+                window.scrollTo({
+                    top: targetScrollY,
+                    behavior: 'smooth'
+                });
+
+                // Perbarui posisi spotlight dan popover secara dinamis selama scrolling berjalan
+                let frame = 0;
+                const tracker = setInterval(() => {
+                    this.calculatePosition(el);
+                    frame++;
+                    if (frame > 7) {
+                        clearInterval(tracker);
+                        if (callback) callback();
+                    }
+                }, 50);
             },
 
             startTour() {
@@ -400,7 +409,9 @@
                 this.$nextTick(() => {
                     const targetEl = this.findTargetElement(step.target);
                     if (targetEl) {
-                        this.calculatePosition(targetEl);
+                        this.scrollToElement(targetEl, () => {
+                            this.calculatePosition(targetEl);
+                        });
                     } else {
                         this.calculateFallbackPosition();
                     }
