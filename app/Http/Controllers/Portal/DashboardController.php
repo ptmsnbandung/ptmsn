@@ -17,6 +17,25 @@ class DashboardController extends Controller
         $customer = Auth::guard('customer')->user();
         if ($customer) {
             $customer->load(['pelanggan', 'bandwith', 'statusRegistrasi']);
+
+            // Pastikan is_login terupdate menjadi 1 di database IMS trx_batchjob_register
+            if ((int)($customer->is_login ?? 0) === 0) {
+                try {
+                    \Illuminate\Support\Facades\DB::connection('ims')
+                        ->statement("UPDATE trx_batchjob_register SET is_login = 1 WHERE nomor_internet = ?", [$customer->nomor_internet]);
+                    $customer->is_login = 1;
+                } catch (\Throwable $e) {
+                    try {
+                        \Illuminate\Support\Facades\DB::connection('ims')
+                            ->table('trx_batchjob_register')
+                            ->where('nomor_internet', $customer->nomor_internet)
+                            ->update(['is_login' => 1]);
+                        $customer->is_login = 1;
+                    } catch (\Throwable $err) {
+                        //
+                    }
+                }
+            }
         }
 
         // Ambil tiket & ubah layanan terbaru dari IMS
