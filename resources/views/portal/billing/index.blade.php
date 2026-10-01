@@ -260,8 +260,7 @@
                                         <path d="M17 11H20V18H17V11Z"/>
                                         <path d="M2 20H22V22H2V20Z"/>
                                     </svg>
-                                    <span class="sm:hidden">Transfer Bank</span>
-                                    <span class="hidden sm:inline">Konfirmasi Bukti Transfer</span>
+                                    <span>Transfer Bank</span>
                                 </button>
                             </div>
                         </div>
