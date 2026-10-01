@@ -61,22 +61,16 @@
             background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #0e7490 100%);
         }
 
-        /* Mobile bottom sheet rounded top + subtle luxury texture */
-        .textured-login-sheet {
-            background-color: #ffffff;
-            background-image: 
-                radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 45%),
-                radial-gradient(at 0% 100%, rgba(2, 132, 199, 0.06) 0px, transparent 45%),
-                radial-gradient(#e0f2fe 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 18px 18px;
-            background-position: 0 0, 0 0, 0 0;
+        /* Mobile bottom sheet rounded top with clean luxury ambient styling */
+        .clean-login-sheet {
+            background: #ffffff;
             border-top-left-radius: 36px;
             border-top-right-radius: 36px;
-            box-shadow: 0 -10px 40px -5px rgba(9, 19, 34, 0.35);
+            box-shadow: 0 -12px 36px -4px rgba(9, 19, 34, 0.35);
         }
 
         @media (min-width: 768px) {
-            .textured-login-sheet {
+            .clean-login-sheet {
                 border-radius: 0px;
                 box-shadow: none;
             }
@@ -95,47 +89,47 @@
         <div class="absolute -bottom-24 -right-24 w-[450px] h-[450px] bg-cyan-500/20 rounded-full blur-[140px]"></div>
     </div>
 
-    <!-- Main Container: 45% Blue / 55% White split on Mobile -->
+    <!-- Main Container: 40% Blue / 60% White split on Mobile -->
     <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
-        <!-- LEFT / TOP SECTION: Brand Header with Network Topology Background (45% on Mobile & 42% on Desktop) -->
-        <div class="hero-network-gradient h-[45vh] max-h-[45vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-5 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
+        <!-- LEFT / TOP SECTION: Brand Header (40% on Mobile & 42% on Desktop) -->
+        <div class="hero-network-gradient h-[40vh] max-h-[40vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-4 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
             
-            <!-- Network Node Grid & Constellation Lines (Subtle ISP Topology Pattern) -->
-            <div class="absolute inset-0 pointer-events-none opacity-30 overflow-hidden">
+            <!-- Subtle Network Topology Lines Background -->
+            <div class="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
                     <defs>
-                        <pattern id="network-topology" width="80" height="80" patternUnits="userSpaceOnUse">
-                            <circle cx="15" cy="15" r="2" fill="#38bdf8" />
-                            <circle cx="65" cy="45" r="2.5" fill="#0ea5e9" />
-                            <circle cx="40" cy="70" r="1.5" fill="#38bdf8" />
-                            <path d="M15 15 L65 45 M65 45 L40 70 M15 15 L-15 45 M65 45 L95 15 M40 70 L15 95 M65 45 L65 125" stroke="#38bdf8" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.75"/>
+                        <pattern id="network-mesh-pattern" width="70" height="70" patternUnits="userSpaceOnUse">
+                            <circle cx="12" cy="12" r="1.5" fill="#38bdf8" />
+                            <circle cx="55" cy="40" r="2" fill="#0ea5e9" />
+                            <circle cx="35" cy="60" r="1.5" fill="#38bdf8" />
+                            <path d="M12 12 L55 40 M55 40 L35 60 M12 12 L-12 40 M55 40 L85 12" stroke="#38bdf8" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.8"/>
                         </pattern>
                     </defs>
-                    <rect width="100%" height="100%" fill="url(#network-topology)" />
+                    <rect width="100%" height="100%" fill="url(#network-mesh-pattern)" />
                 </svg>
             </div>
 
             <!-- Ambient Card Glow -->
-            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
             
-            <!-- Logo Icon Container (matching Browser Tab) -->
-            <a href="{{ route('home') }}" class="group block mb-2.5 transform hover:scale-105 transition-transform duration-300 relative z-10 shrink-0">
-                <div class="w-15 h-15 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-3xl bg-white p-2.5 sm:p-3 shadow-2xl shadow-sky-950/60 border border-white/90 flex items-center justify-center">
+            <!-- Logo Icon Container (Fixed 56px box so it never expands) -->
+            <a href="{{ route('home') }}" class="group block mb-2 transform hover:scale-105 transition-transform duration-300 relative z-10 shrink-0">
+                <div class="w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-sky-950/60 border border-white/90 flex items-center justify-center mx-auto" style="width: 56px; height: 56px;">
                     <img 
                         src="{{ asset('images/logo/logo-icon.png') }}" 
                         alt="PT Media Solusi Network" 
-                        class="w-full h-full max-h-full max-w-full object-contain filter drop-shadow-xs"
+                        class="w-10 h-10 object-contain filter drop-shadow-xs"
                     >
                 </div>
             </a>
 
             <!-- Brand Typography -->
             <div class="relative z-10 shrink-0">
-                <h1 class="text-white font-heading font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
+                <h1 class="text-white font-heading font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1">
                     <span>My</span><span class="text-sky-300">MSN</span>
                 </h1>
-                <p class="text-sky-200/90 text-[10.5px] sm:text-xs font-semibold tracking-wider uppercase mt-0.5">
+                <p class="text-sky-200/90 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mt-0.5">
                     Customer Self-Care Portal
                 </p>
                 <p class="text-slate-300/80 text-xs font-sans mt-2 max-w-xs hidden md:block leading-relaxed">
@@ -161,10 +155,10 @@
             </div>
         </div>
 
-        <!-- RIGHT / BOTTOM SECTION: White Textured Form Card (55% on Mobile & 58% on Desktop) -->
-        <div class="textured-login-sheet h-[55vh] max-h-[55vh] md:h-auto md:max-h-none md:w-7/12 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
+        <!-- RIGHT / BOTTOM SECTION: White Clean Form Card (60% on Mobile & 58% on Desktop) -->
+        <div class="clean-login-sheet h-[60vh] max-h-[60vh] md:h-auto md:max-h-none md:w-7/12 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
             
-            <div class="w-full max-w-sm flex flex-col gap-3 my-auto">
+            <div class="w-full max-w-sm flex flex-col gap-3 sm:gap-3.5 my-auto">
                 <!-- Card Header: WELCOME -->
                 <div class="text-center">
                     <h2 class="text-2xl sm:text-[26px] font-heading font-black tracking-widest text-[#0284c7] uppercase">
@@ -226,7 +220,7 @@
                                 value="{{ old('login', old('phone')) }}" 
                                 required 
                                 autofocus 
-                                class="w-full pl-3.5 pr-10 py-2.5 rounded-xl sm:rounded-2xl bg-white/90 border border-slate-200 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-xs"
+                                class="w-full pl-3.5 pr-10 py-2.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-xs"
                                 placeholder="Contoh: 1711221 atau 081234567890"
                                 autocomplete="username"
                             >
