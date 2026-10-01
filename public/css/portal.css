@@ -210,12 +210,14 @@
     padding: 3px 2px 4px;
     border-radius: 16px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    color: rgba(203, 213, 225, 0.65);
+    color: #ffffff !important;
+    opacity: 0.95;
     text-decoration: none;
 }
 
 .dock-item:hover {
-    color: rgba(255, 255, 255, 0.95);
+    color: #ffffff !important;
+    opacity: 1;
 }
 
 .dock-icon {
@@ -237,6 +239,7 @@
 
 .dock-item-active {
     color: #38bdf8 !important;
+    opacity: 1 !important;
 }
 
 .dock-item-active .dock-icon {
@@ -253,12 +256,12 @@
 
 .dock-pill-indicator {
     position: absolute;
-    bottom: -1px;
-    width: 14px;
-    height: 3px;
+    bottom: 0px;
+    width: 12px;
+    height: 1.5px;
     border-radius: 9999px;
-    background: linear-gradient(90deg, #38bdf8, #06b6d4);
-    box-shadow: 0 0 8px #38bdf8, 0 0 12px rgba(56, 189, 248, 0.6);
+    background: #38bdf8;
+    box-shadow: 0 0 6px rgba(56, 189, 248, 0.8), 0 0 10px rgba(56, 189, 248, 0.4);
 }
 
 /* Copy Badge Button */
