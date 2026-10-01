@@ -238,7 +238,11 @@
                                     :class="paymentTab === 'midtrans' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
-                                    <iconify-icon icon="solar:bolt-circle-bold" class="text-sm text-sky-500"></iconify-icon>
+                                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="#00AEFF"/>
+                                        <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="#0284C7"/>
+                                        <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="#0369A1"/>
+                                    </svg>
                                     <span class="sm:hidden">Midtrans</span>
                                     <span class="hidden sm:inline">Otomatis (Midtrans)</span>
                                 </button>
@@ -249,8 +253,8 @@
                                     :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
-                                    <iconify-icon icon="solar:card-recive-bold" class="text-sm text-emerald-500"></iconify-icon>
-                                    <span class="sm:hidden">Transfer</span>
+                                    <iconify-icon icon="solar:bank-bold" class="text-sm text-emerald-600"></iconify-icon>
+                                    <span class="sm:hidden">Transfer Bank</span>
                                     <span class="hidden sm:inline">Konfirmasi Bukti Transfer</span>
                                 </button>
                             </div>
@@ -274,7 +278,12 @@
                                 onclick="payWithMidtrans('{{ $currentInvoice->kode_billing_layanan }}', 'btnPayMain')"
                                 class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-sky-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 text-center disabled:opacity-60 cursor-pointer"
                             >
-                                <iconify-icon icon="solar:card-recive-bold" class="text-base"></iconify-icon>
+                                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2L4 6.6V17.4L12 22L20 17.4V6.6L12 2Z" fill="white" fill-opacity="0.2"/>
+                                    <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="white"/>
+                                    <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="white" fill-opacity="0.8"/>
+                                    <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="white" fill-opacity="0.95"/>
+                                </svg>
                                 <span>Bayar Sekarang (Midtrans)</span>
                             </button>
 
@@ -591,17 +600,22 @@
                                         type="button" 
                                         id="btnPayMobile-{{ $loop->index }}"
                                         onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
-                                        class="w-full py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                        class="w-full py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
                                     >
-                                        <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2L4 6.6V17.4L12 22L20 17.4V6.6L12 2Z" fill="white" fill-opacity="0.2"/>
+                                            <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="white"/>
+                                            <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="white" fill-opacity="0.8"/>
+                                            <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="white" fill-opacity="0.95"/>
+                                        </svg>
                                         <span>Midtrans</span>
                                     </button>
                                     <button 
                                         type="button" 
                                         @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                        class="w-full py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                        class="w-full py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
                                     >
-                                        <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                        <iconify-icon icon="solar:bank-bold" class="text-xs"></iconify-icon>
                                         <span>Transfer</span>
                                     </button>
                                 </div>
@@ -694,19 +708,24 @@
                                                     type="button" 
                                                     id="btnPayHist-{{ $loop->index }}"
                                                     onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
-                                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
                                                     title="Bayar tagihan ini via Midtrans"
                                                 >
-                                                    <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M12 2L4 6.6V17.4L12 22L20 17.4V6.6L12 2Z" fill="white" fill-opacity="0.2"/>
+                                                        <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="white"/>
+                                                        <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="white" fill-opacity="0.8"/>
+                                                        <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="white" fill-opacity="0.95"/>
+                                                    </svg>
                                                     <span>Midtrans</span>
                                                 </button>
                                                 <button 
                                                     type="button" 
                                                     @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
                                                     title="Upload bukti transfer untuk tagihan ini"
                                                 >
-                                                    <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                                    <iconify-icon icon="solar:bank-bold" class="text-xs"></iconify-icon>
                                                     <span>Transfer</span>
                                                 </button>
                                             </div>

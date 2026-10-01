@@ -68,7 +68,12 @@
                     onclick="payWithMidtrans('{{ $invoice->kode_billing_layanan }}')"
                     class="inline-flex items-center gap-1.5 text-xs font-heading font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 px-4 py-2 rounded-xl shadow-md shadow-emerald-600/20 transition-all cursor-pointer disabled:opacity-60 active:scale-95"
                 >
-                    <iconify-icon icon="solar:card-recive-bold" class="text-base"></iconify-icon>
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L4 6.6V17.4L12 22L20 17.4V6.6L12 2Z" fill="white" fill-opacity="0.2"/>
+                        <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="white"/>
+                        <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="white" fill-opacity="0.8"/>
+                        <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="white" fill-opacity="0.95"/>
+                    </svg>
                     <span>Bayar Sekarang (Midtrans)</span>
                 </button>
             @endif
