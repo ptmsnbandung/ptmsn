@@ -125,6 +125,8 @@ class MidtransService
             ],
             'callbacks' => [
                 'finish' => route('portal.billing.index'),
+                'unfinish' => route('portal.billing.index'),
+                'error' => route('portal.billing.index'),
             ],
         ];
 

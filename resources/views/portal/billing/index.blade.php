@@ -796,28 +796,7 @@
 @endsection
 
 @push('scripts')
-<script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
 <script>
-    // Helper untuk memastikan script Snap Midtrans termuat sempurna
-    function ensureSnapLoaded() {
-        return new Promise((resolve) => {
-            if (typeof window.snap !== 'undefined' && typeof window.snap.pay === 'function') {
-                return resolve(true);
-            }
-            let existingScript = document.querySelector('script[src*="snap.js"]');
-            if (!existingScript) {
-                existingScript = document.createElement('script');
-                existingScript.src = '{{ $snapJsUrl }}';
-                existingScript.setAttribute('data-client-key', '{{ $clientKey }}');
-                document.head.appendChild(existingScript);
-            }
-            existingScript.onload = () => resolve(typeof window.snap !== 'undefined');
-            existingScript.onerror = () => resolve(false);
-            // Timeout 2 detik jika lambat
-            setTimeout(() => resolve(typeof window.snap !== 'undefined'), 2000);
-        });
-    }
-
     async function payWithMidtrans(kodeBilling, btnId = null) {
         let btn = null;
         let originalContent = '';
@@ -826,7 +805,7 @@
             if (btn) {
                 originalContent = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1" width="16"></iconify-icon><span>Menghubungi Midtrans...</span>';
+                btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1.5" width="16"></iconify-icon><span>Menghubungkan Pembayaran...</span>';
             }
         }
 
@@ -847,85 +826,24 @@
 
             const data = await response.json();
 
+            if (data.success && data.redirect_url) {
+                // Arahkan langsung ke halaman checkout Midtrans resmi
+                // 100% kompatibel di Desktop & HP, QRIS responsif, e-Wallet deep-link tanpa kendala iframe/cookie
+                window.location.href = data.redirect_url;
+                return;
+            }
+
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
             }
 
-            if (data.success && (data.token || data.redirect_url)) {
-                await ensureSnapLoaded();
-
-                let snapTriggered = false;
-
-                if (typeof window.snap !== 'undefined' && typeof window.snap.pay === 'function' && data.token) {
-                    try {
-                        window.snap.pay(data.token, {
-                            onSuccess: function(result) {
-                                fetch(`{{ route('portal.billing.sync.direct') }}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        kode_billing: kodeBilling
-                                    })
-                                }).finally(() => {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Pembayaran Berhasil!',
-                                        text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
-                                        confirmButtonColor: '#0ea5e9'
-                                    }).then(() => window.location.reload());
-                                });
-                            },
-                            onPending: function(result) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'Menunggu Pembayaran',
-                                    text: 'Instruksi pembayaran telah dibuat. Silakan selesaikan pembayaran sesuai panduan Midtrans.',
-                                    confirmButtonColor: '#0ea5e9'
-                                }).then(() => window.location.reload());
-                            },
-                            onError: function(result) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Pembayaran Dibatalkan',
-                                    text: 'Pembayaran gagal diproses atau telah dibatalkan.',
-                                    confirmButtonColor: '#0ea5e9'
-                                });
-                            },
-                            onClose: function() {
-                                console.log('Jendela popup Snap Midtrans ditutup.');
-                            }
-                        });
-                        snapTriggered = true;
-                    } catch (snapErr) {
-                        console.warn('Snap Popup Error, beralih ke Redirect URL:', snapErr);
-                        snapTriggered = false;
-                    }
-                }
-
-                // Jika Snap popup tidak dapat ditampilkan (misal di WebView HP / browser memblokir iframe)
-                if (!snapTriggered && data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                } else if (!snapTriggered && !data.redirect_url) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Kendala Tampilan',
-                        text: 'Jendela pembayaran tidak dapat dimuat di perangkat ini. Silakan muat ulang halaman atau hubungi layanan pelanggan.',
-                        confirmButtonColor: '#0ea5e9'
-                    });
-                }
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Perhatian',
-                    text: data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa koneksi atau hubungi CS.',
-                    confirmButtonColor: '#0ea5e9'
-                });
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Perhatian',
+                text: data.message || 'Gagal membuat sesi pembayaran Midtrans. Silakan hubungi CS.',
+                confirmButtonColor: '#0ea5e9'
+            });
         } catch (err) {
             if (btn) {
                 btn.disabled = false;

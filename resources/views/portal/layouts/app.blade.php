@@ -220,7 +220,7 @@
     </header>
 
     <!-- Main Body Container -->
-    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 pb-24 md:pb-6">
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 pb-32 md:pb-6">
         
         <!-- Flash Alerts -->
         @if(session('success'))
