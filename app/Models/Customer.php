@@ -221,14 +221,6 @@ class Customer extends Authenticatable
     }
 
     /**
-     * Tanggal jatuh tempo tagihan bulanan
-     */
-    public function getDueDateAttribute(): string
-    {
-        return '24';
-    }
-
-    /**
      * Deskripsi status registrasi dari tabel m_status_registrasi kolom desc_registrasi
      */
     public function getStatusRegLabelAttribute()
@@ -298,7 +290,7 @@ class Customer extends Authenticatable
 
     public function getDueDateAttribute()
     {
-        return $this->periode_billing ?? 20;
+        return $this->periode_billing ?? 24;
     }
 
     public function getBillingStatusAttribute()
