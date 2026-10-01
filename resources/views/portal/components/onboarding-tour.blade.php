@@ -476,16 +476,18 @@
                 if (window.Swal) {
                     Swal.fire({
                         imageUrl: '{{ asset('images/logo/berhasil1.png') }}',
-                        imageWidth: 200,
-                        imageHeight: 200,
+                        imageWidth: 140,
+                        imageHeight: 140,
                         imageAlt: 'Selamat Datang',
-                        title: 'Selamat Datang',
+                        title: 'Selamat Datang!',
+                        html: '<p class="text-xs sm:text-sm text-slate-500 font-sans mt-1.5">Panduan selesai. Selamat menggunakan portal layanan MyMSN!</p>',
                         showConfirmButton: false,
-                        timer: 2000,
+                        timer: 2300,
                         customClass: {
-                            popup: 'rounded-3xl shadow-2xl p-6 sm:p-8 border border-sky-100 max-w-sm sm:max-w-md',
-                            image: '!w-48 !h-48 sm:!w-56 sm:!h-56 object-contain mx-auto my-2',
-                            title: 'font-heading font-extrabold text-2xl sm:text-3xl text-slate-800 tracking-tight mt-2'
+                            popup: '!rounded-3xl !shadow-2xl !border !border-sky-100 !max-w-[320px] sm:!max-w-[360px] !p-6 sm:!p-7 text-center',
+                            image: '!w-32 !h-32 sm:!w-36 sm:!h-36 !object-contain !mx-auto !my-0 !mb-2',
+                            title: '!font-heading !font-extrabold !text-xl sm:!text-2xl !text-slate-800 !tracking-tight !p-0 !m-0',
+                            htmlContainer: '!m-0 !p-0 !mt-1'
                         }
                     }).then(() => {
                         window.location.href = this.routes.dashboard;
