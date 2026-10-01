@@ -135,13 +135,13 @@
             <!-- Ambient Card Glow -->
             <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
             
-            <!-- Logo Icon Container (Fixed 56px box so it never expands) -->
+            <!-- Logo Icon Container (Fixed 59px box, +3px) -->
             <a href="{{ route('home') }}" class="group block mb-1.5 sm:mb-2 transform hover:scale-105 transition-transform duration-300 relative z-10 shrink-0">
-                <div class="w-14 h-14 rounded-2xl bg-white p-2 shadow-xl shadow-sky-950/60 border border-white/90 flex items-center justify-center mx-auto" style="width: 56px; height: 56px;">
+                <div class="w-[59px] h-[59px] rounded-2xl bg-white p-2 shadow-xl shadow-sky-950/60 border border-white/90 flex items-center justify-center mx-auto" style="width: 59px; height: 59px;">
                     <img 
                         src="{{ asset('images/logo/logo-icon.png') }}" 
                         alt="PT Media Solusi Network" 
-                        class="w-10 h-10 object-contain filter drop-shadow-xs"
+                        class="w-[43px] h-[43px] object-contain filter drop-shadow-xs"
                     >
                 </div>
             </a>
