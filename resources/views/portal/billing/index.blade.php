@@ -325,27 +325,27 @@
                                             $accentBorder = 'border-slate-700/80';
 
                                             if (str_contains($bankKey, 'bca')) {
-                                                $bankLogo = 'bca.png';
+                                                $bankLogo = 'payments/bca.svg';
                                                 $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                                 $accentBorder = 'border-sky-500/30';
-                                                $cardLogoClass = 'h-6 sm:h-6.5 scale-110';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[72px]';
                                             } elseif (str_contains($bankKey, 'mandiri')) {
-                                                $bankLogo = 'mandiri.png';
+                                                $bankLogo = 'payments/mandiri.svg';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
-                                                $cardLogoClass = 'h-8 sm:h-9 scale-140';
+                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto max-w-[82px]';
                                             } elseif (str_contains($bankKey, 'bri')) {
-                                                $bankLogo = 'bri.png';
+                                                $bankLogo = 'payments/bri.svg';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                                 $accentBorder = 'border-sky-400/30';
-                                                $cardLogoClass = 'h-6 sm:h-6.5';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[72px]';
                                             } elseif (str_contains($bankKey, 'bni')) {
-                                                $bankLogo = 'bni.png';
+                                                $bankLogo = 'payments/bni.svg';
                                                 $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                                 $accentBorder = 'border-teal-400/30';
-                                                $cardLogoClass = 'h-6 sm:h-6.5';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[72px]';
                                             } else {
-                                                $cardLogoClass = 'h-5.5 sm:h-6';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto';
                                             }
 
                                             $rawAcc = preg_replace('/\s+/', '', $bank['account_number']);
@@ -371,9 +371,9 @@
                                                 </div>
 
                                                 <!-- Official Bank Logo Badge -->
-                                                <div class="h-9 px-3.5 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 min-w-[90px] overflow-hidden">
+                                                <div class="h-9 px-3.5 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 min-w-[95px] overflow-hidden">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $cardLogoClass }} w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
+                                                        <img src="{{ asset('images/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $cardLogoClass }} object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
                                                         <span class="text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
