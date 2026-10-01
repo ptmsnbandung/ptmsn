@@ -243,7 +243,7 @@
                             <input type="checkbox" name="remember" checked class="w-3.5 h-3.5 rounded text-sky-500 border-slate-300 focus:ring-sky-400 accent-sky-500">
                             <span>Ingat Saya</span>
                         </label>
-                        <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20butuh%20bantuan%20login%20portal%20pelanggan" target="_blank" class="font-semibold text-sky-600 hover:text-sky-700 hover:underline">
+                        <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim NOC PT MSN, saya butuh bantuan login portal pelanggan') }}" target="_blank" class="font-semibold text-sky-600 hover:text-sky-700 hover:underline">
                             Butuh Bantuan?
                         </a>
                     </div>
@@ -271,7 +271,7 @@
 
                 <!-- Social / Quick Help Buttons -->
                 <div class="flex items-center justify-center gap-3 pt-0.5">
-                    <a href="https://wa.me/628112293888" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-500 hover:scale-110 hover:bg-emerald-50 transition-all" title="WhatsApp Customer Service">
+                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim NOC PT MSN, saya butuh bantuan terkait layanan internet') }}" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-500 hover:scale-110 hover:bg-emerald-50 transition-all" title="Hubungi WhatsApp NOC MSN">
                         <iconify-icon icon="logos:whatsapp-icon" width="17"></iconify-icon>
                     </a>
                     <a href="{{ route('home') }}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-sky-500 hover:scale-110 hover:bg-sky-50 transition-all" title="Website Resmi MSN">
@@ -283,7 +283,7 @@
                 <div class="text-center">
                     <p class="text-[10.5px] text-slate-500">
                         Belum berlangganan? 
-                        <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20ingin%20pasang%20internet%20baru" target="_blank" class="font-bold text-sky-600 hover:underline">
+                        <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim PT MSN, saya ingin pasang dan berlangganan internet baru') }}" target="_blank" class="font-bold text-sky-600 hover:underline">
                             Daftar Sekarang
                         </a>
                     </p>
