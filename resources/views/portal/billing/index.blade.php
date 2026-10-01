@@ -186,20 +186,22 @@
                                     type="button" 
                                     @click="paymentTab = 'midtrans'"
                                     :class="paymentTab === 'midtrans' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
-                                    class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                    class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
                                     <iconify-icon icon="solar:bolt-circle-bold" class="text-sm text-sky-500"></iconify-icon>
-                                    <span>Otomatis (Midtrans)</span>
+                                    <span class="sm:hidden">Midtrans</span>
+                                    <span class="hidden sm:inline">Otomatis (Midtrans)</span>
                                 </button>
                                 <button 
                                     type="button" 
                                     id="tour-step-transfer-tab"
                                     @click="paymentTab = 'transfer'"
                                     :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
-                                    class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                    class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
                                     <iconify-icon icon="solar:card-recive-bold" class="text-sm text-emerald-500"></iconify-icon>
-                                    <span>Konfirmasi Bukti Transfer</span>
+                                    <span class="sm:hidden">Transfer</span>
+                                    <span class="hidden sm:inline">Konfirmasi Bukti Transfer</span>
                                 </button>
                             </div>
                         </div>
