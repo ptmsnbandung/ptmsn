@@ -27,19 +27,29 @@ class DashboardController extends Controller
             }
         }
 
-        // Ambil tiket & ubah layanan terbaru dari IMS
+        // Ambil tiket, ubah layanan, suspend, & terminasi terbaru dari IMS
         $tickets = $customer ? $customer->tickets()->get() : collect([]);
         $ubah = $customer ? $customer->ubahLayanan()->get() : collect([]);
+        $suspend = $customer ? $customer->suspendLayanan()->get() : collect([]);
+        $terminasi = $customer ? $customer->terminasiLayanan()->get() : collect([]);
 
-        $recentTickets = $tickets->concat($ubah)->sortByDesc(function ($item) {
-            return $item->created_at ? $item->created_at->timestamp : 0;
-        })->take(5)->values();
+        $recentTickets = $tickets
+            ->concat($ubah)
+            ->concat($suspend)
+            ->concat($terminasi)
+            ->sortByDesc(function ($item) {
+                return $item->created_at ? $item->created_at->timestamp : 0;
+            })->take(5)->values();
 
         $activeTicketsCount = $tickets->whereIn('status', ['11', '12', 'open', 'in_progress', 'proses', 'antrian', 'konfirmasi'])->count()
-            + $ubah->whereIn('status_ubah_layanan', ['11', '12', 'open', 'in_progress', 'proses'])->count();
+            + $ubah->whereIn('status_ubah_layanan', ['11', '12', 'open', 'in_progress', 'proses'])->count()
+            + $suspend->whereIn('status_suspend', ['11', '12', '18', 'open', 'in_progress'])->count()
+            + $terminasi->whereIn('status_terminasi', ['11', '12', '12.1', '13', '15', 'open', 'in_progress'])->count();
 
         $resolvedTicketsCount = $tickets->whereIn('status', ['13', '14', 'resolved', 'done', 'close', 'closed'])->count()
-            + $ubah->whereIn('status_ubah_layanan', ['13', '14', 'resolved', 'done'])->count();
+            + $ubah->whereIn('status_ubah_layanan', ['13', '14', 'resolved', 'done'])->count()
+            + $suspend->whereIn('status_suspend', ['13', '14', '16', 'resolved', 'done'])->count()
+            + $terminasi->whereIn('status_terminasi', ['14', '16', 'resolved', 'done'])->count();
 
         return view('portal.dashboard', compact(
             'customer',
