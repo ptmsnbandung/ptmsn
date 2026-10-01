@@ -138,23 +138,51 @@
                 </div>
 
                 <!-- Price Breakdown Box -->
+                @php
+                    $prorate = $currentInvoice->prorate_info ?? ['is_prorate' => false];
+                @endphp
                 <div class="p-3 sm:p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs space-y-2">
                     <div class="text-[10px] font-mono uppercase text-slate-400 font-bold tracking-wider pb-1 border-b border-slate-100 flex items-center justify-between">
                         <span>Rincian Tagihan</span>
-                        <span class="text-sky-600 font-mono text-[10px] font-bold">1 Bulan</span>
+                        @if(!empty($prorate['is_prorate']))
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-sans text-[10px] font-bold">
+                                <iconify-icon icon="solar:bolt-circle-bold" class="text-amber-500 text-xs"></iconify-icon>
+                                <span>Prorate {{ $prorate['days_active'] }} Hari</span>
+                            </span>
+                        @else
+                            <span class="text-sky-600 font-mono text-[10px] font-bold">1 Bulan</span>
+                        @endif
                     </div>
 
                     <div class="space-y-1 text-xs">
                         <div class="flex justify-between text-slate-600">
-                            <span>Biaya Paket Internet</span>
-                            <span class="font-mono font-semibold text-slate-800">{{ $currentInvoice->formatted_amount }}</span>
+                            <span>Biaya Paket Normal</span>
+                            <span class="font-mono font-semibold text-slate-800">{{ $prorate['formatted_base'] ?? $currentInvoice->formatted_amount }}</span>
                         </div>
+
+                        @if(!empty($prorate['is_prorate']))
+                            <div class="flex justify-between text-rose-600 font-medium">
+                                <span>Potongan Masa Suspend ({{ $prorate['days_suspended'] }} Hari)</span>
+                                <span class="font-mono font-semibold">- {{ $prorate['formatted_discount'] }}</span>
+                            </div>
+
+                            <div class="p-2 rounded-lg bg-amber-50/80 border border-amber-200/70 text-[11px] text-amber-900 space-y-0.5">
+                                <div class="font-bold flex items-center gap-1 text-[11px]">
+                                    <iconify-icon icon="solar:info-circle-bold" class="text-amber-600 text-xs shrink-0"></iconify-icon>
+                                    <span>Penyesuaian Hari Aktif Suspend</span>
+                                </div>
+                                <p class="text-[10.5px] text-amber-800/90 leading-tight">
+                                    Tagihan dihitung proporsional untuk <strong>{{ $prorate['days_active'] }} hari sisa</strong> di bulan ini.
+                                </p>
+                            </div>
+                        @endif
+
                         <div class="flex justify-between text-slate-600">
                             <span>Biaya Admin & Pajak</span>
                             <span class="font-mono font-semibold text-emerald-600">Termasuk (Rp 0)</span>
                         </div>
                         <div class="pt-1.5 border-t border-slate-100 flex justify-between items-baseline">
-                            <span class="font-heading font-bold text-slate-800 text-xs">Total Tagihan:</span>
+                            <span class="font-heading font-bold text-slate-800 text-xs">Total yang Harus Dibayar:</span>
                             <span class="font-heading font-black text-lg sm:text-xl text-sky-600 tracking-tight">
                                 {{ $currentInvoice->formatted_total }}
                             </span>

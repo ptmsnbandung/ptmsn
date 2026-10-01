@@ -91,12 +91,15 @@
         </div>
 
         <!-- Items Table -->
+        @php
+            $prorate = $invoice->prorate_info ?? ['is_prorate' => false];
+        @endphp
         <div class="py-6">
             <table class="w-full text-left text-xs">
                 <thead>
                     <tr class="border-b border-slate-300 text-slate-500 font-mono uppercase text-[10px]">
                         <th class="py-2.5">Deskripsi Layanan</th>
-                        <th class="py-2.5 text-center">Durasi</th>
+                        <th class="py-2.5 text-center">Durasi / Periode</th>
                         <th class="py-2.5 text-right">Harga</th>
                         <th class="py-2.5 text-right">Subtotal</th>
                     </tr>
@@ -107,21 +110,46 @@
                             <div class="font-bold text-slate-900 text-sm">{{ $invoice->package_name }}</div>
                             <div class="text-slate-500 text-[11px] mt-0.5">Koneksi Internet Dedicated Fiber Optic Unlimited Tanpa Batas Kuota (FUP)</div>
                         </td>
-                        <td class="py-4 text-center text-slate-700 font-mono">1 Bulan</td>
-                        <td class="py-4 text-right font-mono text-slate-700">{{ $invoice->formatted_amount }}</td>
-                        <td class="py-4 text-right font-mono font-bold text-slate-900">{{ $invoice->formatted_amount }}</td>
+                        <td class="py-4 text-center text-slate-700 font-mono">
+                            @if(!empty($prorate['is_prorate']))
+                                {{ $prorate['days_active'] }} Hari Aktif
+                            @else
+                                1 Bulan
+                            @endif
+                        </td>
+                        <td class="py-4 text-right font-mono text-slate-700">{{ $prorate['formatted_base'] ?? $invoice->formatted_amount }}</td>
+                        <td class="py-4 text-right font-mono font-bold text-slate-900">{{ $prorate['formatted_base'] ?? $invoice->formatted_amount }}</td>
                     </tr>
+                    @if(!empty($prorate['is_prorate']))
+                        <tr class="bg-amber-50/50">
+                            <td class="py-3">
+                                <div class="font-semibold text-amber-900 text-xs flex items-center gap-1">
+                                    <span>⚡ Penyesuaian Prorate Masa Suspend</span>
+                                </div>
+                                <div class="text-amber-700 text-[11px]">Potongan kompensasi hari non-aktif selama terisolir ({{ $prorate['days_suspended'] }} hari)</div>
+                            </td>
+                            <td class="py-3 text-center text-amber-800 font-mono text-xs">-{{ $prorate['days_suspended'] }} Hari</td>
+                            <td class="py-3 text-right font-mono text-rose-600">- {{ $prorate['formatted_discount'] }}</td>
+                            <td class="py-3 text-right font-mono font-bold text-rose-600">- {{ $prorate['formatted_discount'] }}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
 
         <!-- Summary Totals -->
         <div class="pt-4 border-t border-slate-200 flex justify-end">
-            <div class="w-full sm:w-64 space-y-2 text-xs">
+            <div class="w-full sm:w-72 space-y-2 text-xs">
                 <div class="flex justify-between text-slate-600">
-                    <span>Subtotal:</span>
-                    <span class="font-mono font-semibold">{{ $invoice->formatted_amount }}</span>
+                    <span>Biaya Normal:</span>
+                    <span class="font-mono font-semibold">{{ $prorate['formatted_base'] ?? $invoice->formatted_amount }}</span>
                 </div>
+                @if(!empty($prorate['is_prorate']))
+                    <div class="flex justify-between text-rose-600">
+                        <span>Potongan Suspend:</span>
+                        <span class="font-mono font-semibold">- {{ $prorate['formatted_discount'] }}</span>
+                    </div>
+                @endif
                 <div class="flex justify-between text-slate-600">
                     <span>PPN / Biaya Admin:</span>
                     <span class="font-mono font-semibold">Rp 0</span>

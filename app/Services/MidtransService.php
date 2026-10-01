@@ -86,7 +86,9 @@ class MidtransService
         $cleanKodeBilling = str_replace(['/', '\\', ' '], '-', $billing->kode_billing_layanan);
         $uniqueOrderId = $cleanKodeBilling . '-' . rand(10000, 99999);
 
-        $amount = (int) round((float) $billing->total_layanan);
+        // Gunakan nilai payable_amount (sudah otomatis memperhitungkan prorate jika pelanggan berstatus suspend)
+        $amount = (int) round((float) $billing->payable_amount);
+        $prorate = $billing->prorate_info ?? [];
 
         $cleanPhone = preg_replace('/[^0-9]/', '', $customer->phone ?? '08123456789');
         if (strlen($cleanPhone) < 10) {
@@ -98,6 +100,9 @@ class MidtransService
             : ($customer->customer_id . '@ptmsn.net.id');
 
         $packageName = $billing->package_name ?: 'Layanan Internet PT MSN';
+        if (!empty($prorate['is_prorate'])) {
+            $packageName .= " (Prorate {$prorate['days_active']} Hari Aktif)";
+        }
 
         $payload = [
             'transaction_details' => [
@@ -264,6 +269,18 @@ class MidtransService
         $billing->date_update = Carbon::now();
         $billing->user_update = 'Midtrans Webhook';
         $billing->save();
+
+        // Jika tagihan lunas, buka isolir (un-suspend) pelanggan otomatis di database
+        if ((int) $billing->status_bill_lay === 15) {
+            try {
+                $billing->customer?->unSuspend();
+            } catch (\Throwable $e) {
+                Log::warning('Midtrans Webhook: Failed to unSuspend customer', [
+                    'customer_id' => $billing->nomor_internet,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         Log::info('Midtrans Webhook: Billing status updated', [
             'order_id' => $orderId,

@@ -131,9 +131,93 @@ class Customer extends Authenticatable
         return $this->alamat_pasang;
     }
 
+    public function getIsSuspendedAttribute(): bool
+    {
+        $statusReg = (string) ($this->status_reg ?? '');
+        return ($this->is_suspend === '1' || $this->is_suspend === 1 || $statusReg === '21' || $statusReg === '21.1');
+    }
+
     public function getStatusAttribute()
     {
-        return ($this->is_suspend == '1' || $this->is_suspend == '0' || empty($this->is_suspend)) ? 'active' : 'suspended';
+        return $this->is_suspended ? 'suspended' : 'active';
+    }
+
+    /**
+     * Hitung kalkulasi prorate hari aktif jika pelanggan berstatus suspend
+     */
+    public function calculateProrate(?float $baseAmount = null): array
+    {
+        $basePrice = $baseAmount ?? (float) ($this->billing_amount ?: ($this->bandwith?->harga_bandwith ?? 250000));
+        $isSuspended = $this->is_suspended;
+
+        $now = \Carbon\Carbon::now();
+        $totalDaysInMonth = (int) $now->daysInMonth;
+        $currentDay = (int) $now->day;
+
+        // Sisa hari aktif dari hari ini sampai akhir bulan (inklusif)
+        $activeDays = max(1, ($totalDaysInMonth - $currentDay) + 1);
+        $suspendedDays = max(0, $totalDaysInMonth - $activeDays);
+
+        if (!$isSuspended || $basePrice <= 0) {
+            return [
+                'is_prorate' => false,
+                'base_amount' => $basePrice,
+                'final_amount' => $basePrice,
+                'discount' => 0,
+                'days_active' => $totalDaysInMonth,
+                'days_suspended' => 0,
+                'total_days' => $totalDaysInMonth,
+                'percentage' => 100,
+                'formatted_base' => 'Rp ' . number_format($basePrice, 0, ',', '.'),
+                'formatted_discount' => 'Rp 0',
+                'formatted_final' => 'Rp ' . number_format($basePrice, 0, ',', '.'),
+            ];
+        }
+
+        // Kalkulasi proporsional hari aktif
+        $prorateAmount = (float) round(($activeDays / $totalDaysInMonth) * $basePrice);
+        $discountAmount = max(0, (float) ($basePrice - $prorateAmount));
+
+        return [
+            'is_prorate' => true,
+            'base_amount' => $basePrice,
+            'final_amount' => $prorateAmount,
+            'discount' => $discountAmount,
+            'days_active' => $activeDays,
+            'days_suspended' => $suspendedDays,
+            'total_days' => $totalDaysInMonth,
+            'percentage' => round(($activeDays / $totalDaysInMonth) * 100, 1),
+            'formatted_base' => 'Rp ' . number_format($basePrice, 0, ',', '.'),
+            'formatted_discount' => 'Rp ' . number_format($discountAmount, 0, ',', '.'),
+            'formatted_final' => 'Rp ' . number_format($prorateAmount, 0, ',', '.'),
+        ];
+    }
+
+    /**
+     * Buka suspend pelanggan otomatis saat pembayaran lunas
+     */
+    public function unSuspend(): bool
+    {
+        $this->is_suspend = '0';
+        $this->status_reg = '20'; // Aktif
+
+        $nomorInternet = (string) $this->nomor_internet;
+        if (!$nomorInternet) return false;
+
+        $connections = array_unique([$this->getConnectionName(), config('database.default'), 'ims', 'mysql']);
+        foreach ($connections as $connName) {
+            if (!$connName) continue;
+            try {
+                \Illuminate\Support\Facades\DB::connection($connName)
+                    ->table('trx_batchjob_register')
+                    ->where('nomor_internet', $nomorInternet)
+                    ->update([
+                        'is_suspend' => '0',
+                        'status_reg' => '20',
+                    ]);
+            } catch (\Throwable $e) {}
+        }
+        return true;
     }
 
     /**

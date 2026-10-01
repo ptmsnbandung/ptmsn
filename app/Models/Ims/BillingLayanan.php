@@ -81,12 +81,53 @@ class BillingLayanan extends Model
 
     public function getFormattedTotalAttribute(): string
     {
-        return 'Rp ' . number_format((float) ($this->total_layanan ?: 0), 0, ',', '.');
+        return 'Rp ' . number_format($this->payable_amount, 0, ',', '.');
     }
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->formatted_total;
+        return 'Rp ' . number_format((float) ($this->total_layanan ?: 0), 0, ',', '.');
+    }
+
+    public function getProrateInfoAttribute(): array
+    {
+        $customer = $this->customer;
+        $baseAmount = (float) ($this->total_layanan ?: ($customer?->billing_amount ?? 250000));
+        if ($customer) {
+            return $customer->calculateProrate($baseAmount);
+        }
+        return [
+            'is_prorate' => false,
+            'base_amount' => $baseAmount,
+            'final_amount' => $baseAmount,
+            'discount' => 0,
+            'days_active' => 30,
+            'days_suspended' => 0,
+            'total_days' => 30,
+            'percentage' => 100,
+            'formatted_base' => 'Rp ' . number_format($baseAmount, 0, ',', '.'),
+            'formatted_discount' => 'Rp 0',
+            'formatted_final' => 'Rp ' . number_format($baseAmount, 0, ',', '.'),
+        ];
+    }
+
+    public function getPayableAmountAttribute(): float
+    {
+        if ($this->is_paid) {
+            return (float) ($this->amount_paid ?: ($this->total_layanan ?: 0));
+        }
+
+        $prorate = $this->prorate_info;
+        if (!empty($prorate['is_prorate'])) {
+            return (float) $prorate['final_amount'];
+        }
+
+        return (float) ($this->total_layanan ?: 250000);
+    }
+
+    public function getFormattedPayableAmountAttribute(): string
+    {
+        return 'Rp ' . number_format($this->payable_amount, 0, ',', '.');
     }
 
     public function getIsPaidAttribute(): bool
