@@ -76,6 +76,9 @@
         }
 
         @media (min-width: 768px) {
+            .desktop-hero-panel {
+                background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #0e7490 100%) !important;
+            }
             .clean-login-sheet {
                 border-radius: 0px;
                 box-shadow: none;
@@ -114,7 +117,7 @@
     <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
         <!-- LEFT / TOP SECTION: Brand Header (37% on Mobile & 42% on Desktop) -->
-        <div class="bg-transparent md:hero-network-gradient h-[37vh] max-h-[37vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3.5 sm:p-4 md:p-8 text-center relative z-10 md:border-r md:border-sky-500/20">
+        <div class="bg-transparent desktop-hero-panel h-[37vh] max-h-[37vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3.5 sm:p-4 md:p-8 text-center relative z-10 md:border-r md:border-sky-500/20">
             
             <!-- Ambient Card Glow -->
             <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
