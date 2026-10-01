@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-50 text-slate-800">
+<html lang="id" class="h-full bg-sky-400">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyMSN — Customer Self-Care | PT Media Solusi Network</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
-    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter, JetBrains Mono -->
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,6 @@
                         brand: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
                         heading: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
                         sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
                     }
                 }
             }
@@ -44,102 +43,102 @@
 
     <style>
         body {
-            background-color: #f1f5f9;
-            background-image: 
-                radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.16) 0px, transparent 40%),
-                radial-gradient(at 85% 20%, rgba(56, 189, 248, 0.20) 0px, transparent 45%),
-                radial-gradient(at 50% 85%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-                radial-gradient(at 90% 85%, rgba(14, 165, 233, 0.14) 0px, transparent 40%);
+            background: linear-gradient(180deg, #38bdf8 0%, #60cdff 35%, #56c2f5 65%, #38bdf8 100%);
             font-family: 'Inter', sans-serif;
-            background-attachment: fixed;
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
-        .login-glass-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 
-                0 20px 40px -10px rgba(15, 23, 42, 0.08),
-                0 0 0 1px rgba(226, 232, 240, 0.8),
-                inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+        .login-sheet {
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            box-shadow: 0 -10px 40px -5px rgba(2, 132, 199, 0.25);
+        }
+
+        @media (min-width: 640px) {
+            .login-sheet {
+                border-radius: 36px;
+                box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            }
+        }
+
+        .input-glow:focus-within {
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-x-hidden text-slate-800 antialiased">
+<body class="min-h-screen flex flex-col justify-between sm:justify-center items-center text-slate-800 antialiased sm:p-4">
 
-    <!-- Ambient Glow Background Blobs -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[550px] h-[300px] bg-sky-300/30 rounded-full blur-[130px]"></div>
-        <div class="absolute bottom-5 left-5 w-[300px] h-[300px] bg-blue-200/35 rounded-full blur-[110px]"></div>
-        <div class="absolute top-1/3 -right-20 w-[350px] h-[350px] bg-indigo-200/30 rounded-full blur-[120px]"></div>
-    </div>
+    <!-- Container wrapper (App Shell) -->
+    <div class="w-full max-w-[430px] flex flex-col justify-between min-h-screen sm:min-h-[720px] sm:bg-gradient-to-b sm:from-[#38bdf8] sm:via-[#5bcafc] sm:to-[#38bdf8] sm:rounded-[44px] sm:shadow-2xl sm:border-[5px] sm:border-white/30 overflow-hidden relative">
 
-    <!-- Centered Card Container (Sleek & Compact) -->
-    <div class="relative z-10 w-full max-w-[390px] mx-auto py-4">
-        
-        <!-- Brand Logo MSN MID -->
-        <div class="text-center mb-5">
-            <a href="{{ route('home') }}" class="inline-block hover:opacity-90 transition-opacity" title="PT Media Solusi Network">
-                <img 
-                    src="{{ asset('images/logo/LOGO MSN MID.png') }}" 
-                    alt="Logo PT Media Solusi Network" 
-                    class="h-14 sm:h-16 w-auto mx-auto object-contain drop-shadow-xs hover:scale-105 transition-transform"
-                >
+        <!-- TOP SECTION: Logo & Brand Header -->
+        <div class="flex-1 flex flex-col items-center justify-center pt-10 pb-8 px-6 text-center z-10">
+            
+            <!-- White Icon Container with Soft Drop Shadow -->
+            <a href="{{ route('home') }}" class="group block mb-3 transform hover:scale-105 transition-transform duration-300">
+                <div class="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto flex items-center justify-center">
+                    <!-- Subtle Glow Ring -->
+                    <div class="absolute inset-0 bg-white/30 rounded-full blur-xl animate-pulse"></div>
+                    
+                    <!-- White Logo / Emblem Graphic -->
+                    <div class="relative w-full h-full rounded-3xl bg-white/20 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-4">
+                        <img 
+                            src="{{ asset('images/logo/logo-msn-white.png') }}" 
+                            alt="PT Media Solusi Network" 
+                            class="max-h-full max-w-full object-contain filter drop-shadow-md"
+                            onerror="this.onerror=null; this.src='{{ asset('images/logo/logo-icon.png') }}';"
+                        >
+                    </div>
+                </div>
             </a>
+
+            <!-- Brand Name Typography -->
+            <h1 class="text-white font-heading font-extrabold text-2xl sm:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
+                <span>My</span><span class="text-sky-100">MSN</span>
+            </h1>
+            <p class="text-white/90 text-xs font-medium tracking-wide uppercase mt-0.5 drop-shadow-xs">
+                Customer Self-Care Portal
+            </p>
         </div>
 
-        <!-- The Login Glass Card -->
-        <div class="login-glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-7">
+        <!-- BOTTOM SECTION: White Rounded Sheet Card -->
+        <div class="login-sheet bg-white px-7 pt-8 pb-7 w-full flex-shrink-0 z-20">
             
-            <!-- Card Header -->
-            <div class="mb-5">
-                <div class="flex items-center justify-between mb-1.5">
-                    <div class="flex items-center gap-1">
-                        <span class="font-brand font-extrabold text-3xl tracking-tight text-sky-500">My</span><span class="font-brand font-black text-3xl tracking-tight text-slate-900">MSN</span>
-                    </div>
-                    <span class="text-[10px] font-heading font-bold tracking-wide uppercase px-2.5 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200/80 shadow-2xs">
-                        Self-Care
-                    </span>
-                </div>
-                <div class="text-[10.5px] font-heading font-bold tracking-wider uppercase text-sky-600 mb-2 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
-                    <span>CUSTOMER SELF-CARE</span>
-                </div>
-                <p class="text-xs text-slate-500 leading-relaxed font-sans">
-                    Gunakan Nomor Internet (ID Pelanggan) atau Nomor WhatsApp yang terdaftar
+            <!-- Card Header: WELCOME -->
+            <div class="text-center mb-6">
+                <h2 class="text-2xl sm:text-[26px] font-heading font-black tracking-widest text-[#4f7cf7] uppercase">
+                    WELCOME
+                </h2>
+                <p class="text-xs text-slate-400 font-medium mt-1">
+                    Silakan masuk dengan akun internet Anda
                 </p>
             </div>
 
             <!-- Alerts Container -->
-            
-            <!-- 1 Hour Timeout Alert -->
             @if(session('warning'))
-                <div class="mb-4 p-3 rounded-xl bg-amber-50/95 border border-amber-200 text-amber-900 text-xs font-sans flex items-start gap-2 shadow-xs animate-pulse">
-                    <iconify-icon icon="solar:clock-circle-bold" class="text-base shrink-0 text-amber-600 mt-0.5"></iconify-icon>
+                <div class="mb-4 p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2 animate-pulse">
+                    <iconify-icon icon="solar:clock-circle-bold" class="text-base shrink-0 text-amber-500 mt-0.5"></iconify-icon>
                     <span class="leading-snug">{{ session('warning') }}</span>
                 </div>
             @endif
 
-            <!-- General Info Alert -->
             @if(session('info'))
-                <div class="mb-4 p-3 rounded-xl bg-sky-50/95 border border-sky-200 text-sky-900 text-xs font-sans flex items-start gap-2 shadow-xs">
-                    <iconify-icon icon="solar:info-circle-bold" class="text-base shrink-0 text-sky-600 mt-0.5"></iconify-icon>
+                <div class="mb-4 p-3 rounded-2xl bg-sky-50 border border-sky-200 text-sky-900 text-xs flex items-start gap-2">
+                    <iconify-icon icon="solar:info-circle-bold" class="text-base shrink-0 text-sky-500 mt-0.5"></iconify-icon>
                     <span class="leading-snug">{{ session('info') }}</span>
                 </div>
             @endif
 
-            <!-- Success Alert -->
             @if(session('success'))
-                <div class="mb-4 p-3 rounded-xl bg-emerald-50/95 border border-emerald-200 text-emerald-900 text-xs font-sans flex items-start gap-2 shadow-xs">
-                    <iconify-icon icon="solar:check-circle-bold" class="text-base shrink-0 text-emerald-600 mt-0.5"></iconify-icon>
+                <div class="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2">
+                    <iconify-icon icon="solar:check-circle-bold" class="text-base shrink-0 text-emerald-500 mt-0.5"></iconify-icon>
                     <span class="leading-snug">{{ session('success') }}</span>
                 </div>
             @endif
 
-            <!-- Error Alert -->
             @if(isset($errors) && $errors->any())
-                <div class="mb-4 p-3 rounded-xl bg-rose-50/95 border border-rose-200 text-rose-900 text-xs font-sans shadow-xs">
+                <div class="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs">
                     @foreach($errors->all() as $error)
                         <div class="flex items-start gap-2">
                             <iconify-icon icon="solar:danger-circle-bold" class="text-base shrink-0 text-rose-500 mt-0.5"></iconify-icon>
@@ -153,15 +152,13 @@
             <form id="loginForm" action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4">
                 @csrf
 
+                <!-- Input: Nomor Internet / WhatsApp -->
                 <div>
-                    <label for="login" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    <label for="login" class="block text-[11.5px] font-heading font-semibold text-slate-600 mb-1.5 pl-1">
                         Nomor Internet / WhatsApp
                     </label>
                     
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                            <iconify-icon icon="solar:user-id-bold" width="18"></iconify-icon>
-                        </div>
+                    <div class="relative input-glow rounded-2xl transition-all">
                         <input 
                             type="text" 
                             id="login" 
@@ -169,58 +166,75 @@
                             value="{{ old('login', old('phone')) }}" 
                             required 
                             autofocus 
-                            class="w-full pl-10 pr-3.5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/90 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all font-mono shadow-xs"
+                            class="w-full pl-4 pr-11 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-inner"
                             placeholder="Contoh: 1711221 atau 081234567890"
                             autocomplete="username"
                         >
-                    </div>
-
-                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-2 px-0.5">
-                        <span class="flex items-center gap-1">
-                            <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-xs"></iconify-icon>
-                            <span>Tervalidasi Database IMS</span>
-                        </span>
-                        <span class="flex items-center gap-1 text-slate-400">
-                            <iconify-icon icon="solar:clock-circle-linear" class="text-xs"></iconify-icon>
-                            <span>Auto-logout 1 jam</span>
-                        </span>
+                        <!-- Right Icon (matching sample style) -->
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-sky-400">
+                            <iconify-icon icon="solar:letter-bold" width="20"></iconify-icon>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Action Submit Button -->
-                <button 
-                    type="submit" 
-                    id="btnSubmit"
-                    class="w-full py-3 sm:py-3.5 px-5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-sm transition-all duration-200 shadow-md shadow-sky-500/25 hover:shadow-lg hover:shadow-sky-500/35 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-80 disabled:cursor-not-allowed disabled:pointer-events-none"
-                >
-                    <span id="btnText" class="inline-flex items-center justify-center gap-2">
-                        <span>Masuk Sekarang</span>
-                        <iconify-icon icon="solar:arrow-right-linear" width="17"></iconify-icon>
-                    </span>
-                    <span id="btnLoading" class="hidden items-center justify-center gap-2">
-                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Memproses Masuk...</span>
-                    </span>
-                </button>
+                <!-- Auxiliary Row: Remember & Help -->
+                <div class="flex items-center justify-between text-[11px] pt-0.5 px-1">
+                    <label class="flex items-center gap-2 cursor-pointer text-slate-500 hover:text-slate-700 select-none">
+                        <input type="checkbox" name="remember" checked class="w-3.5 h-3.5 rounded-full text-sky-500 border-slate-300 focus:ring-sky-400 accent-sky-500">
+                        <span>Ingat Saya</span>
+                    </label>
+                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20butuh%20bantuan%20login%20portal%20pelanggan" target="_blank" class="font-medium text-[#4f7cf7] hover:underline">
+                        Butuh Bantuan?
+                    </a>
+                </div>
+
+                <!-- Submit Button (Pill shaped gradient matching sample image) -->
+                <div class="pt-2 text-center">
+                    <button 
+                        type="submit" 
+                        id="btnSubmit"
+                        class="w-full sm:w-48 py-3 px-8 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-[#4f7cf7] hover:from-sky-500 hover:to-[#3b66e3] text-white font-heading font-extrabold text-sm uppercase tracking-widest transition-all duration-200 shadow-md shadow-sky-400/40 hover:shadow-lg hover:shadow-sky-400/50 active:scale-95 flex items-center justify-center gap-2 cursor-pointer mx-auto disabled:opacity-80 disabled:cursor-not-allowed disabled:pointer-events-none"
+                    >
+                        <span id="btnText" class="inline-flex items-center justify-center">
+                            LOGIN
+                        </span>
+                        <span id="btnLoading" class="hidden items-center justify-center gap-2">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-xs">LOADING...</span>
+                        </span>
+                    </button>
+                </div>
             </form>
 
-            <!-- Safety & Privacy Guarantee Note -->
-            <div class="mt-5 pt-4 border-t border-slate-200/70 text-center text-[10px] text-slate-400 flex items-center justify-center gap-1.5 font-mono">
-                <iconify-icon icon="solar:lock-bold" class="text-slate-400"></iconify-icon>
-                <span>Koneksi aman terenkripsi • Sesi aktif 1 jam</span>
+            <!-- Social / Help Badges (similar to Google / FB icons in sample) -->
+            <div class="mt-6 flex items-center justify-center gap-4">
+                <a href="https://wa.me/628112293888" target="_blank" class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-500 hover:scale-110 hover:bg-emerald-50 transition-all" title="WhatsApp Support">
+                    <iconify-icon icon="logos:whatsapp-icon" width="20"></iconify-icon>
+                </a>
+                <a href="{{ route('home') }}" class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200/80 shadow-xs flex items-center justify-center text-sky-500 hover:scale-110 hover:bg-sky-50 transition-all" title="Website Resmi MSN">
+                    <iconify-icon icon="solar:global-bold" width="20"></iconify-icon>
+                </a>
             </div>
 
-        </div>
+            <!-- Footer: Register / Web Link -->
+            <div class="mt-5 text-center">
+                <p class="text-[11px] text-slate-500">
+                    Belum berlangganan? 
+                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20ingin%20pasang%20internet%20baru" target="_blank" class="font-bold text-[#4f7cf7] hover:underline">
+                        Daftar Sekarang
+                    </a>
+                </p>
+                <div class="mt-1.5">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-1 text-[10.5px] text-slate-400 hover:text-slate-600 transition-colors">
+                        <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
+                        <span>Kembali ke Halaman Utama</span>
+                    </a>
+                </div>
+            </div>
 
-        <!-- Back to Home Link -->
-        <div class="text-center mt-3.5">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-600 transition-colors font-mono">
-                <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
-                <span>Kembali ke Website Utama</span>
-            </a>
         </div>
 
     </div>
