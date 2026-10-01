@@ -583,40 +583,44 @@
                         </div>
                     </div>
 
-                    <div class="pt-1.5 border-t border-slate-100 flex items-center justify-end gap-1 flex-wrap">
+                    <div class="pt-2 border-t border-slate-100 space-y-1.5">
                         @if(!$inv->is_paid)
                             @if($isPayable)
-                                <button 
-                                    type="button" 
-                                    id="btnPayMobile-{{ $loop->index }}"
-                                    onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
-                                    class="px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                                >
-                                    <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
-                                    <span>Midtrans</span>
-                                </button>
-                                <button 
-                                    type="button" 
-                                    @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                    class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                                >
-                                    <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
-                                    <span>Upload</span>
-                                </button>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <button 
+                                        type="button" 
+                                        id="btnPayMobile-{{ $loop->index }}"
+                                        onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
+                                        class="w-full py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                    >
+                                        <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                        <span>Midtrans</span>
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
+                                        class="w-full py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                    >
+                                        <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                        <span>Transfer</span>
+                                    </button>
+                                </div>
                             @else
-                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-[10px] border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
-                                    <iconify-icon icon="solar:lock-bold" width="11"></iconify-icon>
-                                    <span>Terkunci (Bayar {{ $oldestUnpaidInvoice?->period }} Dulu)</span>
-                                </span>
+                                <div class="text-right">
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-[10px] border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
+                                        <iconify-icon icon="solar:lock-bold" width="11"></iconify-icon>
+                                        <span>Terkunci (Bayar {{ $oldestUnpaidInvoice?->period }} Dulu)</span>
+                                    </span>
+                                </div>
                             @endif
                         @endif
                         <a 
                             href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
                             target="_blank"
-                            class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 font-semibold text-[11px] flex items-center gap-1 transition-all"
+                            class="w-full py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 font-semibold text-[11px] flex items-center justify-center gap-1 border border-slate-200/70 transition-all"
                         >
                             <iconify-icon icon="solar:document-text-bold" width="12"></iconify-icon>
-                            <span>Struk</span>
+                            <span>Lihat / Cetak Struk</span>
                         </a>
                     </div>
                 </div>
@@ -682,39 +686,43 @@
                                 @endif
                             </td>
                             <td class="py-2.5 px-3.5 text-center whitespace-nowrap">
-                                <div class="flex items-center justify-center gap-1">
+                                <div class="flex flex-col items-center justify-center gap-1.5">
                                     @if(!$inv->is_paid)
                                         @if($isPayable)
-                                            <button 
-                                                type="button" 
-                                                id="btnPayHist-{{ $loop->index }}"
-                                                onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
-                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
-                                                title="Bayar tagihan ini via Midtrans"
-                                            >
-                                                <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
-                                                <span>Midtrans</span>
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
-                                                title="Upload bukti transfer untuk tagihan ini"
-                                            >
-                                                <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
-                                                <span>Transfer</span>
-                                            </button>
+                                            <div class="inline-flex items-center gap-1.5">
+                                                <button 
+                                                    type="button" 
+                                                    id="btnPayHist-{{ $loop->index }}"
+                                                    onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
+                                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                                                    title="Bayar tagihan ini via Midtrans"
+                                                >
+                                                    <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                                    <span>Midtrans</span>
+                                                </button>
+                                                <button 
+                                                    type="button" 
+                                                    @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
+                                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                                                    title="Upload bukti transfer untuk tagihan ini"
+                                                >
+                                                    <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                                    <span>Transfer</span>
+                                                </button>
+                                            </div>
                                         @else
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
-                                                <iconify-icon icon="solar:lock-bold" width="12"></iconify-icon>
-                                                <span>Terkunci</span>
-                                            </span>
+                                            <div>
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
+                                                    <iconify-icon icon="solar:lock-bold" width="12"></iconify-icon>
+                                                    <span>Terkunci</span>
+                                                </span>
+                                            </div>
                                         @endif
                                     @endif
                                     <a 
                                         href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
                                         target="_blank"
-                                        class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs whitespace-nowrap"
+                                        class="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 transition-colors font-semibold text-xs border border-slate-200/80 whitespace-nowrap {{ !$inv->is_paid && $isPayable ? 'w-full' : '' }}"
                                         title="Cetak struk resmi"
                                     >
                                         <iconify-icon icon="solar:document-text-bold" width="12"></iconify-icon>
