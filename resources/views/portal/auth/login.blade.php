@@ -165,10 +165,10 @@
         <div class="clean-login-sheet h-[63vh] max-h-[63vh] md:h-auto md:max-h-none md:w-7/12 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
             
             <div class="w-full max-w-sm flex flex-col gap-3 sm:gap-3.5 my-auto">
-                <!-- Card Header: WELCOME -->
+                <!-- Card Header: SELAMAT DATANG -->
                 <div class="text-center">
-                    <h2 class="text-2xl sm:text-[26px] font-heading font-black tracking-widest text-[#0284c7] uppercase">
-                        WELCOME
+                    <h2 class="text-xl sm:text-2xl font-heading font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#091322] via-[#0f233d] to-[#0e7490] uppercase">
+                        SELAMAT DATANG
                     </h2>
                     <p class="text-[11px] sm:text-xs text-slate-400 font-medium mt-0.5">
                         Silakan masuk dengan akun internet Anda
