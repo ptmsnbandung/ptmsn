@@ -18,23 +18,9 @@ class DashboardController extends Controller
         if ($customer) {
             $customer->load(['pelanggan', 'bandwith', 'statusRegistrasi']);
 
-            // Pastikan is_login terupdate menjadi 1 di database IMS trx_batchjob_register
+            // Pastikan is_login terupdate menjadi 1 di database
             if ((int)($customer->is_login ?? 0) === 0) {
-                try {
-                    \Illuminate\Support\Facades\DB::connection('ims')
-                        ->statement("UPDATE trx_batchjob_register SET is_login = 1 WHERE nomor_internet = ?", [$customer->nomor_internet]);
-                    $customer->is_login = 1;
-                } catch (\Throwable $e) {
-                    try {
-                        \Illuminate\Support\Facades\DB::connection('ims')
-                            ->table('trx_batchjob_register')
-                            ->where('nomor_internet', $customer->nomor_internet)
-                            ->update(['is_login' => 1]);
-                        $customer->is_login = 1;
-                    } catch (\Throwable $err) {
-                        //
-                    }
-                }
+                $customer->markAsLoggedIn();
             }
         }
 
@@ -68,31 +54,7 @@ class DashboardController extends Controller
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
         if ($customer) {
-            try {
-                $customer->is_login = 1;
-                $customer->save();
-            } catch (\Throwable $e) {
-                try {
-                    \Illuminate\Support\Facades\DB::connection($customer->getConnectionName() ?: 'ims')
-                        ->table($customer->getTable())
-                        ->where($customer->getKeyName(), $customer->getKey())
-                        ->update(['is_login' => 1]);
-                } catch (\Throwable $inner) {
-                    //
-                }
-            }
-
-            // Sync ke tabel customers di default connection jika ada
-            try {
-                if (\Illuminate\Support\Facades\Schema::connection('mysql')->hasTable('customers')) {
-                    \Illuminate\Support\Facades\DB::connection('mysql')->table('customers')
-                        ->where('customer_id', $customer->customer_id)
-                        ->orWhere('phone', $customer->phone)
-                        ->update(['is_login' => 1]);
-                }
-            } catch (\Throwable $e) {
-                //
-            }
+            $customer->markAsLoggedIn();
         }
 
         return response()->json([

@@ -62,27 +62,8 @@ class AuthController extends Controller
             if ($customer) {
                 $wasFirstLogin = (int)($customer->is_login ?? 0) === 0;
 
-                // Update status is_login menjadi 1 di database IMS (tabel trx_batchjob_register)
-                try {
-                    \Illuminate\Support\Facades\DB::connection('ims')
-                        ->statement("UPDATE trx_batchjob_register SET is_login = 1 WHERE nomor_internet = ?", [$customer->nomor_internet]);
-                    $customer->is_login = 1;
-                } catch (\Throwable $e) {
-                    try {
-                        \Illuminate\Support\Facades\DB::connection('ims')
-                            ->table('trx_batchjob_register')
-                            ->where('nomor_internet', $customer->nomor_internet)
-                            ->update(['is_login' => 1]);
-                        $customer->is_login = 1;
-                    } catch (\Throwable $err) {
-                        try {
-                            $customer->is_login = 1;
-                            $customer->save();
-                        } catch (\Throwable $err2) {
-                            //
-                        }
-                    }
-                }
+                // Update status is_login menjadi 1 di database
+                $customer->markAsLoggedIn();
 
                 // Langsung login tanpa perlu memasukkan PIN/kata sandi (tanpa remember token agar patuh batas sesi 1 jam)
                 Auth::guard('customer')->login($customer, false);

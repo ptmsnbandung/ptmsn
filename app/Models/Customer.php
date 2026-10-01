@@ -232,4 +232,56 @@ class Customer extends Authenticatable
             'price' => $this->billing_amount,
         ];
     }
+
+    /**
+     * Tandai pelanggan sudah login (update is_login = 1) di database
+     */
+    public function markAsLoggedIn(): bool
+    {
+        $this->is_login = 1;
+        $nomorInternet = (string) $this->nomor_internet;
+
+        if (!$nomorInternet) {
+            return false;
+        }
+
+        // 1. Update via koneksi aktif model
+        try {
+            $this->getConnection()->table($this->getTable())
+                ->where('nomor_internet', $nomorInternet)
+                ->update(['is_login' => 1]);
+        } catch (\Throwable $e) {
+            //
+        }
+
+        // 2. Update via Model Eloquent
+        try {
+            $this->save();
+        } catch (\Throwable $e) {
+            //
+        }
+
+        // 3. Fallback: coba semua koneksi database yang terkonfigurasi (ims, mysql, default)
+        $connections = array_unique([$this->getConnectionName(), config('database.default'), 'ims', 'mysql']);
+        foreach ($connections as $connName) {
+            if (!$connName) continue;
+            try {
+                \Illuminate\Support\Facades\DB::connection($connName)
+                    ->statement("UPDATE `trx_batchjob_register` SET `is_login` = 1 WHERE `nomor_internet` = ?", [$nomorInternet]);
+            } catch (\Throwable $e) {
+                //
+            }
+            try {
+                \Illuminate\Support\Facades\DB::connection($connName)
+                    ->table('customers')
+                    ->where('customer_id', $nomorInternet)
+                    ->update(['is_login' => 1]);
+            } catch (\Throwable $e) {
+                //
+            }
+        }
+
+        return true;
+    }
 }
+
