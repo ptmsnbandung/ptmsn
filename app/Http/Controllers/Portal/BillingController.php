@@ -33,11 +33,22 @@ class BillingController extends Controller
         // Ambil riwayat seluruh invoice pelanggan dari tabel IMS trx_billing_layanan
         $invoices = $customer->billingLayanan;
 
-        // Cari tagihan aktif: prioritaskan yang belum lunas (status != 15), atau ambil tagihan terbaru
-        $currentInvoice = $invoices->firstWhere('is_paid', false) ?? $invoices->first();
+        // Ambil seluruh tagihan yang belum lunas, urutkan secara kronologis (Tahun ASC, Bulan ASC, date_create ASC)
+        $unpaidInvoices = $invoices->where('is_paid', false)->sortBy(function ($inv) {
+            $year = (int) ($inv->tahun_tagihan ?: 2026);
+            $month = (int) ($inv->bulan_tagihan ?: 1);
+            $date = $inv->date_create ? $inv->date_create->timestamp : 0;
+            return sprintf('%04d%02d_%012d', $year, $month, $date);
+        })->values();
 
-        // Jika belum ada data tagihan di IMS untuk pelanggan ini, siapkan tagihan bulan berjalan
-        if (!$currentInvoice) {
+        // Tagihan aktif yang WAJIB dibayar pertama kali adalah tunggakan tertua
+        $oldestUnpaidInvoice = $unpaidInvoices->first();
+
+        // Tagihan aktif utama: gunakan tunggakan tertua jika ada, atau tagihan terbaru jika semua sudah lunas
+        $currentInvoice = $oldestUnpaidInvoice ?? $invoices->first();
+
+        // Jika belum ada data tagihan sama sekali di IMS untuk pelanggan ini, siapkan tagihan bulan berjalan
+        if (!$currentInvoice && $invoices->isEmpty()) {
             $currentMonth = Carbon::now()->format('m');
             $currentYear = Carbon::now()->format('Y');
             $kodeBilling = 'INV/' . $customer->customer_id . '/' . $currentMonth . '/' . $currentYear;
@@ -64,6 +75,8 @@ class BillingController extends Controller
 
             // Muat ulang riwayat
             $invoices = $customer->billingLayanan()->get();
+            $unpaidInvoices = $invoices->where('is_paid', false);
+            $oldestUnpaidInvoice = $currentInvoice->is_paid ? null : $currentInvoice;
         }
 
         // Cek sinkronisasi status otomatis dengan Midtrans jika tagihan belum lunas tapi pernah dibuat sesi bayar
@@ -87,6 +100,8 @@ class BillingController extends Controller
         return view('portal.billing.index', compact(
             'customer',
             'currentInvoice',
+            'oldestUnpaidInvoice',
+            'unpaidInvoices',
             'invoices',
             'snapJsUrl',
             'clientKey',
@@ -116,6 +131,19 @@ class BillingController extends Controller
 
         if ($invoice->is_paid) {
             return back()->with('info', 'Tagihan ini sudah tercatat LUNAS.');
+        }
+
+        // Validasi urutan pembayaran (FIFO): Pelanggan wajib melunasi tunggakan tertua terlebih dahulu
+        $unpaidInvoices = $customer->billingLayanan->where('is_paid', false)->sortBy(function ($inv) {
+            $year = (int) ($inv->tahun_tagihan ?: 2026);
+            $month = (int) ($inv->bulan_tagihan ?: 1);
+            $date = $inv->date_create ? $inv->date_create->timestamp : 0;
+            return sprintf('%04d%02d_%012d', $year, $month, $date);
+        })->values();
+
+        $oldestUnpaid = $unpaidInvoices->first();
+        if ($oldestUnpaid && $oldestUnpaid->kode_billing_layanan !== $invoice->kode_billing_layanan) {
+            return back()->withErrors(['transfer' => "Pembayaran harus berurutan. Harap selesaikan tagihan tertua Anda terlebih dahulu (#{$oldestUnpaid->invoice_number} - Periode {$oldestUnpaid->period})."]);
         }
 
         $request->validate([
@@ -295,6 +323,22 @@ class BillingController extends Controller
                 'success' => false,
                 'message' => 'Tagihan ini sudah LUNAS.',
             ], 400);
+        }
+
+        // Validasi urutan pembayaran (FIFO): Pelanggan wajib melunasi tunggakan tertua terlebih dahulu
+        $unpaidInvoices = $customer->billingLayanan->where('is_paid', false)->sortBy(function ($inv) {
+            $year = (int) ($inv->tahun_tagihan ?: 2026);
+            $month = (int) ($inv->bulan_tagihan ?: 1);
+            $date = $inv->date_create ? $inv->date_create->timestamp : 0;
+            return sprintf('%04d%02d_%012d', $year, $month, $date);
+        })->values();
+
+        $oldestUnpaid = $unpaidInvoices->first();
+        if ($oldestUnpaid && $oldestUnpaid->kode_billing_layanan !== $invoice->kode_billing_layanan) {
+            return response()->json([
+                'success' => false,
+                'message' => "Pembayaran harus berurutan. Harap selesaikan tagihan tertua Anda terlebih dahulu (#{$oldestUnpaid->invoice_number} - Periode {$oldestUnpaid->period}).",
+            ], 422);
         }
 
         $force = $request->boolean('force', true);

@@ -64,6 +64,28 @@
         </div>
     @endif
 
+    @if(isset($unpaidInvoices) && $unpaidInvoices->count() > 1)
+        <!-- Warning Banner: Multi-Month Unpaid Invoices (FIFO Sequential Order Notice) -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-amber-50/95 border border-amber-300 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <iconify-icon icon="solar:danger-triangle-bold" class="text-xl"></iconify-icon>
+                </div>
+                <div class="text-xs">
+                    <span class="font-bold text-xs sm:text-sm block text-amber-950">
+                        Anda memiliki {{ $unpaidInvoices->count() }} tagihan yang belum lunas
+                    </span>
+                    <span class="text-amber-800 text-[11px]">
+                        Pembayaran harus diselesaikan secara berurutan mulai dari tagihan tertua (<strong>Periode: {{ $oldestUnpaidInvoice->period }}</strong>).
+                    </span>
+                </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-xl bg-amber-100 text-amber-900 border border-amber-300/80 font-mono font-bold text-xs shrink-0 text-center">
+                Tunggakan: {{ $unpaidInvoices->count() }} Bulan
+            </span>
+        </div>
+    @endif
+
     <!-- Active Invoice Card -->
     <div id="tour-step-invoice-card" class="portal-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden space-y-3.5 sm:space-y-4">
         
@@ -527,6 +549,7 @@
             @forelse($invoices as $inv)
                 @php
                     $invConf = $confirmations->get($inv->kode_billing_layanan);
+                    $isPayable = (!$inv->is_paid && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
                 @endphp
                 <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1.5">
                     <div class="flex items-center justify-between gap-2">
@@ -562,23 +585,30 @@
 
                     <div class="pt-1.5 border-t border-slate-100 flex items-center justify-end gap-1 flex-wrap">
                         @if(!$inv->is_paid)
-                            <button 
-                                type="button" 
-                                id="btnPayMobile-{{ $loop->index }}"
-                                onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
-                                class="px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                            >
-                                <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
-                                <span>Midtrans</span>
-                            </button>
-                            <button 
-                                type="button" 
-                                @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                            >
-                                <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
-                                <span>Upload</span>
-                            </button>
+                            @if($isPayable)
+                                <button 
+                                    type="button" 
+                                    id="btnPayMobile-{{ $loop->index }}"
+                                    onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayMobile-{{ $loop->index }}')"
+                                    class="px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                >
+                                    <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                    <span>Midtrans</span>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
+                                    class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                >
+                                    <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                    <span>Upload</span>
+                                </button>
+                            @else
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-[10px] border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
+                                    <iconify-icon icon="solar:lock-bold" width="11"></iconify-icon>
+                                    <span>Terkunci (Bayar {{ $oldestUnpaidInvoice?->period }} Dulu)</span>
+                                </span>
+                            @endif
                         @endif
                         <a 
                             href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
@@ -615,6 +645,7 @@
                     @forelse($invoices as $inv)
                         @php
                             $invConf = $confirmations->get($inv->kode_billing_layanan);
+                            $isPayable = (!$inv->is_paid && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
                         @endphp
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <td class="py-2.5 px-3.5 font-mono font-bold text-slate-800 whitespace-nowrap">
@@ -653,25 +684,32 @@
                             <td class="py-2.5 px-3.5 text-center whitespace-nowrap">
                                 <div class="flex items-center justify-center gap-1">
                                     @if(!$inv->is_paid)
-                                        <button 
-                                            type="button" 
-                                            id="btnPayHist-{{ $loop->index }}"
-                                            onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
-                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
-                                            title="Bayar tagihan ini via Midtrans"
-                                        >
-                                            <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
-                                            <span>Midtrans</span>
-                                        </button>
-                                        <button 
-                                            type="button" 
-                                            @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
-                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
-                                            title="Upload bukti transfer untuk tagihan ini"
-                                        >
-                                            <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
-                                            <span>Transfer</span>
-                                        </button>
+                                        @if($isPayable)
+                                            <button 
+                                                type="button" 
+                                                id="btnPayHist-{{ $loop->index }}"
+                                                onclick="payWithMidtrans('{{ $inv->kode_billing_layanan }}', 'btnPayHist-{{ $loop->index }}')"
+                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-2xs transition-all disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                                                title="Bayar tagihan ini via Midtrans"
+                                            >
+                                                <iconify-icon icon="solar:bolt-circle-bold" width="12"></iconify-icon>
+                                                <span>Midtrans</span>
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
+                                                class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                                                title="Upload bukti transfer untuk tagihan ini"
+                                            >
+                                                <iconify-icon icon="solar:upload-track-bold" width="12"></iconify-icon>
+                                                <span>Transfer</span>
+                                            </button>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
+                                                <iconify-icon icon="solar:lock-bold" width="12"></iconify-icon>
+                                                <span>Terkunci</span>
+                                            </span>
+                                        @endif
                                     @endif
                                     <a 
                                         href="{{ route('portal.billing.show', urlencode($inv->kode_billing_layanan)) }}" 
