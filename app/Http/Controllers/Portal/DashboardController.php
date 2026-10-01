@@ -18,8 +18,11 @@ class DashboardController extends Controller
         if ($customer) {
             $customer->load(['pelanggan', 'bandwith', 'statusRegistrasi']);
 
-            // Pastikan is_login terupdate menjadi 1 di database
+            // Jika is_login di database masih 0, aktifkan sesi first login untuk memicu tutorial lalu tandai logged in
             if ((int)($customer->is_login ?? 0) === 0) {
+                if (!session()->has('is_first_login')) {
+                    session(['is_first_login' => true]);
+                }
                 $customer->markAsLoggedIn();
             }
         }

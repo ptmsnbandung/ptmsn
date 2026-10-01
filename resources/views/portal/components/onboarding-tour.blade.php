@@ -31,6 +31,7 @@
 <div 
     x-data="portalOnboardingTour({
         customerId: '{{ $customerId }}',
+        isFirstLogin: {{ $isFirstLogin ? 'true' : 'false' }},
         shouldActive: {{ $shouldActive ? 'true' : 'false' }},
         initialStep: {{ $initialStepIdx }},
         routes: {
@@ -224,6 +225,14 @@
             initTour() {
                 this.adaptStepsForCurrentPage();
 
+                // Jika server mendeteksi login perdana (is_login = 0 di database), reset storage key agar tour langsung aktif
+                if (config.isFirstLogin) {
+                    try {
+                        localStorage.removeItem(this.storageKey);
+                        sessionStorage.removeItem(this.storageKey);
+                    } catch (e) {}
+                }
+
                 window.startPortalTour = () => {
                     try {
                         localStorage.removeItem(this.storageKey);
@@ -239,8 +248,8 @@
 
                 const hasExplicitStep = new URLSearchParams(window.location.search).has('tour_step');
 
-                // Hanya jalankan jika harus aktif dan belum pernah selesai (kecuali dipicu manual via query param)
-                if (config.shouldActive && (!isDone || hasExplicitStep)) {
+                // Jalankan jika harus aktif dan belum selesai (atau jika login perdana / dipicu manual via URL)
+                if (config.shouldActive && (!isDone || hasExplicitStep || config.isFirstLogin)) {
                     this.startTour();
                 }
             },
