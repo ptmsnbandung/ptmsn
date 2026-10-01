@@ -798,7 +798,27 @@
 @push('scripts')
 <script src="{{ $snapJsUrl }}" data-client-key="{{ $clientKey }}"></script>
 <script>
-    function payWithMidtrans(kodeBilling, btnId = null) {
+    // Helper untuk memastikan script Snap Midtrans termuat sempurna
+    function ensureSnapLoaded() {
+        return new Promise((resolve) => {
+            if (typeof window.snap !== 'undefined' && typeof window.snap.pay === 'function') {
+                return resolve(true);
+            }
+            let existingScript = document.querySelector('script[src*="snap.js"]');
+            if (!existingScript) {
+                existingScript = document.createElement('script');
+                existingScript.src = '{{ $snapJsUrl }}';
+                existingScript.setAttribute('data-client-key', '{{ $clientKey }}');
+                document.head.appendChild(existingScript);
+            }
+            existingScript.onload = () => resolve(typeof window.snap !== 'undefined');
+            existingScript.onerror = () => resolve(false);
+            // Timeout 2 detik jika lambat
+            setTimeout(() => resolve(typeof window.snap !== 'undefined'), 2000);
+        });
+    }
+
+    async function payWithMidtrans(kodeBilling, btnId = null) {
         let btn = null;
         let originalContent = '';
         if (btnId) {
@@ -806,74 +826,90 @@
             if (btn) {
                 originalContent = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1" width="16"></iconify-icon><span>Memproses Midtrans...</span>';
+                btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1" width="16"></iconify-icon><span>Menghubungi Midtrans...</span>';
             }
         }
 
         const endpoint = `{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/pay`;
 
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
             }
 
-            if (data.success && data.token) {
-                if (typeof window.snap !== 'undefined') {
-                    window.snap.pay(data.token, {
-                        onSuccess: function(result) {
-                            fetch(`{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/sync`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Accept': 'application/json'
-                                }
-                            }).finally(() => {
+            if (data.success && (data.token || data.redirect_url)) {
+                await ensureSnapLoaded();
+
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                let snapTriggered = false;
+
+                if (typeof window.snap !== 'undefined' && typeof window.snap.pay === 'function' && data.token) {
+                    try {
+                        window.snap.pay(data.token, {
+                            onSuccess: function(result) {
+                                fetch(`{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/sync`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json'
+                                    }
+                                }).finally(() => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Pembayaran Berhasil!',
+                                        text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
+                                        confirmButtonColor: '#0ea5e9'
+                                    }).then(() => window.location.reload());
+                                });
+                            },
+                            onPending: function(result) {
                                 Swal.fire({
-                                    icon: 'success',
-                                    title: 'Pembayaran Berhasil!',
-                                    text: 'Pembayaran tagihan Anda berhasil dikonfirmasi. Halaman akan dimuat ulang.',
+                                    icon: 'info',
+                                    title: 'Menunggu Pembayaran',
+                                    text: 'Instruksi pembayaran telah dibuat. Silakan selesaikan pembayaran sesuai panduan Midtrans.',
                                     confirmButtonColor: '#0ea5e9'
                                 }).then(() => window.location.reload());
-                            });
-                        },
-                        onPending: function(result) {
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Menunggu Pembayaran',
-                                text: 'Instruksi pembayaran telah dibuat. Silakan selesaikan pembayaran sesuai panduan Midtrans.',
-                                confirmButtonColor: '#0ea5e9'
-                            }).then(() => window.location.reload());
-                        },
-                        onError: function(result) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Pembayaran Dibatalkan',
-                                text: 'Pembayaran gagal diproses atau telah dibatalkan.',
-                                confirmButtonColor: '#0ea5e9'
-                            });
-                        },
-                        onClose: function() {
-                            console.log('Jendela popup Snap Midtrans ditutup.');
-                        }
-                    });
-                } else if (data.redirect_url) {
-                    window.open(data.redirect_url, '_blank');
-                } else {
+                            },
+                            onError: function(result) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Pembayaran Dibatalkan',
+                                    text: 'Pembayaran gagal diproses atau telah dibatalkan.',
+                                    confirmButtonColor: '#0ea5e9'
+                                });
+                            },
+                            onClose: function() {
+                                console.log('Jendela popup Snap Midtrans ditutup.');
+                            }
+                        });
+                        snapTriggered = true;
+                    } catch (snapErr) {
+                        console.warn('Snap Popup Error, beralih ke Redirect URL:', snapErr);
+                        snapTriggered = false;
+                    }
+                }
+
+                // Jika Snap popup tidak dapat ditampilkan (misal di WebView HP / browser memblokir iframe)
+                if (!snapTriggered && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else if (!snapTriggered && !data.redirect_url) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Siap Membayar',
-                        text: 'Sistem pembayaran Midtrans siap diproses.',
+                        icon: 'warning',
+                        title: 'Kendala Tampilan',
+                        text: 'Jendela pembayaran tidak dapat dimuat di perangkat ini. Silakan muat ulang halaman atau hubungi layanan pelanggan.',
                         confirmButtonColor: '#0ea5e9'
                     });
                 }
@@ -881,12 +917,11 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Perhatian',
-                    text: data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa konfigurasi server.',
+                    text: data.message || 'Gagal memproses pembayaran Midtrans. Mohon periksa koneksi atau hubungi CS.',
                     confirmButtonColor: '#0ea5e9'
                 });
             }
-        })
-        .catch(err => {
+        } catch (err) {
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
@@ -895,10 +930,10 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Gangguan Server',
-                text: 'Terjadi kendala saat menghubungi server pembayaran.',
+                text: 'Terjadi kendala saat menghubungi server pembayaran. Silakan coba sesaat lagi.',
                 confirmButtonColor: '#0ea5e9'
             });
-        });
+        }
     }
 </script>
 @endpush

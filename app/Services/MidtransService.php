@@ -123,6 +123,9 @@ class MidtransService
                 'unit' => 'day',
                 'duration' => 3,
             ],
+            'callbacks' => [
+                'finish' => route('portal.billing.index'),
+            ],
         ];
 
         try {
