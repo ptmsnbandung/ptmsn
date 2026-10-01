@@ -10,7 +10,8 @@
     modalInvoiceAmount: '', 
     modalInvoiceNumber: '',
     modalPeriod: '',
-    filePreview: null 
+    filePreview: null,
+    modalFilePreview: null
 }">
 
     <!-- Full-Width Dark Oceanic Blue Hero Backdrop (Extends down behind the top of invoice card) -->
@@ -367,7 +368,7 @@
                                                 $bankLogo = 'mandiri.png';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
-                                                $cardLogoClass = 'h-7 sm:h-8 w-auto max-w-[85px] sm:max-w-[95px] scale-120 sm:scale-130';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[80px] sm:max-w-[85px]';
                                             } elseif (str_contains($bankKey, 'bri')) {
                                                 $bankLogo = 'bri.png';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
@@ -818,116 +819,167 @@
     >
         <div 
             @click.outside="showTransferModal = false"
-            class="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-lg w-full p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto"
+            class="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-lg w-full p-4 sm:p-6 space-y-3.5 sm:space-y-4 max-h-[90vh] overflow-y-auto"
         >
+            <!-- Header Modal -->
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                        <iconify-icon icon="solar:upload-track-bold" class="text-lg"></iconify-icon>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs">
+                        <iconify-icon icon="solar:upload-track-bold" class="text-xl"></iconify-icon>
                     </div>
                     <div>
-                        <h3 class="text-sm font-heading font-extrabold text-slate-900">Upload Bukti Transfer Bank</h3>
+                        <h3 class="text-sm font-heading font-extrabold text-slate-900 leading-tight">Upload Bukti Transfer Bank</h3>
                         <p class="text-[11px] text-slate-500">Invoice: <span class="font-mono font-bold text-sky-600" x-text="'#' + modalInvoiceNumber"></span></p>
                     </div>
                 </div>
-                <button @click="showTransferModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-xl cursor-pointer">
-                    <iconify-icon icon="solar:close-circle-bold" class="text-xl"></iconify-icon>
+                <button 
+                    type="button"
+                    @click="showTransferModal = false" 
+                    class="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-xl transition-colors cursor-pointer"
+                    title="Tutup Modal"
+                >
+                    <iconify-icon icon="solar:close-circle-bold" class="text-2xl"></iconify-icon>
                 </button>
             </div>
 
-            <!-- Rekening PT MSN (Mini ATM Cards) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                @foreach($bankAccounts as $bank)
-                    @php
-                        $mBankKey = strtolower($bank['bank_name']);
-                        $mBankLogo = null;
-                        $mCardGradient = 'from-slate-900 via-slate-800 to-slate-900';
-                        $mAccentBorder = 'border-slate-700/80';
+            <!-- Rekening Resmi PT MSN (Mini ATM Card View) -->
+            <div class="space-y-1.5">
+                <div class="text-[10px] font-mono uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
+                    <span>Rekening Resmi Tujuan:</span>
+                    <span class="text-sky-600 font-sans font-semibold text-[10px]">Klik salin nomor</span>
+                </div>
 
-                        if (str_contains($mBankKey, 'bca')) {
-                            $mBankLogo = 'bca.png';
-                            $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
-                            $mAccentBorder = 'border-sky-500/30';
-                            $mCardLogoClass = 'h-5 sm:h-5.5 scale-110';
-                        } elseif (str_contains($mBankKey, 'mandiri')) {
-                            $mBankLogo = 'mandiri.png';
-                            $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
-                            $mAccentBorder = 'border-amber-500/30';
-                            $mCardLogoClass = 'h-6.5 sm:h-7 scale-135';
-                        } elseif (str_contains($mBankKey, 'bri')) {
-                            $mBankLogo = 'bri.png';
-                            $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
-                            $mAccentBorder = 'border-sky-400/30';
-                            $mCardLogoClass = 'h-4.5 sm:h-5';
-                        } elseif (str_contains($mBankKey, 'bni')) {
-                            $mBankLogo = 'bni.png';
-                            $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
-                            $mAccentBorder = 'border-teal-400/30';
-                            $mCardLogoClass = 'h-4.5 sm:h-5';
-                        } else {
-                            $mCardLogoClass = 'h-4 sm:h-4.5';
-                        }
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    @foreach($bankAccounts as $bank)
+                        @php
+                            $mBankKey = strtolower($bank['bank_name']);
+                            $mBankLogo = null;
+                            $mCardGradient = 'from-slate-900 via-slate-800 to-slate-900';
+                            $mAccentBorder = 'border-slate-700/80';
 
-                        $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
-                        $mFormattedAcc = trim(chunk_split($mRawAcc, 4, ' '));
-                    @endphp
-                    <div class="p-3 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-md space-y-1.5 relative overflow-hidden">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-6 h-4.5 rounded-[3px] bg-gradient-to-br from-amber-200 to-amber-500 border border-amber-300 flex flex-col justify-center">
+                            if (str_contains($mBankKey, 'bca')) {
+                                $mBankLogo = 'bca.png';
+                                $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
+                                $mAccentBorder = 'border-sky-500/30';
+                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
+                            } elseif (str_contains($mBankKey, 'mandiri')) {
+                                $mBankLogo = 'mandiri.png';
+                                $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
+                                $mAccentBorder = 'border-amber-500/30';
+                                $mCardLogoClass = 'h-4 sm:h-4.5 w-auto max-w-[70px]';
+                            } elseif (str_contains($mBankKey, 'bri')) {
+                                $mBankLogo = 'bri.png';
+                                $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
+                                $mAccentBorder = 'border-sky-400/30';
+                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
+                            } elseif (str_contains($mBankKey, 'bni')) {
+                                $mBankLogo = 'bni.png';
+                                $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
+                                $mAccentBorder = 'border-teal-400/30';
+                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
+                            } else {
+                                $mCardLogoClass = 'h-4 sm:h-4.5 w-auto';
+                            }
+
+                            $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
+                            $mFormattedAcc = trim(chunk_split($mRawAcc, 4, ' '));
+                        @endphp
+                        <div class="p-3 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-sm space-y-1.5 relative overflow-hidden flex flex-col justify-between">
+                            <div class="flex items-center justify-between gap-1">
+                                <!-- Chip Gold -->
+                                <div class="w-6 h-4.5 rounded-[3px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-2xs flex flex-col justify-center items-center shrink-0">
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                 </div>
+                                
+                                <!-- Logo Container -->
+                                <div class="h-6.5 px-2 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 min-w-[68px] overflow-hidden">
+                                    @if($mBankLogo)
+                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $mCardLogoClass }} object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
+                                    @else
+                                        <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="h-7 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 min-w-[70px] overflow-hidden">
-                                @if($mBankLogo)
-                                    <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $mCardLogoClass }} w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
-                                @else
-                                    <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
-                                @endif
+
+                            <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all my-0.5">
+                                {{ $mFormattedAcc }}
+                            </div>
+
+                            <div class="flex items-center justify-between text-[9px] pt-1 border-t border-white/10 text-slate-300">
+                                <span class="truncate pr-1">a.n. {{ $bank['account_name'] }}</span>
+                                <button 
+                                    type="button" 
+                                    onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')" 
+                                    class="copy-btn text-sky-300 hover:text-white font-bold ml-1 shrink-0 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                                >
+                                    Salin
+                                </button>
                             </div>
                         </div>
-                        <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all">
-                            {{ $mFormattedAcc }}
-                        </div>
-                        <div class="flex items-center justify-between text-[9px] pt-1 border-t border-white/10 text-slate-300">
-                            <span class="truncate">a.n. {{ $bank['account_name'] }}</span>
-                            <button type="button" onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')" class="copy-btn text-sky-300 hover:text-white font-bold ml-1 cursor-pointer">Salin</button>
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
 
+            <!-- Upload Form -->
             <form 
                 :action="`{{ url('/portal/tagihan') }}/${encodeURIComponent(modalInvoiceCode)}/transfer-confirm`" 
                 method="POST" 
                 enctype="multipart/form-data" 
-                class="space-y-3"
+                class="space-y-3 pt-1"
                 x-data="{ isModalSubmitting: false }"
                 @submit="if(isModalSubmitting) { $event.preventDefault(); return false; } isModalSubmitting = true;"
             >
                 @csrf
+                <!-- File Upload Box with Drag/Drop Look & Reactive File Preview -->
                 <div>
-                    <label class="block text-slate-600 text-xs font-medium mb-1">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
-                    <input type="file" name="proof_file" accept="image/*,.pdf" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+                    <label class="block text-slate-700 text-xs font-heading font-semibold mb-1">
+                        Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):
+                    </label>
+                    <div class="relative border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-3 text-center bg-slate-50/70 hover:bg-emerald-50/20 transition-all cursor-pointer group">
+                        <input 
+                            type="file" 
+                            name="proof_file" 
+                            accept="image/*,.pdf" 
+                            required 
+                            @change="modalFilePreview = $event.target.files[0] ? $event.target.files[0].name : null"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        >
+                        <div class="flex flex-col items-center justify-center gap-1 pointer-events-none">
+                            <iconify-icon icon="solar:upload-line-duotone" class="text-2xl text-emerald-600 group-hover:scale-110 transition-transform"></iconify-icon>
+                            <div class="text-xs font-semibold text-slate-800">
+                                <span x-text="modalFilePreview ? modalFilePreview : 'Klik untuk memilih Foto / Dokumen Resi'"></span>
+                            </div>
+                            <p class="text-[10px] text-slate-400">Mendukung format JPG, PNG, atau PDF (Maksimal 5MB)</p>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Notes Textarea -->
                 <div>
-                    <label class="block text-slate-600 text-xs font-medium mb-1">Catatan Tambahan (Opsional):</label>
-                    <textarea name="notes" rows="2" placeholder="Catatan transaksi..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:border-sky-500 resize-none"></textarea>
+                    <label class="block text-slate-700 text-xs font-heading font-semibold mb-1">Catatan Tambahan (Opsional):</label>
+                    <textarea name="notes" rows="2" placeholder="Contoh: Sudah ditransfer via Mandiri jam 10:30..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none transition-all resize-none"></textarea>
                 </div>
 
-                <div class="pt-2 flex items-center justify-end gap-2">
-                    <button type="button" @click="showTransferModal = false" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer">
+                <!-- Modal Action Buttons -->
+                <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+                    <button 
+                        type="button" 
+                        @click="showTransferModal = false" 
+                        class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-semibold text-xs transition-colors cursor-pointer"
+                    >
                         Batal
                     </button>
                     <button 
                         type="submit" 
                         :disabled="isModalSubmitting"
-                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed flex items-center gap-1.5"
+                        class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs shadow-md shadow-emerald-600/20 active:scale-95 transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed flex items-center gap-1.5"
                     >
                         <template x-if="!isModalSubmitting">
-                            <span>Kirim Bukti Pembayaran</span>
+                            <span class="inline-flex items-center gap-1.5">
+                                <iconify-icon icon="solar:plain-bold" class="text-sm"></iconify-icon>
+                                <span>Kirim Bukti Pembayaran</span>
+                            </span>
                         </template>
                         <template x-if="isModalSubmitting">
                             <span class="inline-flex items-center gap-1.5">
