@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Mail\PaymentSuccessMail;
 use App\Models\Customer;
 use App\Models\Ims\BillingLayanan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class MidtransService
 {
@@ -270,7 +272,7 @@ class MidtransService
         $billing->user_update = 'Midtrans Webhook';
         $billing->save();
 
-        // Jika tagihan lunas, buka isolir (un-suspend) pelanggan otomatis di database
+        // Jika tagihan lunas, buka isolir (un-suspend) & kirim notifikasi email ke pelanggan
         if ((int) $billing->status_bill_lay === 15) {
             try {
                 $billing->customer?->unSuspend();
@@ -280,6 +282,9 @@ class MidtransService
                     'error' => $e->getMessage(),
                 ]);
             }
+
+            // Kirim bukti pembayaran lunas ke email pelanggan
+            $this->sendPaymentSuccessEmail($billing, $payload);
         }
 
         Log::info('Midtrans Webhook: Billing status updated', [
@@ -360,6 +365,18 @@ class MidtransService
                     $billing->user_update = 'Midtrans Sync';
                     $billing->save();
 
+                    try {
+                        $billing->customer?->unSuspend();
+                    } catch (\Throwable $e) {
+                        Log::warning('Midtrans Sync: Failed to unSuspend customer', [
+                            'customer_id' => $billing->nomor_internet,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+
+                    // Kirim bukti pembayaran lunas ke email pelanggan
+                    $this->sendPaymentSuccessEmail($billing, $payload);
+
                     Log::info("Midtrans Status Synced: {$billing->kode_billing_layanan} updated to PAID (15)");
                     return true;
                 }
@@ -369,5 +386,31 @@ class MidtransService
         }
 
         return false;
+    }
+
+    /**
+     * Kirim email konfirmasi pembayaran lunas ke pelanggan
+     */
+    public function sendPaymentSuccessEmail(BillingLayanan $billing, array $payload = []): bool
+    {
+        try {
+            $customer = $billing->customer;
+            $email = trim((string) ($customer?->email ?? ''));
+
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Log::info("Payment Success Email: Dilewati karena pelanggan #{$billing->nomor_internet} belum memiliki alamat email yang valid.");
+                return false;
+            }
+
+            Mail::to($email)->send(new PaymentSuccessMail($billing, $customer, $payload));
+
+            Log::info("Payment Success Email: Berhasil dikirimkan ke {$email} untuk invoice {$billing->kode_billing_layanan}");
+            return true;
+        } catch (\Throwable $e) {
+            Log::error("Payment Success Email Error untuk invoice {$billing->kode_billing_layanan}: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return false;
+        }
     }
 }
