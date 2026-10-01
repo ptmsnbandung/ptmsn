@@ -363,24 +363,18 @@
                                                 $bankLogo = 'bca.png';
                                                 $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                                 $accentBorder = 'border-sky-500/30';
-                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
                                             } elseif (str_contains($bankKey, 'mandiri')) {
                                                 $bankLogo = 'mandiri.png';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
-                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[80px] sm:max-w-[85px]';
                                             } elseif (str_contains($bankKey, 'bri')) {
                                                 $bankLogo = 'bri.png';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                                 $accentBorder = 'border-sky-400/30';
-                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
                                             } elseif (str_contains($bankKey, 'bni')) {
                                                 $bankLogo = 'bni.png';
                                                 $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                                 $accentBorder = 'border-teal-400/30';
-                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
-                                            } else {
-                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto';
                                             }
 
                                             $rawAcc = preg_replace('/\s+/', '', $bank['account_number']);
@@ -405,10 +399,10 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Official Bank Logo Badge -->
-                                                <div class="h-10 px-3.5 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 min-w-[105px] overflow-hidden">
+                                                <!-- Official Bank Logo Badge (Fixed Dimension for Perfect Uniformity) -->
+                                                <div class="h-9 sm:h-10 w-24 sm:w-28 px-3 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $cardLogoClass }} object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-5 sm:h-6 max-w-full w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
                                                         <span class="text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
@@ -849,7 +843,7 @@
                     <span class="text-sky-600 font-sans font-semibold text-[10px]">Klik salin nomor</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                     @foreach($bankAccounts as $bank)
                         @php
                             $mBankKey = strtolower($bank['bank_name']);
@@ -861,30 +855,24 @@
                                 $mBankLogo = 'bca.png';
                                 $mCardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                 $mAccentBorder = 'border-sky-500/30';
-                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
                             } elseif (str_contains($mBankKey, 'mandiri')) {
                                 $mBankLogo = 'mandiri.png';
                                 $mCardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                 $mAccentBorder = 'border-amber-500/30';
-                                $mCardLogoClass = 'h-4 sm:h-4.5 w-auto max-w-[70px]';
                             } elseif (str_contains($mBankKey, 'bri')) {
                                 $mBankLogo = 'bri.png';
                                 $mCardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                 $mAccentBorder = 'border-sky-400/30';
-                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
                             } elseif (str_contains($mBankKey, 'bni')) {
                                 $mBankLogo = 'bni.png';
                                 $mCardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                 $mAccentBorder = 'border-teal-400/30';
-                                $mCardLogoClass = 'h-4.5 sm:h-5 w-auto max-w-[65px]';
-                            } else {
-                                $mCardLogoClass = 'h-4 sm:h-4.5 w-auto';
                             }
 
                             $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
                             $mFormattedAcc = trim(chunk_split($mRawAcc, 4, ' '));
                         @endphp
-                        <div class="p-3 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-sm space-y-1.5 relative overflow-hidden flex flex-col justify-between">
+                        <div class="p-3.5 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-sm space-y-2 relative overflow-hidden flex flex-col justify-between min-h-[120px]">
                             <div class="flex items-center justify-between gap-1">
                                 <!-- Chip Gold -->
                                 <div class="w-6 h-4.5 rounded-[3px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-2xs flex flex-col justify-center items-center shrink-0">
@@ -892,10 +880,10 @@
                                     <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
                                 </div>
                                 
-                                <!-- Logo Container -->
-                                <div class="h-6.5 px-2 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 min-w-[68px] overflow-hidden">
+                                <!-- Logo Container with Fixed Dimension -->
+                                <div class="h-8 w-22 sm:w-24 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 overflow-hidden">
                                     @if($mBankLogo)
-                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ $mCardLogoClass }} object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
+                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-4.5 sm:h-5 max-w-full w-auto object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
                                     @else
                                         <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                     @endif
@@ -906,12 +894,12 @@
                                 {{ $mFormattedAcc }}
                             </div>
 
-                            <div class="flex items-center justify-between text-[9px] pt-1 border-t border-white/10 text-slate-300">
+                            <div class="flex items-center justify-between text-[9px] pt-1.5 border-t border-white/10 text-slate-300">
                                 <span class="truncate pr-1">a.n. {{ $bank['account_name'] }}</span>
                                 <button 
                                     type="button" 
                                     onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')" 
-                                    class="copy-btn text-sky-300 hover:text-white font-bold ml-1 shrink-0 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                                    class="copy-btn text-sky-300 hover:text-white font-bold ml-1 shrink-0 px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
                                 >
                                     Salin
                                 </button>
