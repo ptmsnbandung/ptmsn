@@ -222,38 +222,114 @@
     <!-- Main Body Container -->
     <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 pb-32 md:pb-6">
         
-        <!-- Flash Alerts -->
-        @if(session('success'))
-            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
-                <div class="flex items-center gap-2.5">
-                    <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-base sm:text-xl shrink-0"></iconify-icon>
-                    <span class="font-medium">{{ session('success') }}</span>
+        <!-- Modern Flash Alerts (Interactive, Dismissible & Auto-Dismissing) -->
+        <div 
+            x-data="{ 
+                showSuccess: {{ session('success') ? 'true' : 'false' }}, 
+                showInfo: {{ session('info') ? 'true' : 'false' }}, 
+                showError: {{ (isset($errors) && $errors->any()) ? 'true' : 'false' }} 
+            }" 
+            class="space-y-2.5 mb-3 sm:mb-5"
+        >
+            @if(session('success'))
+                <div 
+                    x-show="showSuccess"
+                    x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="opacity-0 -translate-y-2 scale-98"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 -translate-y-2 scale-98"
+                    x-init="setTimeout(() => showSuccess = false, 6000)"
+                    class="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50/95 via-teal-50/95 to-emerald-50/95 border border-emerald-300/80 text-emerald-950 flex items-center justify-between gap-3 shadow-md shadow-emerald-500/5 backdrop-blur-md"
+                >
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs ring-2 ring-emerald-200/70">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-lg"></iconify-icon>
+                        </div>
+                        <div class="text-xs sm:text-sm font-medium leading-snug">
+                            {{ session('success') }}
+                        </div>
+                    </div>
+                    <button 
+                        type="button" 
+                        @click="showSuccess = false" 
+                        class="p-1 rounded-xl text-emerald-600 hover:text-emerald-900 hover:bg-emerald-200/50 transition-colors shrink-0 cursor-pointer"
+                        title="Tutup Notifikasi"
+                    >
+                        <iconify-icon icon="solar:close-circle-bold" class="text-xl"></iconify-icon>
+                    </button>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if(session('info'))
-            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-sky-50/90 backdrop-blur-md border border-sky-200 text-sky-800 flex items-center justify-between gap-2.5 text-xs sm:text-sm font-sans shadow-xs">
-                <div class="flex items-center gap-2.5">
-                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-500 text-base sm:text-xl shrink-0"></iconify-icon>
-                    <span class="font-medium">{{ session('info') }}</span>
+            @if(session('info'))
+                <div 
+                    x-show="showInfo"
+                    x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="opacity-0 -translate-y-2 scale-98"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 -translate-y-2 scale-98"
+                    x-init="setTimeout(() => showInfo = false, 6000)"
+                    class="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/95 via-blue-50/95 to-sky-50/95 border border-sky-300/80 text-sky-950 flex items-center justify-between gap-3 shadow-md shadow-sky-500/5 backdrop-blur-md"
+                >
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs ring-2 ring-sky-200/70">
+                            <iconify-icon icon="solar:info-circle-bold" class="text-lg"></iconify-icon>
+                        </div>
+                        <div class="text-xs sm:text-sm font-medium leading-snug">
+                            {{ session('info') }}
+                        </div>
+                    </div>
+                    <button 
+                        type="button" 
+                        @click="showInfo = false" 
+                        class="p-1 rounded-xl text-sky-600 hover:text-sky-900 hover:bg-sky-200/50 transition-colors shrink-0 cursor-pointer"
+                        title="Tutup Notifikasi"
+                    >
+                        <iconify-icon icon="solar:close-circle-bold" class="text-xl"></iconify-icon>
+                    </button>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if(isset($errors) && $errors->any())
-            <div class="mb-3 sm:mb-5 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50/90 backdrop-blur-md border border-rose-200 text-rose-800 text-xs sm:text-sm font-sans shadow-xs">
-                <div class="font-bold mb-1 flex items-center gap-2">
-                    <iconify-icon icon="solar:danger-circle-bold" class="text-base sm:text-lg text-rose-500"></iconify-icon>
-                    <span>Harap perhatikan input berikut:</span>
+            @if(isset($errors) && $errors->any())
+                <div 
+                    x-show="showError"
+                    x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="opacity-0 -translate-y-2 scale-98"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 -translate-y-2 scale-98"
+                    class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-rose-50/95 via-red-50/95 to-rose-50/95 border border-rose-300/80 text-rose-950 shadow-md shadow-rose-500/5 backdrop-blur-md"
+                >
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-start gap-2.5 min-w-0">
+                            <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-xs ring-2 ring-rose-200/70 mt-0.5">
+                                <iconify-icon icon="solar:danger-circle-bold" class="text-lg"></iconify-icon>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="font-heading font-bold text-xs sm:text-sm block text-rose-950">Harap perhatikan input berikut:</span>
+                                <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-800">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button 
+                            type="button" 
+                            @click="showError = false" 
+                            class="p-1 rounded-xl text-rose-600 hover:text-rose-900 hover:bg-rose-200/50 transition-colors shrink-0 cursor-pointer"
+                            title="Tutup Notifikasi"
+                        >
+                            <iconify-icon icon="solar:close-circle-bold" class="text-xl"></iconify-icon>
+                        </button>
+                    </div>
                 </div>
-                <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-700 pl-1">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+            @endif
+        </div>
 
         @yield('content')
 
