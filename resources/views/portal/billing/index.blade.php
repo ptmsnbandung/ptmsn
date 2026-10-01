@@ -219,7 +219,40 @@
                 <!-- Payment Methods Card -->
                 <div class="p-3.5 sm:p-4 lg:p-4.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
                     
-                    @if(!$currentInvoice->is_paid)
+                    @php
+                        $activeConf = $confirmations->get($currentInvoice->kode_billing_layanan);
+                        $isPendingVerification = ($activeConf && $activeConf->status === 'pending');
+                    @endphp
+
+                    @if($currentInvoice->is_paid)
+                        <!-- Lunas Box -->
+                        <div id="tour-step-billing-status" class="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm shadow-emerald-500/20">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-xl"></iconify-icon>
+                            </div>
+                            <h3 class="text-sm font-heading font-extrabold text-emerald-900">Tagihan Telah Lunas</h3>
+                            <p class="text-xs text-emerald-700 leading-relaxed max-w-sm mx-auto">
+                                Terima kasih! Pembayaran tagihan periode ini telah terkonfirmasi. Layanan internet aktif lancar tanpa kendala.
+                            </p>
+                        </div>
+                    @elseif($isPendingVerification)
+                        <!-- Menunggu Verifikasi Box -->
+                        <div id="tour-step-billing-status" class="p-4 sm:p-5 rounded-2xl bg-amber-50/90 border border-amber-300 text-center space-y-2">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center mx-auto shadow-sm shadow-amber-500/20">
+                                <iconify-icon icon="solar:clock-circle-bold" class="text-2xl"></iconify-icon>
+                            </div>
+                            <h3 class="text-sm font-heading font-extrabold text-amber-950">Sedang Menunggu Verifikasi</h3>
+                            <p class="text-xs text-amber-800 leading-relaxed max-w-sm mx-auto">
+                                Bukti pembayaran transfer Anda telah berhasil dikirim pada <strong>{{ $activeConf->created_at?->translatedFormat('d F Y, H:i') }} WIB</strong> dan sedang dalam proses verifikasi oleh Tim Finance/HRD PT MSN.
+                            </p>
+                            <div class="pt-1 flex items-center justify-center gap-2">
+                                <a href="{{ $activeConf->proof_url }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300/80 text-amber-900 font-heading font-bold text-xs transition-colors">
+                                    <iconify-icon icon="solar:eye-bold" class="text-xs"></iconify-icon>
+                                    <span>Lihat Bukti yang Dikirim</span>
+                                </a>
+                            </div>
+                        </div>
+                    @else
                         <!-- Card Header & Tab Selector -->
                         <div class="space-y-2">
                             <div class="flex items-center justify-between flex-wrap gap-1">
@@ -414,39 +447,14 @@
                                 </div>
                             </div>
 
-                            <!-- Existing Confirmation Status if Any -->
-                            @if(isset($activeConf) && $activeConf)
-                                <div class="p-3 rounded-xl bg-amber-50/90 border border-amber-200/90 text-xs space-y-1.5">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-1.5 font-heading font-bold text-amber-900 text-xs">
-                                            <iconify-icon icon="solar:clock-circle-bold" class="text-amber-600 text-sm"></iconify-icon>
-                                            <span>Bukti Transfer Telah Diunggah</span>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded-md bg-amber-200 text-amber-900 font-mono text-[9px] font-bold uppercase">
-                                            {{ $activeConf->status }}
-                                        </span>
-                                    </div>
-                                    <div class="text-slate-600 text-[11px] space-y-0.5">
-                                        <p>Waktu Unggah: <strong class="text-slate-800">{{ $activeConf->created_at?->translatedFormat('d F Y, H:i') }} WIB</strong></p>
-                                        @if($activeConf->notes)
-                                            <p>Catatan: <span class="text-slate-700 italic">"{{ $activeConf->notes }}"</span></p>
-                                        @endif
-                                    </div>
-                                    <div class="pt-0.5 flex items-center gap-2">
-                                        <a href="{{ $activeConf->proof_url }}" target="_blank" class="text-[11px] font-heading font-bold text-sky-600 hover:underline flex items-center gap-1">
-                                            <iconify-icon icon="solar:eye-bold" class="text-xs"></iconify-icon>
-                                            <span>Lihat Bukti yang Dikirim</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
-
                             <!-- Upload Proof Form (Simplified: Bukti & Catatan Saja) -->
                             <form 
                                 action="{{ route('portal.billing.transfer.confirm', urlencode($currentInvoice->kode_billing_layanan)) }}" 
                                 method="POST" 
                                 enctype="multipart/form-data" 
                                 class="space-y-3 pt-2 border-t border-slate-100"
+                                x-data="{ isSubmitting: false }"
+                                @submit="if(isSubmitting) { $event.preventDefault(); return false; } isSubmitting = true;"
                             >
                                 @csrf
                                 <div class="text-xs font-heading font-bold text-slate-800 flex items-center gap-1.5">
@@ -482,17 +490,28 @@
                                     <textarea name="notes" rows="2" placeholder="Contoh: Sudah ditransfer via BCA..." class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:bg-white focus:border-sky-500 text-xs resize-none"></textarea>
                                 </div>
 
-                                <!-- Submit Button -->
+                                <!-- Submit Button with Loading State -->
                                 <button 
                                     type="submit" 
-                                    class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                    :disabled="isSubmitting"
+                                    class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
                                 >
-                                    <iconify-icon icon="solar:plain-bold" class="text-sm"></iconify-icon>
-                                    <span>Kirim Bukti Pembayaran</span>
+                                    <template x-if="!isSubmitting">
+                                        <span class="inline-flex items-center gap-2">
+                                            <iconify-icon icon="solar:plain-bold" class="text-sm"></iconify-icon>
+                                            <span>Kirim Bukti Pembayaran</span>
+                                        </span>
+                                    </template>
+                                    <template x-if="isSubmitting">
+                                        <span class="inline-flex items-center gap-2">
+                                            <iconify-icon icon="solar:spinner-line" class="animate-spin text-base"></iconify-icon>
+                                            <span>Mengirim Bukti Pembayaran...</span>
+                                        </span>
+                                    </template>
                                 </button>
                             </form>
                         </div>
-                    @else
+                    @endiflse
                         <!-- Lunas Box -->
                         <div id="tour-step-billing-status" class="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
                             <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm shadow-emerald-500/20">
@@ -564,7 +583,8 @@
             @forelse($invoices as $inv)
                 @php
                     $invConf = $confirmations->get($inv->kode_billing_layanan);
-                    $isPayable = (!$inv->is_paid && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
+                    $isPending = ($invConf && $invConf->status === 'pending');
+                    $isPayable = (!$inv->is_paid && !$isPending && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
                 @endphp
                 <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1.5">
                     <div class="flex items-center justify-between gap-2">
@@ -574,7 +594,7 @@
                                 <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
                                 <span>LUNAS</span>
                             </span>
-                        @elseif($invConf && $invConf->status === 'pending')
+                        @elseif($isPending)
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                 <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
                                 <span>DIVERIFIKASI</span>
@@ -631,6 +651,13 @@
                                         <span>Transfer</span>
                                     </button>
                                 </div>
+                            @elseif($isPending)
+                                <div class="text-center py-1 bg-amber-50 rounded-lg border border-amber-200/80">
+                                    <span class="inline-flex items-center gap-1 text-[11px] text-amber-900 font-medium">
+                                        <iconify-icon icon="solar:clock-circle-bold" class="text-amber-600"></iconify-icon>
+                                        <span>Menunggu verifikasi bukti transfer</span>
+                                    </span>
+                                </div>
                             @else
                                 <div class="text-right">
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-[10px] border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
@@ -675,7 +702,8 @@
                     @forelse($invoices as $inv)
                         @php
                             $invConf = $confirmations->get($inv->kode_billing_layanan);
-                            $isPayable = (!$inv->is_paid && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
+                            $isPending = ($invConf && $invConf->status === 'pending');
+                            $isPayable = (!$inv->is_paid && !$isPending && $oldestUnpaidInvoice && $oldestUnpaidInvoice->kode_billing_layanan === $inv->kode_billing_layanan);
                         @endphp
                         <tr class="hover:bg-slate-50/80 transition-colors">
                             <td class="py-2.5 px-3.5 font-mono font-bold text-slate-800 whitespace-nowrap">
@@ -699,7 +727,7 @@
                                         <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
                                         <span>LUNAS</span>
                                     </span>
-                                @elseif($invConf && $invConf->status === 'pending')
+                                @elseif($isPending)
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                         <iconify-icon icon="solar:clock-circle-bold"></iconify-icon>
                                         <span>DIVERIFIKASI</span>
@@ -747,6 +775,11 @@
                                                     <span>Transfer</span>
                                                 </button>
                                             </div>
+                                        @elseif($isPending)
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-medium text-xs border border-amber-200">
+                                                <iconify-icon icon="solar:clock-circle-bold" width="12" class="text-amber-600"></iconify-icon>
+                                                <span>Verifikasi Bukti</span>
+                                            </span>
                                         @else
                                             <div>
                                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs border border-slate-200" title="Harap lunasi tagihan periode {{ $oldestUnpaidInvoice?->period }} terlebih dahulu">
@@ -881,6 +914,8 @@
                 method="POST" 
                 enctype="multipart/form-data" 
                 class="space-y-3"
+                x-data="{ isModalSubmitting: false }"
+                @submit="if(isModalSubmitting) { $event.preventDefault(); return false; } isModalSubmitting = true;"
             >
                 @csrf
                 <div>
@@ -897,8 +932,20 @@
                     <button type="button" @click="showTransferModal = false" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer">
                         Batal
                     </button>
-                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer">
-                        Kirim Bukti Pembayaran
+                    <button 
+                        type="submit" 
+                        :disabled="isModalSubmitting"
+                        class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed flex items-center gap-1.5"
+                    >
+                        <template x-if="!isModalSubmitting">
+                            <span>Kirim Bukti Pembayaran</span>
+                        </template>
+                        <template x-if="isModalSubmitting">
+                            <span class="inline-flex items-center gap-1.5">
+                                <iconify-icon icon="solar:spinner-line" class="animate-spin text-sm"></iconify-icon>
+                                <span>Mengirim...</span>
+                            </span>
+                        </template>
                     </button>
                 </div>
             </form>
