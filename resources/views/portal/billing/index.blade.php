@@ -511,17 +511,6 @@
                                 </button>
                             </form>
                         </div>
-                    @endiflse
-                        <!-- Lunas Box -->
-                        <div id="tour-step-billing-status" class="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-1.5">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm shadow-emerald-500/20">
-                                <iconify-icon icon="solar:check-circle-bold" class="text-xl"></iconify-icon>
-                            </div>
-                            <h3 class="text-sm font-heading font-extrabold text-emerald-900">Tagihan Telah Lunas</h3>
-                            <p class="text-xs text-emerald-700 leading-relaxed max-w-sm mx-auto">
-                                Terima kasih! Pembayaran tagihan periode ini telah terkonfirmasi. Layanan internet aktif lancar tanpa kendala.
-                            </p>
-                        </div>
                     @endif
 
                     <!-- Dual Action Buttons: Cetak & WhatsApp Billing (Placed inside payment section) -->
