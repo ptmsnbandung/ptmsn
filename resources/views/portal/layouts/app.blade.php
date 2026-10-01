@@ -279,12 +279,12 @@
                     <span class="text-[9.5px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.billing.*') ? 'font-extrabold text-cyan-300' : 'font-medium text-white/85 group-hover:text-white' }}">Tagihan</span>
                 </a>
 
-                <!-- Tiket NOC -->
+                <!-- Tiket -->
                 <a href="{{ route('portal.tickets.index') }}" class="group dock-item flex flex-col items-center justify-center py-0.5 px-1 rounded-full transition-all duration-150 active:scale-95">
                     <div class="w-10 h-6 rounded-full flex items-center justify-center transition-all duration-150 {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
                         <iconify-icon icon="solar:chat-round-dots-bold" width="17"></iconify-icon>
                     </div>
-                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'font-extrabold text-cyan-300' : 'font-medium text-white/85 group-hover:text-white' }}">Tiket NOC</span>
+                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'font-extrabold text-cyan-300' : 'font-medium text-white/85 group-hover:text-white' }}">Tiket</span>
                 </a>
 
                 <!-- Profil -->
