@@ -158,7 +158,7 @@
                     </a>
                     <a href="{{ route('portal.tickets.index') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-heading font-semibold transition-all {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'bg-white text-sky-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60' }}">
                         <span class="flex items-center gap-1.5">
-                            <iconify-icon icon="solar:chat-round-dots-bold" width="15" class="{{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
+                            <iconify-icon icon="solar:ticket-bold" width="15" class="{{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'text-sky-600' : 'text-slate-400' }}"></iconify-icon>
                             <span>Bantuan & Tiket</span>
                         </span>
                     </a>
@@ -364,7 +364,7 @@
                 <!-- Tiket -->
                 <a href="{{ route('portal.tickets.index') }}" class="dock-item {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'dock-item-active' : '' }} active:scale-95">
                     <div class="dock-icon">
-                        <iconify-icon icon="solar:chat-round-dots-bold" width="22"></iconify-icon>
+                        <iconify-icon icon="solar:ticket-bold" width="22"></iconify-icon>
                     </div>
                     <span class="dock-label font-heading">Tiket</span>
                     @if(request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create'))
