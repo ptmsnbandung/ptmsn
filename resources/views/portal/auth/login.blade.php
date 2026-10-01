@@ -95,18 +95,33 @@
         <div class="absolute -bottom-24 -right-24 w-[450px] h-[450px] bg-cyan-500/20 rounded-full blur-[140px]"></div>
     </div>
 
-    <!-- Main Container: 50% / 50% split on Mobile and Desktop -->
+    <!-- Main Container: 45% Blue / 55% White split on Mobile -->
     <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
-        <!-- LEFT / TOP SECTION: Brand Header (50% on Mobile & 50% on Desktop) -->
-        <div class="hero-network-gradient h-[50vh] max-h-[50vh] md:h-auto md:max-h-none md:w-1/2 flex-none flex flex-col items-center justify-center p-6 md:p-10 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
+        <!-- LEFT / TOP SECTION: Brand Header with Network Topology Background (45% on Mobile & 42% on Desktop) -->
+        <div class="hero-network-gradient h-[45vh] max-h-[45vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-5 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
             
+            <!-- Network Node Grid & Constellation Lines (Subtle ISP Topology Pattern) -->
+            <div class="absolute inset-0 pointer-events-none opacity-30 overflow-hidden">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                    <defs>
+                        <pattern id="network-topology" width="80" height="80" patternUnits="userSpaceOnUse">
+                            <circle cx="15" cy="15" r="2" fill="#38bdf8" />
+                            <circle cx="65" cy="45" r="2.5" fill="#0ea5e9" />
+                            <circle cx="40" cy="70" r="1.5" fill="#38bdf8" />
+                            <path d="M15 15 L65 45 M65 45 L40 70 M15 15 L-15 45 M65 45 L95 15 M40 70 L15 95 M65 45 L65 125" stroke="#38bdf8" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.75"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#network-topology)" />
+                </svg>
+            </div>
+
             <!-- Ambient Card Glow -->
-            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-44 h-44 bg-sky-400/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
             
             <!-- Logo Icon Container (matching Browser Tab) -->
-            <a href="{{ route('home') }}" class="group block mb-3 transform hover:scale-105 transition-transform duration-300 relative z-10 shrink-0">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 mx-auto rounded-3xl bg-white p-3 sm:p-3.5 shadow-2xl shadow-sky-950/60 border border-white/90 flex items-center justify-center">
+            <a href="{{ route('home') }}" class="group block mb-2.5 transform hover:scale-105 transition-transform duration-300 relative z-10 shrink-0">
+                <div class="w-15 h-15 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-3xl bg-white p-2.5 sm:p-3 shadow-2xl shadow-sky-950/60 border border-white/90 flex items-center justify-center">
                     <img 
                         src="{{ asset('images/logo/logo-icon.png') }}" 
                         alt="PT Media Solusi Network" 
@@ -117,13 +132,13 @@
 
             <!-- Brand Typography -->
             <div class="relative z-10 shrink-0">
-                <h1 class="text-white font-heading font-extrabold text-2xl sm:text-3xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
+                <h1 class="text-white font-heading font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
                     <span>My</span><span class="text-sky-300">MSN</span>
                 </h1>
-                <p class="text-sky-200/90 text-[11px] sm:text-xs font-semibold tracking-wider uppercase mt-1">
+                <p class="text-sky-200/90 text-[10.5px] sm:text-xs font-semibold tracking-wider uppercase mt-0.5">
                     Customer Self-Care Portal
                 </p>
-                <p class="text-slate-300/80 text-xs font-sans mt-2.5 max-w-xs hidden md:block leading-relaxed">
+                <p class="text-slate-300/80 text-xs font-sans mt-2 max-w-xs hidden md:block leading-relaxed">
                     Akses tagihan internet, cek status koneksi, dan layanan bantuan pelanggan secara real-time.
                 </p>
             </div>
@@ -146,8 +161,8 @@
             </div>
         </div>
 
-        <!-- RIGHT / BOTTOM SECTION: White Textured Form Card (50% on Mobile & 50% on Desktop) -->
-        <div class="textured-login-sheet h-[50vh] max-h-[50vh] md:h-auto md:max-h-none md:w-1/2 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
+        <!-- RIGHT / BOTTOM SECTION: White Textured Form Card (55% on Mobile & 58% on Desktop) -->
+        <div class="textured-login-sheet h-[55vh] max-h-[55vh] md:h-auto md:max-h-none md:w-7/12 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
             
             <div class="w-full max-w-sm flex flex-col gap-3 my-auto">
                 <!-- Card Header: WELCOME -->
