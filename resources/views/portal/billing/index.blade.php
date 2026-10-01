@@ -231,17 +231,18 @@
                             </div>
 
                             <!-- Tabs Switcher -->
-                            <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-slate-100/90 border border-slate-200/80">
+                            <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-slate-100/90 border border-slate-200/80">
                                 <button 
                                     type="button" 
                                     @click="paymentTab = 'midtrans'"
-                                    :class="paymentTab === 'midtrans' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
+                                    :class="paymentTab === 'midtrans' ? 'bg-sky-600 text-white shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
                                     <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" fill="#00AEFF"/>
-                                        <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" fill="#0284C7"/>
-                                        <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" fill="#0369A1"/>
+                                        <path d="M12 2L4 6.6V17.4L12 22L20 17.4V6.6L12 2Z" :fill="paymentTab === 'midtrans' ? 'white' : '#00AEFF'" :fill-opacity="paymentTab === 'midtrans' ? '0.25' : '0.15'"/>
+                                        <path d="M12 3.8L18.8 7.7L12 11.6L5.2 7.7L12 3.8Z" :fill="paymentTab === 'midtrans' ? 'white' : '#00AEFF'"/>
+                                        <path d="M5.2 9.2L11.2 12.6V19.8L5.2 16.4V9.2Z" :fill="paymentTab === 'midtrans' ? 'white' : '#0284C7'" :fill-opacity="paymentTab === 'midtrans' ? '0.8' : '1'"/>
+                                        <path d="M12.8 12.6L18.8 9.2V16.4L12.8 19.8V12.6Z" :fill="paymentTab === 'midtrans' ? 'white' : '#0369A1'" :fill-opacity="paymentTab === 'midtrans' ? '0.95' : '1'"/>
                                     </svg>
                                     <span class="sm:hidden">Midtrans</span>
                                     <span class="hidden sm:inline">Otomatis (Midtrans)</span>
@@ -250,10 +251,10 @@
                                     type="button" 
                                     id="tour-step-transfer-tab"
                                     @click="paymentTab = 'transfer'"
-                                    :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
+                                    :class="paymentTab === 'transfer' ? 'bg-sky-600 text-white shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
-                                    <svg class="w-3.5 h-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-3.5 h-3.5 shrink-0" :class="paymentTab === 'transfer' ? 'text-white' : 'text-slate-600'" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12 2L2 7V9H22V7L12 2Z"/>
                                         <path d="M4 11H7V18H4V11Z"/>
                                         <path d="M10.5 11H13.5V18H10.5V11Z"/>
