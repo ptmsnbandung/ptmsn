@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full overflow-hidden">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyMSN — Customer Self-Care | PT Media Solusi Network</title>
     
@@ -43,12 +43,23 @@
 
     <style>
         html, body {
-            height: 100%;
-            height: 100dvh;
-            max-height: 100dvh;
-            overflow: hidden !important;
+            min-height: 100%;
+            min-height: 100dvh;
             margin: 0;
             padding: 0;
+        }
+
+        @media (max-width: 767px) {
+            html, body {
+                overflow-x: hidden;
+            }
+        }
+
+        @media (min-width: 768px) {
+            html, body {
+                height: 100%;
+                overflow: hidden !important;
+            }
         }
 
         body {
@@ -70,9 +81,10 @@
                 radial-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 18px 18px;
             background-position: 0 0, 0 0, 0 0;
-            border-top-left-radius: 36px;
-            border-top-right-radius: 36px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
             box-shadow: 0 -12px 36px -4px rgba(9, 19, 34, 0.35);
+            padding-bottom: max(1.75rem, calc(env(safe-area-inset-bottom, 0px) + 1.25rem));
         }
 
         @media (min-width: 768px) {
@@ -82,6 +94,7 @@
             .clean-login-sheet {
                 border-radius: 0px;
                 box-shadow: none;
+                padding-bottom: 2rem;
             }
         }
 
@@ -90,7 +103,7 @@
         }
     </style>
 </head>
-<body class="h-full max-h-[100dvh] hero-network-gradient flex flex-col justify-between md:justify-center items-center text-slate-800 antialiased p-0 md:p-6 relative overflow-hidden">
+<body class="min-h-[100dvh] hero-network-gradient flex flex-col justify-between md:justify-center items-center text-slate-800 antialiased p-0 md:p-6 relative">
 
     <!-- Global Network Topology Background (Seamless across full screen) -->
     <div class="absolute inset-0 pointer-events-none opacity-20 overflow-hidden z-0">
@@ -114,10 +127,10 @@
     </div>
 
     <!-- Main Container: 37% Blue / 63% White split on Mobile -->
-    <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
+    <div class="w-full max-w-full md:max-w-4xl min-h-[100dvh] md:min-h-0 md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
         <!-- LEFT / TOP SECTION: Brand Header (37% on Mobile & 42% on Desktop) -->
-        <div class="bg-transparent desktop-hero-panel h-[37vh] max-h-[37vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3.5 sm:p-4 md:p-8 text-center relative z-10 md:border-r md:border-sky-500/20">
+        <div class="bg-transparent desktop-hero-panel min-h-[30dvh] h-[33dvh] md:h-auto md:min-h-0 md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3 sm:p-4 md:p-8 text-center relative z-10 md:border-r md:border-sky-500/20">
             
             <!-- Ambient Card Glow -->
             <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-36 h-36 bg-sky-400/25 rounded-full blur-2xl pointer-events-none"></div>
@@ -165,9 +178,9 @@
         </div>
 
         <!-- RIGHT / BOTTOM SECTION: White Clean Form Card (63% on Mobile & 58% on Desktop) -->
-        <div class="clean-login-sheet h-[63vh] max-h-[63vh] md:h-auto md:max-h-none md:w-7/12 flex-none px-6 sm:px-8 md:px-10 py-5 sm:py-6 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20">
+        <div class="clean-login-sheet flex-1 min-h-[67dvh] md:min-h-0 md:h-auto md:max-h-none md:w-7/12 flex-none px-5 sm:px-8 md:px-10 pt-4 md:py-8 flex flex-col justify-center items-center flex-shrink-0 z-20 overflow-y-auto">
             
-            <div class="w-full max-w-sm flex flex-col gap-3 sm:gap-3.5 my-auto">
+            <div class="w-full max-w-sm flex flex-col gap-2.5 sm:gap-3.5 my-auto">
                 <!-- Card Header: SELAMAT DATANG -->
                 <div class="text-center">
                     <h2 class="text-xl sm:text-2xl font-heading font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#091322] via-[#0f233d] to-[#0e7490] uppercase">
