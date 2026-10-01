@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-sky-400">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyMSN — Customer Self-Care | PT Media Solusi Network</title>
     
-    <!-- Favicon -->
+    <!-- Favicon (Tab Logo) -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
     <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter -->
@@ -25,7 +25,7 @@
                             blue: '#0284c7',
                             cyan: '#0ea5e9',
                             sky: '#38bdf8',
-                            navy: '#0f172a',
+                            navy: '#091322',
                         }
                     },
                     fontFamily: {
@@ -43,71 +43,99 @@
 
     <style>
         body {
-            background: linear-gradient(180deg, #38bdf8 0%, #60cdff 35%, #56c2f5 65%, #38bdf8 100%);
+            background: linear-gradient(135deg, #091322 0%, #0f233d 40%, #075985 85%, #0284c7 100%);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             min-height: 100dvh;
         }
 
-        .login-sheet {
-            border-top-left-radius: 40px;
-            border-top-right-radius: 40px;
-            box-shadow: 0 -10px 40px -5px rgba(2, 132, 199, 0.25);
+        /* Halo Dashboard Gradient for Branding Panel */
+        .hero-network-gradient {
+            background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #0e7490 100%);
         }
 
-        @media (min-width: 640px) {
-            .login-sheet {
-                border-radius: 36px;
-                box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+        /* Mobile bottom sheet rounded top */
+        .mobile-login-sheet {
+            border-top-left-radius: 36px;
+            border-top-right-radius: 36px;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-login-sheet {
+                border-radius: 0px;
             }
         }
 
         .input-glow:focus-within {
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between sm:justify-center items-center text-slate-800 antialiased sm:p-4">
+<body class="min-h-screen flex flex-col justify-between md:justify-center items-center text-slate-800 antialiased p-0 md:p-6 relative overflow-x-hidden">
 
-    <!-- Container wrapper (App Shell) -->
-    <div class="w-full max-w-[430px] flex flex-col justify-between min-h-screen sm:min-h-[720px] sm:bg-gradient-to-b sm:from-[#38bdf8] sm:via-[#5bcafc] sm:to-[#38bdf8] sm:rounded-[44px] sm:shadow-2xl sm:border-[5px] sm:border-white/30 overflow-hidden relative">
+    <!-- Ambient Glow Background Blobs (Desktop) -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
+        <div class="absolute -top-24 -left-24 w-[500px] h-[500px] bg-sky-500/15 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-24 -right-24 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[140px]"></div>
+    </div>
 
-        <!-- TOP SECTION: Logo & Brand Header -->
-        <div class="flex-1 flex flex-col items-center justify-center pt-10 pb-8 px-6 text-center z-10">
+    <!-- Main Container: Mobile App view on Mobile & Wide Modern Card on Desktop -->
+    <div class="w-full max-w-full md:max-w-4xl min-h-screen md:min-h-[580px] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
+
+        <!-- LEFT / TOP SECTION: Brand Header with Halo Dashboard Blue Gradient -->
+        <div class="hero-network-gradient flex-1 md:w-5/12 flex flex-col items-center justify-center pt-10 pb-8 px-6 md:p-10 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
             
-            <!-- White Icon Container with Soft Drop Shadow -->
-            <a href="{{ route('home') }}" class="group block mb-3 transform hover:scale-105 transition-transform duration-300">
-                <div class="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto flex items-center justify-center">
-                    <!-- Subtle Glow Ring -->
-                    <div class="absolute inset-0 bg-white/30 rounded-full blur-xl animate-pulse"></div>
-                    
-                    <!-- White Logo / Emblem Graphic -->
-                    <div class="relative w-full h-full rounded-3xl bg-white/20 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-4">
-                        <img 
-                            src="{{ asset('images/logo/logo-msn-white.png') }}" 
-                            alt="PT Media Solusi Network" 
-                            class="max-h-full max-w-full object-contain filter drop-shadow-md"
-                            onerror="this.onerror=null; this.src='{{ asset('images/logo/logo-icon.png') }}';"
-                        >
-                    </div>
+            <!-- Ambient Card Glow -->
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-sky-400/20 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <!-- Logo Icon Container (matching Browser Tab) -->
+            <a href="{{ route('home') }}" class="group block mb-4 transform hover:scale-105 transition-transform duration-300 relative z-10">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl bg-white p-3.5 shadow-xl shadow-sky-950/50 border border-white/90 flex items-center justify-center">
+                    <img 
+                        src="{{ asset('images/logo/logo-icon.png') }}" 
+                        alt="PT Media Solusi Network" 
+                        class="w-full h-full object-contain filter drop-shadow-xs"
+                    >
                 </div>
             </a>
 
-            <!-- Brand Name Typography -->
-            <h1 class="text-white font-heading font-extrabold text-2xl sm:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
-                <span>My</span><span class="text-sky-100">MSN</span>
-            </h1>
-            <p class="text-white/90 text-xs font-medium tracking-wide uppercase mt-0.5 drop-shadow-xs">
-                Customer Self-Care Portal
-            </p>
+            <!-- Brand Typography -->
+            <div class="relative z-10">
+                <h1 class="text-white font-heading font-extrabold text-2xl sm:text-3xl tracking-tight drop-shadow-md flex items-center justify-center gap-1.5">
+                    <span>My</span><span class="text-sky-300">MSN</span>
+                </h1>
+                <p class="text-sky-200/90 text-[11px] sm:text-xs font-semibold tracking-wider uppercase mt-1">
+                    Customer Self-Care Portal
+                </p>
+                <p class="text-slate-300/80 text-xs font-sans mt-2 max-w-xs hidden md:block leading-relaxed">
+                    Akses tagihan internet, cek status koneksi, dan layanan bantuan pelanggan secara real-time.
+                </p>
+            </div>
+
+            <!-- Desktop Highlights Badges -->
+            <div class="hidden md:flex flex-col gap-2 mt-8 w-full max-w-xs text-left relative z-10">
+                <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs text-slate-200">
+                    <iconify-icon icon="solar:wallet-money-bold" class="text-sky-400 text-base shrink-0"></iconify-icon>
+                    <span>Cek & Bayar Tagihan Otomatis</span>
+                </div>
+                <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs text-slate-200">
+                    <iconify-icon icon="solar:chat-round-dots-bold" class="text-emerald-400 text-base shrink-0"></iconify-icon>
+                    <span>Tiket Bantuan & Respon Cepat NOC</span>
+                </div>
+            </div>
+
+            <!-- Desktop Footer Note -->
+            <div class="hidden md:block mt-auto pt-6 text-[10.5px] text-slate-400 font-mono">
+                PT MEDIA SOLUSI NETWORK © {{ date('Y') }}
+            </div>
         </div>
 
-        <!-- BOTTOM SECTION: White Rounded Sheet Card -->
-        <div class="login-sheet bg-white px-7 pt-8 pb-7 w-full flex-shrink-0 z-20">
+        <!-- RIGHT / BOTTOM SECTION: White Form Card -->
+        <div class="mobile-login-sheet bg-white md:w-7/12 px-6 sm:px-10 pt-8 pb-8 md:py-10 flex flex-col justify-center flex-shrink-0 z-20 shadow-2xl md:shadow-none">
             
             <!-- Card Header: WELCOME -->
             <div class="text-center mb-6">
-                <h2 class="text-2xl sm:text-[26px] font-heading font-black tracking-widest text-[#4f7cf7] uppercase">
+                <h2 class="text-2xl sm:text-[26px] font-heading font-black tracking-widest text-[#0284c7] uppercase">
                     WELCOME
                 </h2>
                 <p class="text-xs text-slate-400 font-medium mt-1">
@@ -149,7 +177,7 @@
             @endif
 
             <!-- Form -->
-            <form id="loginForm" action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4">
+            <form id="loginForm" action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4 max-w-sm mx-auto w-full">
                 @csrf
 
                 <!-- Input: Nomor Internet / WhatsApp -->
@@ -170,8 +198,8 @@
                             placeholder="Contoh: 1711221 atau 081234567890"
                             autocomplete="username"
                         >
-                        <!-- Right Icon (matching sample style) -->
-                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-sky-400">
+                        <!-- Right Icon -->
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-sky-500">
                             <iconify-icon icon="solar:letter-bold" width="20"></iconify-icon>
                         </div>
                     </div>
@@ -183,17 +211,17 @@
                         <input type="checkbox" name="remember" checked class="w-3.5 h-3.5 rounded-full text-sky-500 border-slate-300 focus:ring-sky-400 accent-sky-500">
                         <span>Ingat Saya</span>
                     </label>
-                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20butuh%20bantuan%20login%20portal%20pelanggan" target="_blank" class="font-medium text-[#4f7cf7] hover:underline">
+                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20butuh%20bantuan%20login%20portal%20pelanggan" target="_blank" class="font-semibold text-sky-600 hover:text-sky-700 hover:underline">
                         Butuh Bantuan?
                     </a>
                 </div>
 
-                <!-- Submit Button (Pill shaped gradient matching sample image) -->
+                <!-- Submit Button (Pill shaped gradient matching Halo Dashboard theme) -->
                 <div class="pt-2 text-center">
                     <button 
                         type="submit" 
                         id="btnSubmit"
-                        class="w-full sm:w-48 py-3 px-8 rounded-full bg-gradient-to-r from-sky-400 via-sky-500 to-[#4f7cf7] hover:from-sky-500 hover:to-[#3b66e3] text-white font-heading font-extrabold text-sm uppercase tracking-widest transition-all duration-200 shadow-md shadow-sky-400/40 hover:shadow-lg hover:shadow-sky-400/50 active:scale-95 flex items-center justify-center gap-2 cursor-pointer mx-auto disabled:opacity-80 disabled:cursor-not-allowed disabled:pointer-events-none"
+                        class="w-full sm:w-48 py-3 px-8 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-sm uppercase tracking-widest transition-all duration-200 shadow-md shadow-sky-500/30 hover:shadow-lg hover:shadow-sky-500/40 active:scale-95 flex items-center justify-center gap-2 cursor-pointer mx-auto disabled:opacity-80 disabled:cursor-not-allowed disabled:pointer-events-none"
                     >
                         <span id="btnText" class="inline-flex items-center justify-center">
                             LOGIN
@@ -203,15 +231,15 @@
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            <span class="text-xs">LOADING...</span>
+                            <span class="text-xs">MEMPROSES...</span>
                         </span>
                     </button>
                 </div>
             </form>
 
-            <!-- Social / Help Badges (similar to Google / FB icons in sample) -->
+            <!-- Social / Quick Help Buttons -->
             <div class="mt-6 flex items-center justify-center gap-4">
-                <a href="https://wa.me/628112293888" target="_blank" class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-500 hover:scale-110 hover:bg-emerald-50 transition-all" title="WhatsApp Support">
+                <a href="https://wa.me/628112293888" target="_blank" class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-500 hover:scale-110 hover:bg-emerald-50 transition-all" title="WhatsApp Customer Service">
                     <iconify-icon icon="logos:whatsapp-icon" width="20"></iconify-icon>
                 </a>
                 <a href="{{ route('home') }}" class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200/80 shadow-xs flex items-center justify-center text-sky-500 hover:scale-110 hover:bg-sky-50 transition-all" title="Website Resmi MSN">
@@ -223,7 +251,7 @@
             <div class="mt-5 text-center">
                 <p class="text-[11px] text-slate-500">
                     Belum berlangganan? 
-                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20ingin%20pasang%20internet%20baru" target="_blank" class="font-bold text-[#4f7cf7] hover:underline">
+                    <a href="https://wa.me/628112293888?text=Halo%20Admin%20MSN,%20saya%20ingin%20pasang%20internet%20baru" target="_blank" class="font-bold text-sky-600 hover:underline">
                         Daftar Sekarang
                     </a>
                 </p>
