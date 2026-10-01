@@ -264,6 +264,68 @@
     box-shadow: 0 0 6px rgba(56, 189, 248, 0.8), 0 0 10px rgba(56, 189, 248, 0.4);
 }
 
+/* Official Bank ATM Cards UI */
+.bank-atm-card {
+    position: relative;
+    border-radius: 1rem;
+    padding: 0.9rem 1rem;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+}
+
+.bank-card-chip {
+    width: 32px !important;
+    height: 24px !important;
+    min-width: 32px !important;
+    min-height: 24px !important;
+    border-radius: 5px !important;
+    background: linear-gradient(135deg, #fde68a 0%, #f59e0b 50%, #d97706 100%) !important;
+    border: 1px solid #fcd34d !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.bank-card-badge {
+    width: 86px !important;
+    height: 34px !important;
+    min-width: 86px !important;
+    max-width: 86px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    background-color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 3px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+.bank-card-badge img {
+    max-width: 100% !important;
+    max-height: 20px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
 /* Copy Badge Button */
 .copy-btn {
     cursor: pointer;
@@ -353,3 +415,106 @@ div[id*="snap-container"] {
     pointer-events: auto !important;
 }
 
+/* Bank ATM Card Design */
+.bank-atm-card {
+    position: relative;
+    border-radius: 1rem;
+    padding: 0.875rem 1rem;
+    color: #ffffff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 135px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bank-atm-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.bank-card-chip {
+    width: 32px !important;
+    height: 24px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #fde68a 0%, #f59e0b 50%, #d97706 100%);
+    border: 1px solid #fef08a;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.bank-card-chip-line {
+    width: 100%;
+    height: 1px;
+    background: rgba(180, 83, 9, 0.6);
+    margin: 1.5px 0;
+}
+
+.bank-card-chip-cross {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid rgba(180, 83, 9, 0.5);
+    border-right: 1px solid rgba(180, 83, 9, 0.5);
+}
+
+.bank-card-badge {
+    height: 34px !important;
+    width: 88px !important;
+    min-width: 88px !important;
+    max-width: 88px !important;
+    padding: 3px 8px !important;
+    border-radius: 8px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+}
+
+.bank-card-badge img {
+    max-height: 22px !important;
+    max-width: 72px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+.bank-card-badge-sm {
+    height: 30px !important;
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    padding: 2px 6px !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+}
+
+.bank-card-badge-sm img {
+    max-height: 18px !important;
+    max-width: 68px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+}

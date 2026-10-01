@@ -382,7 +382,7 @@
                                         @endphp
                                         
                                         <!-- Real ATM / Credit Card Design -->
-                                        <div class="relative rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br {{ $cardGradient }} text-white shadow-md {{ $accentBorder }} border overflow-hidden flex flex-col justify-between min-h-[140px] group transition-all duration-200 hover:shadow-lg">
+                                        <div class="bank-atm-card bg-gradient-to-br {{ $cardGradient }} {{ $accentBorder }} border group">
                                             
                                             <!-- Glossy / Metallic Sheen Background Decor -->
                                             <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
@@ -390,21 +390,19 @@
 
                                             <!-- Top Row: EMV Chip & Bank Logo -->
                                             <div class="relative z-10 flex items-center justify-between gap-2">
-                                                <div class="flex items-center gap-2">
-                                                     <!-- Realistic Gold Smart Chip -->
-                                                    <div class="w-8 h-6 rounded-[5px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-inner flex flex-col justify-center items-center relative overflow-hidden shrink-0">
-                                                        <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
-                                                        <div class="w-full h-[1px] bg-amber-700/60 my-[1.5px]"></div>
-                                                        <div class="absolute inset-x-2 top-0 bottom-0 border-x border-amber-700/50"></div>
-                                                    </div>
+                                                <!-- Realistic Gold Smart Chip -->
+                                                <div class="bank-card-chip">
+                                                    <div class="bank-card-chip-line"></div>
+                                                    <div class="bank-card-chip-line"></div>
+                                                    <div class="bank-card-chip-cross"></div>
                                                 </div>
 
                                                 <!-- Official Bank Logo Badge (Fixed Dimension for Perfect Uniformity) -->
-                                                <div class="h-9 sm:h-10 w-24 sm:w-28 px-3 py-1 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+                                                <div class="bank-card-badge">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-5 sm:h-6 max-w-full w-auto object-contain transition-transform" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
-                                                        <span class="text-[11px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
+                                                        <span class="text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -872,36 +870,47 @@
                             $mRawAcc = preg_replace('/\s+/', '', $bank['account_number']);
                             $mFormattedAcc = trim(chunk_split($mRawAcc, 4, ' '));
                         @endphp
-                        <div class="p-3.5 rounded-2xl bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border text-white shadow-sm space-y-2 relative overflow-hidden flex flex-col justify-between min-h-[120px]">
-                            <div class="flex items-center justify-between gap-1">
+                        <div class="bank-atm-card bg-gradient-to-br {{ $mCardGradient }} {{ $mAccentBorder }} border">
+                            <!-- Glossy / Metallic Sheen Background Decor -->
+                            <div class="absolute -right-8 -top-8 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+                            
+                            <!-- Top Row: EMV Chip & Bank Logo -->
+                            <div class="relative z-10 flex items-center justify-between gap-2">
                                 <!-- Chip Gold -->
-                                <div class="w-6 h-4.5 rounded-[3px] bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 border border-amber-300 shadow-2xs flex flex-col justify-center items-center shrink-0">
-                                    <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
-                                    <div class="w-full h-[1px] bg-amber-700/60 my-[1px]"></div>
+                                <div class="bank-card-chip">
+                                    <div class="bank-card-chip-line"></div>
+                                    <div class="bank-card-chip-line"></div>
+                                    <div class="bank-card-chip-cross"></div>
                                 </div>
                                 
                                 <!-- Logo Container with Fixed Dimension -->
-                                <div class="h-8 w-22 sm:w-24 px-2.5 py-0.5 rounded-lg bg-white shadow-2xs flex items-center justify-center shrink-0 overflow-hidden">
+                                <div class="bank-card-badge">
                                     @if($mBankLogo)
-                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="h-4.5 sm:h-5 max-w-full w-auto object-contain" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
+                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
                                     @else
                                         <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all my-0.5">
-                                {{ $mFormattedAcc }}
+                            <!-- Middle Row: Spaced Card Account Number -->
+                            <div class="relative z-10 my-1.5 space-y-0.5">
+                                <div class="text-[7.5px] font-mono tracking-widest text-slate-300/80 uppercase font-semibold">Nomor Rekening</div>
+                                <div class="font-mono font-black text-xs sm:text-sm tracking-wider text-white select-all">
+                                    {{ $mFormattedAcc }}
+                                </div>
                             </div>
 
-                            <div class="flex items-center justify-between text-[9px] pt-1.5 border-t border-white/10 text-slate-300">
+                            <!-- Bottom Row: Cardholder Name & Quick Copy Button -->
+                            <div class="relative z-10 flex items-center justify-between text-[9px] pt-1.5 border-t border-white/10 text-slate-300">
                                 <span class="truncate pr-1">a.n. {{ $bank['account_name'] }}</span>
                                 <button 
                                     type="button" 
                                     onclick="copyToClipboard('{{ $bank['account_number'] }}', 'No. Rekening {{ $bank['bank_name'] }}')" 
-                                    class="copy-btn text-sky-300 hover:text-white font-bold ml-1 shrink-0 px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                                    class="copy-btn text-sky-300 hover:text-white font-bold ml-1 shrink-0 px-2.5 py-0.5 rounded bg-white/15 hover:bg-white/30 transition-all cursor-pointer flex items-center gap-1"
                                 >
-                                    Salin
+                                    <iconify-icon icon="solar:copy-bold" class="text-[10px] text-sky-300"></iconify-icon>
+                                    <span>Salin</span>
                                 </button>
                             </div>
                         </div>
