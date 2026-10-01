@@ -1,5 +1,5 @@
 @php
-    $isFirstLogin = (int)(auth('customer')->user()->is_login ?? 0) === 0;
+    $isFirstLogin = session('is_first_login', false) || (int)(auth('customer')->user()->is_login ?? 0) === 0;
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
     
