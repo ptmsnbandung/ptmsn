@@ -336,39 +336,51 @@
     </main>
 
     <!-- Floating Mobile Island Dock (Dark Oceanic Island - Wider & Slimmer) -->
-    <div class="md:hidden fixed bottom-3 inset-x-0 z-40 max-w-[400px] w-full mx-auto px-3">
+    <div class="md:hidden fixed bottom-3 inset-x-0 z-40 max-w-[390px] w-full mx-auto px-4">
         <div class="floating-mobile-dock">
             <div class="grid grid-cols-4 gap-1 items-center text-center">
                 <!-- Beranda -->
-                <a href="{{ route('portal.dashboard') }}" class="group dock-item flex flex-col items-center justify-center py-0.5 px-1 rounded-full transition-all duration-200 active:scale-95 relative">
-                    <div class="w-10 h-6.5 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.dashboard') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
-                        <iconify-icon icon="solar:home-smile-bold" width="18"></iconify-icon>
+                <a href="{{ route('portal.dashboard') }}" class="dock-item {{ request()->routeIs('portal.dashboard') ? 'dock-item-active' : '' }} active:scale-95">
+                    <div class="dock-icon">
+                        <iconify-icon icon="solar:home-smile-bold" width="22"></iconify-icon>
                     </div>
-                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight transition-colors duration-200 {{ request()->routeIs('portal.dashboard') ? 'font-bold text-cyan-300 drop-shadow-[0_1px_4px_rgba(6,182,212,0.4)]' : 'font-medium text-slate-300/80 group-hover:text-white' }}">Beranda</span>
+                    <span class="dock-label font-heading">Beranda</span>
+                    @if(request()->routeIs('portal.dashboard'))
+                        <span class="dock-pill-indicator"></span>
+                    @endif
                 </a>
 
                 <!-- Tagihan -->
-                <a href="{{ route('portal.billing.index') }}" class="group dock-item flex flex-col items-center justify-center py-0.5 px-1 rounded-full transition-all duration-200 active:scale-95 relative">
-                    <div class="w-10 h-6.5 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.billing.*') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
-                        <iconify-icon icon="solar:wallet-money-bold" width="18"></iconify-icon>
+                <a href="{{ route('portal.billing.index') }}" class="dock-item {{ request()->routeIs('portal.billing.*') ? 'dock-item-active' : '' }} active:scale-95">
+                    <div class="dock-icon">
+                        <iconify-icon icon="solar:wallet-money-bold" width="22"></iconify-icon>
                     </div>
-                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight transition-colors duration-200 {{ request()->routeIs('portal.billing.*') ? 'font-bold text-cyan-300 drop-shadow-[0_1px_4px_rgba(6,182,212,0.4)]' : 'font-medium text-slate-300/80 group-hover:text-white' }}">Tagihan</span>
+                    <span class="dock-label font-heading">Tagihan</span>
+                    @if(request()->routeIs('portal.billing.*'))
+                        <span class="dock-pill-indicator"></span>
+                    @endif
                 </a>
 
                 <!-- Tiket -->
-                <a href="{{ route('portal.tickets.index') }}" class="group dock-item flex flex-col items-center justify-center py-0.5 px-1 rounded-full transition-all duration-200 active:scale-95 relative">
-                    <div class="w-10 h-6.5 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
-                        <iconify-icon icon="solar:chat-round-dots-bold" width="18"></iconify-icon>
+                <a href="{{ route('portal.tickets.index') }}" class="dock-item {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'dock-item-active' : '' }} active:scale-95">
+                    <div class="dock-icon">
+                        <iconify-icon icon="solar:chat-round-dots-bold" width="22"></iconify-icon>
                     </div>
-                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight transition-colors duration-200 {{ request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create') ? 'font-bold text-cyan-300 drop-shadow-[0_1px_4px_rgba(6,182,212,0.4)]' : 'font-medium text-slate-300/80 group-hover:text-white' }}">Tiket</span>
+                    <span class="dock-label font-heading">Tiket</span>
+                    @if(request()->routeIs('portal.tickets.*') && !request()->routeIs('portal.tickets.create'))
+                        <span class="dock-pill-indicator"></span>
+                    @endif
                 </a>
 
                 <!-- Profil -->
-                <a href="{{ route('portal.profile') }}" class="group dock-item flex flex-col items-center justify-center py-0.5 px-1 rounded-full transition-all duration-200 active:scale-95 relative">
-                    <div class="w-10 h-6.5 rounded-full flex items-center justify-center transition-all duration-200 {{ request()->routeIs('portal.profile') ? 'dock-icon-capsule-active' : 'dock-icon-capsule-inactive' }}">
-                        <iconify-icon icon="solar:user-circle-bold" width="18"></iconify-icon>
+                <a href="{{ route('portal.profile') }}" class="dock-item {{ request()->routeIs('portal.profile') ? 'dock-item-active' : '' }} active:scale-95">
+                    <div class="dock-icon">
+                        <iconify-icon icon="solar:user-circle-bold" width="22"></iconify-icon>
                     </div>
-                    <span class="text-[9.5px] font-heading mt-0.5 tracking-tight transition-colors duration-200 {{ request()->routeIs('portal.profile') ? 'font-bold text-cyan-300 drop-shadow-[0_1px_4px_rgba(6,182,212,0.4)]' : 'font-medium text-slate-300/80 group-hover:text-white' }}">Profil</span>
+                    <span class="dock-label font-heading">Profil</span>
+                    @if(request()->routeIs('portal.profile'))
+                        <span class="dock-pill-indicator"></span>
+                    @endif
                 </a>
             </div>
         </div>
