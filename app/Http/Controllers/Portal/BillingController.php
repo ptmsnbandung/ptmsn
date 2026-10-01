@@ -166,8 +166,9 @@ class BillingController extends Controller
 
         $file->move($destinationPath, $filename);
         $filePath = 'uploads/bukti_transfer/' . $filename;
+        $fullUrl = url($filePath);
 
-        // Simpan atau update data konfirmasi
+        // Simpan atau update data konfirmasi (Menyimpan Full URL langsung ke database)
         \App\Models\PaymentConfirmation::updateOrCreate(
             [
                 'customer_id' => $customer->customer_id,
@@ -175,7 +176,7 @@ class BillingController extends Controller
             ],
             [
                 'customer_name' => $customer->name,
-                'proof_file' => $filePath,
+                'proof_file' => $fullUrl,
                 'notes' => $request->input('notes'),
                 'status' => 'pending',
                 'verified_at' => null,

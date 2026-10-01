@@ -23,6 +23,9 @@ class PaymentConfirmation extends Model
 
     public function getProofUrlAttribute(): string
     {
+        if (str_starts_with((string) $this->proof_file, 'http://') || str_starts_with((string) $this->proof_file, 'https://')) {
+            return $this->proof_file;
+        }
         return asset($this->proof_file);
     }
 }

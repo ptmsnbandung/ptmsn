@@ -23,5 +23,6 @@ Homestead.yaml
 Thumbs.db
 *.sql
 /ims
+/gomsn
 bootstrap/cache/*.php
 
