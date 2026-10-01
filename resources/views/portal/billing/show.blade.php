@@ -204,7 +204,7 @@
                     btn.innerHTML = '<iconify-icon icon="solar:spinner-line" class="animate-spin inline-block mr-1" width="16"></iconify-icon><span>Menghubungi Midtrans...</span>';
                 }
 
-                const endpoint = `{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/pay`;
+                const endpoint = `{{ route('portal.billing.pay.direct') }}`;
 
                 try {
                     const response = await fetch(endpoint, {
@@ -213,7 +213,10 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Accept': 'application/json'
-                        }
+                        },
+                        body: JSON.stringify({
+                            kode_billing: kodeBilling
+                        })
                     });
 
                     const data = await response.json();
@@ -232,13 +235,16 @@
                             try {
                                 window.snap.pay(data.token, {
                                     onSuccess: function(result) {
-                                        fetch(`{{ url('/portal/tagihan') }}/${encodeURIComponent(kodeBilling)}/sync`, {
+                                        fetch(`{{ route('portal.billing.sync.direct') }}`, {
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
                                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                                 'Accept': 'application/json'
-                                            }
+                                            },
+                                            body: JSON.stringify({
+                                                kode_billing: kodeBilling
+                                            })
                                         }).finally(() => {
                                             Swal.fire({
                                                 icon: 'success',

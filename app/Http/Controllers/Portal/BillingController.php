@@ -213,7 +213,18 @@ class BillingController extends Controller
     /**
      * Endpoint Cek & Sinkronkan Status Pembayaran dari Frontend / Popup
      */
-    public function sync(string $invoiceCode): JsonResponse
+    public function syncDirect(Request $request): JsonResponse
+    {
+        $invoiceCode = $request->input('kode_billing') ?? $request->input('invoice') ?? '';
+        return $this->processSync($request, $invoiceCode);
+    }
+
+    public function sync(Request $request, string $invoiceCode): JsonResponse
+    {
+        return $this->processSync($request, $invoiceCode);
+    }
+
+    protected function processSync(Request $request, string $invoiceCode): JsonResponse
     {
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
@@ -221,6 +232,7 @@ class BillingController extends Controller
 
         $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
             ->orWhere('kode_billing_layanan', $invoiceCode)
+            ->orWhere('kode_billing_layanan', str_replace('-', '/', $decodedCode))
             ->first();
 
         if (!$invoice || $invoice->nomor_internet !== $customer->customer_id) {
@@ -241,7 +253,18 @@ class BillingController extends Controller
     /**
      * Endpoint Buat / Dapatkan Token Midtrans Snap untuk Tagihan Tertentu
      */
+    public function payDirect(Request $request): JsonResponse
+    {
+        $invoiceCode = $request->input('kode_billing') ?? $request->input('invoice') ?? '';
+        return $this->processPay($request, $invoiceCode);
+    }
+
     public function pay(Request $request, string $invoiceCode): JsonResponse
+    {
+        return $this->processPay($request, $invoiceCode);
+    }
+
+    protected function processPay(Request $request, string $invoiceCode): JsonResponse
     {
         /** @var \App\Models\Customer $customer */
         $customer = Auth::guard('customer')->user();
@@ -250,7 +273,15 @@ class BillingController extends Controller
 
         $invoice = BillingLayanan::where('kode_billing_layanan', $decodedCode)
             ->orWhere('kode_billing_layanan', $invoiceCode)
-            ->firstOrFail();
+            ->orWhere('kode_billing_layanan', str_replace('-', '/', $decodedCode))
+            ->first();
+
+        if (!$invoice) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tagihan tidak ditemukan: ' . $invoiceCode,
+            ], 404);
+        }
 
         if ($invoice->nomor_internet !== $customer->customer_id) {
             return response()->json([
@@ -266,7 +297,7 @@ class BillingController extends Controller
             ], 400);
         }
 
-        $force = $request->boolean('force', false);
+        $force = $request->boolean('force', true);
         $result = $this->midtransService->createSnapTransaction($invoice, $customer, $force);
 
         if (!$result['success']) {

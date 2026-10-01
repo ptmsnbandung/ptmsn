@@ -57,6 +57,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
         // Tagihan & Pembayaran (Billing)
         Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
+        Route::post('/tagihan/pay', [PortalBillingController::class, 'payDirect'])->name('billing.pay.direct');
+        Route::post('/tagihan/sync', [PortalBillingController::class, 'syncDirect'])->name('billing.sync.direct');
         Route::post('/tagihan/{invoice}/pay', [PortalBillingController::class, 'pay'])->where('invoice', '.*')->name('billing.pay');
         Route::post('/tagihan/{invoice}/sync', [PortalBillingController::class, 'sync'])->where('invoice', '.*')->name('billing.sync');
         Route::post('/tagihan/{invoice}/transfer-confirm', [PortalBillingController::class, 'confirmTransfer'])->where('invoice', '.*')->name('billing.transfer.confirm');
