@@ -150,7 +150,7 @@
             @endif
 
             <!-- Form -->
-            <form action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4">
+            <form id="loginForm" action="{{ route('portal.login.submit') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <div>
@@ -190,10 +190,20 @@
                 <!-- Action Submit Button -->
                 <button 
                     type="submit" 
-                    class="w-full py-3 sm:py-3.5 px-5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-sm transition-all duration-200 shadow-md shadow-sky-500/25 hover:shadow-lg hover:shadow-sky-500/35 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-1"
+                    id="btnSubmit"
+                    class="w-full py-3 sm:py-3.5 px-5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-sm transition-all duration-200 shadow-md shadow-sky-500/25 hover:shadow-lg hover:shadow-sky-500/35 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-80 disabled:cursor-not-allowed disabled:pointer-events-none"
                 >
-                    <span>Masuk Sekarang</span>
-                    <iconify-icon icon="solar:arrow-right-linear" width="17"></iconify-icon>
+                    <span id="btnText" class="inline-flex items-center justify-center gap-2">
+                        <span>Masuk Sekarang</span>
+                        <iconify-icon icon="solar:arrow-right-linear" width="17"></iconify-icon>
+                    </span>
+                    <span id="btnLoading" class="hidden items-center justify-center gap-2">
+                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Memproses Masuk...</span>
+                    </span>
                 </button>
             </form>
 
@@ -215,5 +225,31 @@
 
     </div>
 
+    <!-- Script Handling Loading State -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnText = document.getElementById('btnText');
+            const btnLoading = document.getElementById('btnLoading');
+
+            if (loginForm && btnSubmit) {
+                loginForm.addEventListener('submit', function (e) {
+                    if (btnSubmit.disabled) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Disable button and switch to loading state
+                    btnSubmit.disabled = true;
+                    if (btnText) btnText.classList.add('hidden');
+                    if (btnLoading) {
+                        btnLoading.classList.remove('hidden');
+                        btnLoading.classList.add('inline-flex');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
