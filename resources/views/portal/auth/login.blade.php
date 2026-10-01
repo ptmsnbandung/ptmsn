@@ -243,7 +243,7 @@
                                 required 
                                 autofocus 
                                 class="w-full pl-3.5 pr-10 py-2.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-xs"
-                                placeholder="Contoh: 1711221 atau 081234567890"
+                                placeholder="Contoh: 123456 atau 081234567890"
                                 autocomplete="username"
                             >
                             <!-- Right Icon -->
