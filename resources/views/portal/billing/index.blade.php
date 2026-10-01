@@ -330,24 +330,24 @@
                                                 $bankLogo = 'bca.png';
                                                 $cardGradient = 'from-[#081e3a] via-[#004282] to-[#00224d]';
                                                 $accentBorder = 'border-sky-500/30';
-                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto max-w-[75px]';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
                                             } elseif (str_contains($bankKey, 'mandiri')) {
                                                 $bankLogo = 'mandiri.png';
                                                 $cardGradient = 'from-[#0a1c2e] via-[#00315c] to-[#051321]';
                                                 $accentBorder = 'border-amber-500/30';
-                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto max-w-[78px]';
+                                                $cardLogoClass = 'h-7 sm:h-8 w-auto max-w-[85px] sm:max-w-[95px] scale-120 sm:scale-130';
                                             } elseif (str_contains($bankKey, 'bri')) {
                                                 $bankLogo = 'bri.png';
                                                 $cardGradient = 'from-[#031c36] via-[#004f98] to-[#021324]';
                                                 $accentBorder = 'border-sky-400/30';
-                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto max-w-[75px]';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
                                             } elseif (str_contains($bankKey, 'bni')) {
                                                 $bankLogo = 'bni.png';
                                                 $cardGradient = 'from-[#022329] via-[#005e6a] to-[#011417]';
                                                 $accentBorder = 'border-teal-400/30';
-                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto max-w-[75px]';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto max-w-[70px] sm:max-w-[75px]';
                                             } else {
-                                                $cardLogoClass = 'h-5.5 sm:h-6 w-auto';
+                                                $cardLogoClass = 'h-5 sm:h-5.5 w-auto';
                                             }
 
                                             $rawAcc = preg_replace('/\s+/', '', $bank['account_number']);
