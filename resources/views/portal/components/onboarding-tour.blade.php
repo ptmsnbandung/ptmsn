@@ -419,37 +419,67 @@
                 };
 
                 const popoverWidth = Math.min(window.innerWidth * 0.88, window.innerWidth < 640 ? 320 : 420);
-                const popoverHeight = window.innerWidth < 640 ? 175 : 240;
-                const margin = window.innerWidth < 640 ? 10 : 14;
+                const popoverHeight = window.innerWidth < 640 ? 175 : 230;
+                const margin = window.innerWidth < 640 ? 10 : 16;
+                const topSafeMargin = window.innerWidth < 640 ? 64 : 78;
+                const bottomSafeMargin = window.innerWidth < 640 ? 80 : 20;
+
+                const spaceBelow = window.innerHeight - (this.spotlight.top + this.spotlight.height);
+                const spaceAbove = this.spotlight.top - topSafeMargin;
+                const spaceRight = window.innerWidth - (this.spotlight.left + this.spotlight.width);
+                const spaceLeft = this.spotlight.left;
 
                 let popLeft = this.spotlight.left + (this.spotlight.width / 2) - (popoverWidth / 2);
-                popLeft = Math.max(margin, Math.min(popLeft, window.innerWidth - popoverWidth - margin));
-
                 let popTop = this.spotlight.top + this.spotlight.height + margin;
-                if (popTop + popoverHeight > window.innerHeight && this.spotlight.top > popoverHeight + margin) {
+
+                // Cek jika desktop memiliki ruang lega di samping kanan (misal target ada di kolom kiri seperti rincian tagihan)
+                if (window.innerWidth >= 1024 && spaceRight >= popoverWidth + margin && this.spotlight.top < (popoverHeight + topSafeMargin)) {
+                    popLeft = this.spotlight.left + this.spotlight.width + margin;
+                    popTop = Math.max(topSafeMargin, this.spotlight.top);
+                } else if (spaceBelow >= popoverHeight + bottomSafeMargin) {
+                    // Cukup ruang di bawah spotlight
+                    popTop = this.spotlight.top + this.spotlight.height + margin;
+                } else if (spaceAbove >= popoverHeight) {
+                    // Cukup ruang di atas spotlight di bawah header navbar
                     popTop = this.spotlight.top - popoverHeight - margin;
+                } else if (window.innerWidth >= 768 && spaceRight >= popoverWidth + margin) {
+                    // Letakkan di samping kanan
+                    popLeft = this.spotlight.left + this.spotlight.width + margin;
+                    popTop = Math.max(topSafeMargin, this.spotlight.top);
+                } else if (window.innerWidth >= 768 && spaceLeft >= popoverWidth + margin) {
+                    // Letakkan di samping kiri
+                    popLeft = this.spotlight.left - popoverWidth - margin;
+                    popTop = Math.max(topSafeMargin, this.spotlight.top);
+                } else {
+                    // Fallback di bawah atau di atas
+                    popTop = (spaceBelow > spaceAbove) 
+                        ? this.spotlight.top + this.spotlight.height + margin 
+                        : this.spotlight.top - popoverHeight - margin;
                 }
 
-                popTop = Math.max(margin, Math.min(popTop, window.innerHeight - popoverHeight - margin));
+                // Jaminan mutlak: popTop tidak boleh terpotong header dan tidak boleh melampaui batas bawah
+                popTop = Math.max(topSafeMargin, Math.min(popTop, window.innerHeight - popoverHeight - bottomSafeMargin));
+                popLeft = Math.max(margin, Math.min(popLeft, window.innerWidth - popoverWidth - margin));
 
                 this.popover = {
-                    top: popTop,
-                    left: popLeft
+                    top: Math.round(popTop),
+                    left: Math.round(popLeft)
                 };
             },
 
             calculateFallbackPosition() {
-                const width = Math.min(window.innerWidth * 0.88, window.innerWidth < 640 ? 320 : 420);
-                const popoverHeight = window.innerWidth < 640 ? 175 : 240;
+                const popoverWidth = Math.min(window.innerWidth * 0.88, window.innerWidth < 640 ? 320 : 420);
+                const popoverHeight = window.innerWidth < 640 ? 175 : 230;
+                const topSafeMargin = window.innerWidth < 640 ? 64 : 78;
                 this.spotlight = {
-                    top: window.innerHeight / 2 - 40,
-                    left: window.innerWidth / 2 - 130,
+                    top: Math.round(window.innerHeight / 2 - 40),
+                    left: Math.round(window.innerWidth / 2 - 130),
                     width: 260,
                     height: 80
                 };
                 this.popover = {
-                    top: window.innerHeight / 2 - (popoverHeight / 2),
-                    left: window.innerWidth / 2 - (width / 2)
+                    top: Math.max(topSafeMargin, Math.round(window.innerHeight / 2 - (popoverHeight / 2))),
+                    left: Math.round(window.innerWidth / 2 - (popoverWidth / 2))
                 };
             },
 
