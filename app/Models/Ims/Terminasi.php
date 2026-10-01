@@ -44,13 +44,13 @@ class Terminasi extends Model
 
     public function getCategoryLabelAttribute(): string
     {
-        return 'Terminasi Layanan';
+        return 'Request Terminasi';
     }
 
     public function getSubjectAttribute()
     {
         $dateStr = $this->date_collect_start ? Carbon::parse($this->date_collect_start)->isoFormat('D MMM Y') : null;
-        return "Permohonan Terminasi Layanan" . ($dateStr ? " (Rencana: {$dateStr})" : "");
+        return "Pengajuan Request Terminasi Layanan" . ($dateStr ? " (Rencana: {$dateStr})" : "");
     }
 
     public function getDescriptionAttribute()
@@ -67,13 +67,15 @@ class Terminasi extends Model
     {
         $st = (string) $this->status_terminasi;
         return match ($st) {
-            '14' => 'Selesai (Terminasi)',
-            '12', '12.1' => 'Penjadwalan Pengambilan Perangkat',
+            '11' => 'Req. Terminasi (Menunggu Verifikasi)',
+            '12' => 'Collecting (Pengambilan Perangkat)',
+            '12.1' => 'Reschedule Collecting',
             '13' => 'Perangkat Telah Diterima',
+            '14' => 'Terminasi Selesai',
             '15' => 'Pending Terminasi',
-            '16' => 'Dibatalkan',
+            '16' => 'Cancel Terminasi',
             '17' => 'Req. Batal Terminasi',
-            default => 'Menunggu Verifikasi',
+            default => 'Req. Terminasi',
         };
     }
 

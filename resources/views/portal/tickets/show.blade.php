@@ -8,8 +8,8 @@
         '17' => 'Pengajuan Ubah Layanan',
         '12' => 'Permintaan Ubah WiFi',
         '13' => 'Pengajuan Relokasi',
-        '14' => 'Permohonan Terminasi',
-        '15' => 'Pengajuan Suspend',
+        '14' => 'Request Terminasi',
+        '15' => 'Request Suspend',
         default => 'Tiket Gangguan',
     };
 @endphp

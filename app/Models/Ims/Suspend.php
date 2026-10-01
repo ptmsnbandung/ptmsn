@@ -44,13 +44,13 @@ class Suspend extends Model
 
     public function getCategoryLabelAttribute(): string
     {
-        return 'Suspend Layanan';
+        return 'Request Suspend';
     }
 
     public function getSubjectAttribute()
     {
         $startStr = $this->suspend_start ? Carbon::parse($this->suspend_start)->isoFormat('D MMM Y') : null;
-        return "Pengajuan Suspend Layanan" . ($startStr ? " (Mulai {$startStr})" : " Sementara");
+        return "Pengajuan Request Suspend Layanan" . ($startStr ? " (Mulai {$startStr})" : " Sementara");
     }
 
     public function getDescriptionAttribute()
@@ -67,12 +67,13 @@ class Suspend extends Model
     {
         $st = (string) $this->status_suspend;
         return match ($st) {
-            '13' => 'Selesai (Unsuspend)',
+            '11' => 'Req. Suspend (Menunggu Verifikasi)',
             '12' => 'Suspend Aktif',
             '18' => 'Req. Unsuspend',
-            '14' => 'Dibatalkan',
+            '13' => 'Selesai (Unsuspend)',
+            '14' => 'Cancel Suspend',
             '15', '16' => 'Dialihkan ke Terminasi',
-            default => 'Menunggu Verifikasi',
+            default => 'Req. Suspend',
         };
     }
 
