@@ -400,7 +400,7 @@
                                                 <!-- Official Bank Logo Badge (Fixed Dimension for Perfect Uniformity) -->
                                                 <div class="bank-card-badge">
                                                     @if($bankLogo)
-                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
+                                                        <img src="{{ asset('images/logo/' . $bankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ str_contains(strtolower($bankLogo), 'mandiri') ? 'logo-mandiri' : '' }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider\'>{{ $bank['bank_name'] }}</span>';">
                                                     @else
                                                         <span class="text-[10px] font-mono font-black text-slate-800 uppercase tracking-wider">{{ $bank['bank_name'] }}</span>
                                                     @endif
@@ -886,7 +886,7 @@
                                 <!-- Logo Container with Fixed Dimension -->
                                 <div class="bank-card-badge">
                                     @if($mBankLogo)
-                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
+                                        <img src="{{ asset('images/logo/' . $mBankLogo) }}" alt="{{ $bank['bank_name'] }}" class="{{ str_contains(strtolower($mBankLogo), 'mandiri') ? 'logo-mandiri' : '' }}" onerror="this.onerror=null; this.outerHTML='<span class=\'text-[10px] font-mono font-black text-slate-800 uppercase\'>{{ $bank['bank_name'] }}</span>';">
                                     @else
                                         <span class="text-[10px] font-mono font-black text-slate-800 uppercase">{{ $bank['bank_name'] }}</span>
                                     @endif
