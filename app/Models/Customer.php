@@ -194,29 +194,77 @@ class Customer extends Authenticatable
     }
 
     /**
-     * Buka suspend pelanggan otomatis saat pembayaran lunas
+     * Buka suspend pelanggan otomatis (Req. Unsuspend jika sebelumnya suspend) saat pembayaran lunas
      */
-    public function unSuspend(): bool
+    public function unSuspend(string $userUpdate = 'System (Auto)'): bool
     {
-        $this->is_suspend = '0';
-        $this->status_reg = '20'; // Aktif
-
         $nomorInternet = (string) $this->nomor_internet;
         if (!$nomorInternet) return false;
 
         $connections = array_unique([$this->getConnectionName(), config('database.default'), 'ims', 'mysql']);
+
         foreach ($connections as $connName) {
             if (!$connName) continue;
             try {
-                \Illuminate\Support\Facades\DB::connection($connName)
-                    ->table('trx_batchjob_register')
+                $db = \Illuminate\Support\Facades\DB::connection($connName);
+
+                // 1. Cek apakah pelanggan sebelumnya dalam status suspend
+                $reg = $db->table('trx_batchjob_register')
                     ->where('nomor_internet', $nomorInternet)
-                    ->update([
-                        'is_suspend' => '0',
-                        'status_reg' => '20',
-                    ]);
-            } catch (\Throwable $e) {}
+                    ->first();
+
+                $activeSuspend = $db->table('trx_suspend')
+                    ->where('nomor_internet', $nomorInternet)
+                    ->where('status_suspend', '12') // 12 = Suspend
+                    ->where(function ($q) {
+                        $q->whereNull('hide')->orWhere('hide', '0');
+                    })
+                    ->orderByDesc('date_create')
+                    ->first();
+
+                $wasSuspended = ($reg && (string)$reg->is_suspend === '1') || !empty($activeSuspend);
+
+                // 2. Jika sebelumnya suspend, lakukan Request Unsuspend (status 18)
+                if ($wasSuspended) {
+                    if ($activeSuspend) {
+                        // Update trx_suspend menjadi 18 (Req. Unsuspend)
+                        $db->table('trx_suspend')
+                            ->where('kode_suspend', $activeSuspend->kode_suspend)
+                            ->update([
+                                'status_suspend' => '18',
+                                'date_update' => \Carbon\Carbon::now(),
+                                'user_update' => $userUpdate,
+                            ]);
+
+                        // Insert ke riwayat trx_suspend_log
+                        $logCode = 'SL-' . $nomorInternet . rand(1000, 9999);
+                        $db->table('trx_suspend_log')->insert([
+                            'kode_suspend_log' => $logCode,
+                            'kode_suspend' => $activeSuspend->kode_suspend,
+                            'status_suspend' => '18',
+                            'date_create' => \Carbon\Carbon::now(),
+                            'user_create' => $userUpdate,
+                            'hide' => '0',
+                        ]);
+                    }
+
+                    // Update trx_batchjob_register membuka flag isolir
+                    $db->table('trx_batchjob_register')
+                        ->where('nomor_internet', $nomorInternet)
+                        ->update([
+                            'is_suspend' => '0',
+                            'status_reg' => '20',
+                            'date_update' => \Carbon\Carbon::now(),
+                        ]);
+
+                    $this->is_suspend = '0';
+                    $this->status_reg = '20';
+                }
+            } catch (\Throwable $e) {
+                // Lanjutkan ke koneksi berikutnya jika ada
+            }
         }
+
         return true;
     }
 

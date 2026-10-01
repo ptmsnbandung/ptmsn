@@ -272,10 +272,10 @@ class MidtransService
         $billing->user_update = 'Midtrans Webhook';
         $billing->save();
 
-        // Jika tagihan lunas, buka isolir (un-suspend) & kirim notifikasi email ke pelanggan
+        // Jika tagihan lunas, buka isolir (Req. Unsuspend) & kirim notifikasi email ke pelanggan
         if ((int) $billing->status_bill_lay === 15) {
             try {
-                $billing->customer?->unSuspend();
+                $billing->customer?->unSuspend('Midtrans Webhook');
             } catch (\Throwable $e) {
                 Log::warning('Midtrans Webhook: Failed to unSuspend customer', [
                     'customer_id' => $billing->nomor_internet,
@@ -366,7 +366,7 @@ class MidtransService
                     $billing->save();
 
                     try {
-                        $billing->customer?->unSuspend();
+                        $billing->customer?->unSuspend('Midtrans Sync');
                     } catch (\Throwable $e) {
                         Log::warning('Midtrans Sync: Failed to unSuspend customer', [
                             'customer_id' => $billing->nomor_internet,
