@@ -253,7 +253,13 @@
                                     :class="paymentTab === 'transfer' ? 'bg-white text-sky-700 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900 font-semibold'"
                                     class="py-2 px-3 rounded-lg text-xs font-heading transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                                 >
-                                    <iconify-icon icon="solar:bank-bold" class="text-sm text-emerald-600"></iconify-icon>
+                                    <svg class="w-3.5 h-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2L2 7V9H22V7L12 2Z"/>
+                                        <path d="M4 11H7V18H4V11Z"/>
+                                        <path d="M10.5 11H13.5V18H10.5V11Z"/>
+                                        <path d="M17 11H20V18H17V11Z"/>
+                                        <path d="M2 20H22V22H2V20Z"/>
+                                    </svg>
                                     <span class="sm:hidden">Transfer Bank</span>
                                     <span class="hidden sm:inline">Konfirmasi Bukti Transfer</span>
                                 </button>
@@ -615,7 +621,13 @@
                                         @click="modalInvoiceCode = '{{ $inv->kode_billing_layanan }}'; modalInvoiceAmount = '{{ (int)$inv->total_layanan }}'; modalInvoiceNumber = '{{ $inv->invoice_number }}'; modalPeriod = '{{ $inv->period }}'; showTransferModal = true"
                                         class="w-full py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
                                     >
-                                        <iconify-icon icon="solar:bank-bold" class="text-xs"></iconify-icon>
+                                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2L2 7V9H22V7L12 2Z"/>
+                                            <path d="M4 11H7V18H4V11Z"/>
+                                            <path d="M10.5 11H13.5V18H10.5V11Z"/>
+                                            <path d="M17 11H20V18H17V11Z"/>
+                                            <path d="M2 20H22V22H2V20Z"/>
+                                        </svg>
                                         <span>Transfer</span>
                                     </button>
                                 </div>
@@ -725,7 +737,13 @@
                                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap"
                                                     title="Upload bukti transfer untuk tagihan ini"
                                                 >
-                                                    <iconify-icon icon="solar:bank-bold" class="text-xs"></iconify-icon>
+                                                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M12 2L2 7V9H22V7L12 2Z"/>
+                                                        <path d="M4 11H7V18H4V11Z"/>
+                                                        <path d="M10.5 11H13.5V18H10.5V11Z"/>
+                                                        <path d="M17 11H20V18H17V11Z"/>
+                                                        <path d="M2 20H22V22H2V20Z"/>
+                                                    </svg>
                                                     <span>Transfer</span>
                                                 </button>
                                             </div>
