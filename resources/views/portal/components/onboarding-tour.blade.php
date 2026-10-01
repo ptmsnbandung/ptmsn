@@ -1,5 +1,13 @@
 @php
-    $isFirstLogin = session('is_first_login', false) || (int)(auth('customer')->user()->is_login ?? 0) === 0;
+    $customerId = auth('customer')->user()?->customer_id ?? 'default';
+    $isFirstLogin = session('is_first_login', false);
+    
+    // Segera hapus is_first_login dari session setelah dibaca agar navigasi berikutnya tidak mengulang tour
+    if ($isFirstLogin) {
+        session()->forget('is_first_login');
+        session(['is_first_login' => false]);
+    }
+
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
     
@@ -22,6 +30,7 @@
 <!-- Interactive Product Tour / Onboarding Component (5 Langkah untuk 1 Aplikasi) -->
 <div 
     x-data="portalOnboardingTour({
+        customerId: '{{ $customerId }}',
         shouldActive: {{ $shouldActive ? 'true' : 'false' }},
         initialStep: {{ $initialStepIdx }},
         routes: {
@@ -209,14 +218,29 @@
                 }
             ],
 
+            customerId: config.customerId || 'default',
+            storageKey: 'mymsn_tour_done_' + (config.customerId || 'default'),
+
             initTour() {
                 this.adaptStepsForCurrentPage();
 
                 window.startPortalTour = () => {
+                    try {
+                        localStorage.removeItem(this.storageKey);
+                        sessionStorage.removeItem(this.storageKey);
+                    } catch (e) {}
                     window.location.href = `${this.routes.dashboard}?tour_step=1`;
                 };
 
-                if (config.shouldActive) {
+                let isDone = false;
+                try {
+                    isDone = localStorage.getItem(this.storageKey) === 'true' || sessionStorage.getItem(this.storageKey) === 'true';
+                } catch (e) {}
+
+                const hasExplicitStep = new URLSearchParams(window.location.search).has('tour_step');
+
+                // Hanya jalankan jika harus aktif dan belum pernah selesai (kecuali dipicu manual via query param)
+                if (config.shouldActive && (!isDone || hasExplicitStep)) {
                     this.startTour();
                 }
             },
@@ -434,6 +458,10 @@
             finishTour() {
                 this.unlockScroll();
                 this.isOpen = false;
+                try {
+                    localStorage.setItem(this.storageKey, 'true');
+                    sessionStorage.setItem(this.storageKey, 'true');
+                } catch (e) {}
                 this.markCompletedOnServer();
 
                 if (window.Swal) {
@@ -461,6 +489,10 @@
             skipTour() {
                 this.unlockScroll();
                 this.isOpen = false;
+                try {
+                    localStorage.setItem(this.storageKey, 'true');
+                    sessionStorage.setItem(this.storageKey, 'true');
+                } catch (e) {}
                 this.markCompletedOnServer();
             },
 

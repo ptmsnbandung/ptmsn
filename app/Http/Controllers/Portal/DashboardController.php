@@ -57,6 +57,9 @@ class DashboardController extends Controller
             $customer->markAsLoggedIn();
         }
 
+        session(['is_first_login' => false]);
+        session()->forget('is_first_login');
+
         return response()->json([
             'success' => true,
             'message' => 'Tutorial onboarding berhasil diselesaikan.',
