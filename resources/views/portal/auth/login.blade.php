@@ -52,7 +52,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #091322 0%, #0f233d 40%, #075985 85%, #0284c7 100%);
+            background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #0e7490 100%);
             font-family: 'Inter', sans-serif;
         }
 
@@ -61,15 +61,15 @@
             background: linear-gradient(135deg, #091322 0%, #0f172a 45%, #0e7490 100%);
         }
 
-        /* Mobile bottom sheet rounded top with clean luxury ambient styling + subtle tech grid texture */
+        /* Mobile bottom sheet rounded top with subtle dot micro-texture */
         .clean-login-sheet {
             background-color: #ffffff;
             background-image: 
                 radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 40%),
                 radial-gradient(at 0% 100%, rgba(2, 132, 199, 0.05) 0px, transparent 40%),
-                linear-gradient(to right, rgba(226, 232, 240, 0.6) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 22px 22px, 22px 22px;
+                radial-gradient(rgba(148, 163, 184, 0.35) 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 18px 18px;
+            background-position: 0 0, 0 0, 0 0;
             border-top-left-radius: 36px;
             border-top-right-radius: 36px;
             box-shadow: 0 -12px 36px -4px rgba(9, 19, 34, 0.35);
@@ -99,7 +99,7 @@
     <div class="w-full max-w-full md:max-w-4xl h-[100dvh] max-h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:flex-row justify-between md:rounded-3xl md:shadow-2xl md:border md:border-sky-500/30 overflow-hidden relative z-10 bg-transparent md:bg-white">
 
         <!-- LEFT / TOP SECTION: Brand Header (37% on Mobile & 42% on Desktop) -->
-        <div class="hero-network-gradient h-[37vh] max-h-[37vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3.5 sm:p-4 md:p-8 text-center relative overflow-hidden z-10 border-b md:border-b-0 md:border-r border-sky-500/20">
+        <div class="hero-network-gradient h-[37vh] max-h-[37vh] md:h-auto md:max-h-none md:w-5/12 flex-none flex flex-col items-center justify-center p-3.5 sm:p-4 md:p-8 text-center relative overflow-hidden z-10 md:border-r md:border-sky-500/20">
             
             <!-- Subtle Network Topology Lines Background -->
             <div class="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
