@@ -67,7 +67,7 @@
             background-image: 
                 radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 40%),
                 radial-gradient(at 0% 100%, rgba(2, 132, 199, 0.05) 0px, transparent 40%),
-                radial-gradient(rgba(148, 163, 184, 0.35) 1.2px, transparent 1.2px);
+                radial-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 18px 18px;
             background-position: 0 0, 0 0, 0 0;
             border-top-left-radius: 36px;
