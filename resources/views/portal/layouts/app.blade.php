@@ -52,6 +52,10 @@
     <link rel="stylesheet" href="{{ asset('css/portal.css') }}?v={{ time() }}">
 
     <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
         }

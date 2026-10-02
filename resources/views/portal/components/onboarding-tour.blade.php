@@ -205,7 +205,9 @@
 
     <!-- 2. EMAIL VERIFICATION & ACTIVE CHECK MODAL (MUNCUL SEBELUM TUTORIAL) -->
     <div 
-        x-show="showEmailModal" 
+        x-show="showEmailModal"
+        x-cloak
+        style="display: none;" 
         class="fixed inset-0 z-[100000] flex items-center justify-center p-3.5 sm:p-4 overflow-y-auto bg-slate-950/75 backdrop-blur-xs"
         x-transition:enter="transition ease-out duration-250"
         x-transition:enter-start="opacity-0 scale-95"
@@ -431,19 +433,17 @@
 
                 // 1. Jika sedang dalam navigasi langkah tour antar halaman (ada query ?tour_step=...)
                 if (hasExplicitStep) {
+                    this.showEmailModal = false;
                     this.startTour();
                     return;
                 }
 
                 // 2. Jika is_login di database masih bernilai 0 (login perdana/belum selesai onboarding)
-                if (this.isLoginZero) {
+                if (this.isLoginZero && this.isDashboard) {
                     this.lockScroll();
                     this.$nextTick(() => {
                         this.showEmailModal = true;
                     });
-                    setTimeout(() => {
-                        this.showEmailModal = true;
-                    }, 300);
                 }
             },
 
