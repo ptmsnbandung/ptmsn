@@ -727,31 +727,16 @@
                             </div>
                         </div>
 
-                        <!-- Grid Form Options: Jenis Perubahan & Tanggal Mulai -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2">
-                            <!-- Jenis Permintaan -->
-                            <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
-                                    Jenis Perubahan: <span class="text-rose-500">*</span>
-                                </label>
-                                <select 
-                                    name="change_type" 
-                                    x-model="changeType"
-                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm font-medium"
-                                >
-                                    <option value="Upgrade Kecepatan (Tambah Bandwidth)">Upgrade Kecepatan (Tambah Bandwidth)</option>
-                                    <option value="Downgrade Paket">Downgrade Paket</option>
-                                </select>
-                            </div>
+                        <!-- Hidden Input Otomatis untuk Jenis Perubahan (Kalkulasi Otomatis dari Mbps) -->
+                        <input type="hidden" name="change_type" :value="changeType">
 
-                            <!-- Tanggal Mulai Berlaku -->
-                            <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">Tanggal Mulai Berlaku:</label>
-                                <select name="effective_date" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm font-medium">
-                                    <option value="Mulai Awal Bulan Depan (Periode Tagihan Baru)">Mulai Awal Bulan Depan (Periode Tagihan Baru) [Disarankan]</option>
-                                    <option value="Segera (Perhitungan biaya berjalan dihitung prorata)">Segera (Perhitungan biaya berjalan dihitung prorata)</option>
-                                </select>
-                            </div>
+                        <!-- Tanggal Mulai Berlaku -->
+                        <div class="space-y-1.5 pt-1">
+                            <label class="block text-xs font-bold text-slate-800">Tanggal Mulai Berlaku:</label>
+                            <select name="effective_date" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm font-medium">
+                                <option value="Mulai Awal Bulan Depan (Periode Tagihan Baru)">Mulai Awal Bulan Depan (Periode Tagihan Baru) [Disarankan]</option>
+                                <option value="Segera (Perhitungan biaya berjalan dihitung prorata)">Segera (Perhitungan biaya berjalan dihitung prorata)</option>
+                            </select>
                         </div>
 
                         <!-- Alasan Perubahan Paket -->
