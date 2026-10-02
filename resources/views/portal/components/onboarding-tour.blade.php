@@ -1,5 +1,8 @@
 @php
-    $customerId = auth('customer')->user()?->customer_id ?? 'default';
+    $customer = auth('customer')->user();
+    $customerId = $customer?->customer_id ?? 'default';
+    $customerEmail = $customer?->email ?? '';
+    $customerName = $customer?->name ?? 'Pelanggan';
     $isFirstLogin = session('is_first_login', false);
     
     // Segera hapus is_first_login dari session setelah dibaca agar navigasi berikutnya tidak mengulang tour
@@ -27,10 +30,12 @@
 <!-- Preload completion image so it appears instantly without delay -->
 <img src="{{ asset('images/logo/berhasil1.png') }}" alt="" class="hidden" style="display:none;" />
 
-<!-- Interactive Product Tour / Onboarding Component (5 Langkah untuk 1 Aplikasi) -->
+<!-- Interactive Product Tour & Email Verification Component -->
 <div 
     x-data="portalOnboardingTour({
         customerId: '{{ $customerId }}',
+        customerEmail: '{{ addslashes($customerEmail) }}',
+        customerName: '{{ addslashes($customerName) }}',
         isFirstLogin: {{ $isFirstLogin ? 'true' : 'false' }},
         shouldActive: {{ $shouldActive ? 'true' : 'false' }},
         initialStep: {{ $initialStepIdx }},
@@ -38,30 +43,34 @@
             dashboard: '{{ url('/portal') }}',
             tickets: '{{ route('portal.tickets.index') }}',
             billing: '{{ route('portal.billing.index') }}',
-            complete: '{{ route('portal.onboarding.complete') }}'
+            complete: '{{ route('portal.onboarding.complete') }}',
+            updateEmail: '{{ route('portal.profile.update-email') }}'
         }
     })"
     x-init="initTour()"
-    x-show="isOpen"
     x-cloak
-    class="fixed inset-0 z-[100] overflow-hidden pointer-events-none transition-opacity duration-300"
-    :class="isOpen ? 'opacity-100' : 'opacity-0'"
-    style="display: none;"
-    @keydown.escape.window="skipTour()"
-    @resize.window="updatePosition()"
-    @scroll.window.passive="updatePosition()"
 >
-    <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
+    <!-- 1. FLOATING SPOTLIGHT TOUR CONTAINER -->
     <div 
-        class="fixed transition-all duration-200 pointer-events-auto rounded-2xl ring-2 ring-sky-400 shadow-[0_0_0_9999px_rgba(15,23,42,0.80)]"
-        :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px;`"
-    ></div>
-
-    <!-- Floating Interactive Popover Tooltip Card -->
-    <div 
-        class="fixed transition-all duration-200 pointer-events-auto z-[102] w-[88vw] max-w-[320px] sm:max-w-[420px]"
-        :style="`top: ${popover.top}px; left: ${popover.left}px;`"
+        x-show="isOpen"
+        class="fixed inset-0 z-[100] overflow-hidden pointer-events-none transition-opacity duration-300"
+        :class="isOpen ? 'opacity-100' : 'opacity-0'"
+        style="display: none;"
+        @keydown.escape.window="skipTour()"
+        @resize.window="updatePosition()"
+        @scroll.window.passive="updatePosition()"
     >
+        <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
+        <div 
+            class="fixed transition-all duration-200 pointer-events-auto rounded-2xl ring-2 ring-sky-400 shadow-[0_0_0_9999px_rgba(15,23,42,0.80)]"
+            :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px;`"
+        ></div>
+
+        <!-- Floating Interactive Popover Tooltip Card -->
+        <div 
+            class="fixed transition-all duration-200 pointer-events-auto z-[102] w-[88vw] max-w-[320px] sm:max-w-[420px]"
+            :style="`top: ${popover.top}px; left: ${popover.left}px;`"
+        >
         <div class="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-sky-200/90 text-slate-800 space-y-2.5 sm:space-y-3.5 relative overflow-hidden">
             
             <!-- Top Gradient Accent Bar & Progress Tracker -->
@@ -153,12 +162,197 @@
 
         </div>
     </div>
+
+    <!-- 2. EMAIL VERIFICATION & ACTIVE CHECK MODAL -->
+    <div 
+        x-show="showEmailModal" 
+        class="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/70 backdrop-blur-sm"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        style="display: none;"
+    >
+        <div 
+            class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-sky-100 overflow-hidden text-slate-800 p-6 sm:p-8"
+            @click.away="!isSavingEmail"
+        >
+            <!-- Decorative Background Accent -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-sky-400/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Top Header Icon & Badges -->
+            <div class="text-center space-y-3 relative">
+                <div class="mx-auto w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/25 ring-4 ring-sky-50">
+                    <iconify-icon icon="solar:letter-unread-bold-duotone" class="text-3xl sm:text-4xl"></iconify-icon>
+                </div>
+
+                <div class="space-y-1">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-700 font-heading font-bold text-xs">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+                        Konfirmasi Email Notifikasi
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-heading font-extrabold text-slate-900 tracking-tight">
+                        Pengecekan Email Pelanggan
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+                        Pastikan email Anda aktif untuk menerima invoice tagihan, bukti lunas, dan pemberitahuan penting.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Manfaat Email Aktif Info Card -->
+            <div class="my-5 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                <div class="text-[11px] font-heading font-bold text-slate-400 uppercase tracking-wider">
+                    Guna Email Aktif Bagi Pelanggan:
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] sm:text-xs text-slate-600">
+                    <div class="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-slate-100">
+                        <iconify-icon icon="solar:document-text-bold" class="text-sky-600 text-sm shrink-0"></iconify-icon>
+                        <span class="font-medium truncate">Invoice Tagihan</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-slate-100">
+                        <iconify-icon icon="solar:bill-check-bold" class="text-emerald-600 text-sm shrink-0"></iconify-icon>
+                        <span class="font-medium truncate">Bukti Bayar Lunas</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-white p-2 rounded-xl border border-slate-100">
+                        <iconify-icon icon="solar:danger-triangle-bold" class="text-amber-500 text-sm shrink-0"></iconify-icon>
+                        <span class="font-medium truncate">Info Gangguan</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATE 1: Pelanggan Sudah Memiliki Email & Tidak Sedang Mode Edit -->
+            <template x-if="customerEmail && customerEmail.trim() !== '' && !isEditingEmail">
+                <div class="space-y-4">
+                    <div class="p-4 rounded-2xl bg-gradient-to-r from-sky-50/70 to-blue-50/70 border border-sky-200/80 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-10 h-10 rounded-xl bg-white shadow-xs border border-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                                <iconify-icon icon="solar:mailbox-bold" class="text-xl"></iconify-icon>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-[10px] font-mono text-sky-700 font-semibold uppercase tracking-wider">Email Terdaftar Saat Ini</div>
+                                <div class="text-sm sm:text-base font-heading font-extrabold text-slate-900 truncate" x-text="customerEmail"></div>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-heading font-bold shrink-0">
+                            <iconify-icon icon="solar:check-circle-bold" class="text-xs"></iconify-icon>
+                            Tersedia
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-center text-slate-600">
+                        Apakah alamat email di atas <strong>masih aktif</strong> dan dapat menerima pesan dari MyMSN?
+                    </p>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
+                        <button 
+                            type="button" 
+                            @click="confirmEmailActive()"
+                            class="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <iconify-icon icon="solar:check-circle-bold" class="text-base"></iconify-icon>
+                            <span>Ya, Email Saya Aktif</span>
+                        </button>
+
+                        <button 
+                            type="button" 
+                            @click="isEditingEmail = true; inputEmail = customerEmail; emailError = '';"
+                            class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                            <iconify-icon icon="solar:pen-new-square-bold" class="text-base"></iconify-icon>
+                            <span>Ubah Email</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- STATE 2: Belum Ada Email ATAU Pelanggan Ingin Mengubah Email -->
+            <template x-if="!customerEmail || customerEmail.trim() === '' || isEditingEmail">
+                <div class="space-y-4">
+                    <div x-show="!customerEmail || customerEmail.trim() === ''" class="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-800 flex items-start gap-2 text-xs">
+                        <iconify-icon icon="solar:info-circle-bold" class="text-base text-amber-600 shrink-0 mt-0.5"></iconify-icon>
+                        <span>Anda belum mendaftarkan email aktif. Silakan masukkan alamat email yang sering Anda buka.</span>
+                    </div>
+
+                    <div class="space-y-1.5 text-left">
+                        <label class="block text-xs font-heading font-extrabold text-slate-700">
+                            Masukkan Alamat Email Aktif <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <iconify-icon icon="solar:letter-bold" class="text-lg"></iconify-icon>
+                            </span>
+                            <input 
+                                type="email" 
+                                x-model="inputEmail"
+                                @keydown.enter="saveNewEmail()"
+                                placeholder="contoh: nama.anda@gmail.com"
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border text-xs sm:text-sm font-sans transition-all focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 placeholder:text-slate-400"
+                                :class="emailError ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200 bg-white'"
+                            />
+                        </div>
+                        <template x-if="emailError">
+                            <p class="text-[11px] text-rose-600 font-medium flex items-center gap-1 mt-1">
+                                <iconify-icon icon="solar:danger-circle-bold"></iconify-icon>
+                                <span x-text="emailError"></span>
+                            </p>
+                        </template>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
+                        <button 
+                            type="button" 
+                            @click="saveNewEmail()"
+                            :disabled="isSavingEmail"
+                            class="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 disabled:opacity-50 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-sky-600/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <iconify-icon x-show="!isSavingEmail" icon="solar:diskette-bold" class="text-base"></iconify-icon>
+                            <iconify-icon x-show="isSavingEmail" icon="line-md:loading-loop" class="text-base animate-spin"></iconify-icon>
+                            <span x-text="isSavingEmail ? 'Menyimpan...' : 'Simpan & Aktifkan Email'"></span>
+                        </button>
+
+                        <button 
+                            type="button" 
+                            x-show="customerEmail && customerEmail.trim() !== ''"
+                            @click="isEditingEmail = false; emailError = '';"
+                            class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                            <span>Batal</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Bottom Skip Option -->
+            <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+                <button 
+                    type="button" 
+                    @click="skipEmailVerification()"
+                    class="text-[11px] text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 transition-colors cursor-pointer"
+                >
+                    Lewati (Atur nanti di menu Profil)
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('portalOnboardingTour', (config) => ({
             isOpen: false,
+            showEmailModal: false,
+            customerEmail: (config.customerEmail || '').trim(),
+            customerName: config.customerName || 'Pelanggan',
+            inputEmail: (config.customerEmail || '').trim(),
+            isEditingEmail: !(config.customerEmail && config.customerEmail.trim().length > 0),
+            isSavingEmail: false,
+            emailError: '',
             currentStep: config.initialStep || 0,
             spotlight: { top: 0, left: 0, width: 0, height: 0 },
             popover: { top: 0, left: 0 },
@@ -508,20 +702,101 @@
             finishTour() {
                 this.unlockScroll();
                 this.isOpen = false;
+                
+                // Buka Modal Pengecekan & Verifikasi Email Pelanggan
+                this.showEmailModal = true;
+            },
+
+            skipTour() {
+                this.unlockScroll();
+                this.isOpen = false;
+                try {
+                    localStorage.setItem(this.storageKey, 'true');
+                    sessionStorage.setItem(this.storageKey, 'true');
+                } catch (e) {}
+                this.markCompletedOnServer();
+            },
+
+            confirmEmailActive() {
+                this.showEmailModal = false;
                 try {
                     localStorage.setItem(this.storageKey, 'true');
                     sessionStorage.setItem(this.storageKey, 'true');
                 } catch (e) {}
                 this.markCompletedOnServer();
 
+                this.showCompletionAlert('Email Aktif Terkonfirmasi!', 'Email Anda siap menerima invoice dan notifikasi layanan.');
+            },
+
+            async saveNewEmail() {
+                const emailToSave = (this.inputEmail || '').trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailToSave) {
+                    this.emailError = 'Mohon masukkan alamat email Anda.';
+                    return;
+                }
+
+                if (!emailRegex.test(emailToSave)) {
+                    this.emailError = 'Format email tidak valid (contoh: nama@gmail.com).';
+                    return;
+                }
+
+                this.isSavingEmail = true;
+                this.emailError = '';
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    const response = await fetch(this.routes.updateEmail, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken || '',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ email: emailToSave })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        this.customerEmail = data.email || emailToSave;
+                        this.showEmailModal = false;
+                        try {
+                            localStorage.setItem(this.storageKey, 'true');
+                            sessionStorage.setItem(this.storageKey, 'true');
+                        } catch (e) {}
+                        this.markCompletedOnServer();
+                        this.showCompletionAlert('Email Berhasil Disimpan!', 'Email notifikasi Anda telah diperbarui dan siap digunakan.');
+                    } else {
+                        this.emailError = data.message || 'Terjadi kesalahan saat menyimpan email.';
+                    }
+                } catch (err) {
+                    this.emailError = 'Koneksi gagal saat menyimpan email. Silakan coba lagi.';
+                } finally {
+                    this.isSavingEmail = false;
+                }
+            },
+
+            skipEmailVerification() {
+                this.showEmailModal = false;
+                try {
+                    localStorage.setItem(this.storageKey, 'true');
+                    sessionStorage.setItem(this.storageKey, 'true');
+                } catch (e) {}
+                this.markCompletedOnServer();
+                this.showCompletionAlert('Panduan Selesai!', 'Selamat menggunakan portal layanan MyMSN.');
+            },
+
+            showCompletionAlert(title, message) {
                 if (window.Swal) {
                     Swal.fire({
                         imageUrl: '{{ asset('images/logo/berhasil1.png') }}',
                         imageWidth: 140,
                         imageHeight: 140,
                         imageAlt: 'Selamat Datang',
-                        title: 'Selamat Datang!',
-                        html: '<p class="text-xs sm:text-sm text-slate-500 font-sans mt-1.5">Panduan selesai. Selamat menggunakan portal layanan MyMSN!</p>',
+                        title: title || 'Selamat Datang!',
+                        html: `<p class="text-xs sm:text-sm text-slate-500 font-sans mt-1.5">${message || 'Panduan selesai. Selamat menggunakan portal layanan MyMSN!'}</p>`,
                         showConfirmButton: false,
                         timer: 2300,
                         customClass: {
@@ -536,16 +811,6 @@
                 } else {
                     window.location.href = this.routes.dashboard;
                 }
-            },
-
-            skipTour() {
-                this.unlockScroll();
-                this.isOpen = false;
-                try {
-                    localStorage.setItem(this.storageKey, 'true');
-                    sessionStorage.setItem(this.storageKey, 'true');
-                } catch (e) {}
-                this.markCompletedOnServer();
             },
 
             markCompletedOnServer() {
