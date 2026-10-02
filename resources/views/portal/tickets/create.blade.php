@@ -425,7 +425,7 @@
                                         :class="packageCategoryTab === 'bisnis' ? 'bg-white text-emerald-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800'"
                                         class="px-2.5 py-1 rounded-lg transition-all cursor-pointer text-[11px]"
                                     >
-                                        Bisnis & UMKM
+                                        Bisnis
                                     </button>
                                 </div>
                             </div>
@@ -482,7 +482,7 @@
                                                         @endif
                                                     </div>
                                                     <span class="text-[10px] text-slate-500 block capitalize">
-                                                        {{ $pkg->category === 'bisnis' ? 'Kategori Bisnis / UMKM' : 'Kategori Broadband Rumah' }}
+                                                        {{ $pkg->category === 'bisnis' ? 'Kategori Bisnis' : 'Kategori Broadband Rumah' }}
                                                     </span>
                                                 </div>
 
