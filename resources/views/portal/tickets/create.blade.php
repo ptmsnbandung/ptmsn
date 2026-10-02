@@ -9,17 +9,65 @@
     selectedPackageId: '{{ old('target_package_id', '') }}',
     packageCategoryTab: 'all',
     changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
-    currentPackagePrice: {{ (int) ($customer->package->price ?? 0) }},
-    currentPackageId: {{ (int) ($customer->package->id ?? 0) }},
+    currentPackage: {
+        name: '{{ addslashes($customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet')) }}',
+        speed: '{{ addslashes($customer->package->speed ?? ($customer->bandwith->nama_bandwith ?? 'Broadband')) }}',
+        speedNum: {{ (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25 }},
+        price: {{ (int) ($customer->package->price ?? 0) }},
+        formattedPrice: '{{ $customer->package->formatted_price ?? ('Rp ' . number_format($customer->package->price ?? 0, 0, ',', '.')) }}'
+    },
+    targetPackage: null,
+    packagesMap: {
+        @foreach($packages as $pkg)
+            '{{ $pkg->id }}': {
+                id: '{{ $pkg->id }}',
+                name: '{{ addslashes($pkg->name) }}',
+                speed: '{{ addslashes($pkg->speed) }}',
+                speedNum: {{ (int) preg_replace('/[^0-9]/', '', $pkg->speed) ?: 0 }},
+                price: {{ (int) $pkg->price }},
+                formattedPrice: '{{ $pkg->formatted_price }}',
+                category: '{{ $pkg->category }}',
+                idealDevices: '{{ addslashes($pkg->ideal_devices ?? '') }}'
+            },
+        @endforeach
+    },
+    init() {
+        if (this.selectedPackageId && this.packagesMap[this.selectedPackageId]) {
+            this.targetPackage = this.packagesMap[this.selectedPackageId];
+        }
+    },
     selectPackage(id, price, name) {
         this.selectedPackageId = String(id);
-        if (this.currentPackagePrice > 0 && price > 0) {
-            if (price > this.currentPackagePrice) {
+        this.targetPackage = this.packagesMap[id] || null;
+        if (this.currentPackage.price > 0 && price > 0) {
+            if (price > this.currentPackage.price) {
                 this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
-            } else if (price < this.currentPackagePrice) {
+            } else if (price < this.currentPackage.price) {
+                this.changeType = 'Downgrade Paket';
+            }
+        } else if (this.targetPackage && this.targetPackage.speedNum && this.currentPackage.speedNum) {
+            if (this.targetPackage.speedNum > this.currentPackage.speedNum) {
+                this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
+            } else if (this.targetPackage.speedNum < this.currentPackage.speedNum) {
                 this.changeType = 'Downgrade Paket';
             }
         }
+    },
+    get isUpgrade() {
+        if (!this.targetPackage) return false;
+        if (this.currentPackage.price > 0 && this.targetPackage.price > this.currentPackage.price) return true;
+        if (this.targetPackage.speedNum > this.currentPackage.speedNum) return true;
+        return false;
+    },
+    get isDowngrade() {
+        if (!this.targetPackage) return false;
+        if (this.currentPackage.price > 0 && this.targetPackage.price < this.currentPackage.price) return true;
+        if (this.targetPackage.speedNum < this.currentPackage.speedNum && this.targetPackage.price <= this.currentPackage.price) return true;
+        return false;
+    },
+    get speedDifference() {
+        if (!this.targetPackage) return 0;
+        return this.targetPackage.speedNum - this.currentPackage.speedNum;
     }
 }">
 
@@ -554,6 +602,137 @@
                                         </div>
                                     </div>
                                 @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Live Comparison Summary (Paket Sebelum vs Paket Sesudah & Kesimpulan) -->
+                        <div 
+                            x-show="targetPackage"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 -translate-y-2 scale-98"
+                            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                            class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all shadow-sm space-y-3.5"
+                            :class="isUpgrade 
+                                ? 'bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-white border-emerald-300' 
+                                : (isDowngrade ? 'bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-white border-amber-300' : 'bg-gradient-to-br from-sky-500/10 to-white border-sky-300')"
+                        >
+                            <!-- Header Komparasi: Status Kesimpulan -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
+                                <div class="flex items-center gap-2">
+                                    <template x-if="isUpgrade">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-extrabold bg-emerald-600 text-white shadow-xs">
+                                            <iconify-icon icon="solar:round-arrow-right-up-bold" class="text-sm"></iconify-icon>
+                                            <span>KESIMPULAN: UPGRADE LAYANAN</span>
+                                        </span>
+                                    </template>
+                                    <template x-if="isDowngrade">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-extrabold bg-amber-600 text-white shadow-xs">
+                                            <iconify-icon icon="solar:round-arrow-right-down-bold" class="text-sm"></iconify-icon>
+                                            <span>KESIMPULAN: DOWNGRADE PAKET</span>
+                                        </span>
+                                    </template>
+                                    <template x-if="!isUpgrade && !isDowngrade">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-extrabold bg-sky-600 text-white shadow-xs">
+                                            <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-sm"></iconify-icon>
+                                            <span>KESIMPULAN: PERUBAHAN PAKET SETARA</span>
+                                        </span>
+                                    </template>
+                                </div>
+
+                                <!-- Highlight Selisih Kecepatan -->
+                                <div class="text-left sm:text-right">
+                                    <template x-if="isUpgrade">
+                                        <span class="text-xs font-mono font-bold text-emerald-700">
+                                            ▲ Kecepatan meningkat <span x-show="speedDifference > 0" x-text="'+' + speedDifference + ' Mbps'"></span>
+                                        </span>
+                                    </template>
+                                    <template x-if="isDowngrade">
+                                        <span class="text-xs font-mono font-bold text-amber-700">
+                                            ▼ Penyesuaian bandwidth <span x-show="speedDifference < 0" x-text="speedDifference + ' Mbps'"></span>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- 2 Kolom Komparasi Sebelum vs Sesudah -->
+                            <div class="grid grid-cols-1 sm:grid-cols-11 gap-3 items-center">
+                                <!-- Paket Sebelum (Kiri - 5 Cols) -->
+                                <div class="sm:col-span-5 p-3.5 rounded-2xl bg-white/90 border border-slate-200/90 shadow-2xs space-y-2">
+                                    <div class="flex items-center justify-between gap-1">
+                                        <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Paket Sebelum (Saat Ini)</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono text-[9px] font-bold">Layanan Aktif</span>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-xs sm:text-sm font-heading font-extrabold text-slate-800" x-text="currentPackage.name"></h5>
+                                        <div class="flex items-center justify-between gap-2 mt-1 pt-1.5 border-t border-slate-100">
+                                            <div class="text-xs font-mono font-bold text-slate-700" x-text="currentPackage.speed"></div>
+                                            <div class="text-xs font-mono font-bold text-slate-600" x-text="currentPackage.formattedPrice + '/bln'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panah Transisi (Tengah - 1 Col) -->
+                                <div class="sm:col-span-1 flex items-center justify-center">
+                                    <div 
+                                        :class="isUpgrade ? 'bg-emerald-100 text-emerald-700' : (isDowngrade ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700')"
+                                        class="w-8 h-8 rounded-full flex items-center justify-center shadow-2xs rotate-90 sm:rotate-0 transition-colors"
+                                    >
+                                        <iconify-icon icon="solar:arrow-right-bold" class="text-base"></iconify-icon>
+                                    </div>
+                                </div>
+
+                                <!-- Paket Sesudah (Kanan - 5 Cols) -->
+                                <div 
+                                    :class="isUpgrade ? 'border-emerald-400 bg-emerald-50/70 ring-1 ring-emerald-400/30' : (isDowngrade ? 'border-amber-400 bg-amber-50/70 ring-1 ring-amber-400/30' : 'border-sky-400 bg-sky-50/70')"
+                                    class="sm:col-span-5 p-3.5 rounded-2xl border shadow-2xs space-y-2 transition-all"
+                                >
+                                    <div class="flex items-center justify-between gap-1">
+                                        <span 
+                                            :class="isUpgrade ? 'text-emerald-700' : (isDowngrade ? 'text-amber-700' : 'text-sky-700')"
+                                            class="text-[10px] font-mono font-bold uppercase tracking-wider"
+                                        >
+                                            Paket Sesudah (Tujuan)
+                                        </span>
+                                        <span 
+                                            :class="isUpgrade ? 'bg-emerald-600 text-white' : (isDowngrade ? 'bg-amber-600 text-white' : 'bg-sky-600 text-white')"
+                                            class="px-2 py-0.5 rounded-full font-mono text-[9px] font-extrabold shadow-2xs"
+                                        >
+                                            Pilihan Baru
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-xs sm:text-sm font-heading font-extrabold text-slate-900" x-text="targetPackage ? targetPackage.name : ''"></h5>
+                                        <div class="flex items-center justify-between gap-2 mt-1 pt-1.5 border-t border-slate-200/60">
+                                            <div 
+                                                :class="isUpgrade ? 'text-emerald-800' : (isDowngrade ? 'text-amber-800' : 'text-sky-800')"
+                                                class="text-xs font-mono font-extrabold" 
+                                                x-text="targetPackage ? targetPackage.speed : ''"
+                                            ></div>
+                                            <div 
+                                                :class="isUpgrade ? 'text-emerald-700' : (isDowngrade ? 'text-amber-700' : 'text-sky-700')"
+                                                class="text-xs font-mono font-extrabold" 
+                                                x-text="targetPackage ? (targetPackage.formattedPrice + '/bln') : ''"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ringkasan Catatan / Penjelasan -->
+                            <div class="pt-2 border-t border-slate-200/60 text-xs flex items-center justify-between gap-2 flex-wrap text-slate-600">
+                                <div class="flex items-center gap-1.5">
+                                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-600 text-sm shrink-0"></iconify-icon>
+                                    <template x-if="isUpgrade">
+                                        <span>Pengajuan <strong>Upgrade Kecepatan</strong> akan diproses langsung oleh tim NOC PT MSN.</span>
+                                    </template>
+                                    <template x-if="isDowngrade">
+                                        <span>Pengajuan <strong>Downgrade Paket</strong> akan disesuaikan pada periode tagihan baru.</span>
+                                    </template>
+                                    <template x-if="!isUpgrade && !isDowngrade">
+                                        <span>Perubahan paket akan diproses oleh tim administrasi PT MSN.</span>
+                                    </template>
+                                </div>
+                                <span class="text-[11px] font-mono text-slate-500 font-semibold">Unlimited Quota • Fiber Optic</span>
                             </div>
                         </div>
 
