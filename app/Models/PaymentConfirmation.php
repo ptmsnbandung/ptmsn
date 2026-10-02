@@ -10,6 +10,7 @@ class PaymentConfirmation extends Model
         'customer_id',
         'kode_billing_layanan',
         'customer_name',
+        'destination_bank',
         'proof_file',
         'notes',
         'status',

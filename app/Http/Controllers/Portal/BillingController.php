@@ -171,7 +171,6 @@ class BillingController extends Controller
 
         $destBank = trim((string) $request->input('destination_bank', ''));
         $rawNotes = trim((string) $request->input('notes', ''));
-        $combinedNotes = $destBank ? "Tujuan Transfer: {$destBank}" . ($rawNotes ? " | Catatan: {$rawNotes}" : '') : $rawNotes;
 
         // Update invoice di IMS v3 menjadi metode transfer (payment_type = '2')
         try {
@@ -186,7 +185,7 @@ class BillingController extends Controller
                     'kode_billing_lay_log' => 'LOG-' . uniqid(),
                     'kode_billing_layanan' => $invoice->kode_billing_layanan,
                     'status_bill_lay' => $invoice->status_bill_lay ?? '13',
-                    'note_billing_lay' => "Customer mengunggah bukti transfer via Portal Pelanggan ({$customer->name}) - {$destBank}",
+                    'note_billing_lay' => "Customer mengunggah bukti transfer via Portal Pelanggan ({$customer->name})" . ($destBank ? " - {$destBank}" : ''),
                     'date_create' => \Carbon\Carbon::now()->toDateTimeString(),
                     'user_create' => 'PORTAL_CUSTOMER',
                     'hide' => '0',
@@ -204,8 +203,9 @@ class BillingController extends Controller
             ],
             [
                 'customer_name' => $customer->name,
+                'destination_bank' => $destBank ?: null,
                 'proof_file' => $fullUrl,
-                'notes' => $combinedNotes,
+                'notes' => $rawNotes ?: null,
                 'status' => 'pending',
                 'verified_at' => null,
             ]
@@ -214,6 +214,11 @@ class BillingController extends Controller
         // Sinkronisasi data konfirmasi ke database ims_v3 agar ims_v2 dapat membaca langsung
         try {
             if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('payment_confirmations')) {
+                // Pastikan kolom destination_bank ada di tabel payment_confirmations IMS
+                if (!\Illuminate\Support\Facades\Schema::connection('ims')->hasColumn('payment_confirmations', 'destination_bank')) {
+                    \Illuminate\Support\Facades\DB::connection('ims')->statement("ALTER TABLE payment_confirmations ADD COLUMN destination_bank VARCHAR(255) NULL AFTER customer_name;");
+                }
+
                 \Illuminate\Support\Facades\DB::connection('ims')->table('payment_confirmations')->updateOrInsert(
                     [
                         'customer_id' => $customer->customer_id,
@@ -221,8 +226,9 @@ class BillingController extends Controller
                     ],
                     [
                         'customer_name' => $customer->name,
+                        'destination_bank' => $destBank ?: null,
                         'proof_file' => $fullUrl,
-                        'notes' => $combinedNotes,
+                        'notes' => $rawNotes ?: null,
                         'status' => 'pending',
                         'verified_at' => null,
                         'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
@@ -237,6 +243,7 @@ class BillingController extends Controller
                         customer_id VARCHAR(255) NOT NULL,
                         kode_billing_layanan VARCHAR(255) NOT NULL,
                         customer_name VARCHAR(255) NULL,
+                        destination_bank VARCHAR(255) NULL,
                         proof_file TEXT NOT NULL,
                         notes TEXT NULL,
                         status VARCHAR(50) DEFAULT 'pending',
@@ -256,8 +263,9 @@ class BillingController extends Controller
                     ],
                     [
                         'customer_name' => $customer->name,
+                        'destination_bank' => $destBank ?: null,
                         'proof_file' => $fullUrl,
-                        'notes' => $combinedNotes,
+                        'notes' => $rawNotes ?: null,
                         'status' => 'pending',
                         'verified_at' => null,
                         'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
@@ -266,7 +274,7 @@ class BillingController extends Controller
                 );
             }
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Gagal sinkronisasi payment_confirmations ke IMS database: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('Gagal sinkronisasi payment_confirmations ke IMS: ' . $e->getMessage());
         }
 
         $billingWa = config('company.billing_whatsapp', '6289696629955');
