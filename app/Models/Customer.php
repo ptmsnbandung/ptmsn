@@ -141,6 +141,145 @@ class Customer extends Authenticatable
         return $this->alamat_pasang;
     }
 
+    /**
+     * Tanggal mulai berlangganan dari kolom date_create
+     */
+    public function getMemberSinceAttribute(): ?\Carbon\Carbon
+    {
+        if (!empty($this->date_create)) {
+            try {
+                return \Carbon\Carbon::parse($this->date_create);
+            } catch (\Throwable $e) {}
+        }
+        return null;
+    }
+
+    /**
+     * Format teks tanggal mulai berlangganan (misal: 15 Januari 2024)
+     */
+    public function getMemberSinceFormattedAttribute(): string
+    {
+        return $this->member_since 
+            ? $this->member_since->translatedFormat('d F Y') 
+            : '-';
+    }
+
+    /**
+     * Alias berlangganan sejak
+     */
+    public function getBerlanggananSejakAttribute(): string
+    {
+        return $this->member_since_formatted;
+    }
+
+    /**
+     * Durasi berlangganan dalam jumlah bulan
+     */
+    public function getSubscriptionMonthsAttribute(): int
+    {
+        if (!$this->member_since) {
+            return 0;
+        }
+        return max(0, (int) $this->member_since->diffInMonths(now()));
+    }
+
+    /**
+     * Durasi berlangganan dalam jumlah hari
+     */
+    public function getSubscriptionDaysAttribute(): int
+    {
+        if (!$this->member_since) {
+            return 0;
+        }
+        return max(0, (int) $this->member_since->diffInDays(now()));
+    }
+
+    /**
+     * Format teks durasi berlangganan (contoh: '8 Bulan', '1 Tahun 3 Bulan', '25 Hari')
+     */
+    public function getSubscriptionDurationTextAttribute(): string
+    {
+        if (!$this->member_since) {
+            return '-';
+        }
+
+        $months = $this->subscription_months;
+        if ($months < 1) {
+            $days = $this->subscription_days;
+            return $days . ' Hari';
+        }
+
+        if ($months < 12) {
+            return $months . ' Bulan';
+        }
+
+        $years = floor($months / 12);
+        $remMonths = $months % 12;
+        return $years . ' Tahun' . ($remMonths > 0 ? ' ' . $remMonths . ' Bulan' : '');
+    }
+
+    /**
+     * Syarat pengajuan suspend: minimal berlangganan selama 6 bulan
+     */
+    public function getCanRequestSuspendAttribute(): bool
+    {
+        if (!$this->member_since) {
+            return false;
+        }
+        return $this->subscription_months >= 6;
+    }
+
+    /**
+     * Penjelasan jika belum memenuhi syarat pengajuan suspend
+     */
+    public function getSuspendIneligibleReasonAttribute(): ?string
+    {
+        if ($this->can_request_suspend) {
+            return null;
+        }
+
+        $months = $this->subscription_months;
+        $remaining = max(1, 6 - $months);
+        $dateStr = $this->member_since_formatted;
+
+        if ($months < 1) {
+            return "Anda baru berlangganan selama {$this->subscription_days} hari (sejak {$dateStr}). Syarat pengajuan suspend layanan adalah minimal telah aktif berlangganan selama 6 bulan.";
+        }
+
+        return "Masa aktif berlangganan Anda baru {$months} bulan (sejak {$dateStr}). Syarat pengajuan suspend layanan adalah minimal telah aktif berlangganan selama 6 bulan (kurang {$remaining} bulan lagi).";
+    }
+
+    /**
+     * Syarat pengajuan terminasi: minimal berlangganan selama 6 bulan
+     */
+    public function getCanRequestTerminationAttribute(): bool
+    {
+        if (!$this->member_since) {
+            return false;
+        }
+        return $this->subscription_months >= 6;
+    }
+
+    /**
+     * Penjelasan jika belum memenuhi syarat pengajuan terminasi
+     */
+    public function getTerminationIneligibleReasonAttribute(): ?string
+    {
+        if ($this->can_request_termination) {
+            return null;
+        }
+
+        $months = $this->subscription_months;
+        $remaining = max(1, 6 - $months);
+        $dateStr = $this->member_since_formatted;
+
+        if ($months < 1) {
+            return "Anda baru berlangganan selama {$this->subscription_days} hari (sejak {$dateStr}). Sesuai ketentuan kontrak berlangganan PT MSN, pengajuan terminasi layanan hanya dapat dilakukan setelah aktif berlangganan minimal 6 bulan.";
+        }
+
+        return "Masa aktif berlangganan Anda baru {$months} bulan (sejak {$dateStr}). Sesuai ketentuan kontrak berlangganan PT MSN, pengajuan terminasi layanan hanya dapat dilakukan setelah aktif berlangganan minimal 6 bulan (kurang {$remaining} bulan lagi).";
+    }
+
     public function getIsSuspendedAttribute(): bool
     {
         $statusReg = (string) ($this->status_reg ?? '');

@@ -40,20 +40,27 @@
         <div class="space-y-4">
             <div class="portal-card rounded-2xl sm:rounded-3xl p-5 sm:p-6 space-y-4">
                 <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-heading font-extrabold text-lg shadow-md shadow-sky-500/20">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-heading font-extrabold text-lg shadow-md shadow-sky-500/20 shrink-0">
                         {{ $customer->initial }}
                     </div>
                     <div class="overflow-hidden">
                         <div class="text-sm font-heading font-bold text-slate-900 truncate">{{ $customer->name }}</div>
-                        <button 
-                            type="button" 
-                            onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan')"
-                            class="text-xs font-mono text-sky-600 font-semibold flex items-center gap-1 hover:text-sky-700"
-                            title="Salin ID"
-                        >
-                            <span>ID: {{ $customer->customer_id }}</span>
-                            <iconify-icon icon="solar:copy-linear" class="text-xs opacity-60"></iconify-icon>
-                        </button>
+                        <div class="flex items-center gap-2 flex-wrap mt-0.5">
+                            <button 
+                                type="button" 
+                                onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan')"
+                                class="text-xs font-mono text-sky-600 font-semibold flex items-center gap-1 hover:text-sky-700"
+                                title="Salin ID"
+                            >
+                                <span>ID: {{ $customer->customer_id }}</span>
+                                <iconify-icon icon="solar:copy-linear" class="text-xs opacity-60"></iconify-icon>
+                            </button>
+                            @if($customer->berlangganan_sejak !== '-')
+                                <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate">
+                                    • Sejak {{ $customer->berlangganan_sejak }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -85,6 +92,19 @@
                             <span>{{ $customer->ip_address ?? '10.20.104.22' }}</span>
                             <iconify-icon icon="solar:copy-linear" class="text-xs opacity-60"></iconify-icon>
                         </button>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-500 text-[11px] font-medium flex items-center gap-1">
+                                <iconify-icon icon="solar:calendar-date-bold" class="text-sky-500 text-xs"></iconify-icon>
+                                <span>Bergabung Sejak:</span>
+                            </span>
+                            <span class="text-emerald-700 bg-emerald-100 font-semibold px-2 py-0.5 rounded text-[10px]">
+                                Aktif {{ $customer->subscription_duration_text }}
+                            </span>
+                        </div>
+                        <span class="text-slate-900 font-bold text-xs block">{{ $customer->berlangganan_sejak }}</span>
                     </div>
 
                     <div>

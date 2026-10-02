@@ -496,10 +496,12 @@ div[id*="snap-container"] {
 
 .bank-card-badge img.logo-mandiri,
 .bank-card-badge img[src*="mandiri"] {
-    max-height: 27px !important;
-    max-width: 82px !important;
-    transform: scale(1.35) !important;
-    transform-origin: center center !important;
+    max-height: 24px !important;
+    max-width: 74px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    transform: none !important;
 }
 
 .bank-card-badge-sm {
@@ -529,8 +531,10 @@ div[id*="snap-container"] {
 
 .bank-card-badge-sm img.logo-mandiri,
 .bank-card-badge-sm img[src*="mandiri"] {
-    max-height: 22px !important;
-    max-width: 74px !important;
-    transform: scale(1.35) !important;
-    transform-origin: center center !important;
+    max-height: 20px !important;
+    max-width: 68px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    transform: none !important;
 }

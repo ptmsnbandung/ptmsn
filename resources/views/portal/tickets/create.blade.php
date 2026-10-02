@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="text-left min-w-0">
                                     <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Suspend</div>
-                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Jeda koneksi</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Min. 6 bln aktif</div>
                                 </div>
                             </label>
 
@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="text-left min-w-0">
                                     <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Terminasi</div>
-                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Berhenti langganan</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Min. 6 bln aktif</div>
                                 </div>
                             </label>
 
@@ -478,120 +478,219 @@
                     <!-- FORM KONDISIONAL 5: SUSPEND LAYANAN (15)                          -->
                     <!-- ================================================================= -->
                     <div x-show="katTiket === '15'" class="space-y-4 pt-3 border-t border-slate-200/80">
-                        <div class="p-3.5 rounded-2xl bg-purple-50/80 border border-purple-200 text-purple-900 text-xs flex items-start gap-2.5">
-                            <iconify-icon icon="solar:pause-circle-bold" class="text-purple-600 text-lg shrink-0 mt-0.5"></iconify-icon>
-                            <span>Layanan internet Anda akan dinonaktifkan sementara (misal: saat bepergian ke luar kota atau renovasi rumah). Jalur fiber optic Anda tetap tersimpan.</span>
-                        </div>
+                        @if(!$customer->can_request_suspend)
+                            <!-- Alert: Ineligible for Suspend (Under 6 months) -->
+                            <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 space-y-3 shadow-xs">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                                        <iconify-icon icon="solar:shield-warning-bold" class="text-xl"></iconify-icon>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <h4 class="font-heading font-bold text-sm text-amber-900">
+                                            Belum Memenuhi Syarat Suspend Layanan
+                                        </h4>
+                                        <p class="text-xs text-amber-800 leading-relaxed">
+                                            Sesuai kebijakan PT MSN, pengajuan suspend layanan sementara hanya dapat dilakukan oleh pelanggan yang telah aktif berlangganan <strong>minimal 6 bulan berturut-turut</strong>.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Tanggal Mulai -->
+                                <div class="p-3 rounded-xl bg-white/80 border border-amber-200 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Berlangganan Sejak:</span>
+                                        <span class="font-bold text-slate-900">{{ $customer->berlangganan_sejak }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Masa Aktif Saat Ini:</span>
+                                        <span class="font-bold text-amber-700">{{ $customer->subscription_duration_text }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Syarat Minimal:</span>
+                                        <span class="font-bold text-slate-800">6 Bulan (Kurang {{ max(1, 6 - $customer->subscription_months) }} Bulan)</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-xs">
+                                    <span class="text-amber-800 text-[11px]">Butuh bantuan terkait kendala atau perubahan paket?</span>
+                                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20Admin,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20konsultasi%20mengenai%20layanan%20saya" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-heading font-bold text-xs transition-all shadow-xs shrink-0">
+                                        <iconify-icon icon="solar:chat-round-dots-bold"></iconify-icon>
+                                        <span>Hubungi Customer Care</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Eligibility Notice -->
+                            <div class="p-3.5 rounded-2xl bg-purple-50/80 border border-purple-200 text-purple-900 text-xs flex items-start gap-2.5">
+                                <iconify-icon icon="solar:pause-circle-bold" class="text-purple-600 text-lg shrink-0 mt-0.5"></iconify-icon>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold">Pengajuan Suspend Sementara</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                                            ✓ Memenuhi Syarat (Aktif {{ $customer->subscription_duration_text }})
+                                        </span>
+                                    </div>
+                                    <span>Layanan internet Anda akan dinonaktifkan sementara (misal: saat bepergian ke luar kota atau renovasi rumah). Jalur fiber optic Anda tetap tersimpan.</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Tanggal Mulai -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-800">
+                                        Tanggal Mulai Suspend: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="date" 
+                                        name="suspend_start" 
+                                        value="{{ old('suspend_start', date('Y-m-d', strtotime('+3 days'))) }}" 
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm"
+                                    >
+                                </div>
+
+                                <!-- Estimasi Selesai -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-800">Estimasi Tanggal Aktif Kembali:</label>
+                                    <input 
+                                        type="date" 
+                                        name="suspend_end" 
+                                        value="{{ old('suspend_end', date('Y-m-d', strtotime('+1 month'))) }}" 
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Alasan Suspend -->
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-800">
-                                    Tanggal Mulai Suspend: <span class="text-rose-500">*</span>
+                                    Alasan Penonaktifan Sementara: <span class="text-rose-500">*</span>
                                 </label>
-                                <input 
-                                    type="date" 
-                                    name="suspend_start" 
-                                    value="{{ old('suspend_start', date('Y-m-d', strtotime('+3 days'))) }}" 
-                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm"
-                                >
+                                <select name="suspend_reason" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm">
+                                    <option value="Renovasi Rumah / Bangunan">Renovasi Rumah / Bangunan</option>
+                                    <option value="Dinas / Bepergian Keluar Kota / Luar Negeri">Dinas / Bepergian Keluar Kota / Luar Negeri</option>
+                                    <option value="Libur Panjang / Mudik">Libur Panjang / Mudik</option>
+                                    <option value="Alasan Pribadi / Lainnya">Alasan Pribadi / Lainnya</option>
+                                </select>
                             </div>
 
-                            <!-- Estimasi Selesai -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">Estimasi Tanggal Aktif Kembali:</label>
-                                <input 
-                                    type="date" 
-                                    name="suspend_end" 
-                                    value="{{ old('suspend_end', date('Y-m-d', strtotime('+1 month'))) }}" 
-                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm"
-                                >
+                                <label class="block text-xs font-bold text-slate-800">Catatan Tambahan:</label>
+                                <textarea 
+                                    name="suspend_notes" 
+                                    rows="2" 
+                                    placeholder="Keterangan tambahan jika ada..."
+                                    class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 resize-none shadow-sm"
+                                >{{ old('suspend_notes') }}</textarea>
                             </div>
-                        </div>
-
-                        <!-- Alasan Suspend -->
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">
-                                Alasan Penonaktifan Sementara: <span class="text-rose-500">*</span>
-                            </label>
-                            <select name="suspend_reason" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-purple-500 shadow-sm">
-                                <option value="Renovasi Rumah / Bangunan">Renovasi Rumah / Bangunan</option>
-                                <option value="Dinas / Bepergian Keluar Kota / Luar Negeri">Dinas / Bepergian Keluar Kota / Luar Negeri</option>
-                                <option value="Libur Panjang / Mudik">Libur Panjang / Mudik</option>
-                                <option value="Alasan Pribadi / Lainnya">Alasan Pribadi / Lainnya</option>
-                            </select>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">Catatan Tambahan:</label>
-                            <textarea 
-                                name="suspend_notes" 
-                                rows="2" 
-                                placeholder="Keterangan tambahan jika ada..."
-                                class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 resize-none shadow-sm"
-                            >{{ old('suspend_notes') }}</textarea>
-                        </div>
+                        @endif
                     </div>
 
                     <!-- ================================================================= -->
                     <!-- FORM KONDISIONAL 6: TERMINASI (14)                                -->
                     <!-- ================================================================= -->
                     <div x-show="katTiket === '14'" class="space-y-4 pt-3 border-t border-slate-200/80">
-                        <div class="p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-900 text-xs flex items-start gap-2.5">
-                            <iconify-icon icon="solar:danger-circle-bold" class="text-rose-600 text-lg shrink-0 mt-0.5"></iconify-icon>
-                            <div>
-                                <span class="font-bold block mb-0.5">Pemberitahuan Penghentian Langganan:</span>
-                                <span>Kami menyayangkan keputusan Anda. Jika terdapat kendala kecepatan atau harga paket, tim customer support kami selalu siap memberikan alternatif solusi terbaik.</span>
-                            </div>
-                        </div>
+                        @if(!$customer->can_request_termination)
+                            <!-- Alert: Ineligible for Termination (Under 6 months) -->
+                            <div class="p-4 sm:p-5 rounded-2xl bg-rose-50 border border-rose-300 text-rose-950 space-y-3 shadow-xs">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                                        <iconify-icon icon="solar:shield-warning-bold" class="text-xl"></iconify-icon>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <h4 class="font-heading font-bold text-sm text-rose-900">
+                                            Belum Memenuhi Syarat Terminasi Layanan
+                                        </h4>
+                                        <p class="text-xs text-rose-800 leading-relaxed">
+                                            Sesuai ketentuan kontrak berlangganan PT MSN, pengajuan permohonan terminasi/penutupan layanan hanya dapat dilakukan setelah masa berlangganan <strong>minimal 6 bulan berturut-turut</strong>.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Tanggal Efektif -->
-                            <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
-                                    Tanggal Efektif Berhenti: <span class="text-rose-500">*</span>
+                                <div class="p-3 rounded-xl bg-white/80 border border-rose-200 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Berlangganan Sejak:</span>
+                                        <span class="font-bold text-slate-900">{{ $customer->berlangganan_sejak }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Masa Aktif Saat Ini:</span>
+                                        <span class="font-bold text-rose-700">{{ $customer->subscription_duration_text }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px] font-mono uppercase">Syarat Minimal:</span>
+                                        <span class="font-bold text-slate-800">6 Bulan (Kurang {{ max(1, 6 - $customer->subscription_months) }} Bulan)</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-xs">
+                                    <span class="text-rose-800 text-[11px]">Memiliki kendala kualitas, kecepatan, atau biaya langganan?</span>
+                                    <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text=Halo%20Admin,%20saya%20pelanggan%20ID%20{{ $customer->customer_id }}%20ingin%20konsultasi%20mengenai%20layanan%20saya" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-heading font-bold text-xs transition-all shadow-xs shrink-0">
+                                        <iconify-icon icon="solar:chat-round-dots-bold"></iconify-icon>
+                                        <span>Konsultasi Solusi Terbaik</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Eligibility Notice -->
+                            <div class="p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-900 text-xs flex items-start gap-2.5">
+                                <iconify-icon icon="solar:danger-circle-bold" class="text-rose-600 text-lg shrink-0 mt-0.5"></iconify-icon>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold">Pemberitahuan Penghentian Langganan</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                                            ✓ Memenuhi Syarat Kontrak (Aktif {{ $customer->subscription_duration_text }})
+                                        </span>
+                                    </div>
+                                    <span>Kami menyayangkan keputusan Anda. Jika terdapat kendala kecepatan atau harga paket, tim customer support kami selalu siap memberikan alternatif solusi terbaik.</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Tanggal Efektif -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-800">
+                                        Tanggal Efektif Berhenti: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="date" 
+                                        name="termination_date" 
+                                        value="{{ old('termination_date', date('Y-m-d', strtotime('+7 days'))) }}" 
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-rose-500 shadow-sm"
+                                    >
+                                </div>
+
+                                <!-- Alasan Penghentian -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-800">
+                                        Alasan Utama Berhenti: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <select name="termination_reason" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-rose-500 shadow-sm">
+                                        <option value="Pindah Tempat Tinggal ke Luar Jangkauan PT MSN">Pindah Tempat Tinggal ke Luar Jangkauan PT MSN</option>
+                                        <option value="Rumah / Bangunan Sudah Tidak Ditempati">Rumah / Bangunan Sudah Tidak Ditempati</option>
+                                        <option value="Efisiensi Anggaran / Kendala Biaya">Efisiensi Anggaran / Kendala Biaya</option>
+                                        <option value="Beralih ke Internet Kantor / Hotspot Seluler">Beralih ke Internet Kantor / Hotspot Seluler</option>
+                                        <option value="Menggunakan Layanan Provider Lain">Menggunakan Layanan Provider Lain</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Checkbox Kesiapan Pengembalian Modem -->
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                                <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
+                                    <input type="checkbox" name="agree_return_device" value="1" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
+                                    <span>Saya memahami bahwa perangkat Modem ONT & Adaptor adalah aset milik PT MSN dan bersedia diserahterimakan kembali kepada teknisi resmi saat proses penarikan. <span class="text-rose-500 font-bold">*</span></span>
                                 </label>
-                                <input 
-                                    type="date" 
-                                    name="termination_date" 
-                                    value="{{ old('termination_date', date('Y-m-d', strtotime('+7 days'))) }}" 
-                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-rose-500 shadow-sm"
-                                >
                             </div>
 
-                            <!-- Alasan Penghentian -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
-                                    Alasan Utama Berhenti: <span class="text-rose-500">*</span>
-                                </label>
-                                <select name="termination_reason" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-rose-500 shadow-sm">
-                                    <option value="Pindah Tempat Tinggal ke Luar Jangkauan PT MSN">Pindah Tempat Tinggal ke Luar Jangkauan PT MSN</option>
-                                    <option value="Rumah / Bangunan Sudah Tidak Ditempati">Rumah / Bangunan Sudah Tidak Ditempati</option>
-                                    <option value="Efisiensi Anggaran / Kendala Biaya">Efisiensi Anggaran / Kendala Biaya</option>
-                                    <option value="Beralih ke Internet Kantor / Hotspot Seluler">Beralih ke Internet Kantor / Hotspot Seluler</option>
-                                    <option value="Menggunakan Layanan Provider Lain">Menggunakan Layanan Provider Lain</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
+                                <label class="block text-xs font-bold text-slate-800">Saran & Evaluasi untuk Layanan PT MSN:</label>
+                                <textarea 
+                                    name="termination_notes" 
+                                    rows="2" 
+                                    placeholder="Beri kami masukan agar kami dapat terus berbenah dan meningkatkan kualitas..."
+                                    class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-rose-500 resize-none shadow-sm"
+                                >{{ old('termination_notes') }}</textarea>
                             </div>
-                        </div>
-
-                        <!-- Checkbox Kesiapan Pengembalian Modem -->
-                        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                            <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
-                                <input type="checkbox" name="agree_return_device" value="1" class="mt-0.5 rounded text-rose-600 focus:ring-rose-500">
-                                <span>Saya memahami bahwa perangkat Modem ONT & Adaptor adalah aset milik PT MSN dan bersedia diserahterimakan kembali kepada teknisi resmi saat proses penarikan. <span class="text-rose-500 font-bold">*</span></span>
-                            </label>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">Saran & Evaluasi untuk Layanan PT MSN:</label>
-                            <textarea 
-                                name="termination_notes" 
-                                rows="2" 
-                                placeholder="Beri kami masukan agar kami dapat terus berbenah dan meningkatkan kualitas..."
-                                class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-rose-500 resize-none shadow-sm"
-                            >{{ old('termination_notes') }}</textarea>
-                        </div>
+                        @endif
                     </div>
 
                     <!-- Submit Button -->
@@ -599,13 +698,42 @@
                         <a href="{{ route('portal.tickets.index') }}" class="px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 text-xs font-heading font-bold text-slate-700 transition-colors">
                             Batal
                         </a>
-                        <button 
-                            type="submit" 
-                            class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer"
-                        >
-                            <iconify-icon icon="solar:plain-bold" width="16" class="sm:w-[18px]"></iconify-icon>
-                            <span>Kirim Laporan Tiket</span>
-                        </button>
+                        
+                        @if(!$customer->can_request_suspend)
+                            <template x-if="katTiket === '15'">
+                                <button 
+                                    type="button" 
+                                    disabled
+                                    class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
+                                >
+                                    <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
+                                    <span>Suspend Belum Memenuhi Syarat</span>
+                                </button>
+                            </template>
+                        @endif
+
+                        @if(!$customer->can_request_termination)
+                            <template x-if="katTiket === '14'">
+                                <button 
+                                    type="button" 
+                                    disabled
+                                    class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
+                                >
+                                    <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
+                                    <span>Terminasi Belum Memenuhi Syarat</span>
+                                </button>
+                            </template>
+                        @endif
+
+                        <template x-if="(katTiket !== '15' || {{ $customer->can_request_suspend ? 'true' : 'false' }}) && (katTiket !== '14' || {{ $customer->can_request_termination ? 'true' : 'false' }})">
+                            <button 
+                                type="submit" 
+                                class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer"
+                            >
+                                <iconify-icon icon="solar:plain-bold" width="16" class="sm:w-[18px]"></iconify-icon>
+                                <span>Kirim Laporan Tiket</span>
+                            </button>
+                        </template>
                     </div>
 
                 </form>
@@ -630,6 +758,11 @@
                     <div>
                         <span class="text-slate-400 block text-[10px] sm:text-[11px]">ID Pelanggan:</span>
                         <span class="text-sky-600 font-mono font-bold block text-xs">{{ $customer->customer_id }}</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px] sm:text-[11px]">Berlangganan Sejak:</span>
+                        <span class="text-slate-900 font-bold block text-xs">{{ $customer->berlangganan_sejak }}</span>
+                        <span class="text-emerald-600 font-semibold text-[10px] block">Aktif selama {{ $customer->subscription_duration_text }}</span>
                     </div>
                     <div>
                         <span class="text-slate-400 block text-[10px] sm:text-[11px]">No. WhatsApp:</span>

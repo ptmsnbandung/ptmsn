@@ -168,7 +168,30 @@ class BillingController extends Controller
         $filePath = 'uploads/bukti_transfer/' . $filename;
         $fullUrl = url($filePath);
 
-        // Simpan atau update data konfirmasi (Menyimpan Full URL langsung ke database)
+        // Update invoice di IMS v3 menjadi metode transfer (payment_type = '2')
+        try {
+            $invoice->update([
+                'payment_type' => '2',
+                'date_update' => \Carbon\Carbon::now(),
+            ]);
+
+            // Catat log billing di IMS jika tabel ada
+            if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('trx_billing_layanan_log')) {
+                \Illuminate\Support\Facades\DB::connection('ims')->table('trx_billing_layanan_log')->insert([
+                    'kode_billing_lay_log' => 'LOG-' . uniqid(),
+                    'kode_billing_layanan' => $invoice->kode_billing_layanan,
+                    'status_bill_lay' => $invoice->status_bill_lay ?? '13',
+                    'note_billing_lay' => "Customer mengunggah bukti transfer via Portal Pelanggan ({$customer->name})",
+                    'date_create' => \Carbon\Carbon::now()->toDateTimeString(),
+                    'user_create' => 'PORTAL_CUSTOMER',
+                    'hide' => '0',
+                ]);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal update status payment_type invoice IMS: ' . $e->getMessage());
+        }
+
+        // Simpan atau update data konfirmasi di database lokal ptmsn
         \App\Models\PaymentConfirmation::updateOrCreate(
             [
                 'customer_id' => $customer->customer_id,
@@ -183,13 +206,70 @@ class BillingController extends Controller
             ]
         );
 
+        // Sinkronisasi data konfirmasi ke database ims_v3 agar ims_v2 dapat membaca langsung
+        try {
+            if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('payment_confirmations')) {
+                \Illuminate\Support\Facades\DB::connection('ims')->table('payment_confirmations')->updateOrInsert(
+                    [
+                        'customer_id' => $customer->customer_id,
+                        'kode_billing_layanan' => $invoice->kode_billing_layanan,
+                    ],
+                    [
+                        'customer_name' => $customer->name,
+                        'proof_file' => $fullUrl,
+                        'notes' => $request->input('notes'),
+                        'status' => 'pending',
+                        'verified_at' => null,
+                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                        'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                    ]
+                );
+            } else {
+                // Buat tabel payment_confirmations di ims_v3 jika belum ada
+                \Illuminate\Support\Facades\DB::connection('ims')->statement("
+                    CREATE TABLE IF NOT EXISTS payment_confirmations (
+                        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        customer_id VARCHAR(255) NOT NULL,
+                        kode_billing_layanan VARCHAR(255) NOT NULL,
+                        customer_name VARCHAR(255) NULL,
+                        proof_file TEXT NOT NULL,
+                        notes TEXT NULL,
+                        status VARCHAR(50) DEFAULT 'pending',
+                        admin_notes TEXT NULL,
+                        verified_at TIMESTAMP NULL,
+                        created_at TIMESTAMP NULL,
+                        updated_at TIMESTAMP NULL,
+                        INDEX (customer_id),
+                        INDEX (kode_billing_layanan)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ");
+
+                \Illuminate\Support\Facades\DB::connection('ims')->table('payment_confirmations')->updateOrInsert(
+                    [
+                        'customer_id' => $customer->customer_id,
+                        'kode_billing_layanan' => $invoice->kode_billing_layanan,
+                    ],
+                    [
+                        'customer_name' => $customer->name,
+                        'proof_file' => $fullUrl,
+                        'notes' => $request->input('notes'),
+                        'status' => 'pending',
+                        'verified_at' => null,
+                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                        'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal sinkronisasi payment_confirmations ke IMS database: ' . $e->getMessage());
+        }
+
         $billingWa = config('company.billing_whatsapp', '6289696629955');
         $formattedTotal = $invoice->formatted_total ?? ('Rp ' . number_format((float) $invoice->total_layanan, 0, ',', '.'));
         $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Periode:* {$invoice->period}%0A• *Total Tagihan:* {$formattedTotal}%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
         $waUrl = "https://wa.me/{$billingWa}?text={$waMsg}";
 
-        return back()->with('success', 'Bukti transfer pembayaran berhasil dikirim! Tim Billing PT MSN akan segera memverifikasi transaksi Anda.')
-            ->with('wa_confirm_url', $waUrl);
+        return back()->with('wa_confirm_url', $waUrl);
     }
 
     /**

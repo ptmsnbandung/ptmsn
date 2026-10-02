@@ -359,6 +359,13 @@ class TicketController extends Controller
 
         // 2. Kategori Suspend Layanan (15) -> Simpan ke trx_suspend IMS & trx_suspend_log
         if ($katTiket === '15') {
+            // Validasi syarat suspend: minimal 6 bulan berlangganan
+            if (!$customer->can_request_suspend) {
+                return back()->withInput()->withErrors([
+                    'suspend_reason' => $customer->suspend_ineligible_reason ?: 'Syarat pengajuan suspend layanan adalah minimal telah aktif berlangganan selama 6 bulan.',
+                ]);
+            }
+
             $kodeSuspend = 'S-' . $customer->nomor_internet . rand(1000, 9999);
             $startDate = $request->input('suspend_start') ?: date('Y-m-d');
             $endDate = $request->input('suspend_end') ?: null;
@@ -421,6 +428,13 @@ class TicketController extends Controller
 
         // 3. Kategori Terminasi Layanan (14) -> Simpan ke trx_terminasi IMS & trx_terminasi_log
         if ($katTiket === '14') {
+            // Validasi syarat terminasi: minimal 6 bulan berlangganan
+            if (!$customer->can_request_termination) {
+                return back()->withInput()->withErrors([
+                    'termination_reason' => $customer->termination_ineligible_reason ?: 'Sesuai ketentuan kontrak berlangganan PT MSN, pengajuan terminasi layanan hanya dapat dilakukan setelah aktif berlangganan minimal 6 bulan.',
+                ]);
+            }
+
             $kodeTerminasi = 'TR-' . $customer->nomor_internet . rand(1000, 9999);
             $terminDate = $request->input('termination_date') ?: date('Y-m-d');
 

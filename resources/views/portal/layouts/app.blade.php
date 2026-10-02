@@ -225,13 +225,13 @@
         <!-- Modern Flash Alerts (Interactive, Dismissible & Auto-Dismissing) -->
         <div 
             x-data="{ 
-                showSuccess: {{ session('success') ? 'true' : 'false' }}, 
+                showSuccess: {{ (session('success') && !session('wa_confirm_url')) ? 'true' : 'false' }}, 
                 showInfo: {{ session('info') ? 'true' : 'false' }}, 
                 showError: {{ (isset($errors) && $errors->any()) ? 'true' : 'false' }} 
             }" 
             class="space-y-2.5 mb-3 sm:mb-5"
         >
-            @if(session('success'))
+            @if(session('success') && !session('wa_confirm_url'))
                 <div 
                     x-show="showSuccess"
                     x-transition:enter="transition ease-out duration-300 transform"

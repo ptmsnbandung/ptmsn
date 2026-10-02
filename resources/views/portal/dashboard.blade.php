@@ -31,6 +31,15 @@
                             <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }}"></span>
                             <span>{{ $customer->status_reg_label }}</span>
                         </span>
+
+                        @if($customer->berlangganan_sejak !== '-')
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] sm:text-xs font-semibold bg-slate-800/90 border-slate-700/90 text-cyan-300 shadow-2xs" title="Total durasi aktif: {{ $customer->subscription_duration_text }}">
+                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs"></iconify-icon>
+                                <span>Bergabung sejak {{ $customer->berlangganan_sejak }}</span>
+                                <span class="text-cyan-400/50">•</span>
+                                <span class="text-emerald-400 font-mono">{{ $customer->subscription_duration_text }}</span>
+                            </span>
+                        @endif
                     </div>
 
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
@@ -79,9 +88,12 @@
                     {{ $customer->package->speed ?? '25 Mbps' }}
                 </div>
             </div>
-            <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 text-[10px] sm:text-xs text-slate-600 flex items-center gap-1">
-                <iconify-icon icon="solar:check-circle-bold" class="text-emerald-500 text-xs shrink-0"></iconify-icon>
-                <span class="font-medium truncate">Tanpa FUP (Unlimited)</span>
+            <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[10px] sm:text-xs text-slate-600">
+                <span class="flex items-center gap-1">
+                    <iconify-icon icon="solar:calendar-date-bold" class="text-sky-500 text-xs shrink-0"></iconify-icon>
+                    <span class="font-medium truncate">Sejak {{ $customer->berlangganan_sejak }}</span>
+                </span>
+                <span class="text-emerald-600 font-semibold font-mono">{{ $customer->subscription_duration_text }}</span>
             </div>
         </div>
 

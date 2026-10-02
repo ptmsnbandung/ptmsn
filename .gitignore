@@ -24,5 +24,7 @@ Thumbs.db
 *.sql
 /ims
 /gomsn
+/ims_v2
 bootstrap/cache/*.php
+
 

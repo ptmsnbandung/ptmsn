@@ -75,6 +75,12 @@
                             <td class="py-3 px-4">
                                 <div class="font-bold text-white">{{ $cust->name }}</div>
                                 <div class="text-[10px] text-slate-400 truncate max-w-[180px]">{{ $cust->address ?? '-' }}</div>
+                                @if(!empty($cust->berlangganan_sejak) && $cust->berlangganan_sejak !== '-')
+                                    <div class="text-[9px] text-slate-400/90 font-mono mt-0.5 flex items-center gap-1">
+                                        <iconify-icon icon="solar:calendar-date-bold" class="text-sky-400 text-[10px]"></iconify-icon>
+                                        <span>Sejak: {{ $cust->berlangganan_sejak }}</span>
+                                    </div>
+                                @endif
                             </td>
                             <td class="py-3 px-4 font-mono">
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $cust->phone) }}" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-1">
