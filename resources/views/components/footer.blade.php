@@ -72,9 +72,9 @@
                     <div class="font-heading font-bold text-xs font-mono uppercase tracking-wider text-[#38bdf8] mb-4">Perusahaan</div>
                     <ul class="space-y-2.5 text-xs text-slate-300 font-medium">
                         <li><a href="#tentang-kami" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#paket" class="hover:text-white transition-colors">Paket Internet</a></li>
                         <li><a href="#portofolio" class="hover:text-white transition-colors">Proyek</a></li>
-                        <li><a href="#coverage" class="hover:text-white transition-colors">Coverage</a></li>
-                        <li><a href="#kontak" class="hover:text-white transition-colors">Karir</a></li>
+                        <li><a href="#kontak" class="hover:text-white transition-colors">Kontak Kami</a></li>
                     </ul>
                 </div>
 
