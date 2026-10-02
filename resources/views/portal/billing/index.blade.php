@@ -28,18 +28,6 @@
                 </h1>
                 <p class="text-xs text-slate-300">Rincian invoice, riwayat transaksi, dan pilihan pembayaran online atau transfer bank.</p>
             </div>
-
-            <!-- ID Pelanggan Pill -->
-            <button 
-                type="button" 
-                onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')"
-                class="copy-btn px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/90 hover:border-cyan-400 text-cyan-300 flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-2xs self-start sm:self-center"
-                title="Klik untuk menyalin ID"
-            >
-                <iconify-icon icon="solar:hashtag-bold" class="text-cyan-400 text-xs"></iconify-icon>
-                <span class="text-xs font-mono font-bold">{{ $customer->customer_id }}</span>
-                <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-[11px]"></iconify-icon>
-            </button>
         </div>
     </div>
 
