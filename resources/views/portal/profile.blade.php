@@ -148,9 +148,130 @@
             </div>
         </div>
 
-        <!-- Right 2 Cols: Profile Edit Form -->
+        <!-- Right 2 Cols: Installation Data & Profile Edit Form -->
         <div class="lg:col-span-2 space-y-4 sm:space-y-6">
             
+            <!-- Data Pemasangan & Parameter Teknis Card -->
+            <div class="portal-card rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-4 sm:space-y-5 border border-slate-200/80 bg-white/95 shadow-xs">
+                
+                <!-- Card Header -->
+                <div class="pb-3 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0 shadow-2xs">
+                            <iconify-icon icon="solar:home-wifi-bold" class="text-lg sm:text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <h2 class="text-sm sm:text-base font-heading font-extrabold text-slate-900 leading-tight">
+                                Data Pemasangan & Lokasi Jaringan
+                            </h2>
+                            <p class="text-[11px] text-slate-500">Rincian parameter lokasi instalasi fisik dan media transmisi internet aktif.</p>
+                        </div>
+                    </div>
+
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-heading font-bold self-start sm:self-auto {{ $customer->status_reg_badge_class }}">
+                        <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }}"></span>
+                        <span>{{ $customer->status_reg_label }}</span>
+                    </span>
+                </div>
+
+                <!-- Primary Installation Address Box -->
+                <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-50/90 border border-slate-200/90 space-y-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                            <iconify-icon icon="solar:map-point-wave-bold" class="text-sky-500 text-xs"></iconify-icon>
+                            <span>Alamat Lengkap Pemasangan</span>
+                        </span>
+                        @if(!empty($customer->loc_maps) || !empty($customer->lon_lat))
+                            @php
+                                $mapsRaw = $customer->loc_maps ?: $customer->lon_lat;
+                                $mapsLink = str_starts_with($mapsRaw, 'http') ? $mapsRaw : 'https://www.google.com' . $mapsRaw;
+                            @endphp
+                            <a 
+                                href="{{ $mapsLink }}" 
+                                target="_blank" 
+                                class="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-sky-600 hover:text-sky-700 transition-colors"
+                                title="Lihat di Google Maps"
+                            >
+                                <iconify-icon icon="solar:map-arrow-square-bold" class="text-xs"></iconify-icon>
+                                <span>Lihat Peta Titik Pasang</span>
+                            </a>
+                        @endif
+                    </div>
+                    <p class="text-xs sm:text-sm font-heading font-semibold text-slate-900 leading-relaxed">
+                        {{ $customer->address ?: 'Alamat belum tercatat di sistem' }}
+                    </p>
+                    <div class="flex items-center gap-2 sm:gap-3 flex-wrap text-[11px] text-slate-600 pt-1 border-t border-slate-200/60 font-mono">
+                        <span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700">
+                            RT: <strong>{{ $customer->rt_pasang ?: '00' }}</strong> / RW: <strong>{{ $customer->rw_pasang ?: '00' }}</strong>
+                        </span>
+                        @if(!empty($customer->nomor_bangunan) && $customer->nomor_bangunan !== '00')
+                            <span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700">
+                                No. Bangunan: <strong>{{ $customer->nomor_bangunan }}</strong>
+                            </span>
+                        @endif
+                        @if(!empty($customer->jenis_bangunan))
+                            <span class="px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200 text-sky-700 font-sans font-medium">
+                                {{ str_replace('-', ' ', ucwords(strtolower($customer->jenis_bangunan))) }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- 4 Grid Technical Details -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
+                    
+                    <!-- Media Akses -->
+                    <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <span class="text-slate-400 text-[10px] font-mono uppercase block flex items-center gap-1">
+                            <iconify-icon icon="solar:transmission-bold" class="text-sky-500 text-xs"></iconify-icon>
+                            <span>Media Akses Transmisi</span>
+                        </span>
+                        <div class="font-heading font-bold text-slate-800 text-xs sm:text-sm">
+                            {{ $customer->media_akses ?: 'Fiber Optic (FTTH)' }}
+                        </div>
+                        <span class="text-[10px] text-emerald-600 font-medium block">Koneksi Dedicated Simetris</span>
+                    </div>
+
+                    <!-- Tanggal Aktivasi Pasang -->
+                    <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <span class="text-slate-400 text-[10px] font-mono uppercase block flex items-center gap-1">
+                            <iconify-icon icon="solar:calendar-date-bold" class="text-sky-500 text-xs"></iconify-icon>
+                            <span>Tanggal Mulai Berlangganan</span>
+                        </span>
+                        <div class="font-heading font-bold text-slate-800 text-xs sm:text-sm">
+                            {{ $customer->berlangganan_sejak }}
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium block">Aktif selama {{ $customer->subscription_duration_text }}</span>
+                    </div>
+
+                    <!-- Titik POP Jaringan -->
+                    <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <span class="text-slate-400 text-[10px] font-mono uppercase block flex items-center gap-1">
+                            <iconify-icon icon="solar:server-bold" class="text-sky-500 text-xs"></iconify-icon>
+                            <span>Node / Server Distribusi (POP)</span>
+                        </span>
+                        <div class="font-mono font-bold text-slate-800 text-xs">
+                            {{ $customer->kode_pop ? strtoupper($customer->kode_pop) : 'POP Distribusi Regional' }}
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium block">Jaringan Inti PT MSN</span>
+                    </div>
+
+                    <!-- Sales / Petugas Lapangan -->
+                    <div class="p-3 rounded-xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <span class="text-slate-400 text-[10px] font-mono uppercase block flex items-center gap-1">
+                            <iconify-icon icon="solar:user-hand-up-bold" class="text-sky-500 text-xs"></iconify-icon>
+                            <span>Petugas Registrasi / Sales</span>
+                        </span>
+                        <div class="font-heading font-bold text-slate-800 text-xs truncate">
+                            {{ $customer->nama_sales ?: ($customer->user_create ?: 'Tim Layanan PT MSN') }}
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium block">{{ $customer->group_layanan ?: 'MEDIANET Broadband' }}</span>
+                    </div>
+
+                </div>
+
+            </div>
+
             <!-- Update Profile Form -->
             <div class="portal-card rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-4 sm:space-y-5">
                 <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
