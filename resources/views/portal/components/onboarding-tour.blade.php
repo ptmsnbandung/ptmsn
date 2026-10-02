@@ -310,17 +310,6 @@
                     </div>
                 </div>
             </template>
-
-            <!-- Bottom Skip Option -->
-            <div class="pt-2 border-t border-slate-100 text-center">
-                <button 
-                    type="button" 
-                    @click="skipEmailAndStartTour()"
-                    class="text-[10px] sm:text-[11px] text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 transition-colors cursor-pointer"
-                >
-                    Lewati ke Panduan Portal
-                </button>
-            </div>
         </div>
     </div>
 </div>
