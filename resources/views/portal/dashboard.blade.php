@@ -19,23 +19,24 @@
                         <button 
                             type="button"
                             onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')" 
-                            class="copy-btn inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-800/90 border border-slate-700/90 hover:border-sky-400 text-sky-300 font-mono text-[11px] sm:text-xs font-bold transition-all shadow-2xs"
+                            class="copy-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700/90 hover:border-sky-400 text-sky-300 font-mono text-[11px] sm:text-xs font-bold transition-all shadow-2xs whitespace-nowrap"
                             title="Klik untuk menyalin ID Pelanggan"
                         >
-                            <iconify-icon icon="solar:hashtag-bold" class="text-sky-400 text-xs"></iconify-icon>
+                            <iconify-icon icon="solar:hashtag-bold" class="text-sky-400 text-xs shrink-0"></iconify-icon>
                             <span>ID: {{ $customer->customer_id }}</span>
-                            <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-xs ml-0.5"></iconify-icon>
+                            <iconify-icon icon="solar:copy-linear" class="text-slate-400 text-xs ml-0.5 shrink-0"></iconify-icon>
                         </button>
 
-                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full border text-[11px] sm:text-xs font-semibold {{ $customer->status_reg_badge_class }}">
-                            <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }}"></span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] sm:text-xs font-semibold {{ $customer->status_reg_badge_class }} whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $customer->status_reg_dot_class }} shrink-0"></span>
                             <span>{{ $customer->status_reg_label }}</span>
                         </span>
 
                         @if($customer->berlangganan_sejak !== '-')
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] sm:text-xs font-semibold bg-slate-800/90 border-slate-700/90 text-cyan-300 shadow-2xs" title="Total durasi aktif: {{ $customer->subscription_duration_text }}">
-                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs"></iconify-icon>
-                                <span>Bergabung sejak {{ $customer->berlangganan_sejak }}</span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-slate-800/90 border-slate-700/90 text-cyan-300 shadow-2xs whitespace-nowrap" title="Total durasi aktif: {{ $customer->subscription_duration_text }}">
+                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs shrink-0"></iconify-icon>
+                                <span class="hidden sm:inline">Bergabung </span>
+                                <span>Sejak {{ $customer->berlangganan_sejak }}</span>
                                 <span class="text-cyan-400/50">•</span>
                                 <span class="text-emerald-400 font-mono">{{ $customer->subscription_duration_text }}</span>
                             </span>
