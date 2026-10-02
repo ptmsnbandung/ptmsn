@@ -95,8 +95,8 @@
         </div>
     </div>
 
-    <!-- Main Content Container Overlapping the Blue Backdrop -->
-    <div class="-mt-14 sm:-mt-16 relative z-10 max-w-4xl mx-auto space-y-3.5 sm:space-y-6">
+    <!-- Main Content Container Overlapping the Blue Backdrop (Full Width) -->
+    <div class="-mt-14 sm:-mt-16 relative z-10 w-full space-y-3.5 sm:space-y-6">
 
     <!-- Error Summary if Any -->
     @if (isset($errors) && $errors->any())
