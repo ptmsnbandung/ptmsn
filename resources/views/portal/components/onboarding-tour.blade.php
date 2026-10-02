@@ -90,12 +90,14 @@
     <!-- 1. FLOATING SPOTLIGHT TOUR CONTAINER -->
     <div 
         x-show="isOpen"
-        class="fixed inset-0 z-[99990] overflow-hidden pointer-events-none transition-opacity duration-300"
+        class="fixed inset-0 z-[99990] overflow-hidden select-none pointer-events-auto transition-opacity duration-300 touch-none"
         :class="isOpen ? 'opacity-100' : 'opacity-0'"
         style="display: none;"
+        @wheel.prevent.stop
+        @touchmove.prevent.stop
+        @scroll.prevent.stop
         @keydown.escape.window="skipTour()"
         @resize.window="updatePosition()"
-        @scroll.window.passive="updatePosition()"
     >
         <!-- Darkened Backdrop with cutout spotlight focus ring (Single Crisp Ring) -->
         <div 
@@ -421,6 +423,7 @@
 
                 // Expose global helper jika ingin dipanggil manual
                 window.startPortalTour = () => {
+                    this.lockScroll();
                     this.showEmailModal = true;
                 };
 
@@ -434,6 +437,7 @@
 
                 // 2. Jika is_login di database masih bernilai 0 (login perdana/belum selesai onboarding)
                 if (this.isLoginZero) {
+                    this.lockScroll();
                     this.$nextTick(() => {
                         this.showEmailModal = true;
                     });
@@ -533,17 +537,49 @@
             },
 
             lockScroll() {
-                this._keyHandler = (e) => {
-                    if (this.isOpen && e.code === 'Escape') {
-                        this.skipTour();
-                    }
-                };
-                window.addEventListener('keydown', this._keyHandler, { passive: false });
+                document.body.style.overscrollBehavior = 'none';
+
+                if (!this._preventScroll) {
+                    this._preventScroll = (e) => {
+                        if (this.isOpen || this.showEmailModal) {
+                            const modalContent = e.target.closest('.overflow-y-auto');
+                            if (modalContent && modalContent.scrollHeight > modalContent.clientHeight) {
+                                return; // Izinkan scrolling di dalam modal jika konten panjang
+                            }
+                            e.preventDefault();
+                        }
+                    };
+                    window.addEventListener('wheel', this._preventScroll, { passive: false });
+                    window.addEventListener('touchmove', this._preventScroll, { passive: false });
+                }
+
+                if (!this._keyHandler) {
+                    this._keyHandler = (e) => {
+                        if (this.isOpen && e.code === 'Escape') {
+                            this.skipTour();
+                            return;
+                        }
+                        if ((this.isOpen || this.showEmailModal) && ['Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+                            const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+                            if (!isInput) {
+                                e.preventDefault();
+                            }
+                        }
+                    };
+                    window.addEventListener('keydown', this._keyHandler, { passive: false });
+                }
             },
 
             unlockScroll() {
+                document.body.style.overscrollBehavior = '';
+                if (this._preventScroll) {
+                    window.removeEventListener('wheel', this._preventScroll);
+                    window.removeEventListener('touchmove', this._preventScroll);
+                    this._preventScroll = null;
+                }
                 if (this._keyHandler) {
                     window.removeEventListener('keydown', this._keyHandler);
+                    this._keyHandler = null;
                 }
             },
 
