@@ -148,6 +148,7 @@ class BillingController extends Controller
 
         $request->validate([
             'proof_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'destination_bank' => 'nullable|string|max:200',
             'notes' => 'nullable|string|max:500',
         ], [
             'proof_file.required' => 'Bukti transfer (foto/PDF) wajib diunggah.',
@@ -168,6 +169,10 @@ class BillingController extends Controller
         $filePath = 'uploads/bukti_transfer/' . $filename;
         $fullUrl = url($filePath);
 
+        $destBank = trim((string) $request->input('destination_bank', ''));
+        $rawNotes = trim((string) $request->input('notes', ''));
+        $combinedNotes = $destBank ? "Tujuan Transfer: {$destBank}" . ($rawNotes ? " | Catatan: {$rawNotes}" : '') : $rawNotes;
+
         // Update invoice di IMS v3 menjadi metode transfer (payment_type = '2')
         try {
             $invoice->update([
@@ -181,7 +186,7 @@ class BillingController extends Controller
                     'kode_billing_lay_log' => 'LOG-' . uniqid(),
                     'kode_billing_layanan' => $invoice->kode_billing_layanan,
                     'status_bill_lay' => $invoice->status_bill_lay ?? '13',
-                    'note_billing_lay' => "Customer mengunggah bukti transfer via Portal Pelanggan ({$customer->name})",
+                    'note_billing_lay' => "Customer mengunggah bukti transfer via Portal Pelanggan ({$customer->name}) - {$destBank}",
                     'date_create' => \Carbon\Carbon::now()->toDateTimeString(),
                     'user_create' => 'PORTAL_CUSTOMER',
                     'hide' => '0',
@@ -200,7 +205,7 @@ class BillingController extends Controller
             [
                 'customer_name' => $customer->name,
                 'proof_file' => $fullUrl,
-                'notes' => $request->input('notes'),
+                'notes' => $combinedNotes,
                 'status' => 'pending',
                 'verified_at' => null,
             ]
@@ -217,7 +222,7 @@ class BillingController extends Controller
                     [
                         'customer_name' => $customer->name,
                         'proof_file' => $fullUrl,
-                        'notes' => $request->input('notes'),
+                        'notes' => $combinedNotes,
                         'status' => 'pending',
                         'verified_at' => null,
                         'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
@@ -252,7 +257,7 @@ class BillingController extends Controller
                     [
                         'customer_name' => $customer->name,
                         'proof_file' => $fullUrl,
-                        'notes' => $request->input('notes'),
+                        'notes' => $combinedNotes,
                         'status' => 'pending',
                         'verified_at' => null,
                         'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
@@ -266,7 +271,8 @@ class BillingController extends Controller
 
         $billingWa = config('company.billing_whatsapp', '6289696629955');
         $formattedTotal = $invoice->formatted_total ?? ('Rp ' . number_format((float) $invoice->total_layanan, 0, ',', '.'));
-        $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Periode:* {$invoice->period}%0A• *Total Tagihan:* {$formattedTotal}%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
+        $bankLine = $destBank ? "%0A• *Bank Tujuan:* {$destBank}" : '';
+        $waMsg = "Halo Tim Billing PT MSN,%0A%0ASaya sudah melakukan transfer dan mengunggah bukti pembayaran untuk tagihan:%0A• *ID Pelanggan:* {$customer->customer_id}%0A• *Nama:* {$customer->name}%0A• *No. Invoice:* {$invoice->kode_billing_layanan}%0A• *Periode:* {$invoice->period}%0A• *Total Tagihan:* {$formattedTotal}{$bankLine}%0A%0AMohon bantuannya untuk verifikasi pembayaran. Terima kasih!";
         $waUrl = "https://wa.me/{$billingWa}?text={$waMsg}";
 
         return back()->with('wa_confirm_url', $waUrl);

@@ -486,6 +486,29 @@
                                     <span>Konfirmasi Bukti Transfer</span>
                                 </div>
 
+                                <!-- Dropdown Pilihan Transfer Kemana -->
+                                <div>
+                                    <label class="block text-slate-700 text-xs font-heading font-bold mb-1 flex items-center gap-1">
+                                        <iconify-icon icon="solar:card-send-bold" class="text-emerald-600 text-sm"></iconify-icon>
+                                        <span>Ditransfer ke Rekening Mana? <span class="text-rose-500">*</span></span>
+                                    </label>
+                                    <div class="relative">
+                                        <select 
+                                            name="destination_bank" 
+                                            required 
+                                            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-400 focus:border-emerald-500 focus:bg-white text-slate-800 text-xs font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all cursor-pointer shadow-2xs appearance-none pr-9"
+                                        >
+                                            <option value="" disabled selected>-- Pilih Rekening Bank Tujuan PT MSN --</option>
+                                            @foreach($bankAccounts as $bank)
+                                                <option value="{{ $bank['bank_name'] }} - {{ $bank['account_number'] }} (a.n. {{ $bank['account_name'] }})">
+                                                    {{ $bank['bank_name'] }} — {{ $bank['account_number'] }} (a.n. {{ $bank['account_name'] }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <iconify-icon icon="solar:alt-arrow-down-bold" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></iconify-icon>
+                                    </div>
+                                </div>
+
                                 <!-- File Upload & Live Preview Area -->
                                 <div>
                                     <label class="block text-slate-600 text-xs font-medium mb-1.5">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
@@ -1036,6 +1059,29 @@
                 @submit="if(isModalSubmitting) { $event.preventDefault(); return false; } isModalSubmitting = true;"
             >
                 @csrf
+                <!-- Dropdown Pilihan Transfer Kemana -->
+                <div>
+                    <label class="block text-slate-700 text-xs font-heading font-semibold mb-1 flex items-center gap-1">
+                        <iconify-icon icon="solar:card-send-bold" class="text-emerald-600 text-sm"></iconify-icon>
+                        <span>Ditransfer ke Rekening Mana? <span class="text-rose-500">*</span></span>
+                    </label>
+                    <div class="relative">
+                        <select 
+                            name="destination_bank" 
+                            required 
+                            class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-400 focus:border-emerald-500 focus:bg-white text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all cursor-pointer shadow-2xs appearance-none pr-8"
+                        >
+                            <option value="" disabled selected>-- Pilih Rekening Bank Tujuan PT MSN --</option>
+                            @foreach($bankAccounts as $bank)
+                                <option value="{{ $bank['bank_name'] }} - {{ $bank['account_number'] }} (a.n. {{ $bank['account_name'] }})">
+                                    {{ $bank['bank_name'] }} — {{ $bank['account_number'] }} (a.n. {{ $bank['account_name'] }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <iconify-icon icon="solar:alt-arrow-down-bold" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></iconify-icon>
+                    </div>
+                </div>
+
                 <!-- File Upload & Live Preview Area -->
                 <div>
                     <label class="block text-slate-700 text-xs font-heading font-semibold mb-1">
