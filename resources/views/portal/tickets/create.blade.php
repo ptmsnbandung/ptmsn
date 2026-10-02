@@ -39,13 +39,7 @@
     selectPackage(id, price, name) {
         this.selectedPackageId = String(id);
         this.targetPackage = this.packagesMap[id] || null;
-        if (this.currentPackage.price > 0 && price > 0) {
-            if (price > this.currentPackage.price) {
-                this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
-            } else if (price < this.currentPackage.price) {
-                this.changeType = 'Downgrade Paket';
-            }
-        } else if (this.targetPackage && this.targetPackage.speedNum && this.currentPackage.speedNum) {
+        if (this.targetPackage && this.targetPackage.speedNum && this.currentPackage.speedNum) {
             if (this.targetPackage.speedNum > this.currentPackage.speedNum) {
                 this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
             } else if (this.targetPackage.speedNum < this.currentPackage.speedNum) {
@@ -54,16 +48,12 @@
         }
     },
     get isUpgrade() {
-        if (!this.targetPackage) return false;
-        if (this.currentPackage.price > 0 && this.targetPackage.price > this.currentPackage.price) return true;
-        if (this.targetPackage.speedNum > this.currentPackage.speedNum) return true;
-        return false;
+        if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
+        return this.targetPackage.speedNum > this.currentPackage.speedNum;
     },
     get isDowngrade() {
-        if (!this.targetPackage) return false;
-        if (this.currentPackage.price > 0 && this.targetPackage.price < this.currentPackage.price) return true;
-        if (this.targetPackage.speedNum < this.currentPackage.speedNum && this.targetPackage.price <= this.currentPackage.price) return true;
-        return false;
+        if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
+        return this.targetPackage.speedNum < this.currentPackage.speedNum;
     },
     get speedDifference() {
         if (!this.targetPackage) return 0;
@@ -484,9 +474,10 @@
                                     @php
                                         $isCurrent = ($customer->package_id && $customer->package_id == $pkg->id) || 
                                                      (strtolower($customer->package->name ?? '') === strtolower($pkg->name));
-                                        $currentPrice = (int) ($customer->package->price ?? 0);
-                                        $isUpgrade = $currentPrice > 0 && $pkg->price > $currentPrice;
-                                        $isDowngrade = $currentPrice > 0 && $pkg->price < $currentPrice;
+                                        $currentSpeedNum = (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25;
+                                        $pkgSpeedNum = (int) preg_replace('/[^0-9]/', '', $pkg->speed) ?: 0;
+                                        $isUpgrade = $currentSpeedNum > 0 && $pkgSpeedNum > $currentSpeedNum;
+                                        $isDowngrade = $currentSpeedNum > 0 && $pkgSpeedNum < $currentSpeedNum;
                                     @endphp
                                     <div 
                                         x-show="packageCategoryTab === 'all' || packageCategoryTab === '{{ $pkg->category ?? 'broadband' }}'"
