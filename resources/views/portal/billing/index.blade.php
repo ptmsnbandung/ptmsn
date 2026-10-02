@@ -89,11 +89,15 @@
                 </span>
             </div>
 
-            <div class="shrink-0 flex items-center gap-2">
+            <div class="shrink-0 flex items-center gap-2 flex-wrap">
                 @if($currentInvoice->is_paid)
                     <span class="badge-paid">
                         <iconify-icon icon="solar:check-circle-bold" class="text-sm"></iconify-icon>
                         <span>LUNAS</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                        <iconify-icon icon="solar:calendar-date-bold" class="text-slate-500 text-xs"></iconify-icon>
+                        <span>Tempo: {{ $currentInvoice->due_date?->translatedFormat('d M Y') ?? 'Tgl ' . $customer->due_date }}</span>
                     </span>
                 @else
                     @php
@@ -110,6 +114,12 @@
                             <span>BELUM DIBAYAR</span>
                         </span>
                     @endif
+
+                    <!-- Jatuh Tempo di Kanan Keterangan Status -->
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-rose-50 text-rose-700 border border-rose-200/80">
+                        <iconify-icon icon="solar:calendar-date-bold" class="text-rose-500 text-xs"></iconify-icon>
+                        <span>Tempo: {{ $currentInvoice->due_date?->translatedFormat('d M Y') ?? 'Tgl ' . $customer->due_date }}</span>
+                    </span>
                 @endif
             </div>
         </div>
@@ -130,8 +140,8 @@
                     </div>
                 </div>
 
-                <!-- Detail Meta Box -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 text-xs">
+                <!-- Detail Meta Box (Desktop/Tablet Only: di mobile tidak ditampilkan) -->
+                <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 text-xs">
                     <div class="space-y-0.5">
                         <span class="text-slate-400 text-[10px] block">Jatuh Tempo:</span>
                         <span class="font-mono font-bold text-xs {{ $currentInvoice->is_paid ? 'text-slate-700' : 'text-rose-600' }}">
