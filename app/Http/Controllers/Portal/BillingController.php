@@ -60,7 +60,7 @@ class BillingController extends Controller
                 [
                     'nomor_internet' => $customer->customer_id,
                     'kode_bandwith' => $customer->kode_bandwith ?? 'AG26007',
-                    'nominal_bandwith' => (string) ($customer->bandwith?->nominal_bandwith ?? '25'),
+                    'nominal_bandwith' => (string) ($customer->nominal_bandwith ?: ($customer->bandwith?->nominal_bandwith ?? '25')),
                     'bulan_tagihan' => $currentMonth,
                     'tahun_tagihan' => $currentYear,
                     'periode_tagihan' => Carbon::now()->translatedFormat('M Y'),

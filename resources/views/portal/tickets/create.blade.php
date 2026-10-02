@@ -11,8 +11,8 @@
     changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
     currentPackage: {
         name: '{{ addslashes($customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet')) }}',
-        speed: '{{ addslashes($customer->package->speed ?? ($customer->bandwith->nama_bandwith ?? 'Broadband')) }}',
-        speedNum: {{ (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25 }},
+        speed: '{{ addslashes($customer->package->speed ?? '25 Mbps') }}',
+        speedNum: {{ (int) ($customer->nominal_mbps ?? 25) }},
         price: {{ (int) ($customer->package->price ?? 0) }},
         formattedPrice: '{{ $customer->package->formatted_price ?? ('Rp ' . number_format($customer->package->price ?? 0, 0, ',', '.')) }}'
     },
@@ -474,7 +474,7 @@
                                     @php
                                         $isCurrent = ($customer->package_id && $customer->package_id == $pkg->id) || 
                                                      (strtolower($customer->package->name ?? '') === strtolower($pkg->name));
-                                        $currentSpeedNum = (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25;
+                                        $currentSpeedNum = (int) ($customer->nominal_mbps ?? 25);
                                         $pkgSpeedNum = (int) preg_replace('/[^0-9]/', '', $pkg->speed) ?: 0;
                                         $isUpgrade = $currentSpeedNum > 0 && $pkgSpeedNum > $currentSpeedNum;
                                         $isDowngrade = $currentSpeedNum > 0 && $pkgSpeedNum < $currentSpeedNum;
