@@ -469,28 +469,6 @@ class Customer extends Authenticatable
         };
     }
 
-    /**
-     * Data nominal bandwidth pelanggan langsung dari kolom nominal_bandwith di table trx_batchjob_register
-     */
-    public function getNominalBandwithAttribute($value)
-    {
-        if (!empty($value)) {
-            return $value;
-        }
-        return $this->attributes['nominal_bandwith'] ?? ($this->bandwith?->nominal_bandwith ?? null);
-    }
-
-    /**
-     * Angka nominal Mbps murni (contoh: 25, 50, 100) dari kolom nominal_bandwith
-     */
-    public function getNominalMbpsAttribute(): float
-    {
-        $val = $this->attributes['nominal_bandwith'] 
-            ?? $this->nominal_bandwith 
-            ?? ($this->bandwith?->nominal_bandwith ?? 25);
-        return (float) (preg_replace('/[^0-9.]/', '', (string) $val) ?: 25);
-    }
-
     public function getBillingAmountAttribute()
     {
         return (float) ($this->bandwith?->harga_bandwith ?? 250000);
@@ -517,23 +495,12 @@ class Customer extends Authenticatable
 
     public function getPackageAttribute()
     {
-        // Ambil nominal bandwidth pelanggan langsung dari tabel trx_batchjob_register kolom nominal_bandwith
-        $speedNominal = $this->attributes['nominal_bandwith'] 
-            ?? $this->nominal_bandwith 
-            ?? ($this->bandwith?->nominal_bandwith ?? '25');
-
-        $speedStr = (string) $speedNominal;
-        $speedFormatted = is_numeric($speedStr) 
-            ? $speedStr . ' Mbps' 
-            : (preg_match('/mbps/i', $speedStr) ? $speedStr : $speedStr . ' Mbps');
-
+        $speedNominal = $this->bandwith?->nominal_bandwith ?? '25';
         $price = (float) $this->billing_amount;
         return (object) [
             'id' => null,
             'name' => 'Broadband ' . ($this->kode_bandwith ?? 'FTTH'),
-            'speed' => $speedFormatted,
-            'nominal_bandwith' => $speedNominal,
-            'nominal_mbps' => (float) (preg_replace('/[^0-9.]/', '', $speedStr) ?: 25),
+            'speed' => (is_numeric($speedNominal) ? $speedNominal . ' Mbps' : $speedNominal),
             'price' => $price,
             'formatted_price' => 'Rp ' . number_format($price, 0, ',', '.'),
         ];
