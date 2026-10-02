@@ -5,7 +5,22 @@
 @section('content')
 <div x-data="{
     katTiket: '{{ old('kat_tiket', request('category', request('kat_tiket', '11'))) }}',
-    showPassword: false
+    showPassword: false,
+    selectedPackageId: '{{ old('target_package_id', '') }}',
+    packageCategoryTab: 'all',
+    changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
+    currentPackagePrice: {{ (int) ($customer->package->price ?? 0) }},
+    currentPackageId: {{ (int) ($customer->package->id ?? 0) }},
+    selectPackage(id, price, name) {
+        this.selectedPackageId = String(id);
+        if (this.currentPackagePrice > 0 && price > 0) {
+            if (price > this.currentPackagePrice) {
+                this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
+            } else if (price < this.currentPackagePrice) {
+                this.changeType = 'Downgrade Paket';
+            }
+        }
+    }
 }">
 
     <!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
@@ -348,52 +363,230 @@
                     <!-- FORM KONDISIONAL 3: UBAH LAYANAN / UPGRADE (17)                   -->
                     <!-- ================================================================= -->
                     <div x-show="katTiket === '17'" class="space-y-4 pt-3 border-t border-slate-200/80">
-                        <div class="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
-                            <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-emerald-600 text-lg shrink-0 mt-0.5"></iconify-icon>
-                            <div>
-                                <span class="font-bold block mb-0.5">Paket Aktif Anda Saat Ini:</span>
-                                <span class="text-emerald-800 font-semibold">{{ $customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband') }} - {{ $customer->package->speed ?? 'Broadband Internet' }}</span>
+                        <!-- Info Banner Paket Aktif -->
+                        <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-200/80 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs">
+                                    <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-xl"></iconify-icon>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-700 font-bold block">Paket Aktif Anda Saat Ini:</span>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-xs sm:text-sm font-heading font-extrabold text-slate-900">
+                                            {{ $customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet') }}
+                                        </span>
+                                        @if(isset($customer->package->speed) || isset($customer->bandwith->nama_bandwith))
+                                            <span class="px-2 py-0.5 rounded-lg bg-emerald-100/80 text-emerald-800 font-mono font-bold text-[10px] border border-emerald-200/60">
+                                                {{ $customer->package->speed ?? $customer->bandwith->nama_bandwith }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @if(isset($customer->package->price))
+                                <div class="sm:text-right pl-12 sm:pl-0">
+                                    <span class="text-[10px] text-slate-500 block">Tarif Berjalan</span>
+                                    <span class="text-xs font-mono font-bold text-emerald-700">{{ $customer->package->formatted_price }}/bln</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Card Pilihan Paket Baru -->
+                        <div class="space-y-2.5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                    <label class="block text-xs font-heading font-bold text-slate-900">
+                                        Pilih Paket Internet Baru: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <p class="text-[11px] text-slate-500">Pilih salah satu kartu paket di bawah ini yang sesuai dengan kebutuhan Anda.</p>
+                                </div>
+
+                                <!-- Filter Segment Tab (Rumahan vs Bisnis) -->
+                                <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs self-start sm:self-auto">
+                                    <button 
+                                        type="button" 
+                                        @click="packageCategoryTab = 'all'"
+                                        :class="packageCategoryTab === 'all' ? 'bg-white text-emerald-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800'"
+                                        class="px-2.5 py-1 rounded-lg transition-all cursor-pointer text-[11px]"
+                                    >
+                                        Semua
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        @click="packageCategoryTab = 'broadband'"
+                                        :class="packageCategoryTab === 'broadband' ? 'bg-white text-emerald-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800'"
+                                        class="px-2.5 py-1 rounded-lg transition-all cursor-pointer text-[11px]"
+                                    >
+                                        Rumahan
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        @click="packageCategoryTab = 'bisnis'"
+                                        :class="packageCategoryTab === 'bisnis' ? 'bg-white text-emerald-700 font-bold shadow-2xs' : 'text-slate-500 hover:text-slate-800'"
+                                        class="px-2.5 py-1 rounded-lg transition-all cursor-pointer text-[11px]"
+                                    >
+                                        Bisnis & UMKM
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Grid of Cards -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                @foreach($packages as $pkg)
+                                    @php
+                                        $isCurrent = ($customer->package_id && $customer->package_id == $pkg->id) || 
+                                                     (strtolower($customer->package->name ?? '') === strtolower($pkg->name));
+                                        $currentPrice = (int) ($customer->package->price ?? 0);
+                                        $isUpgrade = $currentPrice > 0 && $pkg->price > $currentPrice;
+                                        $isDowngrade = $currentPrice > 0 && $pkg->price < $currentPrice;
+                                    @endphp
+                                    <div 
+                                        x-show="packageCategoryTab === 'all' || packageCategoryTab === '{{ $pkg->category ?? 'broadband' }}'"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-98"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        @click="selectPackage('{{ $pkg->id }}', {{ $pkg->price }}, '{{ addslashes($pkg->name) }}')"
+                                        :class="selectedPackageId === '{{ $pkg->id }}' 
+                                            ? 'border-emerald-500 bg-emerald-50/70 ring-2 ring-emerald-500/25 shadow-md scale-[1.01]' 
+                                            : 'border-slate-200/90 bg-white/90 hover:border-emerald-300 hover:bg-white hover:shadow-sm'"
+                                        class="relative rounded-2xl border p-3.5 sm:p-4 transition-all duration-200 cursor-pointer flex flex-col justify-between group overflow-hidden"
+                                    >
+                                        <!-- Hidden Radio Input -->
+                                        <input 
+                                            type="radio" 
+                                            name="target_package_id" 
+                                            value="{{ $pkg->id }}" 
+                                            x-model="selectedPackageId"
+                                            class="sr-only"
+                                            @if(old('target_package_id') == $pkg->id) checked @endif
+                                        >
+
+                                        <!-- Card Header: Title & Badges -->
+                                        <div>
+                                            <div class="flex items-start justify-between gap-2 mb-2">
+                                                <div class="space-y-0.5">
+                                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                                        <h4 class="font-heading font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
+                                                            {{ $pkg->name }}
+                                                        </h4>
+                                                        @if($pkg->is_popular)
+                                                            <span class="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold border border-amber-200 flex items-center gap-0.5">
+                                                                <iconify-icon icon="solar:star-bold" class="text-[10px] text-amber-500"></iconify-icon>
+                                                                Populer
+                                                            </span>
+                                                        @endif
+                                                        @if($isCurrent)
+                                                            <span class="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[9px] font-semibold border border-slate-200">
+                                                                Paket Anda
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <span class="text-[10px] text-slate-500 block capitalize">
+                                                        {{ $pkg->category === 'bisnis' ? 'Kategori Bisnis / UMKM' : 'Kategori Broadband Rumah' }}
+                                                    </span>
+                                                </div>
+
+                                                <!-- Select Checkmark Badge -->
+                                                <div 
+                                                    :class="selectedPackageId === '{{ $pkg->id }}' 
+                                                        ? 'bg-emerald-600 text-white border-emerald-600 scale-110 shadow-xs' 
+                                                        : 'bg-slate-100 text-transparent border-slate-200 group-hover:border-emerald-300 group-hover:text-slate-300'"
+                                                    class="w-5 h-5 sm:w-6 sm:h-6 rounded-full border flex items-center justify-center transition-all shrink-0"
+                                                >
+                                                    <iconify-icon icon="solar:check-read-bold" class="text-xs sm:text-sm"></iconify-icon>
+                                                </div>
+                                            </div>
+
+                                            <!-- Speed & Price Highlight -->
+                                            <div class="my-2.5 p-2.5 rounded-xl bg-slate-50/80 border border-slate-100/80 flex items-center justify-between gap-2 group-hover:bg-emerald-50/40 transition-colors">
+                                                <div class="flex items-center gap-1.5">
+                                                    <div class="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                                                        <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-sm"></iconify-icon>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-[10px] text-slate-400 font-mono leading-none">Kecepatan</div>
+                                                        <div class="font-mono font-extrabold text-xs sm:text-sm text-slate-900 leading-tight">
+                                                            {{ $pkg->speed }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="text-right">
+                                                    <div class="font-mono font-extrabold text-xs sm:text-sm text-emerald-600">
+                                                        {{ $pkg->formatted_price }}
+                                                    </div>
+                                                    <div class="text-[9px] text-slate-400 font-sans leading-none">/bulan</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Short Description / Ideal Devices -->
+                                            @if($pkg->ideal_devices)
+                                                <div class="flex items-center gap-1.5 text-[11px] text-slate-600 mb-2">
+                                                    <iconify-icon icon="solar:devices-bold" class="text-slate-400 text-xs shrink-0"></iconify-icon>
+                                                    <span class="truncate">Ideal untuk: <strong class="text-slate-700">{{ $pkg->ideal_devices }}</strong></span>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Card Footer: Upgrade / Downgrade Tag & Selection Button -->
+                                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                                            @if($isUpgrade)
+                                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                                                    <iconify-icon icon="solar:arrow-up-bold" class="text-xs"></iconify-icon>
+                                                    Upgrade Speed
+                                                </span>
+                                            @elseif($isDowngrade)
+                                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-md">
+                                                    <iconify-icon icon="solar:arrow-down-bold" class="text-xs"></iconify-icon>
+                                                    Downgrade Paket
+                                                </span>
+                                            @else
+                                                <span class="text-[10px] text-slate-400">Unlimited Kuota (FUP Free)</span>
+                                            @endif
+
+                                            <span 
+                                                :class="selectedPackageId === '{{ $pkg->id }}' ? 'text-emerald-700 font-bold' : 'text-slate-400 group-hover:text-emerald-600'"
+                                                class="text-[10px] font-heading flex items-center gap-0.5"
+                                            >
+                                                <span x-text="selectedPackageId === '{{ $pkg->id }}' ? 'Terpilih' : 'Pilih Paket'"></span>
+                                                <iconify-icon icon="solar:alt-arrow-right-bold" class="text-xs"></iconify-icon>
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Grid Form Options: Jenis Perubahan & Tanggal Mulai -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2">
                             <!-- Jenis Permintaan -->
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-800">
                                     Jenis Perubahan: <span class="text-rose-500">*</span>
                                 </label>
-                                <select name="change_type" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                                <select 
+                                    name="change_type" 
+                                    x-model="changeType"
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm font-medium"
+                                >
                                     <option value="Upgrade Kecepatan (Tambah Bandwidth)">Upgrade Kecepatan (Tambah Bandwidth)</option>
                                     <option value="Downgrade Paket">Downgrade Paket</option>
                                 </select>
                             </div>
 
-                            <!-- Pilihan Paket Baru -->
+                            <!-- Tanggal Mulai Berlaku -->
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold text-slate-800">
-                                    Pilih Paket Internet Baru: <span class="text-rose-500">*</span>
-                                </label>
-                                <select name="target_package_id" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm">
-                                    <option value="">-- Pilih Paket Baru --</option>
-                                    @foreach($packages as $pkg)
-                                        <option value="{{ $pkg->id }}" {{ old('target_package_id') == $pkg->id ? 'selected' : '' }}>
-                                            {{ $pkg->name }} — {{ $pkg->speed }} ({{ $pkg->formatted_price }}/bln)
-                                        </option>
-                                    @endforeach
+                                <label class="block text-xs font-bold text-slate-800">Tanggal Mulai Berlaku:</label>
+                                <select name="effective_date" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm font-medium">
+                                    <option value="Mulai Awal Bulan Depan (Periode Tagihan Baru)">Mulai Awal Bulan Depan (Periode Tagihan Baru) [Disarankan]</option>
+                                    <option value="Segera (Perhitungan biaya berjalan dihitung prorata)">Segera (Perhitungan biaya berjalan dihitung prorata)</option>
                                 </select>
                             </div>
                         </div>
 
+                        <!-- Alasan Perubahan Paket -->
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">Tanggal Mulai Berlaku:</label>
-                            <select name="effective_date" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 shadow-sm">
-                                <option value="Mulai Awal Bulan Depan (Periode Tagihan Baru)">Mulai Awal Bulan Depan (Periode Tagihan Baru) [Disarankan]</option>
-                                <option value="Segera (Perhitungan biaya berjalan dihitung prorata)">Segera (Perhitungan biaya berjalan dihitung prorata)</option>
-                            </select>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-800">Alasan Perubahan Paket:</label>
+                            <label class="block text-xs font-bold text-slate-800">Alasan Perubahan Paket (Opsional):</label>
                             <textarea 
                                 name="change_reason" 
                                 rows="2" 
