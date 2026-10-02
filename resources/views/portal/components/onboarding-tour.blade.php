@@ -13,15 +13,16 @@
 
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
+    $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->is('portal') || request()->is('portal/dashboard'));
     
-    // Tentukan apakah tour harus aktif otomatis di halaman saat ini
+    // Tentukan apakah tour harus diizinkan aktif di halaman saat ini
     $shouldActive = false;
     $initialStepIdx = 0;
 
     if ($requestedStep !== null && is_numeric($requestedStep)) {
         $initialStepIdx = max(0, min(4, ((int)$requestedStep) - 1));
         $shouldActive = true;
-    } elseif ($isFirstLogin && ($currentRouteName === 'portal.dashboard' || request()->is('portal') || request()->is('portal/dashboard'))) {
+    } elseif ($isDashboardPage) {
         $initialStepIdx = 0;
         $shouldActive = true;
     }
