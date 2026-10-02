@@ -327,14 +327,26 @@
                                 <span>Bayar Sekarang (Midtrans)</span>
                             </button>
 
-                            <!-- Channel Logos (No border, clean and balanced) -->
-                            <div class="pt-3 border-t border-slate-100 flex items-center justify-center gap-3.5 sm:gap-6 flex-wrap">
-                                <img src="{{ asset('images/logo/qris.jpg') }}" alt="QRIS" class="h-6 sm:h-7 w-auto object-contain transition-transform hover:scale-105" title="QRIS (Gopay, OVO, Dana, ShopeePay)" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-slate-700 tracking-tight\'>QRIS</span>';">
-                                <img src="{{ asset('images/logo/bca.png') }}" alt="BCA" class="h-6 sm:h-7.5 w-auto object-contain transition-transform hover:scale-105" title="BCA Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-800 tracking-tight\'>BCA</span>';">
-                                <img src="{{ asset('images/logo/mandiri.png') }}" alt="Mandiri" class="h-6 sm:h-7.5 w-auto object-contain transition-transform hover:scale-105" title="Bank Mandiri Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-sky-900 tracking-tight\'>MANDIRI</span>';">
-                                <img src="{{ asset('images/logo/bri.png') }}" alt="BRI" class="h-6 sm:h-7.5 w-auto object-contain transition-transform hover:scale-105" title="Bank BRI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-900 tracking-tight\'>BRI</span>';">
-                                <img src="{{ asset('images/logo/bni.png') }}" alt="BNI" class="h-6 sm:h-7.5 w-auto object-contain transition-transform hover:scale-105" title="Bank BNI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-teal-800 tracking-tight\'>BNI</span>';">
-                                <img src="{{ asset('images/logo/alfamart.png') }}" alt="Alfamart" class="h-6 sm:h-7 w-auto object-contain transition-transform hover:scale-105" title="Gerai Alfamart Retail" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-red-600 tracking-tight\'>ALFAMART</span>';">
+                            <!-- Channel Logos (Balanced, uniform height and aligned) -->
+                            <div class="pt-3.5 border-t border-slate-100 flex items-center justify-center gap-3 sm:gap-4.5 flex-wrap">
+                                <div class="h-6 sm:h-7 w-12 sm:w-14 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/qris.png') }}" alt="QRIS" class="max-h-5 sm:max-h-5.5 max-w-full object-contain transition-transform hover:scale-105" title="QRIS (Gopay, OVO, Dana, ShopeePay)" onerror="this.onerror=null; this.src='{{ asset('images/logo/qris.jpg') }}';">
+                                </div>
+                                <div class="h-6 sm:h-7 w-14 sm:w-16 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/bca.png') }}" alt="BCA" class="max-h-5.5 sm:max-h-6 max-w-full object-contain transition-transform hover:scale-105" title="BCA Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-800 tracking-tight\'>BCA</span>';">
+                                </div>
+                                <div class="h-6 sm:h-7 w-14 sm:w-16 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/mandiri.png') }}" alt="Mandiri" class="max-h-5.5 sm:max-h-6 max-w-full object-contain transition-transform hover:scale-105" title="Bank Mandiri Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-sky-900 tracking-tight\'>MANDIRI</span>';">
+                                </div>
+                                <div class="h-6 sm:h-7 w-11 sm:w-13 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/bri.png') }}" alt="BRI" class="max-h-5 sm:max-h-5.5 max-w-full object-contain transition-transform hover:scale-105" title="Bank BRI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-blue-900 tracking-tight\'>BRI</span>';">
+                                </div>
+                                <div class="h-6 sm:h-7 w-11 sm:w-13 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/bni.png') }}" alt="BNI" class="max-h-5 sm:max-h-5.5 max-w-full object-contain transition-transform hover:scale-105" title="Bank BNI Virtual Account" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-teal-800 tracking-tight\'>BNI</span>';">
+                                </div>
+                                <div class="h-6 sm:h-7 w-14 sm:w-16 flex items-center justify-center">
+                                    <img src="{{ asset('images/logo/alfamart.png') }}" alt="Alfamart" class="max-h-4.5 sm:max-h-5 max-w-full object-contain transition-transform hover:scale-105" title="Gerai Alfamart Retail" onerror="this.onerror=null; this.outerHTML='<span class=\'text-xs font-black text-red-600 tracking-tight\'>ALFAMART</span>';">
+                                </div>
                             </div>
                         </div>
 
