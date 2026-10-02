@@ -4,12 +4,30 @@
     $customerEmail = $customer?->email ?? '';
     $customerName = $customer?->name ?? 'Pelanggan';
     
-    // Status is_login mutlak dari database (jika 0 berarti wajib onboarding)
-    $isLoginDbZero = (int)($customer?->is_login ?? 0) === 0;
+    // Status is_login mutlak dari database (jika 0, '0', null, atau false berarti wajib onboarding)
+    $isLoginVal = $customer?->is_login;
+    if ($isLoginVal === null) {
+        try {
+            $isLoginVal = \Illuminate\Support\Facades\DB::connection('ims')
+                ->table('trx_batchjob_register')
+                ->where('nomor_internet', $customer?->nomor_internet)
+                ->value('is_login');
+        } catch (\Throwable $e) {}
+    }
+    if ($isLoginVal === null) {
+        try {
+            $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
+                ->table('customers')
+                ->where('customer_id', $customer?->customer_id)
+                ->value('is_login');
+        } catch (\Throwable $e) {}
+    }
+
+    $isLoginDbZero = empty($isLoginVal) || (int)$isLoginVal === 0;
     
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
-    $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->is('portal') || request()->is('portal/dashboard'));
+    $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->routeIs('portal.dashboard*') || request()->is('portal') || request()->is('portal/dashboard'));
     
     $initialStepIdx = 0;
     if ($requestedStep !== null && is_numeric($requestedStep)) {
@@ -44,7 +62,7 @@
     <!-- 1. FLOATING SPOTLIGHT TOUR CONTAINER -->
     <div 
         x-show="isOpen"
-        class="fixed inset-0 z-[100] overflow-hidden pointer-events-none transition-opacity duration-300"
+        class="fixed inset-0 z-[99990] overflow-hidden pointer-events-none transition-opacity duration-300"
         :class="isOpen ? 'opacity-100' : 'opacity-0'"
         style="display: none;"
         @keydown.escape.window="skipTour()"
@@ -59,7 +77,7 @@
 
         <!-- Floating Interactive Popover Tooltip Card -->
         <div 
-            class="fixed transition-all duration-200 pointer-events-auto z-[102] w-[88vw] max-w-[320px] sm:max-w-[420px]"
+            class="fixed transition-all duration-200 pointer-events-auto z-[99995] w-[88vw] max-w-[320px] sm:max-w-[420px]"
             :style="`top: ${popover.top}px; left: ${popover.left}px;`"
         >
             <div class="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-sky-200/90 text-slate-800 space-y-2.5 sm:space-y-3.5 relative overflow-hidden">
@@ -158,7 +176,7 @@
     <!-- 2. EMAIL VERIFICATION & ACTIVE CHECK MODAL (MUNCUL SEBELUM TUTORIAL) -->
     <div 
         x-show="showEmailModal" 
-        class="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-sm"
+        class="fixed inset-0 z-[100000] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-sm"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-95"
         x-transition:enter-end="opacity-100 scale-100"
@@ -424,19 +442,20 @@
 
                 // 2. Jika is_login di database masih bernilai 0 (login perdana/belum selesai onboarding)
                 if (this.isLoginZero) {
-                    if (config.isDashboard) {
-                        // Buka MODAL EMAIL TERLEBIH DAHULU sebelum tour berjalan
-                        setTimeout(() => {
-                            this.showEmailModal = true;
-                        }, 400);
-                    }
+                    this.$nextTick(() => {
+                        this.showEmailModal = true;
+                    });
+                    setTimeout(() => {
+                        this.showEmailModal = true;
+                    }, 300);
                 }
             },
 
             confirmEmailAndStartTour() {
                 this.showEmailModal = false;
-                // Lanjutkan langsung ke tutorial spotlight 5 langkah
-                this.startTour();
+                this.$nextTick(() => {
+                    this.startTour();
+                });
             },
 
             async saveEmailAndStartTour() {
@@ -473,8 +492,9 @@
                     if (response.ok && data.success) {
                         this.customerEmail = data.email || emailToSave;
                         this.showEmailModal = false;
-                        // Lanjutkan langsung ke tutorial spotlight 5 langkah
-                        this.startTour();
+                        this.$nextTick(() => {
+                            this.startTour();
+                        });
                     } else {
                         this.emailError = data.message || 'Terjadi kesalahan saat menyimpan email.';
                     }
@@ -487,8 +507,9 @@
 
             skipEmailAndStartTour() {
                 this.showEmailModal = false;
-                // Lanjutkan langsung ke tutorial spotlight 5 langkah
-                this.startTour();
+                this.$nextTick(() => {
+                    this.startTour();
+                });
             },
 
             adaptStepsForCurrentPage() {
