@@ -228,28 +228,55 @@
                 <form id="loginForm" action="{{ route('portal.login.submit') }}" method="POST" class="space-y-3 w-full">
                     @csrf
 
-                    <!-- Input: Nomor Internet / WhatsApp -->
-                    <div>
-                        <label for="login" class="block text-[11px] font-heading font-semibold text-slate-600 mb-1 pl-1">
-                            Nomor Internet / WhatsApp
-                        </label>
-                        
-                        <div class="relative input-glow rounded-xl sm:rounded-2xl transition-all">
-                            <input 
-                                type="text" 
-                                id="login" 
-                                name="login" 
-                                value="{{ old('login', old('phone')) }}" 
-                                required 
-                                autofocus 
-                                class="w-full pl-3.5 pr-10 py-2.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-xs"
-                                placeholder="Contoh: 123456 atau 081234567890"
-                                autocomplete="username"
+                    <!-- 2 Pilihan Tombol: No. Internet vs No. Telepon -->
+                    <div class="space-y-2">
+                        <div class="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-slate-100/90 border border-slate-200/80">
+                            <button 
+                                type="button" 
+                                id="tabNoInternet"
+                                onclick="switchLoginMode('internet')"
+                                class="py-2 px-3 rounded-xl text-xs font-heading font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer bg-white text-sky-700 shadow-sm border border-slate-200/60"
                             >
-                            <!-- Right Icon -->
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-sky-500">
-                                <iconify-icon icon="solar:letter-bold" width="18"></iconify-icon>
+                                <iconify-icon icon="solar:hashtag-bold" class="text-sm text-sky-500"></iconify-icon>
+                                <span>No. Internet</span>
+                            </button>
+                            <button 
+                                type="button" 
+                                id="tabNoPhone"
+                                onclick="switchLoginMode('phone')"
+                                class="py-2 px-3 rounded-xl text-xs font-heading font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
+                            >
+                                <iconify-icon icon="solar:phone-calling-bold" class="text-sm text-slate-400"></iconify-icon>
+                                <span>No. Telepon</span>
+                            </button>
+                        </div>
+
+                        <!-- Dynamic Input Field -->
+                        <div>
+                            <label id="inputLabel" for="loginInput" class="block text-[11px] font-heading font-semibold text-slate-600 mb-1 pl-1">
+                                Nomor Internet (ID Pelanggan)
+                            </label>
+                            
+                            <div class="relative input-glow rounded-xl sm:rounded-2xl transition-all">
+                                <input 
+                                    type="text" 
+                                    id="loginInput" 
+                                    name="login" 
+                                    value="{{ old('login', old('phone')) }}" 
+                                    required 
+                                    autofocus 
+                                    class="w-full pl-3.5 pr-10 py-2.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-white focus:border-sky-400 transition-all font-sans shadow-xs"
+                                    placeholder="Contoh: 123456 / 1020000001"
+                                    autocomplete="username"
+                                >
+                                <!-- Right Icon -->
+                                <div id="inputIcon" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-sky-500">
+                                    <iconify-icon icon="solar:hashtag-bold" width="18"></iconify-icon>
+                                </div>
                             </div>
+                            <p id="inputHelper" class="text-[10px] text-slate-400 mt-1 pl-1 font-sans">
+                                Masukkan 6-12 digit ID Pelanggan yang tertera pada invoice Anda.
+                            </p>
                         </div>
                     </div>
 
@@ -316,9 +343,73 @@
 
     </div>
 
-    <!-- Script Handling Loading State -->
+    <!-- Script Handling Login Mode Switch & Loading State -->
     <script>
+        function switchLoginMode(mode) {
+            const tabInternet = document.getElementById('tabNoInternet');
+            const tabPhone = document.getElementById('tabNoPhone');
+            const inputLabel = document.getElementById('inputLabel');
+            const loginInput = document.getElementById('loginInput');
+            const inputIcon = document.getElementById('inputIcon');
+            const inputHelper = document.getElementById('inputHelper');
+
+            if (!tabInternet || !tabPhone || !loginInput) return;
+
+            const activeClass = ['bg-white', 'text-sky-700', 'shadow-sm', 'border', 'border-slate-200/60', 'font-extrabold'];
+            const inactiveClass = ['text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-200/50', 'font-bold'];
+
+            if (mode === 'phone') {
+                // Switch styling
+                tabPhone.classList.remove(...inactiveClass);
+                tabPhone.classList.add(...activeClass);
+                const phoneIcon = tabPhone.querySelector('iconify-icon');
+                if (phoneIcon) phoneIcon.className = 'text-sm text-emerald-500';
+
+                tabInternet.classList.remove(...activeClass);
+                tabInternet.classList.add(...inactiveClass);
+                const internetIcon = tabInternet.querySelector('iconify-icon');
+                if (internetIcon) internetIcon.className = 'text-sm text-slate-400';
+
+                // Switch fields
+                if (inputLabel) inputLabel.textContent = 'Nomor Telepon / WhatsApp';
+                loginInput.placeholder = 'Contoh: 081234567890';
+                loginInput.name = 'phone';
+                loginInput.type = 'tel';
+                if (inputIcon) inputIcon.innerHTML = '<iconify-icon icon="solar:phone-calling-bold" width="18" class="text-emerald-500"></iconify-icon>';
+                if (inputHelper) inputHelper.textContent = 'Masukkan nomor HP/WhatsApp yang terdaftar saat registrasi pemasangan.';
+            } else {
+                // Switch styling
+                tabInternet.classList.remove(...inactiveClass);
+                tabInternet.classList.add(...activeClass);
+                const internetIcon = tabInternet.querySelector('iconify-icon');
+                if (internetIcon) internetIcon.className = 'text-sm text-sky-500';
+
+                tabPhone.classList.remove(...activeClass);
+                tabPhone.classList.add(...inactiveClass);
+                const phoneIcon = tabPhone.querySelector('iconify-icon');
+                if (phoneIcon) phoneIcon.className = 'text-sm text-slate-400';
+
+                // Switch fields
+                if (inputLabel) inputLabel.textContent = 'Nomor Internet (ID Pelanggan)';
+                loginInput.placeholder = 'Contoh: 123456 / 1020000001';
+                loginInput.name = 'login';
+                loginInput.type = 'text';
+                if (inputIcon) inputIcon.innerHTML = '<iconify-icon icon="solar:hashtag-bold" width="18" class="text-sky-500"></iconify-icon>';
+                if (inputHelper) inputHelper.textContent = 'Masukkan 6-12 digit ID Pelanggan yang tertera pada invoice Anda.';
+            }
+
+            loginInput.focus();
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            const loginInput = document.getElementById('loginInput');
+            if (loginInput && loginInput.value) {
+                const val = loginInput.value.trim();
+                if (val.startsWith('08') || val.startsWith('62') || val.startsWith('+62')) {
+                    switchLoginMode('phone');
+                }
+            }
+
             const loginForm = document.getElementById('loginForm');
             const btnSubmit = document.getElementById('btnSubmit');
             const btnText = document.getElementById('btnText');
