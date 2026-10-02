@@ -3,28 +3,17 @@
     $customerId = $customer?->customer_id ?? 'default';
     $customerEmail = $customer?->email ?? '';
     $customerName = $customer?->name ?? 'Pelanggan';
-    $isFirstLogin = session('is_first_login', false);
     
-    // Segera hapus is_first_login dari session setelah dibaca agar navigasi berikutnya tidak mengulang tour
-    if ($isFirstLogin) {
-        session()->forget('is_first_login');
-        session(['is_first_login' => false]);
-    }
-
+    // Status is_login mutlak dari database (jika 0 berarti wajib onboarding)
+    $isLoginDbZero = (int)($customer?->is_login ?? 0) === 0;
+    
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
     $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->is('portal') || request()->is('portal/dashboard'));
     
-    // Tentukan apakah tour harus diizinkan aktif di halaman saat ini
-    $shouldActive = false;
     $initialStepIdx = 0;
-
     if ($requestedStep !== null && is_numeric($requestedStep)) {
         $initialStepIdx = max(0, min(4, ((int)$requestedStep) - 1));
-        $shouldActive = true;
-    } elseif ($isDashboardPage) {
-        $initialStepIdx = 0;
-        $shouldActive = true;
     }
 @endphp
 
@@ -37,8 +26,9 @@
         customerId: '{{ $customerId }}',
         customerEmail: '{{ addslashes($customerEmail) }}',
         customerName: '{{ addslashes($customerName) }}',
-        isFirstLogin: {{ $isFirstLogin ? 'true' : 'false' }},
-        shouldActive: {{ $shouldActive ? 'true' : 'false' }},
+        isLoginZero: {{ $isLoginDbZero ? 'true' : 'false' }},
+        isDashboard: {{ $isDashboardPage ? 'true' : 'false' }},
+        hasExplicitStep: {{ $requestedStep !== null ? 'true' : 'false' }},
         initialStep: {{ $initialStepIdx }},
         routes: {
             dashboard: '{{ url('/portal') }}',
@@ -72,102 +62,103 @@
             class="fixed transition-all duration-200 pointer-events-auto z-[102] w-[88vw] max-w-[320px] sm:max-w-[420px]"
             :style="`top: ${popover.top}px; left: ${popover.left}px;`"
         >
-        <div class="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-sky-200/90 text-slate-800 space-y-2.5 sm:space-y-3.5 relative overflow-hidden">
-            
-            <!-- Top Gradient Accent Bar & Progress Tracker -->
-            <div class="absolute top-0 inset-x-0 h-1 sm:h-1.5 bg-slate-100 overflow-hidden">
-                <div 
-                    class="h-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 transition-all duration-300"
-                    :style="`width: ${((currentStep + 1) / steps.length) * 100}%`"
-                ></div>
-            </div>
-
-            <!-- Header: Step Badge & Skip Button -->
-            <div class="flex items-center justify-between pt-0.5">
-                <div class="flex items-center gap-1.5 sm:gap-2">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-700 font-heading font-extrabold text-[10px] sm:text-xs">
-                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
-                        <span x-text="`Langkah ${currentStep + 1} dari ${steps.length}`"></span>
-                    </span>
-                    <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-medium" x-text="steps[currentStep]?.pageLabel"></span>
-                </div>
-
-                <button 
-                    type="button" 
-                    @click="skipTour()"
-                    class="text-slate-400 hover:text-slate-600 font-heading text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 cursor-pointer"
-                    title="Lewati panduan interaktif"
-                >
-                    <span>Lewati</span>
-                    <iconify-icon icon="solar:close-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
-                </button>
-            </div>
-
-            <!-- Content Body: Icon, Title & Description -->
-            <div class="space-y-1.5 sm:space-y-2">
-                <div class="flex items-center gap-2 sm:gap-3">
-                    <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs sm:shadow-md shadow-sky-500/25">
-                        <iconify-icon :icon="steps[currentStep]?.icon || 'solar:star-bold'" class="text-sm sm:text-xl"></iconify-icon>
-                    </div>
-                    <div>
-                        <h3 class="text-xs sm:text-base font-heading font-extrabold text-slate-900 tracking-tight leading-tight" x-text="steps[currentStep]?.title"></h3>
-                        <p class="text-[9px] sm:text-[11px] font-mono font-medium text-sky-600 leading-tight" x-text="steps[currentStep]?.subtitle"></p>
-                    </div>
-                </div>
-
-                <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed" x-text="steps[currentStep]?.description"></p>
-            </div>
-
-            <!-- Footer: Progress Dots & Action Buttons -->
-            <div class="pt-2 sm:pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-sky-200/90 text-slate-800 space-y-2.5 sm:space-y-3.5 relative overflow-hidden">
                 
-                <!-- 5 Clickable Progress Dots -->
-                <div class="flex items-center gap-1 sm:gap-1.5">
-                    <template x-for="(step, idx) in steps" :key="idx">
+                <!-- Top Gradient Accent Bar & Progress Tracker -->
+                <div class="absolute top-0 inset-x-0 h-1 sm:h-1.5 bg-slate-100 overflow-hidden">
+                    <div 
+                        class="h-full bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 transition-all duration-300"
+                        :style="`width: ${((currentStep + 1) / steps.length) * 100}%`"
+                    ></div>
+                </div>
+
+                <!-- Header: Step Badge & Skip Button -->
+                <div class="flex items-center justify-between pt-0.5">
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-700 font-heading font-extrabold text-[10px] sm:text-xs">
+                            <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
+                            <span x-text="`Langkah ${currentStep + 1} dari ${steps.length}`"></span>
+                        </span>
+                        <span class="text-[9px] sm:text-[10px] font-mono text-slate-400 font-medium" x-text="steps[currentStep]?.pageLabel"></span>
+                    </div>
+
+                    <button 
+                        type="button" 
+                        @click="skipTour()"
+                        class="text-slate-400 hover:text-slate-600 font-heading text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-lg hover:bg-slate-100 transition-colors flex items-center gap-1 cursor-pointer"
+                        title="Lewati panduan interaktif"
+                    >
+                        <span>Lewati</span>
+                        <iconify-icon icon="solar:close-circle-bold" class="text-xs sm:text-sm"></iconify-icon>
+                    </button>
+                </div>
+
+                <!-- Content Body: Icon, Title & Description -->
+                <div class="space-y-1.5 sm:space-y-2">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs sm:shadow-md shadow-sky-500/25">
+                            <iconify-icon :icon="steps[currentStep]?.icon || 'solar:star-bold'" class="text-sm sm:text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-xs sm:text-base font-heading font-extrabold text-slate-900 tracking-tight leading-tight" x-text="steps[currentStep]?.title"></h3>
+                            <p class="text-[9px] sm:text-[11px] font-mono font-medium text-sky-600 leading-tight" x-text="steps[currentStep]?.subtitle"></p>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed" x-text="steps[currentStep]?.description"></p>
+                </div>
+
+                <!-- Footer: Progress Dots & Action Buttons -->
+                <div class="pt-2 sm:pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                    
+                    <!-- 5 Clickable Progress Dots -->
+                    <div class="flex items-center gap-1 sm:gap-1.5">
+                        <template x-for="(step, idx) in steps" :key="idx">
+                            <button 
+                                type="button" 
+                                @click="goToStep(idx)"
+                                class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                                :class="currentStep === idx ? 'w-4 sm:w-5 bg-sky-600' : 'w-1.5 bg-slate-200 hover:bg-slate-300'"
+                                :title="`Buka langkah ${idx + 1}: ${step.title}`"
+                            ></button>
+                        </template>
+                    </div>
+
+                    <!-- Next / Prev Controls -->
+                    <div class="flex items-center gap-1.5 sm:gap-2">
                         <button 
                             type="button" 
-                            @click="goToStep(idx)"
-                            class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
-                            :class="currentStep === idx ? 'w-4 sm:w-5 bg-sky-600' : 'w-1.5 bg-slate-200 hover:bg-slate-300'"
-                            :title="`Buka langkah ${idx + 1}: ${step.title}`"
-                        ></button>
-                    </template>
-                </div>
+                            @click="prevStep()"
+                            x-show="currentStep > 0"
+                            class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-[10px] sm:text-xs transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1"
+                        >
+                            <iconify-icon icon="solar:arrow-left-linear" class="text-xs sm:text-sm"></iconify-icon>
+                            <span>Kembali</span>
+                        </button>
 
-                <!-- Next / Prev Controls -->
-                <div class="flex items-center gap-1.5 sm:gap-2">
-                    <button 
-                        type="button"
-                        @click="prevStep()"
-                        x-show="currentStep > 0"
-                        class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-bold text-[10px] sm:text-xs transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1"
-                    >
-                        <iconify-icon icon="solar:arrow-left-linear" class="text-xs sm:text-sm"></iconify-icon>
-                        <span>Kembali</span>
-                    </button>
+                        <button 
+                            type="button" 
+                            @click="nextStep()"
+                            class="px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl font-heading font-extrabold text-[10px] sm:text-xs shadow-sm sm:shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1"
+                            :class="currentStep === steps.length - 1 
+                                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-emerald-600/20' 
+                                : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white shadow-sky-600/20'"
+                        >
+                            <span x-text="getNextButtonText()"></span>
+                            <iconify-icon :icon="currentStep === steps.length - 1 ? 'solar:check-circle-bold' : 'solar:arrow-right-linear'" class="text-xs sm:text-sm"></iconify-icon>
+                        </button>
+                    </div>
 
-                    <button 
-                        type="button"
-                        @click="nextStep()"
-                        class="px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl font-heading font-extrabold text-[10px] sm:text-xs shadow-sm sm:shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1"
-                        :class="currentStep === steps.length - 1 
-                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-emerald-600/20' 
-                            : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white shadow-sky-600/20'"
-                    >
-                        <span x-text="getNextButtonText()"></span>
-                        <iconify-icon :icon="currentStep === steps.length - 1 ? 'solar:check-circle-bold' : 'solar:arrow-right-linear'" class="text-xs sm:text-sm"></iconify-icon>
-                    </button>
                 </div>
 
             </div>
-
         </div>
     </div>
 
-    <!-- 2. EMAIL VERIFICATION & ACTIVE CHECK MODAL -->
+    <!-- 2. EMAIL VERIFICATION & ACTIVE CHECK MODAL (MUNCUL SEBELUM TUTORIAL) -->
     <div 
         x-show="showEmailModal" 
-        class="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/70 backdrop-blur-sm"
+        class="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-sm"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-95"
         x-transition:enter-end="opacity-100 scale-100"
@@ -178,7 +169,6 @@
     >
         <div 
             class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-sky-100 overflow-hidden text-slate-800 p-6 sm:p-8"
-            @click.away="!isSavingEmail"
         >
             <!-- Decorative Background Accent -->
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-sky-400/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -252,11 +242,11 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
                         <button 
                             type="button" 
-                            @click="confirmEmailActive()"
+                            @click="confirmEmailAndStartTour()"
                             class="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
                             <iconify-icon icon="solar:check-circle-bold" class="text-base"></iconify-icon>
-                            <span>Ya, Email Saya Aktif</span>
+                            <span>Ya, Email Aktif & Lanjut Panduan</span>
                         </button>
 
                         <button 
@@ -290,7 +280,7 @@
                             <input 
                                 type="email" 
                                 x-model="inputEmail"
-                                @keydown.enter="saveNewEmail()"
+                                @keydown.enter="saveEmailAndStartTour()"
                                 placeholder="contoh: nama.anda@gmail.com"
                                 class="w-full pl-10 pr-4 py-3 rounded-xl border text-xs sm:text-sm font-sans transition-all focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 placeholder:text-slate-400"
                                 :class="emailError ? 'border-rose-400 bg-rose-50/30' : 'border-slate-200 bg-white'"
@@ -308,13 +298,13 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
                         <button 
                             type="button" 
-                            @click="saveNewEmail()"
+                            @click="saveEmailAndStartTour()"
                             :disabled="isSavingEmail"
                             class="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 disabled:opacity-50 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md shadow-sky-600/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
                             <iconify-icon x-show="!isSavingEmail" icon="solar:diskette-bold" class="text-base"></iconify-icon>
                             <iconify-icon x-show="isSavingEmail" icon="line-md:loading-loop" class="text-base animate-spin"></iconify-icon>
-                            <span x-text="isSavingEmail ? 'Menyimpan...' : 'Simpan & Aktifkan Email'"></span>
+                            <span x-text="isSavingEmail ? 'Menyimpan...' : 'Simpan Email & Lanjut Panduan'"></span>
                         </button>
 
                         <button 
@@ -333,10 +323,10 @@
             <div class="mt-4 pt-3 border-t border-slate-100 text-center">
                 <button 
                     type="button" 
-                    @click="skipEmailVerification()"
+                    @click="skipEmailAndStartTour()"
                     class="text-[11px] text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 transition-colors cursor-pointer"
                 >
-                    Lewati (Atur nanti di menu Profil)
+                    Lewati ke Panduan Portal
                 </button>
             </div>
         </div>
@@ -348,6 +338,7 @@
         Alpine.data('portalOnboardingTour', (config) => ({
             isOpen: false,
             showEmailModal: false,
+            isLoginZero: config.isLoginZero,
             customerEmail: (config.customerEmail || '').trim(),
             customerName: config.customerName || 'Pelanggan',
             inputEmail: (config.customerEmail || '').trim(),
@@ -414,66 +405,95 @@
             ],
 
             customerId: config.customerId || 'default',
-            storageKey: 'mymsn_tour_done_' + (config.customerId || 'default'),
-            emailPromptKey: 'mymsn_email_prompt_dismissed_' + (config.customerId || 'default'),
 
             initTour() {
                 this.adaptStepsForCurrentPage();
 
-                // Expose global methods untuk memicu tour atau modal pengecekan email kapan saja
+                // Expose global helper jika ingin dipanggil manual
                 window.startPortalTour = () => {
-                    try {
-                        localStorage.removeItem(this.storageKey);
-                        sessionStorage.removeItem(this.storageKey);
-                    } catch (e) {}
-                    window.location.href = `${this.routes.dashboard}?tour_step=1`;
-                };
-
-                window.openEmailCheckModal = () => {
-                    this.isOpen = false;
-                    this.isEditingEmail = !(this.customerEmail && this.customerEmail.trim().length > 0);
-                    this.inputEmail = this.customerEmail || '';
-                    this.emailError = '';
                     this.showEmailModal = true;
                 };
 
-                // Jika server mendeteksi login perdana (is_login = 0 di database), reset storage key agar tour langsung aktif
-                if (config.isFirstLogin) {
-                    try {
-                        localStorage.removeItem(this.storageKey);
-                        sessionStorage.removeItem(this.storageKey);
-                    } catch (e) {}
+                const hasExplicitStep = config.hasExplicitStep;
+
+                // 1. Jika sedang dalam navigasi langkah tour antar halaman (ada query ?tour_step=...)
+                if (hasExplicitStep) {
+                    this.startTour();
+                    return;
                 }
 
-                let isDone = false;
-                try {
-                    isDone = localStorage.getItem(this.storageKey) === 'true' || sessionStorage.getItem(this.storageKey) === 'true';
-                } catch (e) {}
-
-                const hasExplicitStep = new URLSearchParams(window.location.search).has('tour_step');
-
-                // 1. Jalankan Onboarding Tour jika login perdana atau jika diminta via URL tour_step
-                if (config.shouldActive && (!isDone || hasExplicitStep || config.isFirstLogin)) {
-                    this.startTour();
-                } else if (this.getCurrentPageName() === 'dashboard') {
-                    // 2. Jika di Dashboard dan email belum terdaftar (atau belum pernah dikonfirmasi di sesi ini), tampilkan modal email
-                    let emailDismissed = false;
-                    try {
-                        emailDismissed = sessionStorage.getItem(this.emailPromptKey) === 'true';
-                    } catch (e) {}
-
-                    if ((!this.customerEmail || this.customerEmail.trim() === '') && !emailDismissed) {
+                // 2. Jika is_login di database masih bernilai 0 (login perdana/belum selesai onboarding)
+                if (this.isLoginZero) {
+                    if (config.isDashboard) {
+                        // Buka MODAL EMAIL TERLEBIH DAHULU sebelum tour berjalan
                         setTimeout(() => {
                             this.showEmailModal = true;
-                        }, 600);
+                        }, 400);
                     }
                 }
+            },
+
+            confirmEmailAndStartTour() {
+                this.showEmailModal = false;
+                // Lanjutkan langsung ke tutorial spotlight 5 langkah
+                this.startTour();
+            },
+
+            async saveEmailAndStartTour() {
+                const emailToSave = (this.inputEmail || '').trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailToSave) {
+                    this.emailError = 'Mohon masukkan alamat email Anda.';
+                    return;
+                }
+
+                if (!emailRegex.test(emailToSave)) {
+                    this.emailError = 'Format email tidak valid (contoh: nama@gmail.com).';
+                    return;
+                }
+
+                this.isSavingEmail = true;
+                this.emailError = '';
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    const response = await fetch(this.routes.updateEmail, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken || '',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ email: emailToSave })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        this.customerEmail = data.email || emailToSave;
+                        this.showEmailModal = false;
+                        // Lanjutkan langsung ke tutorial spotlight 5 langkah
+                        this.startTour();
+                    } else {
+                        this.emailError = data.message || 'Terjadi kesalahan saat menyimpan email.';
+                    }
+                } catch (err) {
+                    this.emailError = 'Koneksi gagal saat menyimpan email. Silakan coba lagi.';
+                } finally {
+                    this.isSavingEmail = false;
+                }
+            },
+
+            skipEmailAndStartTour() {
+                this.showEmailModal = false;
+                // Lanjutkan langsung ke tutorial spotlight 5 langkah
+                this.startTour();
             },
 
             adaptStepsForCurrentPage() {
                 const currentPage = this.getCurrentPageName();
                 if (currentPage === 'billing') {
-                    // Pastikan langkah 4 dan 5 menargetkan area atas kartu invoice agar tampil optimal di semua layar
                     this.steps[3] = {
                         page: 'billing',
                         pageLabel: 'Tagihan',
@@ -519,7 +539,6 @@
                 const absoluteTop = rect.top + window.pageYOffset;
                 const isMobile = window.innerWidth < 640;
                 
-                // Beri ruang yang nyaman di atas elemen agar tidak terpotong navbar
                 const headerOffset = isMobile ? 72 : 90;
                 const targetScrollY = Math.max(0, Math.round(absoluteTop - headerOffset));
 
@@ -528,7 +547,6 @@
                     behavior: 'smooth'
                 });
 
-                // Perbarui posisi spotlight dan popover secara dinamis selama scrolling berjalan
                 let frame = 0;
                 const tracker = setInterval(() => {
                     this.calculatePosition(el);
@@ -566,7 +584,6 @@
                     this.showStep(stepIdx);
                 } else {
                     this.unlockScroll();
-                    // Navigasi antar halaman
                     const targetUrl = this.routes[targetStep.page] || this.routes.dashboard;
                     window.location.href = `${targetUrl}?tour_step=${stepIdx + 1}`;
                 }
@@ -609,7 +626,6 @@
                 const step = this.steps[stepIdx];
                 if (!step) return;
 
-                // Khusus halaman tagihan: aktifkan tab yang sesuai jika mode belum lunas
                 if (step.page === 'billing') {
                     const isPaid = document.querySelector('#tour-step-billing-status') !== null;
                     if (!isPaid) {
@@ -660,32 +676,25 @@
                 let popLeft = this.spotlight.left + (this.spotlight.width / 2) - (popoverWidth / 2);
                 let popTop = this.spotlight.top + this.spotlight.height + margin;
 
-                // Cek jika desktop memiliki ruang lega di samping kanan (misal target ada di kolom kiri seperti rincian tagihan)
                 if (window.innerWidth >= 1024 && spaceRight >= popoverWidth + margin && this.spotlight.top < (popoverHeight + topSafeMargin)) {
                     popLeft = this.spotlight.left + this.spotlight.width + margin;
                     popTop = Math.max(topSafeMargin, this.spotlight.top);
                 } else if (spaceBelow >= popoverHeight + bottomSafeMargin) {
-                    // Cukup ruang di bawah spotlight
                     popTop = this.spotlight.top + this.spotlight.height + margin;
                 } else if (spaceAbove >= popoverHeight) {
-                    // Cukup ruang di atas spotlight di bawah header navbar
                     popTop = this.spotlight.top - popoverHeight - margin;
                 } else if (window.innerWidth >= 768 && spaceRight >= popoverWidth + margin) {
-                    // Letakkan di samping kanan
                     popLeft = this.spotlight.left + this.spotlight.width + margin;
                     popTop = Math.max(topSafeMargin, this.spotlight.top);
                 } else if (window.innerWidth >= 768 && spaceLeft >= popoverWidth + margin) {
-                    // Letakkan di samping kiri
                     popLeft = this.spotlight.left - popoverWidth - margin;
                     popTop = Math.max(topSafeMargin, this.spotlight.top);
                 } else {
-                    // Fallback di bawah atau di atas
                     popTop = (spaceBelow > spaceAbove) 
                         ? this.spotlight.top + this.spotlight.height + margin 
                         : this.spotlight.top - popoverHeight - margin;
                 }
 
-                // Jaminan mutlak: popTop tidak boleh terpotong header dan tidak boleh melampaui batas bawah
                 popTop = Math.max(topSafeMargin, Math.min(popTop, window.innerHeight - popoverHeight - bottomSafeMargin));
                 popLeft = Math.max(margin, Math.min(popLeft, window.innerWidth - popoverWidth - margin));
 
@@ -726,89 +735,18 @@
                 this.unlockScroll();
                 this.isOpen = false;
                 
-                // Buka Modal Pengecekan & Verifikasi Email Pelanggan
-                this.showEmailModal = true;
+                // Onboarding selesai tuntas, tandai is_login = 1 di database
+                this.markCompletedOnServer();
+
+                this.showCompletionAlert('Selamat Datang!', 'Panduan selesai. Selamat menggunakan portal layanan MyMSN!');
             },
 
             skipTour() {
                 this.unlockScroll();
                 this.isOpen = false;
-                try {
-                    localStorage.setItem(this.storageKey, 'true');
-                    sessionStorage.setItem(this.storageKey, 'true');
-                } catch (e) {}
+                
+                // Pelanggan melewati tour, tandai is_login = 1 di database
                 this.markCompletedOnServer();
-            },
-
-            confirmEmailActive() {
-                this.showEmailModal = false;
-                try {
-                    localStorage.setItem(this.storageKey, 'true');
-                    sessionStorage.setItem(this.storageKey, 'true');
-                } catch (e) {}
-                this.markCompletedOnServer();
-
-                this.showCompletionAlert('Email Aktif Terkonfirmasi!', 'Email Anda siap menerima invoice dan notifikasi layanan.');
-            },
-
-            async saveNewEmail() {
-                const emailToSave = (this.inputEmail || '').trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                if (!emailToSave) {
-                    this.emailError = 'Mohon masukkan alamat email Anda.';
-                    return;
-                }
-
-                if (!emailRegex.test(emailToSave)) {
-                    this.emailError = 'Format email tidak valid (contoh: nama@gmail.com).';
-                    return;
-                }
-
-                this.isSavingEmail = true;
-                this.emailError = '';
-
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                    const response = await fetch(this.routes.updateEmail, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken || '',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ email: emailToSave })
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok && data.success) {
-                        this.customerEmail = data.email || emailToSave;
-                        this.showEmailModal = false;
-                        try {
-                            localStorage.setItem(this.storageKey, 'true');
-                            sessionStorage.setItem(this.storageKey, 'true');
-                        } catch (e) {}
-                        this.markCompletedOnServer();
-                        this.showCompletionAlert('Email Berhasil Disimpan!', 'Email notifikasi Anda telah diperbarui dan siap digunakan.');
-                    } else {
-                        this.emailError = data.message || 'Terjadi kesalahan saat menyimpan email.';
-                    }
-                } catch (err) {
-                    this.emailError = 'Koneksi gagal saat menyimpan email. Silakan coba lagi.';
-                } finally {
-                    this.isSavingEmail = false;
-                }
-            },
-
-            skipEmailVerification() {
-                this.showEmailModal = false;
-                try {
-                    localStorage.setItem(this.storageKey, 'true');
-                    sessionStorage.setItem(this.storageKey, 'true');
-                } catch (e) {}
-                this.markCompletedOnServer();
-                this.showCompletionAlert('Panduan Selesai!', 'Selamat menggunakan portal layanan MyMSN.');
             },
 
             showCompletionAlert(title, message) {

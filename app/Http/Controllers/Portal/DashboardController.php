@@ -17,14 +17,6 @@ class DashboardController extends Controller
         $customer = Auth::guard('customer')->user();
         if ($customer) {
             $customer->load(['pelanggan', 'bandwith', 'statusRegistrasi']);
-
-            // Jika is_login di database masih 0, aktifkan sesi first login untuk memicu tutorial lalu tandai logged in
-            if ((int)($customer->is_login ?? 0) === 0) {
-                if (!session()->has('is_first_login')) {
-                    session(['is_first_login' => true]);
-                }
-                $customer->markAsLoggedIn();
-            }
         }
 
         // Ambil tiket, ubah layanan, suspend, & terminasi terbaru dari IMS

@@ -60,10 +60,7 @@ class AuthController extends Controller
             }
 
             if ($customer) {
-                $wasFirstLogin = (int)($customer->is_login ?? 0) === 0;
-
-                // Update status is_login menjadi 1 di database
-                $customer->markAsLoggedIn();
+                $isLoginZero = (int)($customer->is_login ?? 0) === 0;
 
                 // Langsung login tanpa perlu memasukkan PIN/kata sandi (tanpa remember token agar patuh batas sesi 1 jam)
                 Auth::guard('customer')->login($customer, false);
@@ -72,7 +69,7 @@ class AuthController extends Controller
                 // Catat waktu aktivitas awal (untuk timeout 1 jam) dan status login perdana
                 session([
                     'customer_last_activity' => time(),
-                    'is_first_login' => $wasFirstLogin,
+                    'is_first_login' => $isLoginZero,
                 ]);
 
                 return redirect()->intended(route('portal.dashboard'))
