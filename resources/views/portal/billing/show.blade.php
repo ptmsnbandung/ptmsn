@@ -146,7 +146,7 @@
                 <tbody class="divide-y divide-slate-100">
                     <tr>
                         <td class="py-4">
-                            <div class="font-bold text-slate-900 text-sm">{{ $invoice->package_name }}</div>
+                            <div class="font-bold text-slate-900 text-sm">{{ $invoice->package_name }} ({{ $invoice->package_speed }})</div>
                             <div class="text-slate-500 text-[11px] mt-0.5">Koneksi Internet Dedicated Fiber Optic Unlimited Tanpa Batas Kuota (FUP)</div>
                         </td>
                         <td class="py-4 text-center text-slate-700 font-mono">

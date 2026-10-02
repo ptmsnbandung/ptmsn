@@ -132,11 +132,11 @@
                 <div>
                     <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Layanan Berlangganan</span>
                     <h2 class="text-base sm:text-lg font-heading font-extrabold text-slate-900 leading-snug mt-0.5">
-                        {{ $currentInvoice->package_name }}
+                        {{ $customer->package->name ?? ($currentInvoice->package_name ?? 'Broadband Internet') }}
                     </h2>
-                    <div class="flex items-center gap-1.5 text-xs text-sky-600 font-medium mt-0.5">
+                    <div class="flex items-center gap-1.5 text-xs text-sky-600 font-bold font-mono mt-0.5">
                         <iconify-icon icon="solar:bolt-circle-bold" class="text-sm shrink-0"></iconify-icon>
-                        <span>Kecepatan Simetris Fiber Optic Unlimited</span>
+                        <span>{{ $customer->package->speed ?? ($currentInvoice->package_speed ?? '25 Mbps') }}</span>
                     </div>
                 </div>
 

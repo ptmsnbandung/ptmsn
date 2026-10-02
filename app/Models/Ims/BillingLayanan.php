@@ -57,6 +57,14 @@ class BillingLayanan extends Model
         return $this->hasMany(BillingLayananDetail::class, 'kode_billing_layanan', 'kode_billing_layanan');
     }
 
+    /**
+     * Relasi ke master bandwith di IMS
+     */
+    public function bandwith()
+    {
+        return $this->belongsTo(Bandwith::class, 'kode_bandwith', 'kode_bandwith');
+    }
+
     // --- ACCESSOR PORTAL COMPATIBILITY ---
 
     public function getInvoiceNumberAttribute(): string
@@ -191,8 +199,29 @@ class BillingLayanan extends Model
 
     public function getPackageNameAttribute(): string
     {
-        $speed = $this->nominal_bandwith ?: '25';
-        return "Layanan Broadband {$speed} Mbps";
+        if ($this->customer && $this->customer->package) {
+            return $this->customer->package->name;
+        }
+
+        if ($this->bandwith) {
+            return $this->bandwith->nama_bandwith ?: 'Broadband Internet';
+        }
+
+        return 'Broadband Internet';
+    }
+
+    public function getPackageSpeedAttribute(): string
+    {
+        if ($this->customer && $this->customer->package) {
+            return $this->customer->package->speed;
+        }
+
+        if ($this->bandwith) {
+            $speed = $this->bandwith->nominal_bandwith ?: '25';
+            return is_numeric($speed) ? "{$speed} Mbps" : (string) $speed;
+        }
+
+        return '25 Mbps';
     }
 
     public function getSnapTokenAttribute(): ?string
