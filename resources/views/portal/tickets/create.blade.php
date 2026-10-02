@@ -383,10 +383,10 @@
                                     </div>
                                 </div>
                             </div>
-                            @if(isset($customer->package->price))
+                            @if(isset($customer->package->price) && $customer->package->price > 0)
                                 <div class="sm:text-right pl-12 sm:pl-0">
                                     <span class="text-[10px] text-slate-500 block">Tarif Berjalan</span>
-                                    <span class="text-xs font-mono font-bold text-emerald-700">{{ $customer->package->formatted_price }}/bln</span>
+                                    <span class="text-xs font-mono font-bold text-emerald-700">{{ $customer->package->formatted_price ?? ('Rp ' . number_format($customer->package->price, 0, ',', '.')) }}/bln</span>
                                 </div>
                             @endif
                         </div>

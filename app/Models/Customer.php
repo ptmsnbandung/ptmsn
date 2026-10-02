@@ -496,10 +496,13 @@ class Customer extends Authenticatable
     public function getPackageAttribute()
     {
         $speedNominal = $this->bandwith?->nominal_bandwith ?? '25';
+        $price = (float) $this->billing_amount;
         return (object) [
+            'id' => null,
             'name' => 'Broadband ' . ($this->kode_bandwith ?? 'FTTH'),
             'speed' => (is_numeric($speedNominal) ? $speedNominal . ' Mbps' : $speedNominal),
-            'price' => $this->billing_amount,
+            'price' => $price,
+            'formatted_price' => 'Rp ' . number_format($price, 0, ',', '.'),
         ];
     }
 
