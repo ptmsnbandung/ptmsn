@@ -453,18 +453,32 @@ class TicketController extends Controller
                 ]);
             } catch (\Throwable $e) {}
 
-            // Sinkronkan ke database ims_v3 jika ada
+            // Update status_reg di trx_batchjob_register menjadi 23.1 (Req. Terminasi)
+            try {
+                $customer->status_reg = '23.1';
+                $customer->save();
+            } catch (\Throwable $e) {}
+
+            try {
+                \Illuminate\Support\Facades\DB::connection('ims')->table('trx_batchjob_register')
+                    ->where('nomor_internet', $customer->nomor_internet)
+                    ->update(['status_reg' => '23.1']);
+            } catch (\Throwable $e) {}
+
+            try {
+                if (\Illuminate\Support\Facades\Schema::connection('mysql')->hasTable('trx_batchjob_register')) {
+                    \Illuminate\Support\Facades\DB::connection('mysql')->table('trx_batchjob_register')
+                        ->where('nomor_internet', $customer->nomor_internet)
+                        ->update(['status_reg' => '23.1']);
+                }
+            } catch (\Throwable $e) {}
+
             try {
                 \Illuminate\Support\Facades\DB::statement("
-                    INSERT INTO `ims_v3`.`trx_terminasi` 
-                    (`kode_trx_terminasi`, `nomor_internet`, `note_termin`, `date_collect_start`, `collect_perangkat`, `collect_payment`, `status_terminasi`, `date_create`, `date_update`, `user_create`, `user_update`, `hide`)
-                    VALUES (?, ?, ?, ?, '0', '0', '11', NOW(), NOW(), 'Portal Pelanggan', '', '0')
-                ", [
-                    $kodeTerminasi,
-                    $customer->nomor_internet,
-                    $keluhan,
-                    $terminDate
-                ]);
+                    UPDATE `ims_v3`.`trx_batchjob_register` 
+                    SET `status_reg` = '23.1' 
+                    WHERE `nomor_internet` = ?
+                ", [$customer->nomor_internet]);
             } catch (\Throwable $exV3) {}
 
             return redirect()->route('portal.tickets.show', $kodeTerminasi)
