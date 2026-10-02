@@ -481,16 +481,26 @@
                                 @submit="if(isSubmitting) { $event.preventDefault(); return false; } isSubmitting = true;"
                             >
                                 @csrf
-                                <div class="text-xs font-heading font-bold text-slate-800 flex items-center gap-1.5">
-                                    <iconify-icon icon="solar:upload-track-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                                    <span>Konfirmasi Bukti Transfer</span>
+                                <!-- Section Header: Judul Utama Konfirmasi Transfer -->
+                                <div class="pb-2.5 border-b border-slate-100 flex items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 shadow-2xs">
+                                            <iconify-icon icon="solar:upload-track-bold" class="text-base"></iconify-icon>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-xs sm:text-sm font-heading font-extrabold text-slate-900 leading-tight">Konfirmasi Bukti Transfer</h3>
+                                            <p class="text-[10px] sm:text-[11px] text-slate-500">Kirimkan bukti transfer untuk diverifikasi oleh tim billing</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-mono font-bold shrink-0">
+                                        Manual Verifikasi
+                                    </span>
                                 </div>
 
-                                <!-- Dropdown Pilihan Transfer Kemana -->
-                                <div>
-                                    <label class="block text-slate-700 text-xs font-heading font-bold mb-1 flex items-center gap-1">
-                                        <iconify-icon icon="solar:card-send-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                                        <span>Ditransfer ke Rekening Mana? <span class="text-rose-500">*</span></span>
+                                <!-- Subjudul 1: Dropdown Pilihan Transfer Kemana -->
+                                <div class="space-y-1">
+                                    <label class="block text-slate-700 text-xs font-semibold">
+                                        Rekening Bank Tujuan: <span class="text-rose-500 font-bold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select 
@@ -509,9 +519,12 @@
                                     </div>
                                 </div>
 
-                                <!-- File Upload & Live Preview Area -->
-                                <div>
-                                    <label class="block text-slate-600 text-xs font-medium mb-1.5">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
+                                <!-- Subjudul 2: File Upload & Live Preview Area -->
+                                <div class="space-y-1">
+                                    <label class="block text-slate-700 text-xs font-semibold">
+                                        Unggah Foto Resi / Bukti Struk: <span class="text-rose-500 font-bold">*</span>
+                                        <span class="text-[10px] text-slate-400 font-normal ml-1">(JPG, PNG, PDF maks 5MB)</span>
+                                    </label>
                                     
                                     <!-- When NO file selected: Show Dropzone -->
                                     <div x-show="!fileName" class="relative border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-4 text-center bg-slate-50/60 hover:bg-emerald-50/20 transition-all cursor-pointer group">
@@ -1059,11 +1072,10 @@
                 @submit="if(isModalSubmitting) { $event.preventDefault(); return false; } isModalSubmitting = true;"
             >
                 @csrf
-                <!-- Dropdown Pilihan Transfer Kemana -->
-                <div>
-                    <label class="block text-slate-700 text-xs font-heading font-semibold mb-1 flex items-center gap-1">
-                        <iconify-icon icon="solar:card-send-bold" class="text-emerald-600 text-sm"></iconify-icon>
-                        <span>Ditransfer ke Rekening Mana? <span class="text-rose-500">*</span></span>
+                <!-- Subjudul 1: Dropdown Pilihan Transfer Kemana -->
+                <div class="space-y-1">
+                    <label class="block text-slate-700 text-xs font-semibold">
+                        Rekening Bank Tujuan: <span class="text-rose-500 font-bold">*</span>
                     </label>
                     <div class="relative">
                         <select 
@@ -1082,10 +1094,11 @@
                     </div>
                 </div>
 
-                <!-- File Upload & Live Preview Area -->
-                <div>
-                    <label class="block text-slate-700 text-xs font-heading font-semibold mb-1">
-                        Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):
+                <!-- Subjudul 2: File Upload & Live Preview Area -->
+                <div class="space-y-1">
+                    <label class="block text-slate-700 text-xs font-semibold">
+                        Unggah Foto Resi / Bukti Struk: <span class="text-rose-500 font-bold">*</span>
+                        <span class="text-[10px] text-slate-400 font-normal ml-1">(JPG, PNG, PDF maks 5MB)</span>
                     </label>
                     
                     <!-- When NO file selected: Show Dropzone -->
