@@ -414,9 +414,27 @@
 
             customerId: config.customerId || 'default',
             storageKey: 'mymsn_tour_done_' + (config.customerId || 'default'),
+            emailPromptKey: 'mymsn_email_prompt_dismissed_' + (config.customerId || 'default'),
 
             initTour() {
                 this.adaptStepsForCurrentPage();
+
+                // Expose global methods untuk memicu tour atau modal pengecekan email kapan saja
+                window.startPortalTour = () => {
+                    try {
+                        localStorage.removeItem(this.storageKey);
+                        sessionStorage.removeItem(this.storageKey);
+                    } catch (e) {}
+                    window.location.href = `${this.routes.dashboard}?tour_step=1`;
+                };
+
+                window.openEmailCheckModal = () => {
+                    this.isOpen = false;
+                    this.isEditingEmail = !(this.customerEmail && this.customerEmail.trim().length > 0);
+                    this.inputEmail = this.customerEmail || '';
+                    this.emailError = '';
+                    this.showEmailModal = true;
+                };
 
                 // Jika server mendeteksi login perdana (is_login = 0 di database), reset storage key agar tour langsung aktif
                 if (config.isFirstLogin) {
@@ -426,14 +444,6 @@
                     } catch (e) {}
                 }
 
-                window.startPortalTour = () => {
-                    try {
-                        localStorage.removeItem(this.storageKey);
-                        sessionStorage.removeItem(this.storageKey);
-                    } catch (e) {}
-                    window.location.href = `${this.routes.dashboard}?tour_step=1`;
-                };
-
                 let isDone = false;
                 try {
                     isDone = localStorage.getItem(this.storageKey) === 'true' || sessionStorage.getItem(this.storageKey) === 'true';
@@ -441,9 +451,21 @@
 
                 const hasExplicitStep = new URLSearchParams(window.location.search).has('tour_step');
 
-                // Jalankan jika harus aktif dan belum selesai (atau jika login perdana / dipicu manual via URL)
+                // 1. Jalankan Onboarding Tour jika login perdana atau jika diminta via URL tour_step
                 if (config.shouldActive && (!isDone || hasExplicitStep || config.isFirstLogin)) {
                     this.startTour();
+                } else if (this.getCurrentPageName() === 'dashboard') {
+                    // 2. Jika di Dashboard dan email belum terdaftar (atau belum pernah dikonfirmasi di sesi ini), tampilkan modal email
+                    let emailDismissed = false;
+                    try {
+                        emailDismissed = sessionStorage.getItem(this.emailPromptKey) === 'true';
+                    } catch (e) {}
+
+                    if ((!this.customerEmail || this.customerEmail.trim() === '') && !emailDismissed) {
+                        setTimeout(() => {
+                            this.showEmailModal = true;
+                        }, 600);
+                    }
                 }
             },
 

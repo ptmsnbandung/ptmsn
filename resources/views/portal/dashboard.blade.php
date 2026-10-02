@@ -52,7 +52,16 @@
                 </div>
 
                 <!-- Right: Action Buttons -->
-                <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2.5 shrink-0">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0">
+                    <button 
+                        type="button" 
+                        onclick="if(window.startPortalTour){window.startPortalTour();}else{window.location.href='{{ url('/portal?tour_step=1') }}';}"
+                        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-sky-300 font-heading font-bold text-xs shadow-sm transition-all active:scale-95 text-center cursor-pointer"
+                        title="Buka panduan interaktif portal dan cek email"
+                    >
+                        <iconify-icon icon="solar:compass-bold" class="text-sky-400 text-sm sm:text-base shrink-0"></iconify-icon>
+                        <span>Panduan & Email</span>
+                    </button>
                     <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 text-center">
                         <iconify-icon icon="solar:danger-triangle-bold" class="text-amber-300 text-sm sm:text-base shrink-0"></iconify-icon>
                         <span>Lapor Gangguan</span>
@@ -68,6 +77,34 @@
         </div>
 
     </div>
+
+    <!-- Email Verification Alert Banner (Tampil jika email belum terdaftar di sistem) -->
+    @if(empty($customer->email))
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-sky-500/10 to-transparent border border-amber-400/40 backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/25 ring-2 ring-amber-200">
+                    <iconify-icon icon="solar:letter-unread-bold" class="text-xl"></iconify-icon>
+                </div>
+                <div>
+                    <h4 class="text-xs sm:text-sm font-heading font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <span>Email Notifikasi Belum Terdaftar</span>
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                    </h4>
+                    <p class="text-[11px] sm:text-xs text-slate-600">
+                        Pastikan email Anda aktif untuk menerima invoice tagihan bulanan, bukti pembayaran lunas, dan info gangguan.
+                    </p>
+                </div>
+            </div>
+            <button 
+                type="button" 
+                onclick="if(window.openEmailCheckModal){window.openEmailCheckModal();}else{window.location.href='{{ route('portal.profile') }}';}"
+                class="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-heading font-extrabold text-xs shadow-md shadow-sky-600/20 transition-all active:scale-95 text-center cursor-pointer shrink-0 flex items-center justify-center gap-1.5"
+            >
+                <iconify-icon icon="solar:pen-new-square-bold" class="text-sm"></iconify-icon>
+                <span>Daftarkan Email Aktif</span>
+            </button>
+        </div>
+    @endif
 
     <!-- Status 4 KPI Cards Grid (Compact 2x2 on Mobile, 4 Cols on Desktop) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5">
