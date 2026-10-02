@@ -387,19 +387,32 @@ class TicketController extends Controller
                 ]);
             } catch (\Throwable $e) {}
 
-            // Sinkronkan ke database ims_v3 jika ada
+            // Update status_reg di trx_batchjob_register menjadi 21.1 (Req. Suspend)
+            try {
+                $customer->status_reg = '21.1';
+                $customer->save();
+            } catch (\Throwable $e) {}
+
+            try {
+                \Illuminate\Support\Facades\DB::connection('ims')->table('trx_batchjob_register')
+                    ->where('nomor_internet', $customer->nomor_internet)
+                    ->update(['status_reg' => '21.1']);
+            } catch (\Throwable $e) {}
+
+            try {
+                if (\Illuminate\Support\Facades\Schema::connection('mysql')->hasTable('trx_batchjob_register')) {
+                    \Illuminate\Support\Facades\DB::connection('mysql')->table('trx_batchjob_register')
+                        ->where('nomor_internet', $customer->nomor_internet)
+                        ->update(['status_reg' => '21.1']);
+                }
+            } catch (\Throwable $e) {}
+
             try {
                 \Illuminate\Support\Facades\DB::statement("
-                    INSERT INTO `ims_v3`.`trx_suspend` 
-                    (`kode_suspend`, `nomor_internet`, `suspend_start`, `suspend_end`, `status_suspend`, `desc_suspend`, `date_create`, `user_create`, `hide`)
-                    VALUES (?, ?, ?, ?, '11', ?, NOW(), 'Portal Pelanggan', '0')
-                ", [
-                    $kodeSuspend,
-                    $customer->nomor_internet,
-                    $startDate,
-                    $endDate,
-                    $keluhan
-                ]);
+                    UPDATE `ims_v3`.`trx_batchjob_register` 
+                    SET `status_reg` = '21.1' 
+                    WHERE `nomor_internet` = ?
+                ", [$customer->nomor_internet]);
             } catch (\Throwable $exV3) {}
 
             return redirect()->route('portal.tickets.show', $kodeSuspend)
