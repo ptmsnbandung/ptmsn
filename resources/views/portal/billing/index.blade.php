@@ -438,13 +438,46 @@
                                 </div>
                             </div>
 
-                            <!-- Upload Proof Form (Simplified: Bukti & Catatan Saja) -->
+                            <!-- Upload Proof Form (Simplified: Bukti & Catatan Saja with Live Preview) -->
                             <form 
                                 action="{{ route('portal.billing.transfer.confirm', urlencode($currentInvoice->kode_billing_layanan)) }}" 
                                 method="POST" 
                                 enctype="multipart/form-data" 
                                 class="space-y-3 pt-2 border-t border-slate-100"
-                                x-data="{ isSubmitting: false }"
+                                x-data="{ 
+                                    isSubmitting: false,
+                                    filePreviewUrl: null,
+                                    fileName: null,
+                                    fileSize: null,
+                                    isImage: false,
+                                    isPdf: false,
+                                    handleFileSelect(e) {
+                                        const file = e.target.files[0];
+                                        if (!file) {
+                                            this.resetFile();
+                                            return;
+                                        }
+                                        this.fileName = file.name;
+                                        this.fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                                        this.isImage = file.type.startsWith('image/');
+                                        this.isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                                        if (this.isImage) {
+                                            this.filePreviewUrl = URL.createObjectURL(file);
+                                        } else {
+                                            this.filePreviewUrl = null;
+                                        }
+                                    },
+                                    resetFile() {
+                                        this.filePreviewUrl = null;
+                                        this.fileName = null;
+                                        this.fileSize = null;
+                                        this.isImage = false;
+                                        this.isPdf = false;
+                                        if (this.$refs.proofFileInput) {
+                                            this.$refs.proofFileInput.value = '';
+                                        }
+                                    }
+                                }"
                                 @submit="if(isSubmitting) { $event.preventDefault(); return false; } isSubmitting = true;"
                             >
                                 @csrf
@@ -453,24 +486,89 @@
                                     <span>Konfirmasi Bukti Transfer</span>
                                 </div>
 
-                                <!-- File Upload Box -->
+                                <!-- File Upload & Live Preview Area -->
                                 <div>
-                                    <label class="block text-slate-600 text-xs font-medium mb-1">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
-                                    <div class="relative border border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-3 text-center bg-slate-50/60 hover:bg-emerald-50/20 transition-all cursor-pointer">
+                                    <label class="block text-slate-600 text-xs font-medium mb-1.5">Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):</label>
+                                    
+                                    <!-- When NO file selected: Show Dropzone -->
+                                    <div x-show="!fileName" class="relative border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-4 text-center bg-slate-50/60 hover:bg-emerald-50/20 transition-all cursor-pointer group">
                                         <input 
                                             type="file" 
+                                            x-ref="proofFileInput"
                                             name="proof_file" 
                                             accept="image/*,.pdf" 
                                             required 
-                                            @change="filePreview = $event.target.files[0] ? $event.target.files[0].name : null"
-                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            @change="handleFileSelect($event)"
+                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                         >
-                                        <div class="flex flex-col items-center justify-center gap-0.5 pointer-events-none">
-                                            <iconify-icon icon="solar:upload-line-duotone" class="text-2xl text-emerald-600"></iconify-icon>
-                                            <div class="text-xs font-semibold text-slate-700">
-                                                <span x-text="filePreview ? filePreview : 'Pilih Foto / Dokumen Bukti Transfer'"></span>
+                                        <div class="flex flex-col items-center justify-center gap-1 pointer-events-none py-1">
+                                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
+                                                <iconify-icon icon="solar:upload-line-duotone" class="text-2xl"></iconify-icon>
                                             </div>
-                                            <p class="text-[10px] text-slate-400">Klik untuk mengambil foto struk / memilih file</p>
+                                            <div class="text-xs font-heading font-bold text-slate-800 mt-1">
+                                                Pilih Foto / Dokumen Bukti Transfer
+                                            </div>
+                                            <p class="text-[11px] text-slate-400">Klik untuk mengambil foto struk / memilih file</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- When File IS selected: Show Rich Preview Card -->
+                                    <div x-show="fileName" x-cloak class="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-3 space-y-2.5 shadow-2xs">
+                                        <!-- Image Preview if Image -->
+                                        <template x-if="isImage && filePreviewUrl">
+                                            <div class="relative rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200/80 flex items-center justify-center max-h-64 group/img">
+                                                <img :src="filePreviewUrl" alt="Preview Bukti Transfer" class="max-h-60 w-auto object-contain rounded-lg transition-transform duration-200 group-hover/img:scale-[1.02]">
+                                                <div class="absolute top-2 right-2 px-2 py-1 rounded-lg bg-slate-900/70 backdrop-blur-xs text-white text-[10px] font-mono flex items-center gap-1">
+                                                    <iconify-icon icon="solar:eye-bold" class="text-xs text-emerald-400"></iconify-icon>
+                                                    <span>Preview Foto</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- PDF Document Preview Card if PDF -->
+                                        <template x-if="isPdf">
+                                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-rose-200">
+                                                <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                                                    <iconify-icon icon="solar:document-text-bold" class="text-2xl"></iconify-icon>
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <div class="text-xs font-bold text-slate-800 truncate" x-text="fileName"></div>
+                                                    <div class="text-[10px] text-rose-600 font-mono font-semibold">Dokumen PDF (<span x-text="fileSize"></span>)</div>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- File Details & Action Buttons -->
+                                        <div class="flex items-center justify-between gap-2 pt-1 border-t border-emerald-200/60 text-xs">
+                                            <div class="flex items-center gap-1.5 min-w-0">
+                                                <iconify-icon icon="solar:check-circle-bold" class="text-emerald-600 text-sm shrink-0"></iconify-icon>
+                                                <div class="min-w-0">
+                                                    <span class="font-medium text-slate-700 truncate block text-[11px]" x-text="fileName"></span>
+                                                    <span class="text-[10px] text-slate-400 font-mono" x-text="fileSize"></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-center gap-1.5 shrink-0">
+                                                <!-- Change File Button -->
+                                                <label class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-heading font-bold text-[11px] cursor-pointer transition-colors shadow-2xs">
+                                                    <span>Ganti</span>
+                                                    <input 
+                                                        type="file" 
+                                                        accept="image/*,.pdf" 
+                                                        @change="handleFileSelect($event)" 
+                                                        class="sr-only"
+                                                    >
+                                                </label>
+                                                <!-- Remove File Button -->
+                                                <button 
+                                                    type="button" 
+                                                    @click="resetFile()" 
+                                                    class="p-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 cursor-pointer transition-colors"
+                                                    title="Hapus / Batalkan file"
+                                                >
+                                                    <iconify-icon icon="solar:trash-bin-trash-bold" class="text-sm"></iconify-icon>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -895,36 +993,132 @@
                 </div>
             </div>
 
-            <!-- Upload Form -->
+            <!-- Upload Form with Live Preview -->
             <form 
                 :action="`{{ url('/portal/tagihan') }}/${encodeURIComponent(modalInvoiceCode)}/transfer-confirm`" 
                 method="POST" 
                 enctype="multipart/form-data" 
                 class="space-y-2.5 pt-0.5"
-                x-data="{ isModalSubmitting: false }"
+                x-data="{ 
+                    isModalSubmitting: false,
+                    modalFilePreviewUrl: null,
+                    modalFileName: null,
+                    modalFileSize: null,
+                    isModalImage: false,
+                    isModalPdf: false,
+                    handleModalFile(e) {
+                        const file = e.target.files[0];
+                        if (!file) {
+                            this.resetModalFile();
+                            return;
+                        }
+                        this.modalFileName = file.name;
+                        this.modalFileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                        this.isModalImage = file.type.startsWith('image/');
+                        this.isModalPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                        if (this.isModalImage) {
+                            this.modalFilePreviewUrl = URL.createObjectURL(file);
+                        } else {
+                            this.modalFilePreviewUrl = null;
+                        }
+                    },
+                    resetModalFile() {
+                        this.modalFilePreviewUrl = null;
+                        this.modalFileName = null;
+                        this.modalFileSize = null;
+                        this.isModalImage = false;
+                        this.isModalPdf = false;
+                        if (this.$refs.modalProofFileInput) {
+                            this.$refs.modalProofFileInput.value = '';
+                        }
+                    }
+                }"
                 @submit="if(isModalSubmitting) { $event.preventDefault(); return false; } isModalSubmitting = true;"
             >
                 @csrf
-                <!-- File Upload Box with Drag/Drop Look & Reactive File Preview -->
+                <!-- File Upload & Live Preview Area -->
                 <div>
                     <label class="block text-slate-700 text-xs font-heading font-semibold mb-1">
                         Unggah Foto Resi / Bukti Struk (JPG, PNG, PDF max 5MB):
                     </label>
-                    <div class="relative border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-2.5 text-center bg-slate-50/70 hover:bg-emerald-50/20 transition-all cursor-pointer group">
+                    
+                    <!-- When NO file selected: Show Dropzone -->
+                    <div x-show="!modalFileName" class="relative border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-3 text-center bg-slate-50/70 hover:bg-emerald-50/20 transition-all cursor-pointer group">
                         <input 
                             type="file" 
+                            x-ref="modalProofFileInput"
                             name="proof_file" 
                             accept="image/*,.pdf" 
                             required 
-                            @change="modalFilePreview = $event.target.files[0] ? $event.target.files[0].name : null"
+                            @change="handleModalFile($event)"
                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         >
                         <div class="flex flex-col items-center justify-center gap-1 pointer-events-none py-1">
                             <iconify-icon icon="solar:upload-line-duotone" class="text-2xl text-emerald-600 group-hover:scale-110 transition-transform"></iconify-icon>
                             <div class="text-xs font-semibold text-slate-800">
-                                <span x-text="modalFilePreview ? modalFilePreview : 'Klik untuk memilih Foto / Dokumen Resi'"></span>
+                                <span>Klik untuk memilih Foto / Dokumen Resi</span>
                             </div>
                             <p class="text-[10px] text-slate-400">Mendukung JPG, PNG, atau PDF (Maks 5MB)</p>
+                        </div>
+                    </div>
+
+                    <!-- When File IS selected: Show Rich Preview Card -->
+                    <div x-show="modalFileName" x-cloak class="rounded-xl border border-emerald-200 bg-emerald-50/40 p-2.5 space-y-2 shadow-2xs">
+                        <!-- Image Preview if Image -->
+                        <template x-if="isModalImage && modalFilePreviewUrl">
+                            <div class="relative rounded-lg overflow-hidden bg-slate-900/5 border border-slate-200/80 flex items-center justify-center max-h-48 group/img">
+                                <img :src="modalFilePreviewUrl" alt="Preview Bukti Transfer" class="max-h-44 w-auto object-contain rounded transition-transform duration-200 group-hover/img:scale-[1.02]">
+                                <div class="absolute top-1.5 right-1.5 px-2 py-0.5 rounded bg-slate-900/70 backdrop-blur-xs text-white text-[9px] font-mono flex items-center gap-1">
+                                    <iconify-icon icon="solar:eye-bold" class="text-[10px] text-emerald-400"></iconify-icon>
+                                    <span>Preview Foto</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- PDF Document Preview Card if PDF -->
+                        <template x-if="isModalPdf">
+                            <div class="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-rose-200">
+                                <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:document-text-bold" class="text-xl"></iconify-icon>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-xs font-bold text-slate-800 truncate" x-text="modalFileName"></div>
+                                    <div class="text-[9px] text-rose-600 font-mono font-semibold">Dokumen PDF (<span x-text="modalFileSize"></span>)</div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- File Details & Action Buttons -->
+                        <div class="flex items-center justify-between gap-2 pt-1 border-t border-emerald-200/60 text-xs">
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <iconify-icon icon="solar:check-circle-bold" class="text-emerald-600 text-xs shrink-0"></iconify-icon>
+                                <div class="min-w-0">
+                                    <span class="font-medium text-slate-700 truncate block text-[10px]" x-text="modalFileName"></span>
+                                    <span class="text-[9px] text-slate-400 font-mono" x-text="modalFileSize"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-1 shrink-0">
+                                <!-- Change File Button -->
+                                <label class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-heading font-bold text-[10px] cursor-pointer transition-colors shadow-2xs">
+                                    <span>Ganti</span>
+                                    <input 
+                                        type="file" 
+                                        accept="image/*,.pdf" 
+                                        @change="handleModalFile($event)" 
+                                        class="sr-only"
+                                    >
+                                </label>
+                                <!-- Remove File Button -->
+                                <button 
+                                    type="button" 
+                                    @click="resetModalFile()" 
+                                    class="p-0.5 rounded-md bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 cursor-pointer transition-colors"
+                                    title="Hapus file"
+                                >
+                                    <iconify-icon icon="solar:trash-bin-trash-bold" class="text-xs"></iconify-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
