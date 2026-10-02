@@ -1,29 +1,53 @@
 @php
     $customer = auth('customer')->user();
     $customerId = $customer?->customer_id ?? 'default';
+    $nomorInternet = $customer?->nomor_internet;
     $customerEmail = $customer?->email ?? '';
     $customerName = $customer?->name ?? 'Pelanggan';
     
-    // Status is_login mutlak dari database (jika 0, '0', null, atau false berarti wajib onboarding)
-    $isLoginVal = $customer?->is_login;
-    if ($isLoginVal === null) {
+    // Status is_login selalu dibaca real-time langsung dari database (bukan dari cache model/sesi in-memory)
+    $isLoginVal = null;
+    if ($nomorInternet) {
         try {
             $isLoginVal = \Illuminate\Support\Facades\DB::connection('ims')
                 ->table('trx_batchjob_register')
-                ->where('nomor_internet', $customer?->nomor_internet)
+                ->where('nomor_internet', $nomorInternet)
                 ->value('is_login');
         } catch (\Throwable $e) {}
-    }
-    if ($isLoginVal === null) {
-        try {
-            $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
-                ->table('customers')
-                ->where('customer_id', $customer?->customer_id)
-                ->value('is_login');
-        } catch (\Throwable $e) {}
+
+        if ($isLoginVal === null) {
+            try {
+                $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
+                    ->table('trx_batchjob_register')
+                    ->where('nomor_internet', $nomorInternet)
+                    ->value('is_login');
+            } catch (\Throwable $e) {}
+        }
+
+        if ($isLoginVal === null) {
+            try {
+                $isLoginVal = \Illuminate\Support\Facades\DB::table('trx_batchjob_register')
+                    ->where('nomor_internet', $nomorInternet)
+                    ->value('is_login');
+            } catch (\Throwable $e) {}
+        }
+
+        if ($isLoginVal === null) {
+            try {
+                $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
+                    ->table('customers')
+                    ->where('customer_id', $nomorInternet)
+                    ->value('is_login');
+            } catch (\Throwable $e) {}
+        }
     }
 
-    $isLoginDbZero = empty($isLoginVal) || (int)$isLoginVal === 0;
+    if ($isLoginVal === null) {
+        $isLoginVal = $customer?->is_login;
+    }
+
+    // Jika is_login = 0, '0', null, empty, atau false, wajib muncul onboarding
+    $isLoginDbZero = ($isLoginVal === null) || empty($isLoginVal) || (string)$isLoginVal === '0' || (int)$isLoginVal === 0;
     
     $currentRouteName = request()->route()?->getName() ?? '';
     $requestedStep = request()->query('tour_step');
@@ -41,9 +65,9 @@
 <!-- Interactive Product Tour & Email Verification Component -->
 <div 
     x-data="portalOnboardingTour({
-        customerId: '{{ $customerId }}',
-        customerEmail: '{{ addslashes($customerEmail) }}',
-        customerName: '{{ addslashes($customerName) }}',
+        customerId: @json((string)$customerId),
+        customerEmail: @json((string)$customerEmail),
+        customerName: @json((string)$customerName),
         isLoginZero: {{ $isLoginDbZero ? 'true' : 'false' }},
         isDashboard: {{ $isDashboardPage ? 'true' : 'false' }},
         hasExplicitStep: {{ $requestedStep !== null ? 'true' : 'false' }},
@@ -416,6 +440,8 @@
 
             confirmEmailAndStartTour() {
                 this.showEmailModal = false;
+                // Tandai is_login = 1 di database agar tidak berulang
+                this.markCompletedOnServer();
                 this.$nextTick(() => {
                     this.startTour();
                 });
@@ -455,6 +481,8 @@
                     if (response.ok && data.success) {
                         this.customerEmail = data.email || emailToSave;
                         this.showEmailModal = false;
+                        // Tandai is_login = 1 di database
+                        this.markCompletedOnServer();
                         this.$nextTick(() => {
                             this.startTour();
                         });
