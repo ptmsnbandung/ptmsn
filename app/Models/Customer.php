@@ -497,9 +497,13 @@ class Customer extends Authenticatable
     {
         $speedNominal = $this->bandwith?->nominal_bandwith ?? '25';
         $price = (float) $this->billing_amount;
+        $name = $this->bandwith?->nama_bandwith;
+        if (empty($name) || preg_match('/^[a-zA-Z]{1,3}\d+$/i', trim($name))) {
+            $name = 'Broadband Internet';
+        }
         return (object) [
             'id' => null,
-            'name' => 'Broadband ' . ($this->kode_bandwith ?? 'FTTH'),
+            'name' => $name,
             'speed' => (is_numeric($speedNominal) ? $speedNominal . ' Mbps' : $speedNominal),
             'price' => $price,
             'formatted_price' => 'Rp ' . number_format($price, 0, ',', '.'),
