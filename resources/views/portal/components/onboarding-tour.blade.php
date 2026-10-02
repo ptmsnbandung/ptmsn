@@ -62,24 +62,28 @@
 <!-- Preload completion image so it appears instantly without delay -->
 <img src="{{ asset('images/logo/berhasil1.png') }}" alt="" class="hidden" style="display:none;" />
 
+<script>
+    window.__portalOnboardingConfig = {
+        customerId: {!! json_encode((string)$customerId) !!},
+        customerEmail: {!! json_encode((string)$customerEmail) !!},
+        customerName: {!! json_encode((string)$customerName) !!},
+        isLoginZero: {!! $isLoginDbZero ? 'true' : 'false' !!},
+        isDashboard: {!! $isDashboardPage ? 'true' : 'false' !!},
+        hasExplicitStep: {!! $requestedStep !== null ? 'true' : 'false' !!},
+        initialStep: {{ (int)$initialStepIdx }},
+        routes: {
+            dashboard: {!! json_encode(url('/portal')) !!},
+            tickets: {!! json_encode(route('portal.tickets.index')) !!},
+            billing: {!! json_encode(route('portal.billing.index')) !!},
+            complete: {!! json_encode(route('portal.onboarding.complete')) !!},
+            updateEmail: {!! json_encode(route('portal.profile.update-email')) !!}
+        }
+    };
+</script>
+
 <!-- Interactive Product Tour & Email Verification Component -->
 <div 
-    x-data="portalOnboardingTour({
-        customerId: @json((string)$customerId),
-        customerEmail: @json((string)$customerEmail),
-        customerName: @json((string)$customerName),
-        isLoginZero: {{ $isLoginDbZero ? 'true' : 'false' }},
-        isDashboard: {{ $isDashboardPage ? 'true' : 'false' }},
-        hasExplicitStep: {{ $requestedStep !== null ? 'true' : 'false' }},
-        initialStep: {{ $initialStepIdx }},
-        routes: {
-            dashboard: '{{ url('/portal') }}',
-            tickets: '{{ route('portal.tickets.index') }}',
-            billing: '{{ route('portal.billing.index') }}',
-            complete: '{{ route('portal.onboarding.complete') }}',
-            updateEmail: '{{ route('portal.profile.update-email') }}'
-        }
-    })"
+    x-data="portalOnboardingTour(window.__portalOnboardingConfig)"
     x-init="initTour()"
     x-cloak
 >
@@ -339,11 +343,12 @@
 </div>
 
 <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('portalOnboardingTour', (config) => ({
+    function portalOnboardingTour(config) {
+        config = config || window.__portalOnboardingConfig || {};
+        return {
             isOpen: false,
             showEmailModal: false,
-            isLoginZero: config.isLoginZero,
+            isLoginZero: !!config.isLoginZero,
             customerEmail: (config.customerEmail || '').trim(),
             customerName: config.customerName || 'Pelanggan',
             inputEmail: (config.customerEmail || '').trim(),
@@ -353,7 +358,7 @@
             currentStep: config.initialStep || 0,
             spotlight: { top: 0, left: 0, width: 0, height: 0 },
             popover: { top: 0, left: 0 },
-            routes: config.routes,
+            routes: config.routes || {},
             
             // 5 Langkah Terpadu untuk Seluruh Aplikasi Portal
             steps: [
@@ -798,6 +803,14 @@
                     body: JSON.stringify({ is_login: 1 })
                 }).catch(err => console.log('Tour completed signal:', err));
             }
-        }));
+        };
+    }
+
+    window.portalOnboardingTour = portalOnboardingTour;
+
+    document.addEventListener('alpine:init', () => {
+        if (window.Alpine) {
+            Alpine.data('portalOnboardingTour', (config) => portalOnboardingTour(config));
+        }
     });
 </script>
