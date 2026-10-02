@@ -172,12 +172,24 @@ class BillingController extends Controller
         $destBank = trim((string) $request->input('destination_bank', ''));
         $rawNotes = trim((string) $request->input('notes', ''));
 
-        // Update invoice di IMS v3 menjadi metode transfer (payment_type = '2')
+        // Update invoice di IMS v3 menjadi metode transfer (payment_type = '2') & simpan bank tujuan di trx_billing_layanan
         try {
-            $invoice->update([
+            // Pastikan kolom destination_bank ada di tabel trx_billing_layanan IMS jika belum ada
+            if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('trx_billing_layanan') && 
+                !\Illuminate\Support\Facades\Schema::connection('ims')->hasColumn('trx_billing_layanan', 'destination_bank')) {
+                \Illuminate\Support\Facades\DB::connection('ims')->statement("ALTER TABLE trx_billing_layanan ADD COLUMN destination_bank VARCHAR(255) NULL AFTER payment_type;");
+            }
+
+            $updateData = [
                 'payment_type' => '2',
                 'date_update' => \Carbon\Carbon::now(),
-            ]);
+            ];
+
+            if ($destBank) {
+                $updateData['destination_bank'] = $destBank;
+            }
+
+            $invoice->update($updateData);
 
             // Catat log billing di IMS jika tabel ada
             if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('trx_billing_layanan_log')) {
@@ -192,10 +204,10 @@ class BillingController extends Controller
                 ]);
             }
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Gagal update status payment_type invoice IMS: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('Gagal update trx_billing_layanan invoice IMS: ' . $e->getMessage());
         }
 
-        // Simpan atau update data konfirmasi di database lokal ptmsn
+        // Simpan data konfirmasi pembayaran di database lokal ptmsn
         \App\Models\PaymentConfirmation::updateOrCreate(
             [
                 'customer_id' => $customer->customer_id,
@@ -210,72 +222,6 @@ class BillingController extends Controller
                 'verified_at' => null,
             ]
         );
-
-        // Sinkronisasi data konfirmasi ke database ims_v3 agar ims_v2 dapat membaca langsung
-        try {
-            if (\Illuminate\Support\Facades\Schema::connection('ims')->hasTable('payment_confirmations')) {
-                // Pastikan kolom destination_bank ada di tabel payment_confirmations IMS
-                if (!\Illuminate\Support\Facades\Schema::connection('ims')->hasColumn('payment_confirmations', 'destination_bank')) {
-                    \Illuminate\Support\Facades\DB::connection('ims')->statement("ALTER TABLE payment_confirmations ADD COLUMN destination_bank VARCHAR(255) NULL AFTER customer_name;");
-                }
-
-                \Illuminate\Support\Facades\DB::connection('ims')->table('payment_confirmations')->updateOrInsert(
-                    [
-                        'customer_id' => $customer->customer_id,
-                        'kode_billing_layanan' => $invoice->kode_billing_layanan,
-                    ],
-                    [
-                        'customer_name' => $customer->name,
-                        'destination_bank' => $destBank ?: null,
-                        'proof_file' => $fullUrl,
-                        'notes' => $rawNotes ?: null,
-                        'status' => 'pending',
-                        'verified_at' => null,
-                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
-                        'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
-                    ]
-                );
-            } else {
-                // Buat tabel payment_confirmations di ims_v3 jika belum ada
-                \Illuminate\Support\Facades\DB::connection('ims')->statement("
-                    CREATE TABLE IF NOT EXISTS payment_confirmations (
-                        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                        customer_id VARCHAR(255) NOT NULL,
-                        kode_billing_layanan VARCHAR(255) NOT NULL,
-                        customer_name VARCHAR(255) NULL,
-                        destination_bank VARCHAR(255) NULL,
-                        proof_file TEXT NOT NULL,
-                        notes TEXT NULL,
-                        status VARCHAR(50) DEFAULT 'pending',
-                        admin_notes TEXT NULL,
-                        verified_at TIMESTAMP NULL,
-                        created_at TIMESTAMP NULL,
-                        updated_at TIMESTAMP NULL,
-                        INDEX (customer_id),
-                        INDEX (kode_billing_layanan)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-                ");
-
-                \Illuminate\Support\Facades\DB::connection('ims')->table('payment_confirmations')->updateOrInsert(
-                    [
-                        'customer_id' => $customer->customer_id,
-                        'kode_billing_layanan' => $invoice->kode_billing_layanan,
-                    ],
-                    [
-                        'customer_name' => $customer->name,
-                        'destination_bank' => $destBank ?: null,
-                        'proof_file' => $fullUrl,
-                        'notes' => $rawNotes ?: null,
-                        'status' => 'pending',
-                        'verified_at' => null,
-                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
-                        'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
-                    ]
-                );
-            }
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Gagal sinkronisasi payment_confirmations ke IMS: ' . $e->getMessage());
-        }
 
         $billingWa = config('company.billing_whatsapp', '6289696629955');
         $formattedTotal = $invoice->formatted_total ?? ('Rp ' . number_format((float) $invoice->total_layanan, 0, ',', '.'));
