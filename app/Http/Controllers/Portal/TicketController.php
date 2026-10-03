@@ -156,7 +156,48 @@ class TicketController extends Controller
             ->orderBy('price', 'asc')
             ->get();
 
-        return view('portal.tickets.create', compact('customer', 'packages'));
+        // Ambil daftar periode bulan & tahun yang sudah ada invoice / request aktifnya
+        $existingInvoicePeriods = [];
+
+        try {
+            $billings = \App\Models\Ims\BillingLayanan::where('nomor_internet', $customer->nomor_internet)
+                ->where(function ($q) {
+                    $q->whereNull('status_bill_lay')
+                      ->orWhereNotIn('status_bill_lay', ['17']); // 17 = dibatalkan
+                })
+                ->get(['bulan_tagihan', 'tahun_tagihan', 'kode_billing_layanan', 'status_bill_lay']);
+
+            foreach ($billings as $b) {
+                if (!empty($b->tahun_tagihan) && !empty($b->bulan_tagihan)) {
+                    $key = (int) $b->tahun_tagihan . '_' . (int) $b->bulan_tagihan;
+                    $existingInvoicePeriods[$key] = [
+                        'status' => 'invoice_exists',
+                        'label' => 'Sudah Terbit (' . ($b->kode_billing_layanan ?: 'Invoice') . ')',
+                        'is_paid' => $b->is_paid,
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        try {
+            $requests = \App\Models\Ims\BillingRequest::where('nomor_internet', $customer->nomor_internet)
+                ->whereIn('status_request', ['pending', 'approved'])
+                ->get(['bulan_tagihan', 'tahun_tagihan', 'status_request']);
+
+            foreach ($requests as $r) {
+                if (!empty($r->tahun_tagihan) && !empty($r->bulan_tagihan)) {
+                    $key = (int) $r->tahun_tagihan . '_' . (int) $r->bulan_tagihan;
+                    if (!isset($existingInvoicePeriods[$key])) {
+                        $existingInvoicePeriods[$key] = [
+                            'status' => $r->status_request === 'pending' ? 'pending_request' : 'approved_request',
+                            'label' => $r->status_request === 'pending' ? 'Sedang Diajukan' : 'Sudah Disetujui',
+                        ];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        return view('portal.tickets.create', compact('customer', 'packages', 'existingInvoicePeriods'));
     }
 
     /**
@@ -532,6 +573,34 @@ class TicketController extends Controller
         if ($katTiket === '18' || $katTiket === 'billing') {
             $bulan = (int) $request->input('bulan_tagihan', date('n'));
             $tahun = (int) $request->input('tahun_tagihan', date('Y'));
+
+            // 1. Cek apakah invoice periode tersebut sudah pernah terbit di trx_billing_layanan
+            $existsBilling = \App\Models\Ims\BillingLayanan::where('nomor_internet', $customer->nomor_internet)
+                ->where('bulan_tagihan', $bulan)
+                ->where('tahun_tagihan', $tahun)
+                ->where(function ($q) {
+                    $q->whereNull('status_bill_lay')->orWhereNotIn('status_bill_lay', ['17']);
+                })
+                ->first();
+
+            if ($existsBilling) {
+                return back()->withInput()->withErrors([
+                    'bulan_tagihan' => "Invoice untuk periode Bulan {$bulan}/{$tahun} sudah terbit di sistem (#{$existsBilling->kode_billing_layanan}). Anda dapat melihat dan membayarnya di menu Tagihan.",
+                ]);
+            }
+
+            // 2. Cek apakah sudah ada pengajuan invoice yang berstatus pending / approved
+            $existsRequest = \App\Models\Ims\BillingRequest::where('nomor_internet', $customer->nomor_internet)
+                ->where('bulan_tagihan', $bulan)
+                ->where('tahun_tagihan', $tahun)
+                ->where('status_request', 'pending')
+                ->first();
+
+            if ($existsRequest) {
+                return back()->withInput()->withErrors([
+                    'bulan_tagihan' => "Permintaan tagihan untuk periode Bulan {$bulan}/{$tahun} sudah pernah diajukan (#{$existsRequest->tiket}) dan sedang dalam proses verifikasi tim Finance.",
+                ]);
+            }
             
             $monthNames = [
                 1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',

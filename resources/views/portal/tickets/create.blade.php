@@ -9,6 +9,27 @@
     selectedPackageId: '{{ old('target_package_id', '') }}',
     packageCategoryTab: 'all',
     changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
+    tahunTagihan: {{ (int) old('tahun_tagihan', date('Y')) }},
+    bulanTagihan: {{ (int) old('bulan_tagihan', date('n')) }},
+    existingPeriods: @json($existingInvoicePeriods ?? []),
+    isPeriodDisabled(year, month) {
+        const key = `${year}_${month}`;
+        return !!this.existingPeriods[key];
+    },
+    getPeriodLabel(year, month) {
+        const key = `${year}_${month}`;
+        return this.existingPeriods[key] ? this.existingPeriods[key].label : null;
+    },
+    onYearChange() {
+        if (this.isPeriodDisabled(this.tahunTagihan, this.bulanTagihan)) {
+            for (let m = 1; m <= 12; m++) {
+                if (!this.isPeriodDisabled(this.tahunTagihan, m)) {
+                    this.bulanTagihan = m;
+                    break;
+                }
+            }
+        }
+    },
     currentPackage: {
         name: '{{ addslashes($customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet')) }}',
         speed: '{{ addslashes($customer->package->speed ?? ($customer->bandwith->nama_bandwith ?? 'Broadband')) }}',
@@ -35,6 +56,8 @@
         if (this.selectedPackageId && this.packagesMap[this.selectedPackageId]) {
             this.targetPackage = this.packagesMap[this.selectedPackageId];
         }
+        // Auto select first available month if default month is disabled
+        this.onYearChange();
     },
     selectPackage(id, price, name) {
         this.selectedPackageId = String(id);
@@ -1086,10 +1109,10 @@
                                 </label>
                                 <select 
                                     name="bulan_tagihan" 
-                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs"
+                                    x-model.number="bulanTagihan"
+                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
                                 >
                                     @php
-                                        $currentMonth = (int) old('bulan_tagihan', date('n'));
                                         $months = [
                                             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
                                             5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
@@ -1097,7 +1120,11 @@
                                         ];
                                     @endphp
                                     @foreach($months as $num => $name)
-                                        <option value="{{ $num }}" {{ $currentMonth === $num ? 'selected' : '' }}>
+                                        <option 
+                                            value="{{ $num }}"
+                                            :disabled="isPeriodDisabled(tahunTagihan, {{ $num }})"
+                                            x-text="'Bulan {{ $num }} — {{ $name }}' + (isPeriodDisabled(tahunTagihan, {{ $num }}) ? ' (' + (getPeriodLabel(tahunTagihan, {{ $num }}) || 'Sudah Ada') + ')' : '')"
+                                        >
                                             Bulan {{ $num }} — {{ $name }}
                                         </option>
                                     @endforeach
@@ -1111,19 +1138,34 @@
                                 </label>
                                 <select 
                                     name="tahun_tagihan" 
-                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs"
+                                    x-model.number="tahunTagihan"
+                                    @change="onYearChange()"
+                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
                                 >
                                     @php
                                         $curYear = (int) old('tahun_tagihan', date('Y'));
                                     @endphp
                                     @for($y = $curYear - 1; $y <= $curYear + 1; $y++)
-                                        <option value="{{ $y }}" {{ $curYear === $y ? 'selected' : '' }}>
+                                        <option value="{{ $y }}">
                                             Tahun {{ $y }}
                                         </option>
                                     @endfor
                                 </select>
                             </div>
                         </div>
+
+                        <!-- Notice if selected period already exists -->
+                        <template x-if="isPeriodDisabled(tahunTagihan, bulanTagihan)">
+                            <div class="p-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2.5 shadow-2xs">
+                                <iconify-icon icon="solar:shield-warning-bold" class="text-amber-600 text-lg shrink-0"></iconify-icon>
+                                <div class="space-y-0.5">
+                                    <span class="font-bold block">Tagihan Periode Ini Sudah Tersedia</span>
+                                    <span class="text-slate-600 text-[11px] block">
+                                        Invoice untuk periode <strong x-text="'Bulan ' + bulanTagihan + ' Tahun ' + tahunTagihan"></strong> sudah tercatat di sistem (<span class="font-medium text-amber-800" x-text="getPeriodLabel(tahunTagihan, bulanTagihan)"></span>). Silakan pilih bulan atau tahun lainnya.
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
 
                         <!-- Snapshot Layanan & Estimasi Nominal -->
                         <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
@@ -1181,7 +1223,18 @@
                             </template>
                         @endif
 
-                        <template x-if="(katTiket !== '15' || {{ $customer->can_request_suspend ? 'true' : 'false' }}) && (katTiket !== '14' || {{ $customer->can_request_termination ? 'true' : 'false' }})">
+                        <template x-if="katTiket === '18' && isPeriodDisabled(tahunTagihan, bulanTagihan)">
+                            <button 
+                                type="button" 
+                                disabled
+                                class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
+                            >
+                                <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
+                                <span>Tagihan Periode Ini Sudah Ada</span>
+                            </button>
+                        </template>
+
+                        <template x-if="(katTiket !== '15' || {{ $customer->can_request_suspend ? 'true' : 'false' }}) && (katTiket !== '14' || {{ $customer->can_request_termination ? 'true' : 'false' }}) && (katTiket !== '18' || !isPeriodDisabled(tahunTagihan, bulanTagihan))">
                             <button 
                                 type="submit" 
                                 class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer"
