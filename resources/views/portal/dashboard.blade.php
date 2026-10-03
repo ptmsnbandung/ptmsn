@@ -71,64 +71,65 @@
     </div>
 
     <!-- Status 4 KPI Cards Grid (Compact 2x2 on Mobile, 4 Cols on Desktop) -->
+    <!-- Status 4 KPI Cards Grid (Compact 2x2 on Mobile, 4 Cols on Desktop) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5">
         
         <!-- Card 1: Paket Internet -->
         <div id="tour-step-package" class="kpi-stat-card kpi-sky flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center justify-between mb-1.5 sm:mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Paket</span>
-                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100 shrink-0">
-                        <iconify-icon icon="solar:bolt-circle-bold" class="text-base sm:text-lg"></iconify-icon>
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100 shrink-0">
+                        <iconify-icon icon="solar:bolt-circle-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-sm sm:text-base lg:text-lg font-heading font-extrabold text-slate-900 truncate" title="{{ $customer->package->name ?? 'Broadband FTTH' }}">
+                <div class="text-xs sm:text-sm lg:text-base font-heading font-extrabold text-slate-900 truncate" title="{{ $customer->package->name ?? 'Broadband FTTH' }}">
                     {{ $customer->package->name ?? 'Broadband FTTH' }}
                 </div>
-                <div class="text-xs sm:text-sm font-mono text-sky-600 font-bold mt-0.5">
+                <div class="text-[11px] sm:text-xs lg:text-sm font-mono text-sky-600 font-bold mt-0.5 truncate">
                     {{ $customer->package->speed ?? '25 Mbps' }}
                 </div>
             </div>
             <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[10px] sm:text-xs text-slate-600">
-                <span class="flex items-center gap-1">
+                <span class="flex items-center gap-1 truncate" title="Berlangganan sejak {{ $customer->berlangganan_sejak }}">
                     <iconify-icon icon="solar:calendar-date-bold" class="text-sky-500 text-xs shrink-0"></iconify-icon>
-                    <span class="font-medium truncate">Sejak {{ $customer->berlangganan_sejak }}</span>
+                    <span class="truncate font-medium">{{ $customer->subscription_duration_text }}</span>
                 </span>
-                <span class="text-emerald-600 font-semibold font-mono">{{ $customer->subscription_duration_text }}</span>
+                <span class="text-emerald-600 font-semibold font-mono text-[9px] sm:text-[11px] shrink-0">Aktif</span>
             </div>
         </div>
 
         <!-- Card 2: Status Tagihan -->
         <div id="tour-step-billing" class="kpi-stat-card kpi-emerald flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center justify-between mb-1.5 sm:mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Tagihan</span>
-                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shrink-0">
-                        <iconify-icon icon="solar:wallet-money-bold" class="text-base sm:text-lg"></iconify-icon>
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shrink-0">
+                        <iconify-icon icon="solar:wallet-money-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-sm sm:text-base lg:text-lg font-heading font-extrabold text-slate-900 truncate">
+                <div class="text-xs sm:text-sm lg:text-base font-heading font-extrabold text-slate-900 truncate">
                     Rp {{ number_format($customer->billing_amount, 0, ',', '.') }}
                 </div>
                 <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
-                    Tempo: Tgl {{ $customer->due_date }} / bln
+                    Tempo Tgl {{ $customer->due_date }}/bln
                 </div>
             </div>
             <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 flex items-center justify-between gap-1">
                 @if($customer->billing_status === 'paid')
-                    <span class="badge-paid">
+                    <span class="badge-paid text-[9px] sm:text-[10px] px-1.5 py-0.5">
                         <iconify-icon icon="solar:check-read-linear"></iconify-icon>
                         <span>Lunas</span>
                     </span>
                 @else
-                    <span class="badge-unpaid">
+                    <span class="badge-unpaid text-[9px] sm:text-[10px] px-1.5 py-0.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
                         <span>Menunggu</span>
                     </span>
                 @endif
-                <a href="{{ route('portal.billing.index') }}" class="text-sky-600 hover:text-sky-700 font-heading font-bold text-[11px] sm:text-xs hover:underline flex items-center gap-0.5">
+                <a href="{{ route('portal.billing.index') }}" class="text-sky-600 hover:text-sky-700 font-heading font-bold text-[10px] sm:text-xs hover:underline flex items-center gap-0.5 shrink-0">
                     <span>Bayar</span>
-                    <iconify-icon icon="solar:alt-arrow-right-linear"></iconify-icon>
+                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-[9px]"></iconify-icon>
                 </a>
             </div>
         </div>
@@ -136,13 +137,13 @@
         <!-- Card 3: Tiket Kendala Aktif -->
         <div id="tour-step-tickets" class="kpi-stat-card kpi-amber flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center justify-between mb-1.5 sm:mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Tiket</span>
-                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 shrink-0">
-                        <iconify-icon icon="solar:shield-warning-bold" class="text-base sm:text-lg"></iconify-icon>
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 shrink-0">
+                        <iconify-icon icon="solar:shield-warning-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-base sm:text-lg lg:text-xl font-heading font-extrabold text-slate-900">
+                <div class="text-sm sm:text-base lg:text-xl font-heading font-extrabold text-slate-900 leading-tight">
                     {{ $activeTicketsCount }}
                 </div>
                 <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
@@ -150,9 +151,10 @@
                 </div>
             </div>
             <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 text-[10px] sm:text-xs text-slate-500 flex items-center justify-between">
-                <span>Selesai: <strong class="text-emerald-600 font-mono">{{ $resolvedTicketsCount }}</strong></span>
-                <a href="{{ route('portal.tickets.index') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[11px] sm:text-xs hover:underline">
-                    Lihat
+                <span class="truncate">Selesai: <strong class="text-emerald-600 font-mono">{{ $resolvedTicketsCount }}</strong></span>
+                <a href="{{ route('portal.tickets.index') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[10px] sm:text-xs hover:underline shrink-0 flex items-center gap-0.5">
+                    <span>Lihat</span>
+                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-[9px]"></iconify-icon>
                 </a>
             </div>
         </div>
@@ -160,13 +162,13 @@
         <!-- Card 4: Alamat Pemasangan -->
         <div class="kpi-stat-card kpi-purple flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center justify-between mb-1.5 sm:mb-2">
                     <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Alamat Pasang</span>
-                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shrink-0">
-                        <iconify-icon icon="solar:map-point-wave-bold" class="text-base sm:text-lg"></iconify-icon>
+                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shrink-0">
+                        <iconify-icon icon="solar:map-point-wave-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-xs sm:text-sm font-heading font-bold text-slate-900 line-clamp-2 leading-snug" title="{{ $customer->address ?: 'Alamat belum tercatat di sistem' }}">
+                <div class="text-xs sm:text-sm font-heading font-bold text-slate-900 line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]" title="{{ $customer->address ?: 'Alamat belum tercatat di sistem' }}">
                     {{ $customer->address ?: 'Alamat belum tercatat di sistem' }}
                 </div>
             </div>
@@ -175,9 +177,9 @@
                     <iconify-icon icon="solar:city-bold" class="text-purple-500 text-xs shrink-0"></iconify-icon>
                     <span class="truncate">{{ $customer->city ?? 'Area Layanan' }}</span>
                 </span>
-                <a href="{{ route('portal.profile') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[11px] sm:text-xs hover:underline shrink-0 flex items-center gap-0.5">
+                <a href="{{ route('portal.profile') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[10px] sm:text-xs hover:underline shrink-0 flex items-center gap-0.5">
                     <span>Lihat</span>
-                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-[10px]"></iconify-icon>
+                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-[9px]"></iconify-icon>
                 </a>
             </div>
         </div>
