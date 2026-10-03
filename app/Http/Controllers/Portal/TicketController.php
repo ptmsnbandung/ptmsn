@@ -23,6 +23,7 @@ class TicketController extends Controller
         $ubahQuery = $customer->ubahLayanan();
         $suspendQuery = $customer->suspendLayanan();
         $terminasiQuery = $customer->terminasiLayanan();
+        $billingRequestQuery = $customer->billingRequests();
 
         if ($request->filled('status')) {
             $status = $request->status;
@@ -31,21 +32,25 @@ class TicketController extends Controller
                 $ubahQuery->whereIn('status_ubah_layanan', ['11', 'open', 'antrian']);
                 $suspendQuery->whereIn('status_suspend', ['11', 'open']);
                 $terminasiQuery->whereIn('status_terminasi', ['11', 'open']);
+                $billingRequestQuery->where('status_request', 'pending');
             } elseif ($status === 'in_progress') {
                 $ticketsQuery->whereIn('status', ['12', 'in_progress', 'proses', 'konfirmasi']);
                 $ubahQuery->whereIn('status_ubah_layanan', ['12', 'in_progress', 'proses']);
                 $suspendQuery->whereIn('status_suspend', ['12', '18', 'in_progress']);
                 $terminasiQuery->whereIn('status_terminasi', ['12', '12.1', '13', '15', 'in_progress']);
+                $billingRequestQuery->whereRaw('1 = 0');
             } elseif ($status === 'resolved') {
                 $ticketsQuery->whereIn('status', ['13', '14', 'resolved', 'done', 'close', 'closed']);
                 $ubahQuery->whereIn('status_ubah_layanan', ['13', '14', 'resolved', 'done']);
                 $suspendQuery->whereIn('status_suspend', ['13', '14', '16', 'resolved', 'done']);
                 $terminasiQuery->whereIn('status_terminasi', ['14', '16', 'resolved', 'done']);
+                $billingRequestQuery->whereIn('status_request', ['approved', 'rejected']);
             } else {
                 $ticketsQuery->where('status', $status);
                 $ubahQuery->where('status_ubah_layanan', $status);
                 $suspendQuery->where('status_suspend', $status);
                 $terminasiQuery->where('status_terminasi', $status);
+                $billingRequestQuery->where('status_request', $status);
             }
         }
 
@@ -55,19 +60,28 @@ class TicketController extends Controller
                 $ticketsQuery->whereRaw('1 = 0');
                 $suspendQuery->whereRaw('1 = 0');
                 $terminasiQuery->whereRaw('1 = 0');
+                $billingRequestQuery->whereRaw('1 = 0');
             } elseif ($cat === '15') {
                 $ticketsQuery->whereRaw('1 = 0');
                 $ubahQuery->whereRaw('1 = 0');
                 $terminasiQuery->whereRaw('1 = 0');
+                $billingRequestQuery->whereRaw('1 = 0');
             } elseif ($cat === '14') {
                 $ticketsQuery->whereRaw('1 = 0');
                 $ubahQuery->whereRaw('1 = 0');
                 $suspendQuery->whereRaw('1 = 0');
+                $billingRequestQuery->whereRaw('1 = 0');
+            } elseif ($cat === '18' || $cat === 'billing') {
+                $ticketsQuery->whereRaw('1 = 0');
+                $ubahQuery->whereRaw('1 = 0');
+                $suspendQuery->whereRaw('1 = 0');
+                $terminasiQuery->whereRaw('1 = 0');
             } else {
                 $ticketsQuery->where('kat_tiket', $cat);
                 $ubahQuery->whereRaw('1 = 0');
                 $suspendQuery->whereRaw('1 = 0');
                 $terminasiQuery->whereRaw('1 = 0');
+                $billingRequestQuery->whereRaw('1 = 0');
             }
         }
 
@@ -90,17 +104,25 @@ class TicketController extends Controller
                 $q->where('kode_trx_terminasi', 'like', "%{$search}%")
                   ->orWhere('note_termin', 'like', "%{$search}%");
             });
+            $billingRequestQuery->where(function ($q) use ($search) {
+                $q->where('periode_tagihan', 'like', "%{$search}%")
+                  ->orWhere('layanan', 'like', "%{$search}%")
+                  ->orWhere('catatan_pelanggan', 'like', "%{$search}%")
+                  ->orWhere('kode_billing_layanan', 'like', "%{$search}%");
+            });
         }
 
         $allTickets = $ticketsQuery->get();
         $allUbah = $ubahQuery->get();
         $allSuspend = $suspendQuery->get();
         $allTerminasi = $terminasiQuery->get();
+        $allBillingRequests = $billingRequestQuery->get();
 
         $merged = $allTickets
             ->concat($allUbah)
             ->concat($allSuspend)
             ->concat($allTerminasi)
+            ->concat($allBillingRequests)
             ->sortByDesc(function ($item) {
                 return $item->created_at ? $item->created_at->timestamp : 0;
             })->values();
@@ -173,6 +195,11 @@ class TicketController extends Controller
             $rules['termination_date'] = ['required', 'date'];
             $rules['termination_reason'] = ['required', 'string'];
             $rules['agree_return_device'] = ['accepted'];
+        } elseif ($katTiket === '18' || $katTiket === 'billing') {
+            // Request Tagihan / Invoice
+            $rules['bulan_tagihan'] = ['required', 'integer', 'between:1,12'];
+            $rules['tahun_tagihan'] = ['required', 'integer', 'min:2020', 'max:2035'];
+            $rules['catatan_pelanggan'] = ['nullable', 'string', 'max:1000'];
         } else {
             // Default: 11 - Gangguan Layanan
             $rules['subject'] = ['nullable', 'string', 'max:200'];
@@ -191,6 +218,8 @@ class TicketController extends Controller
             'termination_date.required' => 'Tanggal efektif terminasi wajib diisi.',
             'termination_reason.required' => 'Alasan penghentian layanan wajib dipilih.',
             'agree_return_device.accepted' => 'Anda harus menyetujui penyerahan perangkat modem ONT milik PT MSN.',
+            'bulan_tagihan.required' => 'Bulan tagihan yang diminta wajib dipilih.',
+            'tahun_tagihan.required' => 'Tahun tagihan wajib dipilih.',
         ]);
 
         // Konstruksi Indikasi (Subject) & Keluhan (Deskripsi) berdasarkan kategori
@@ -499,7 +528,41 @@ class TicketController extends Controller
                 ->with('success', "Permohonan Terminasi Layanan ({$kodeTerminasi}) berhasil dikirim ke sistem IMS! Tim layanan kami akan segera menghubungi Anda untuk koordinasi serah terima perangkat.");
         }
 
-        // 4. Untuk kategori gangguan teknis, WiFi, relokasi, dll -> Simpan ke tabel trx_tiket_gangguan
+        // 4. Untuk kategori Request Tagihan / Invoice (18) -> Simpan ke tabel trx_billing_request
+        if ($katTiket === '18' || $katTiket === 'billing') {
+            $bulan = (int) $request->input('bulan_tagihan', date('n'));
+            $tahun = (int) $request->input('tahun_tagihan', date('Y'));
+            
+            $monthNames = [
+                1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            ];
+            $monthName = $monthNames[$bulan] ?? date('F', mktime(0, 0, 0, $bulan, 10));
+            $periodeStr = "{$monthName} {$tahun}";
+            
+            $layanan = $customer->package->name ?? ($customer->bandwith?->nama_bandwith ?: 'Broadband Internet');
+            $nominal = (float) ($customer->billing_amount ?: ($customer->bandwith?->harga_bandwith ?: 250000));
+            $catatan = trim((string) $request->input('catatan_pelanggan', ''));
+
+            $billingRequest = \App\Models\Ims\BillingRequest::create([
+                'nomor_internet' => (string) $customer->nomor_internet,
+                'nama_pelanggan' => (string) $customer->name,
+                'bulan_tagihan' => $bulan,
+                'tahun_tagihan' => $tahun,
+                'periode_tagihan' => $periodeStr,
+                'layanan' => $layanan,
+                'nominal' => $nominal,
+                'catatan_pelanggan' => $catatan ?: null,
+                'status_request' => 'pending',
+                'kode_billing_layanan' => null,
+            ]);
+
+            return redirect()->route('portal.tickets.show', $billingRequest->tiket)
+                ->with('success', "Permintaan penerbitan invoice periode {$periodeStr} (#{$billingRequest->tiket}) berhasil diajukan ke Tim Finance & Billing PT MSN!");
+        }
+
+        // 5. Untuk kategori gangguan teknis, WiFi, relokasi, dll -> Simpan ke tabel trx_tiket_gangguan
         $datePrefix = date('Ymd');
         $randomSuffix = rand(100, 999);
         $ticketNumber = $katTiket . '1' . $datePrefix . $randomSuffix;
@@ -544,11 +607,15 @@ class TicketController extends Controller
             $ticket = $customer->terminasiLayanan()->where('kode_trx_terminasi', $id)->firstOrFail();
         } elseif (str_starts_with($id, 'UB-')) {
             $ticket = $customer->ubahLayanan()->where('kode_trx_ubah_layanan', $id)->firstOrFail();
+        } elseif (str_starts_with($id, 'REQ-INV-')) {
+            $numericId = (int) str_replace('REQ-INV-', '', $id);
+            $ticket = $customer->billingRequests()->where('id', $numericId)->firstOrFail();
         } else {
             $ticket = $customer->tickets()->where('tiket', $id)->first()
                 ?: ($customer->ubahLayanan()->where('kode_trx_ubah_layanan', $id)->first()
                 ?: ($customer->suspendLayanan()->where('kode_suspend', $id)->first()
-                ?: $customer->terminasiLayanan()->where('kode_trx_terminasi', $id)->firstOrFail()));
+                ?: ($customer->billingRequests()->where('id', (int) str_replace('REQ-INV-', '', $id))->first()
+                ?: $customer->terminasiLayanan()->where('kode_trx_terminasi', $id)->firstOrFail())));
         }
 
         return view('portal.tickets.show', compact('ticket', 'customer'));

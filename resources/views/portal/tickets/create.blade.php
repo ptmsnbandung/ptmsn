@@ -216,6 +216,22 @@
                                 </div>
                             </label>
 
+                            <!-- Kat 18: Request Tagihan / Invoice -->
+                            <label 
+                                @click="katTiket = '18'"
+                                :class="katTiket === '18' ? 'border-cyan-500 bg-cyan-50/90 ring-2 ring-cyan-500/20 shadow-xs' : 'border-slate-200 bg-white/70 hover:border-cyan-300'"
+                                class="relative flex items-center gap-2 sm:gap-3 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border cursor-pointer transition-all"
+                            >
+                                <input type="radio" name="kat_tiket" value="18" x-model="katTiket" class="sr-only">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center shrink-0">
+                                    <iconify-icon icon="solar:bill-list-bold" width="16" class="sm:w-[18px]"></iconify-icon>
+                                </div>
+                                <div class="text-left min-w-0">
+                                    <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Request Tagihan</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Request invoice</div>
+                                </div>
+                            </label>
+
                         </div>
                     </div>
 
@@ -1039,6 +1055,98 @@
                                 >{{ old('termination_notes') }}</textarea>
                             </div>
                         @endif
+                    </div>
+
+                    <!-- ================================================================= -->
+                    <!-- FORM KONDISIONAL 7: REQUEST TAGIHAN / INVOICE (18)                -->
+                    <!-- ================================================================= -->
+                    <div x-show="katTiket === '18'" class="space-y-3.5 sm:space-y-4 pt-2.5 sm:pt-3 border-t border-slate-200/80">
+                        <div class="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-cyan-700 flex items-center gap-1.5">
+                            <iconify-icon icon="solar:bill-list-bold"></iconify-icon>
+                            <span>Rincian Permintaan Penerbitan Tagihan / Invoice</span>
+                        </div>
+
+                        <!-- Info Box -->
+                        <div class="p-3.5 rounded-xl sm:rounded-2xl bg-cyan-50/80 border border-cyan-200 text-cyan-950 text-xs flex items-start gap-2.5">
+                            <iconify-icon icon="solar:info-circle-bold" class="text-cyan-600 text-lg shrink-0 mt-0.5"></iconify-icon>
+                            <div class="space-y-0.5">
+                                <span class="font-bold block">Permintaan E-Billing / Faktur Tagihan</span>
+                                <span class="text-slate-600 text-[11px] leading-relaxed block">
+                                    Gunakan formulir ini jika tagihan periode tertentu belum terbit atau Anda memerlukan invoice resmi lebih awal untuk keperluan administrasi, reimbursement kantor, atau e-billing.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Pilihan Periode Bulan & Tahun Tagihan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <!-- Bulan Tagihan -->
+                            <div class="space-y-1 sm:space-y-1.5">
+                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
+                                    Bulan Tagihan yang Diminta: <span class="text-rose-500">*</span>
+                                </label>
+                                <select 
+                                    name="bulan_tagihan" 
+                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs"
+                                >
+                                    @php
+                                        $currentMonth = (int) old('bulan_tagihan', date('n'));
+                                        $months = [
+                                            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                                        ];
+                                    @endphp
+                                    @foreach($months as $num => $name)
+                                        <option value="{{ $num }}" {{ $currentMonth === $num ? 'selected' : '' }}>
+                                            Bulan {{ $num }} — {{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Tahun Tagihan -->
+                            <div class="space-y-1 sm:space-y-1.5">
+                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
+                                    Tahun Tagihan: <span class="text-rose-500">*</span>
+                                </label>
+                                <select 
+                                    name="tahun_tagihan" 
+                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs"
+                                >
+                                    @php
+                                        $curYear = (int) old('tahun_tagihan', date('Y'));
+                                    @endphp
+                                    @for($y = $curYear - 1; $y <= $curYear + 1; $y++)
+                                        <option value="{{ $y }}" {{ $curYear === $y ? 'selected' : '' }}>
+                                            Tahun {{ $y }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Snapshot Layanan & Estimasi Nominal -->
+                        <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
+                            <div>
+                                <span class="text-slate-500 block text-[10px] font-mono uppercase">Layanan Terdaftar:</span>
+                                <span class="font-bold text-slate-900 text-xs sm:text-sm">{{ $customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet') }}</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 block text-[10px] font-mono uppercase">Estimasi Nominal Tagihan:</span>
+                                <span class="font-bold text-emerald-600 font-mono text-xs sm:text-sm">Rp {{ number_format((float)$customer->billing_amount, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Catatan Pelanggan -->
+                        <div class="space-y-1 sm:space-y-1.5">
+                            <label class="block text-[11px] sm:text-xs font-bold text-slate-800">Catatan / Keperluan Khusus:</label>
+                            <textarea 
+                                name="catatan_pelanggan" 
+                                rows="3" 
+                                placeholder="Contoh: Mohon terbitkan invoice bulan ini lebih cepat untuk keperluan administrasi klaim kantor / reimbursement / faktur pajak..."
+                                class="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none shadow-2xs"
+                            >{{ old('catatan_pelanggan') }}</textarea>
+                        </div>
                     </div>
 
                     <!-- Submit Button -->

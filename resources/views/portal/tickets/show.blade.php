@@ -10,6 +10,7 @@
         '13' => 'Pengajuan Relokasi',
         '14' => 'Request Terminasi',
         '15' => 'Request Suspend',
+        '18', 'billing', 'billing_request' => 'Request Tagihan',
         default => 'Tiket Gangguan',
     };
 @endphp

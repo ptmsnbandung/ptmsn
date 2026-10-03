@@ -86,6 +86,11 @@ class Customer extends Authenticatable
         return $this->hasMany(\App\Models\Ims\Terminasi::class, 'nomor_internet', 'nomor_internet')->orderBy('date_create', 'desc');
     }
 
+    public function billingRequests()
+    {
+        return $this->hasMany(\App\Models\Ims\BillingRequest::class, 'nomor_internet', 'nomor_internet')->orderBy('created_at', 'desc');
+    }
+
     public function imsTickets()
     {
         return $this->tickets();
