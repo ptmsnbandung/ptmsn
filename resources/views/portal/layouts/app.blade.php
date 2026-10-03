@@ -467,6 +467,53 @@
                 preloader.classList.add('loaded');
             }
         }, 2500);
+
+        // Universal Tactile Click, Ripple & Pop Micro-interaction System
+        document.addEventListener('pointerdown', function(e) {
+            const target = e.target.closest('button, .btn, a.btn, .dock-item, .copy-btn, .tab-btn, .action-btn, .badge-btn, .portal-card-hover, [role="button"], input[type="submit"], input[type="button"]');
+            if (!target) return;
+
+            // Haptic feedback for touch devices
+            if (e.pointerType === 'touch' && navigator.vibrate) {
+                try { navigator.vibrate(12); } catch(err) {}
+            }
+
+            // Create dynamic expanding ripple element
+            const rect = target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height, 40) * 2;
+            const x = e.clientX - rect.left - (size / 2);
+            const y = e.clientY - rect.top - (size / 2);
+
+            const isDarkBg = target.classList.contains('dock-item') || 
+                             target.classList.contains('bg-slate-900') || 
+                             target.classList.contains('bg-slate-800') || 
+                             target.classList.contains('bg-sky-600') || 
+                             target.classList.contains('bg-sky-500');
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-wave ' + (isDarkBg ? 'ripple-wave-light' : 'ripple-wave-dark');
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            const compPos = window.getComputedStyle(target).position;
+            if (compPos === 'static') {
+                target.style.position = 'relative';
+            }
+            target.style.overflow = 'hidden';
+            target.appendChild(ripple);
+
+            // Pop animation on dock item
+            if (target.classList.contains('dock-item')) {
+                target.classList.remove('tap-pop');
+                void target.offsetWidth;
+                target.classList.add('tap-pop');
+            }
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }, { passive: true });
     </script>
 
     @stack('scripts')
