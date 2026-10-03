@@ -3,86 +3,7 @@
 @section('title', 'Buat Laporan / Tiket Layanan')
 
 @section('content')
-<div x-data="{
-    katTiket: '{{ old('kat_tiket', request('category', request('kat_tiket', '11'))) }}',
-    showPassword: false,
-    selectedPackageId: '{{ old('target_package_id', '') }}',
-    packageCategoryTab: 'all',
-    changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
-    tahunTagihan: {{ (int) old('tahun_tagihan', date('Y')) }},
-    bulanTagihan: {{ (int) old('bulan_tagihan', date('n')) }},
-    existingPeriods: @json($existingInvoicePeriods ?? []),
-    isPeriodDisabled(year, month) {
-        const key = `${year}_${month}`;
-        return !!this.existingPeriods[key];
-    },
-    getPeriodLabel(year, month) {
-        const key = `${year}_${month}`;
-        return this.existingPeriods[key] ? this.existingPeriods[key].label : null;
-    },
-    onYearChange() {
-        if (this.isPeriodDisabled(this.tahunTagihan, this.bulanTagihan)) {
-            for (let m = 1; m <= 12; m++) {
-                if (!this.isPeriodDisabled(this.tahunTagihan, m)) {
-                    this.bulanTagihan = m;
-                    break;
-                }
-            }
-        }
-    },
-    currentPackage: {
-        name: '{{ addslashes($customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet')) }}',
-        speed: '{{ addslashes($customer->package->speed ?? ($customer->bandwith->nama_bandwith ?? 'Broadband')) }}',
-        speedNum: {{ (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25 }},
-        price: {{ (int) ($customer->package->price ?? 0) }},
-        formattedPrice: '{{ $customer->package->formatted_price ?? ('Rp ' . number_format($customer->package->price ?? 0, 0, ',', '.')) }}'
-    },
-    targetPackage: null,
-    packagesMap: {
-        @foreach($packages as $pkg)
-            '{{ $pkg->id }}': {
-                id: '{{ $pkg->id }}',
-                name: '{{ addslashes($pkg->name) }}',
-                speed: '{{ addslashes($pkg->speed) }}',
-                speedNum: {{ (int) preg_replace('/[^0-9]/', '', $pkg->speed) ?: 0 }},
-                price: {{ (int) $pkg->price }},
-                formattedPrice: '{{ $pkg->formatted_price }}',
-                category: '{{ $pkg->category }}',
-                idealDevices: '{{ addslashes($pkg->ideal_devices ?? '') }}'
-            },
-        @endforeach
-    },
-    init() {
-        if (this.selectedPackageId && this.packagesMap[this.selectedPackageId]) {
-            this.targetPackage = this.packagesMap[this.selectedPackageId];
-        }
-        // Auto select first available month if default month is disabled
-        this.onYearChange();
-    },
-    selectPackage(id, price, name) {
-        this.selectedPackageId = String(id);
-        this.targetPackage = this.packagesMap[id] || null;
-        if (this.targetPackage && this.targetPackage.speedNum && this.currentPackage.speedNum) {
-            if (this.targetPackage.speedNum > this.currentPackage.speedNum) {
-                this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
-            } else if (this.targetPackage.speedNum < this.currentPackage.speedNum) {
-                this.changeType = 'Downgrade Paket';
-            }
-        }
-    },
-    get isUpgrade() {
-        if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
-        return this.targetPackage.speedNum > this.currentPackage.speedNum;
-    },
-    get isDowngrade() {
-        if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
-        return this.targetPackage.speedNum < this.currentPackage.speedNum;
-    },
-    get speedDifference() {
-        if (!this.targetPackage) return 0;
-        return this.targetPackage.speedNum - this.currentPackage.speedNum;
-    }
-}">
+<div x-data="ticketFormData()">
 
     <!-- Full-Width Dark Oceanic Blue Hero Backdrop -->
     <div class="-mx-3 sm:-mx-6 lg:-mx-8 -mt-3 sm:-mt-6 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 pb-20 sm:pb-24 hero-network-card !rounded-none !border-x-0 !border-t-0 shadow-md relative overflow-hidden">
@@ -1309,3 +1230,90 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function ticketFormData() {
+    return {
+        katTiket: '{{ old('kat_tiket', request('category', request('kat_tiket', '11'))) }}',
+        showPassword: false,
+        selectedPackageId: '{{ old('target_package_id', '') }}',
+        packageCategoryTab: 'all',
+        changeType: '{{ old('change_type', 'Upgrade Kecepatan (Tambah Bandwidth)') }}',
+        tahunTagihan: {{ (int) old('tahun_tagihan', date('Y')) }},
+        bulanTagihan: {{ (int) old('bulan_tagihan', date('n')) }},
+        existingPeriods: @json($existingInvoicePeriods ?? []),
+        isPeriodDisabled(year, month) {
+            const key = year + '_' + month;
+            return !!this.existingPeriods[key];
+        },
+        getPeriodLabel(year, month) {
+            const key = year + '_' + month;
+            return this.existingPeriods[key] ? this.existingPeriods[key].label : null;
+        },
+        onYearChange() {
+            if (this.isPeriodDisabled(this.tahunTagihan, this.bulanTagihan)) {
+                for (let m = 1; m <= 12; m++) {
+                    if (!this.isPeriodDisabled(this.tahunTagihan, m)) {
+                        this.bulanTagihan = m;
+                        break;
+                    }
+                }
+            }
+        },
+        currentPackage: {
+            name: '{{ addslashes($customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet')) }}',
+            speed: '{{ addslashes($customer->package->speed ?? ($customer->bandwith->nama_bandwith ?? 'Broadband')) }}',
+            speedNum: {{ (int) preg_replace('/[^0-9]/', '', $customer->package->speed ?? $customer->bandwith->nama_bandwith ?? '0') ?: 25 }},
+            price: {{ (int) ($customer->package->price ?? 0) }},
+            formattedPrice: '{{ $customer->package->formatted_price ?? ('Rp ' . number_format($customer->package->price ?? 0, 0, ',', '.')) }}'
+        },
+        targetPackage: null,
+        packagesMap: {
+            @foreach($packages as $pkg)
+                '{{ $pkg->id }}': {
+                    id: '{{ $pkg->id }}',
+                    name: '{{ addslashes($pkg->name) }}',
+                    speed: '{{ addslashes($pkg->speed) }}',
+                    speedNum: {{ (int) preg_replace('/[^0-9]/', '', $pkg->speed) ?: 0 }},
+                    price: {{ (int) $pkg->price }},
+                    formattedPrice: '{{ $pkg->formatted_price }}',
+                    category: '{{ $pkg->category }}',
+                    idealDevices: '{{ addslashes($pkg->ideal_devices ?? '') }}'
+                },
+            @endforeach
+        },
+        init() {
+            if (this.selectedPackageId && this.packagesMap[this.selectedPackageId]) {
+                this.targetPackage = this.packagesMap[this.selectedPackageId];
+            }
+            // Auto select first available month if default month is disabled
+            this.onYearChange();
+        },
+        selectPackage(id, price, name) {
+            this.selectedPackageId = String(id);
+            this.targetPackage = this.packagesMap[id] || null;
+            if (this.targetPackage && this.targetPackage.speedNum && this.currentPackage.speedNum) {
+                if (this.targetPackage.speedNum > this.currentPackage.speedNum) {
+                    this.changeType = 'Upgrade Kecepatan (Tambah Bandwidth)';
+                } else if (this.targetPackage.speedNum < this.currentPackage.speedNum) {
+                    this.changeType = 'Downgrade Paket';
+                }
+            }
+        },
+        get isUpgrade() {
+            if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
+            return this.targetPackage.speedNum > this.currentPackage.speedNum;
+        },
+        get isDowngrade() {
+            if (!this.targetPackage || !this.currentPackage.speedNum || !this.targetPackage.speedNum) return false;
+            return this.targetPackage.speedNum < this.currentPackage.speedNum;
+        },
+        get speedDifference() {
+            if (!this.targetPackage) return 0;
+            return this.targetPackage.speedNum - this.currentPackage.speedNum;
+        }
+    };
+}
+</script>
+@endpush
