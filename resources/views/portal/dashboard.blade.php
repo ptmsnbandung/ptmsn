@@ -157,38 +157,28 @@
             </div>
         </div>
 
-        <!-- Card 4: Parameter Jaringan -->
+        <!-- Card 4: Alamat Pemasangan -->
         <div class="kpi-stat-card kpi-purple flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Jaringan</span>
+                    <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Alamat Pasang</span>
                     <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shrink-0">
                         <iconify-icon icon="solar:map-point-wave-bold" class="text-base sm:text-lg"></iconify-icon>
                     </div>
                 </div>
-                <button 
-                    type="button"
-                    onclick="copyToClipboard('{{ $customer->ip_address ?? '10.20.104.22' }}', 'IP Address')" 
-                    class="copy-btn text-left group w-full"
-                    title="Klik untuk menyalin IP"
-                >
-                    <div class="text-xs sm:text-sm font-mono font-bold text-sky-600 truncate flex items-center gap-1 group-hover:text-sky-700">
-                        <span>{{ $customer->ip_address ?? '10.20.104.22' }}</span>
-                        <iconify-icon icon="solar:copy-linear" class="text-slate-400 group-hover:text-sky-600 text-xs shrink-0"></iconify-icon>
-                    </div>
-                </button>
-                <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
-                    {{ $customer->city ?? 'Area Layanan' }} — GPON
+                <div class="text-xs sm:text-sm font-heading font-bold text-slate-900 line-clamp-2 leading-snug" title="{{ $customer->address ?: 'Alamat belum tercatat di sistem' }}">
+                    {{ $customer->address ?: 'Alamat belum tercatat di sistem' }}
                 </div>
             </div>
             <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
-                <span class="flex items-center gap-1">
-                    <iconify-icon icon="solar:server-path-bold" class="text-sky-500"></iconify-icon>
-                    <span>Fiber</span>
+                <span class="flex items-center gap-1 truncate text-slate-500" title="{{ $customer->city ?? 'Area Layanan' }}">
+                    <iconify-icon icon="solar:city-bold" class="text-purple-500 text-xs shrink-0"></iconify-icon>
+                    <span class="truncate">{{ $customer->city ?? 'Area Layanan' }}</span>
                 </span>
-                <span class="signal-bars signal-full" title="Kekuatan Sinyal Sangat Baik">
-                    <span></span><span></span><span></span><span></span>
-                </span>
+                <a href="{{ route('portal.profile') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[11px] sm:text-xs hover:underline shrink-0 flex items-center gap-0.5">
+                    <span>Lihat</span>
+                    <iconify-icon icon="solar:alt-arrow-right-linear" class="text-[10px]"></iconify-icon>
+                </a>
             </div>
         </div>
 
