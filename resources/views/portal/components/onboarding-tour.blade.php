@@ -55,7 +55,7 @@
     
     $initialStepIdx = 0;
     if ($requestedStep !== null && is_numeric($requestedStep)) {
-        $initialStepIdx = max(0, min(4, ((int)$requestedStep) - 1));
+        $initialStepIdx = max(0, min(5, ((int)$requestedStep) - 1));
     }
 @endphp
 
@@ -366,7 +366,7 @@
             popover: { top: 0, left: 0 },
             routes: config.routes || {},
             
-            // 5 Langkah Terpadu untuk Seluruh Aplikasi Portal
+            // 6 Langkah Terpadu untuk Seluruh Aplikasi Portal
             steps: [
                 // 1. Dashboard (1 Langkah)
                 {
@@ -417,6 +417,16 @@
                     subtitle: 'Paket Layanan & Jatuh Tempo',
                     icon: 'solar:wallet-money-bold',
                     description: 'Informasi paket broadband, tanggal jatuh tempo pembayaran, dan rincian total tagihan bulanan.'
+                },
+                // 6. Halaman Pembayaran (Langkah 3 Pembayaran: Cara Bayar)
+                {
+                    page: 'billing',
+                    pageLabel: 'Tagihan',
+                    target: '#tour-step-payment-methods, #tour-step-midtrans-pay, #tour-step-billing-status',
+                    title: 'Pilihan Cara Pembayaran',
+                    subtitle: 'Otomatis (Midtrans) & Transfer Bank',
+                    icon: 'solar:card-recive-bold',
+                    description: 'Pilih metode pembayaran instan 24 jam via QRIS / VA Bank (Midtrans) atau Transfer Rekening Resmi PT MSN dengan konfirmasi bukti transfer.'
                 }
             ],
 
@@ -534,6 +544,15 @@
                         subtitle: 'Paket Layanan & Jatuh Tempo',
                         icon: 'solar:wallet-money-bold',
                         description: 'Informasi paket broadband, tanggal jatuh tempo pembayaran, dan rincian total tagihan bulanan.'
+                    };
+                    this.steps[5] = {
+                        page: 'billing',
+                        pageLabel: 'Tagihan',
+                        target: '#tour-step-payment-methods, #tour-step-midtrans-pay, #tour-step-billing-status',
+                        title: 'Pilihan Cara Pembayaran',
+                        subtitle: 'Otomatis (Midtrans) & Transfer Bank',
+                        icon: 'solar:card-recive-bold',
+                        description: 'Pilih metode pembayaran instan 24 jam via QRIS / VA Bank (Midtrans) atau Transfer Rekening Resmi PT MSN dengan konfirmasi bukti transfer.'
                     };
                 }
             },
@@ -684,12 +703,9 @@
                 if (step.page === 'billing') {
                     const isPaid = document.querySelector('#tour-step-billing-status') !== null;
                     if (!isPaid) {
-                        if (stepIdx === 3) {
+                        if (stepIdx === 3 || stepIdx === 5) {
                             const midtransBtn = document.querySelector("button[\\@click*=\"paymentTab = 'midtrans'\"]");
                             if (midtransBtn) midtransBtn.click();
-                        } else if (stepIdx === 4) {
-                            const transferBtn = document.querySelector("#tour-step-transfer-tab");
-                            if (transferBtn) transferBtn.click();
                         }
                     }
                 }

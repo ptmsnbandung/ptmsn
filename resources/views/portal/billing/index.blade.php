@@ -253,7 +253,7 @@
                         </div>
                     @else
                         <!-- Card Header & Tab Selector -->
-                        <div class="space-y-2">
+                        <div id="tour-step-payment-methods" class="space-y-3">
                             <div class="flex items-center justify-between flex-wrap gap-1">
                                 <span class="text-[10px] sm:text-[11px] font-mono uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1.5">
                                     <iconify-icon icon="solar:card-2-bold" class="text-sky-600 text-sm"></iconify-icon>
