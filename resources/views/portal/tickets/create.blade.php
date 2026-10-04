@@ -172,7 +172,13 @@
                                 </div>
                                 <div class="text-left min-w-0">
                                     <div class="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight truncate">Request Tagihan</div>
-                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">Request invoice</div>
+                                    <div class="text-[9px] sm:text-[10px] text-slate-500 leading-tight truncate">
+                                        @if($hasUnpaidInvoices)
+                                            <span class="text-amber-600 font-semibold">Syarat: Lunas Tagihan</span>
+                                        @else
+                                            Request invoice
+                                        @endif
+                                    </div>
                                 </div>
                             </label>
 
@@ -1010,106 +1016,168 @@
                             <span>Rincian Permintaan Penerbitan Tagihan / Invoice</span>
                         </div>
 
-                        <!-- Info Box -->
-                        <div class="p-3.5 rounded-xl sm:rounded-2xl bg-cyan-50/80 border border-cyan-200 text-cyan-950 text-xs flex items-start gap-2.5">
-                            <iconify-icon icon="solar:info-circle-bold" class="text-cyan-600 text-lg shrink-0 mt-0.5"></iconify-icon>
-                            <div class="space-y-0.5">
-                                <span class="font-bold block">Permintaan E-Billing / Faktur Tagihan</span>
-                                <span class="text-slate-600 text-[11px] leading-relaxed block">
-                                    Gunakan formulir ini jika tagihan periode tertentu belum terbit atau Anda memerlukan invoice resmi lebih awal untuk keperluan administrasi, reimbursement kantor, atau e-billing.
-                                </span>
-                            </div>
-                        </div>
+                        @if($hasUnpaidInvoices)
+                            <!-- Alert: Ineligible for Request Tagihan (Belum Lunas Tagihan Sebelumnya) -->
+                            <div class="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-amber-50 border border-amber-300 text-amber-950 space-y-3.5 shadow-xs">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                                        <iconify-icon icon="solar:shield-warning-bold" class="text-xl sm:text-2xl"></iconify-icon>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <h4 class="font-heading font-extrabold text-sm sm:text-base text-amber-900">
+                                            Belum Memenuhi Syarat Request Tagihan
+                                        </h4>
+                                        <p class="text-xs text-amber-800 leading-relaxed">
+                                            Sesuai ketentuan layanan PT MSN, pengajuan penerbitan request tagihan / invoice baru hanya dapat diproses apabila <strong>seluruh tagihan periode sebelumnya telah lunas</strong>.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        <!-- Pilihan Periode Bulan & Tahun Tagihan -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <!-- Bulan Tagihan -->
-                            <div class="space-y-1 sm:space-y-1.5">
-                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
-                                    Bulan Tagihan yang Diminta: <span class="text-rose-500">*</span>
-                                </label>
-                                <select 
-                                    name="bulan_tagihan" 
-                                    x-model.number="bulanTagihan"
-                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
-                                >
-                                    @php
-                                        $months = [
-                                            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                                            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-                                        ];
-                                    @endphp
-                                    @foreach($months as $num => $name)
-                                        <option 
-                                            value="{{ $num }}"
-                                            :disabled="isPeriodDisabled(tahunTagihan, {{ $num }})"
-                                            x-text="'Bulan {{ $num }} — {{ $name }}' + (isPeriodDisabled(tahunTagihan, {{ $num }}) ? ' (' + (getPeriodLabel(tahunTagihan, {{ $num }}) || 'Sudah Ada') + ')' : '')"
-                                        >
-                                            Bulan {{ $num }} — {{ $name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <!-- Rincian Tagihan yang Masih Tertunggak -->
+                                <div class="space-y-2">
+                                    <div class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-amber-900 flex items-center justify-between">
+                                        <span>Tagihan yang Perlu Dilunasi Terlebih Dahulu ({{ $unpaidInvoices->count() }} Tagihan):</span>
+                                        <span class="text-rose-600 font-bold">Wajib Lunas</span>
+                                    </div>
+                                    <div class="space-y-2">
+                                        @foreach($unpaidInvoices as $inv)
+                                            <div class="p-3 sm:p-3.5 rounded-xl bg-white/90 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 text-xs shadow-2xs">
+                                                <div class="space-y-0.5">
+                                                    <div class="font-bold text-slate-900 flex items-center gap-1.5">
+                                                        <span>Periode {{ $inv->period }}</span>
+                                                        <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[9px] font-mono font-bold">{{ $inv->status_label }}</span>
+                                                    </div>
+                                                    <div class="text-[10px] text-slate-500 font-mono">No. Invoice: <strong class="text-slate-700">{{ $inv->kode_billing_layanan }}</strong></div>
+                                                </div>
+                                                <div class="flex items-center justify-between sm:justify-end gap-3 pt-1.5 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                                                    <div class="text-left sm:text-right">
+                                                        <div class="font-mono font-extrabold text-xs sm:text-sm text-rose-600">{{ $inv->formatted_total }}</div>
+                                                        <div class="text-[9px] text-slate-400">Jatuh Tempo: {{ $inv->due_date?->translatedFormat('d M Y') ?? '-' }}</div>
+                                                    </div>
+                                                    <a href="{{ route('portal.billing.index') }}" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-heading font-bold text-[11px] transition-colors shadow-2xs shrink-0">
+                                                        Bayar
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
 
-                            <!-- Tahun Tagihan -->
-                            <div class="space-y-1 sm:space-y-1.5">
-                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
-                                    Tahun Tagihan: <span class="text-rose-500">*</span>
-                                </label>
-                                <select 
-                                    name="tahun_tagihan" 
-                                    x-model.number="tahunTagihan"
-                                    @change="onYearChange()"
-                                    class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
-                                >
-                                    @php
-                                        $curYear = (int) old('tahun_tagihan', date('Y'));
-                                    @endphp
-                                    @for($y = $curYear - 1; $y <= $curYear + 1; $y++)
-                                        <option value="{{ $y }}">
-                                            Tahun {{ $y }}
-                                        </option>
-                                    @endfor
-                                </select>
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1 text-xs">
+                                    <span class="text-amber-800 text-[11px]">Silakan lunasi tagihan di atas untuk membuka formulir pengajuan request tagihan.</span>
+                                    <a href="{{ route('portal.billing.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-heading font-extrabold text-xs transition-all shadow-md shadow-emerald-600/20 active:scale-95 shrink-0">
+                                        <iconify-icon icon="solar:wallet-money-bold" class="text-sm"></iconify-icon>
+                                        <span>Buka Menu Tagihan</span>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- Notice if selected period already exists -->
-                        <template x-if="isPeriodDisabled(tahunTagihan, bulanTagihan)">
-                            <div class="p-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2.5 shadow-2xs">
-                                <iconify-icon icon="solar:shield-warning-bold" class="text-amber-600 text-lg shrink-0"></iconify-icon>
+                        @else
+                            <!-- Info Box -->
+                            <div class="p-3.5 rounded-xl sm:rounded-2xl bg-cyan-50/80 border border-cyan-200 text-cyan-950 text-xs flex items-start gap-2.5">
+                                <iconify-icon icon="solar:info-circle-bold" class="text-cyan-600 text-lg shrink-0 mt-0.5"></iconify-icon>
                                 <div class="space-y-0.5">
-                                    <span class="font-bold block">Tagihan Periode Ini Sudah Tersedia</span>
-                                    <span class="text-slate-600 text-[11px] block">
-                                        Invoice untuk periode <strong x-text="'Bulan ' + bulanTagihan + ' Tahun ' + tahunTagihan"></strong> sudah tercatat di sistem (<span class="font-medium text-amber-800" x-text="getPeriodLabel(tahunTagihan, bulanTagihan)"></span>). Silakan pilih bulan atau tahun lainnya.
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold">Permintaan E-Billing / Faktur Tagihan</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                                            ✓ Tagihan Sebelumnya Lunas
+                                        </span>
+                                    </div>
+                                    <span class="text-slate-600 text-[11px] leading-relaxed block">
+                                        Gunakan formulir ini jika tagihan periode tertentu belum terbit atau Anda memerlukan invoice resmi lebih awal untuk keperluan administrasi, reimbursement kantor, atau e-billing.
                                     </span>
                                 </div>
                             </div>
-                        </template>
 
-                        <!-- Snapshot Layanan & Estimasi Nominal -->
-                        <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
-                            <div>
-                                <span class="text-slate-500 block text-[10px] font-mono uppercase">Layanan Terdaftar:</span>
-                                <span class="font-bold text-slate-900 text-xs sm:text-sm">{{ $customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet') }}</span>
-                            </div>
-                            <div>
-                                <span class="text-slate-500 block text-[10px] font-mono uppercase">Estimasi Nominal Tagihan:</span>
-                                <span class="font-bold text-emerald-600 font-mono text-xs sm:text-sm">Rp {{ number_format((float)$customer->billing_amount, 0, ',', '.') }}</span>
-                            </div>
-                        </div>
+                            <!-- Pilihan Periode Bulan & Tahun Tagihan -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <!-- Bulan Tagihan -->
+                                <div class="space-y-1 sm:space-y-1.5">
+                                    <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
+                                        Bulan Tagihan yang Diminta: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <select 
+                                        name="bulan_tagihan" 
+                                        x-model.number="bulanTagihan"
+                                        class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
+                                    >
+                                        @php
+                                            $months = [
+                                                1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                                                5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                                                9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                                            ];
+                                        @endphp
+                                        @foreach($months as $num => $name)
+                                            <option 
+                                                value="{{ $num }}"
+                                                :disabled="isPeriodDisabled(tahunTagihan, {{ $num }})"
+                                                x-text="'Bulan {{ $num }} — {{ $name }}' + (isPeriodDisabled(tahunTagihan, {{ $num }}) ? ' (' + (getPeriodLabel(tahunTagihan, {{ $num }}) || 'Sudah Ada') + ')' : '')"
+                                            >
+                                                Bulan {{ $num }} — {{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                        <!-- Catatan Pelanggan -->
-                        <div class="space-y-1 sm:space-y-1.5">
-                            <label class="block text-[11px] sm:text-xs font-bold text-slate-800">Catatan / Keperluan Khusus:</label>
-                            <textarea 
-                                name="catatan_pelanggan" 
-                                rows="3" 
-                                placeholder="Contoh: Mohon terbitkan invoice bulan ini lebih cepat untuk keperluan administrasi klaim kantor / reimbursement / faktur pajak..."
-                                class="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none shadow-2xs"
-                            >{{ old('catatan_pelanggan') }}</textarea>
-                        </div>
+                                <!-- Tahun Tagihan -->
+                                <div class="space-y-1 sm:space-y-1.5">
+                                    <label class="block text-[11px] sm:text-xs font-bold text-slate-800">
+                                        Tahun Tagihan: <span class="text-rose-500">*</span>
+                                    </label>
+                                    <select 
+                                        name="tahun_tagihan" 
+                                        x-model.number="tahunTagihan"
+                                        @change="onYearChange()"
+                                        class="w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-2xs font-medium"
+                                    >
+                                        @php
+                                            $curYear = (int) old('tahun_tagihan', date('Y'));
+                                        @endphp
+                                        @for($y = $curYear - 1; $y <= $curYear + 1; $y++)
+                                            <option value="{{ $y }}">
+                                                Tahun {{ $y }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Notice if selected period already exists -->
+                            <template x-if="isPeriodDisabled(tahunTagihan, bulanTagihan)">
+                                <div class="p-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-center gap-2.5 shadow-2xs">
+                                    <iconify-icon icon="solar:shield-warning-bold" class="text-amber-600 text-lg shrink-0"></iconify-icon>
+                                    <div class="space-y-0.5">
+                                        <span class="font-bold block">Tagihan Periode Ini Sudah Tersedia</span>
+                                        <span class="text-slate-600 text-[11px] block">
+                                            Invoice untuk periode <strong x-text="'Bulan ' + bulanTagihan + ' Tahun ' + tahunTagihan"></strong> sudah tercatat di sistem (<span class="font-medium text-amber-800" x-text="getPeriodLabel(tahunTagihan, bulanTagihan)"></span>). Silakan pilih bulan atau tahun lainnya.
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Snapshot Layanan & Estimasi Nominal -->
+                            <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
+                                <div>
+                                    <span class="text-slate-500 block text-[10px] font-mono uppercase">Layanan Terdaftar:</span>
+                                    <span class="font-bold text-slate-900 text-xs sm:text-sm">{{ $customer->package->name ?? ($customer->bandwith->nama_bandwith ?? 'Broadband Internet') }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block text-[10px] font-mono uppercase">Estimasi Nominal Tagihan:</span>
+                                    <span class="font-bold text-emerald-600 font-mono text-xs sm:text-sm">Rp {{ number_format((float)$customer->billing_amount, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Catatan Pelanggan -->
+                            <div class="space-y-1 sm:space-y-1.5">
+                                <label class="block text-[11px] sm:text-xs font-bold text-slate-800">Catatan / Keperluan Khusus:</label>
+                                <textarea 
+                                    name="catatan_pelanggan" 
+                                    rows="3" 
+                                    placeholder="Contoh: Mohon terbitkan invoice bulan ini lebih cepat untuk keperluan administrasi klaim kantor / reimbursement / faktur pajak..."
+                                    class="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none shadow-2xs"
+                                >{{ old('catatan_pelanggan') }}</textarea>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Submit Button -->
@@ -1144,18 +1212,31 @@
                             </template>
                         @endif
 
-                        <template x-if="katTiket === '18' && isPeriodDisabled(tahunTagihan, bulanTagihan)">
-                            <button 
-                                type="button" 
-                                disabled
-                                class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
-                            >
-                                <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
-                                <span>Tagihan Periode Ini Sudah Ada</span>
-                            </button>
-                        </template>
+                        @if($hasUnpaidInvoices)
+                            <template x-if="katTiket === '18'">
+                                <button 
+                                    type="button" 
+                                    disabled
+                                    class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
+                                >
+                                    <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
+                                    <span>Mohon Lunasi Tagihan Sebelumnya</span>
+                                </button>
+                            </template>
+                        @else
+                            <template x-if="katTiket === '18' && isPeriodDisabled(tahunTagihan, bulanTagihan)">
+                                <button 
+                                    type="button" 
+                                    disabled
+                                    class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-slate-300 text-slate-500 font-heading font-bold text-xs sm:text-sm cursor-not-allowed flex items-center gap-1.5 sm:gap-2 shadow-none"
+                                >
+                                    <iconify-icon icon="solar:lock-keyhole-bold" width="16"></iconify-icon>
+                                    <span>Tagihan Periode Ini Sudah Ada</span>
+                                </button>
+                            </template>
+                        @endif
 
-                        <template x-if="(katTiket !== '15' || {{ $customer->can_request_suspend ? 'true' : 'false' }}) && (katTiket !== '14' || {{ $customer->can_request_termination ? 'true' : 'false' }}) && (katTiket !== '18' || !isPeriodDisabled(tahunTagihan, bulanTagihan))">
+                        <template x-if="(katTiket !== '15' || {{ $customer->can_request_suspend ? 'true' : 'false' }}) && (katTiket !== '14' || {{ $customer->can_request_termination ? 'true' : 'false' }}) && (katTiket !== '18' || (!{{ $hasUnpaidInvoices ? 'true' : 'false' }} && !isPeriodDisabled(tahunTagihan, bulanTagihan)))">
                             <button 
                                 type="submit" 
                                 class="px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm shadow-md sm:shadow-lg shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 sm:gap-2 cursor-pointer"

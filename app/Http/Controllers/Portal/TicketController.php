@@ -195,9 +195,28 @@ class TicketController extends Controller
                     }
                 }
             }
+        // Ambil daftar invoice periode sebelumnya yang belum lunas (syarat Request Tagihan)
+        $unpaidInvoices = collect();
+        try {
+            $unpaidInvoices = \App\Models\Ims\BillingLayanan::where('nomor_internet', $customer->nomor_internet)
+                ->where(function ($q) {
+                    $q->whereNull('status_bill_lay')
+                      ->orWhereNotIn('status_bill_lay', ['15', '17']); // bukan lunas (15) dan bukan dibatalkan (17)
+                })
+                ->orderBy('tahun_tagihan', 'desc')
+                ->orderBy('bulan_tagihan', 'desc')
+                ->get();
         } catch (\Throwable $e) {}
 
-        return view('portal.tickets.create', compact('customer', 'packages', 'existingInvoicePeriods'));
+        $hasUnpaidInvoices = $unpaidInvoices->isNotEmpty();
+
+        return view('portal.tickets.create', compact(
+            'customer', 
+            'packages', 
+            'existingInvoicePeriods', 
+            'unpaidInvoices', 
+            'hasUnpaidInvoices'
+        ));
     }
 
     /**
@@ -571,6 +590,22 @@ class TicketController extends Controller
 
         // 4. Untuk kategori Request Tagihan / Invoice (18) -> Simpan ke tabel trx_billing_request
         if ($katTiket === '18' || $katTiket === 'billing') {
+            // Syarat Utama: Pelanggan tidak boleh memiliki tagihan tertunggak / belum lunas
+            $unpaidInvoice = \App\Models\Ims\BillingLayanan::where('nomor_internet', $customer->nomor_internet)
+                ->where(function ($q) {
+                    $q->whereNull('status_bill_lay')
+                      ->orWhereNotIn('status_bill_lay', ['15', '17']);
+                })
+                ->orderBy('tahun_tagihan', 'desc')
+                ->orderBy('bulan_tagihan', 'desc')
+                ->first();
+
+            if ($unpaidInvoice) {
+                return back()->withInput()->withErrors([
+                    'kat_tiket' => "Pengajuan request tagihan baru belum dapat diproses karena Anda masih memiliki tagihan periode sebelumnya yang belum lunas ({$unpaidInvoice->period} - {$unpaidInvoice->formatted_total}). Silakan lunasi tagihan sebelumnya terlebih dahulu.",
+                ]);
+            }
+
             $bulan = (int) $request->input('bulan_tagihan', date('n'));
             $tahun = (int) $request->input('tahun_tagihan', date('Y'));
 
