@@ -195,6 +195,8 @@ class TicketController extends Controller
                     }
                 }
             }
+        } catch (\Throwable $e) {}
+
         // Ambil daftar invoice periode sebelumnya yang belum lunas (syarat Request Tagihan)
         $unpaidInvoices = collect();
         try {
