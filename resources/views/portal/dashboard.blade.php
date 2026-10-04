@@ -239,7 +239,7 @@
                                     </div>
                                 @endif
                                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 group-hover:bg-sky-600 group-hover:text-white flex items-center justify-center text-slate-400 transition-all ml-auto sm:ml-0">
-                                    <iconify-icon icon="solar:arrow-right-linear" width="14 sm:16"></iconify-icon>
+                                    <iconify-icon icon="solar:arrow-right-linear" class="text-sm sm:text-base"></iconify-icon>
                                 </div>
                             </div>
                         </a>
