@@ -353,6 +353,8 @@
             isOpen: false,
             showEmailModal: false,
             isLoginZero: !!config.isLoginZero,
+            isDashboard: !!config.isDashboard,
+            hasExplicitStep: !!config.hasExplicitStep,
             customerEmail: (config.customerEmail || '').trim(),
             customerName: config.customerName || 'Pelanggan',
             inputEmail: (config.customerEmail || '').trim(),
