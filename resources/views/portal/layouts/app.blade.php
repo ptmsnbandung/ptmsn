@@ -473,9 +473,12 @@
             const target = e.target.closest('button, .btn, a.btn, .dock-item, .copy-btn, .tab-btn, .action-btn, .badge-btn, .portal-card-hover, [role="button"], input[type="submit"], input[type="button"]');
             if (!target) return;
 
-            // Haptic feedback for touch devices
-            if (e.pointerType === 'touch' && navigator.vibrate) {
-                try { navigator.vibrate(12); } catch(err) {}
+            // Haptic feedback for touch devices (only after explicit trusted user activation)
+            if (e.isTrusted && e.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
+                const canVibrate = !navigator.userActivation || navigator.userActivation.isActive || navigator.userActivation.hasBeenActive;
+                if (canVibrate) {
+                    try { navigator.vibrate(12); } catch(err) {}
+                }
             }
 
             // Create dynamic expanding ripple element
