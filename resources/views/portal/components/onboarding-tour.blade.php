@@ -824,16 +824,16 @@
                 if (window.Swal) {
                     Swal.fire({
                         imageUrl: '{{ asset('images/logo/berhasil1.png') }}',
-                        imageWidth: 140,
-                        imageHeight: 140,
+                        imageWidth: 220,
+                        imageHeight: 220,
                         imageAlt: 'Selamat Datang',
                         title: title || 'Selamat Datang!',
                         html: `<p class="text-xs sm:text-sm text-slate-500 font-sans mt-1.5">${message || 'Panduan selesai. Selamat menggunakan portal layanan MyMSN!'}</p>`,
                         showConfirmButton: false,
-                        timer: 2300,
+                        timer: 2600,
                         customClass: {
-                            popup: '!rounded-3xl !shadow-2xl !border !border-sky-100 !max-w-[320px] sm:!max-w-[360px] !p-6 sm:!p-7 text-center',
-                            image: '!w-32 !h-32 sm:!w-36 sm:!h-36 !object-contain !mx-auto !my-0 !mb-2',
+                            popup: '!rounded-3xl !shadow-2xl !border !border-sky-100 !max-w-[360px] sm:!max-w-[420px] !p-6 sm:!p-8 text-center',
+                            image: '!w-48 !h-48 sm:!w-56 sm:!h-56 !object-contain !mx-auto !my-0 !mb-3',
                             title: '!font-heading !font-extrabold !text-xl sm:!text-2xl !text-slate-800 !tracking-tight !p-0 !m-0',
                             htmlContainer: '!m-0 !p-0 !mt-1'
                         }
