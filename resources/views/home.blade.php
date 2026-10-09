@@ -203,7 +203,7 @@
     </section>
 
     <!-- 6. COVERAGE (Cek Area Jaringan Fiber Optic) -->
-    <x-coverage-checker :coverage-areas="$coverageAreas" :covered-cities="$coveredCities" />
+    <x-coverage-checker :coverage-areas="$coverageAreas" :covered-cities="$coveredCities" :odps="$odps" />
 
     <!-- 7. PACKAGES (High-Performance Section Background) -->
     <section id="paket" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 relative z-10 w-full overflow-hidden bg-[#07172e] border-b border-white/10 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/packages/network-bg.jpg') }}');">

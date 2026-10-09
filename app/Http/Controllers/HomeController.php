@@ -79,6 +79,7 @@ class HomeController extends Controller
             ->get();
 
         $coveredCities = $coverageAreas->pluck('city')->unique()->values();
+        $odps = (new CoverageController())->getOdps();
 
         return view('home', compact(
             'packages',
@@ -88,7 +89,8 @@ class HomeController extends Controller
             'portfolios',
             'clients',
             'coverageAreas',
-            'coveredCities'
+            'coveredCities',
+            'odps'
         ));
     }
 }
