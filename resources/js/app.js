@@ -413,13 +413,160 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       6. Live Coverage Checker (AJAX) + Quick City Buttons
+       6. Live Coverage Checker (AJAX) + Live Suggestions + GPS Geolocation
        ========================================================================== */
     const coverageForm = document.getElementById('coverageForm');
     const coverageQuery = document.getElementById('coverageQuery');
     const coverageResult = document.getElementById('coverageResult');
     const coverageSubmitBtn = document.getElementById('coverageSubmitBtn');
+    const coverageLocateBtn = document.getElementById('coverageLocateBtn');
+    const coverageSuggestions = document.getElementById('coverageSuggestions');
     const quickCityButtons = document.querySelectorAll('.quick-city');
+
+    let allCoverageAreasCache = [];
+
+    // Pre-fetch coverage areas for instant autocomplete suggestions
+    const fetchCoverageAreasCache = async () => {
+        try {
+            const res = await fetch('/coverage/areas', {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && Array.isArray(data.areas)) {
+                    allCoverageAreasCache = data.areas;
+                }
+            }
+        } catch (err) {
+            console.warn('Coverage areas cache error:', err);
+        }
+    };
+    fetchCoverageAreasCache();
+
+    // Auto-complete suggestions on typing
+    if (coverageQuery && coverageSuggestions) {
+        coverageQuery.addEventListener('input', () => {
+            const val = coverageQuery.value.trim().toLowerCase();
+            if (val.length < 2 || !allCoverageAreasCache.length) {
+                coverageSuggestions.classList.add('hidden');
+                coverageSuggestions.innerHTML = '';
+                return;
+            }
+
+            const matches = allCoverageAreasCache.filter(area => {
+                const searchStr = `${area.village || ''} ${area.district || ''} ${area.city || ''} ${area.postal_code || ''}`.toLowerCase();
+                return searchStr.includes(val);
+            }).slice(0, 6);
+
+            if (matches.length === 0) {
+                coverageSuggestions.classList.add('hidden');
+                return;
+            }
+
+            coverageSuggestions.innerHTML = matches.map(area => `
+                <div class="suggestion-item px-4 py-3 hover:bg-sky-500/20 cursor-pointer border-b border-white/5 last:border-0 transition-colors flex items-center justify-between text-left" 
+                     data-query="${area.village ? area.village + ', ' : ''}${area.district ? area.district + ', ' : ''}${area.city}">
+                    <div>
+                        <div class="text-xs font-bold text-white">${area.village ? area.village + ', ' : ''}${area.district || ''}</div>
+                        <div class="text-[11px] text-sky-400 font-mono">${area.city}${area.postal_code ? ' (' + area.postal_code + ')' : ''}</div>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono border border-emerald-500/30">
+                        Tercover
+                    </span>
+                </div>
+            `).join('');
+
+            coverageSuggestions.classList.remove('hidden');
+
+            coverageSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const q = item.getAttribute('data-query');
+                    coverageQuery.value = q;
+                    coverageSuggestions.classList.add('hidden');
+                    performCoverageCheck(q);
+                });
+            });
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!coverageQuery.contains(e.target) && !coverageSuggestions.contains(e.target)) {
+                coverageSuggestions.classList.add('hidden');
+            }
+        });
+    }
+
+    // GPS Geolocation Handler
+    if (coverageLocateBtn && coverageQuery) {
+        coverageLocateBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Geolocation Tidak Didukung',
+                        text: 'Browser Anda tidak mendukung deteksi lokasi otomatis.',
+                        background: '#07172e',
+                        color: '#ffffff',
+                    });
+                } else {
+                    alert('Geolocation tidak didukung pada browser Anda.');
+                }
+                return;
+            }
+
+            coverageLocateBtn.disabled = true;
+            coverageLocateBtn.innerHTML = `
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            `;
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                try {
+                    // Reverse geocoding via OpenStreetMap Nominatim
+                    const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`, {
+                        headers: { 'Accept-Language': 'id' }
+                    });
+                    const geoData = await geoRes.json();
+
+                    const addr = geoData.address || {};
+                    const locName = addr.village || addr.suburb || addr.city_district || addr.district || addr.city || addr.town || addr.county || 'Bandung';
+                    
+                    coverageQuery.value = locName;
+                    performCoverageCheck(locName);
+                } catch (err) {
+                    console.error('Reverse geocode error:', err);
+                    coverageQuery.value = 'Bandung';
+                    performCoverageCheck('Bandung');
+                } finally {
+                    coverageLocateBtn.disabled = false;
+                    coverageLocateBtn.innerHTML = `
+                        <iconify-icon icon="solar:gps-bold" width="18"></iconify-icon>
+                        <span class="hidden md:inline text-[11px]">GPS</span>
+                    `;
+                }
+            }, (error) => {
+                coverageLocateBtn.disabled = false;
+                coverageLocateBtn.innerHTML = `
+                    <iconify-icon icon="solar:gps-bold" width="18"></iconify-icon>
+                    <span class="hidden md:inline text-[11px]">GPS</span>
+                `;
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Izin Lokasi Ditolak',
+                        text: 'Silakan ketik nama kelurahan, kecamatan, atau kota Anda secara manual.',
+                        background: '#07172e',
+                        color: '#ffffff',
+                    });
+                }
+            });
+        });
+    }
 
     const performCoverageCheck = async (queryText) => {
         if (!queryText.trim()) return;
@@ -427,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (coverageSubmitBtn) {
             coverageSubmitBtn.disabled = true;
             coverageSubmitBtn.innerHTML = `
-                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -454,20 +601,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data.status === 'covered') {
                     coverageResult.innerHTML = `
-                        <div class="p-6 rounded-2xl bg-sky-50 border border-sky-200 text-sky-900 shadow-sm">
-                            <div class="flex items-start gap-3.5">
-                                <div class="w-9 h-9 rounded-xl bg-[#0284c7] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-                                    <iconify-icon icon="solar:check-circle-bold" width="22"></iconify-icon>
+                        <div class="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-emerald-950/70 via-[#071d2b]/80 to-[#05131f]/90 border border-emerald-400/40 shadow-[0_0_30px_rgba(16,185,129,0.2)] backdrop-blur-xl animate-fade-in">
+                            <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                                    <iconify-icon icon="solar:check-circle-bold" width="28"></iconify-icon>
                                 </div>
                                 <div class="flex-grow">
-                                    <div class="font-heading font-bold text-slate-900 text-base mb-1">${data.title}</div>
-                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">${data.message}</p>
-                                    <div class="flex flex-wrap gap-2.5">
-                                        <a href="#paket" class="px-4 py-2 rounded-lg bg-[#0284c7] text-white font-heading font-bold text-xs hover:bg-[#0369a1] transition-colors shadow-sm">
-                                            Lihat Paket Internet
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-[11px] font-mono text-emerald-300 font-bold mb-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                        <span>AREA FIBER OPTIC AKTIF</span>
+                                    </div>
+                                    <h3 class="font-heading font-extrabold text-white text-lg sm:text-xl mb-1.5">${data.title}</h3>
+                                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">${data.message}</p>
+                                    
+                                    ${data.details ? `
+                                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/10 mb-5 text-xs">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block">Kota / Wilayah</span>
+                                                <span class="text-white font-bold">${data.details.city || '-'}</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block">Kecamatan</span>
+                                                <span class="text-white font-bold">${data.details.district || '-'}</span>
+                                            </div>
+                                            <div class="col-span-2 sm:col-span-1">
+                                                <span class="text-slate-400 text-[10px] block">Status Distribusi</span>
+                                                <span class="text-emerald-400 font-bold">${data.details.notes || 'Siap Pasang'}</span>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <a href="#paket" class="px-5 py-2.5 rounded-xl bg-[#38bdf8] text-[#050d1a] font-heading font-extrabold text-xs sm:text-sm hover:bg-white hover:text-[#0284c7] transition-all shadow-lg shadow-sky-500/20 flex items-center gap-1.5">
+                                            <span>Lihat Pilihan Paket</span>
+                                            <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
                                         </a>
-                                        <a href="${data.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-white text-slate-800 font-heading font-bold text-xs hover:bg-slate-50 transition-colors border border-slate-200 shadow-sm">
-                                            WhatsApp Registrasi
+                                        <a href="${data.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-1.5">
+                                            <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
+                                            <span>Daftar Pasang via WA</span>
                                         </a>
                                     </div>
                                 </div>
@@ -476,17 +647,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 } else {
                     coverageResult.innerHTML = `
-                        <div class="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 shadow-sm">
-                            <div class="flex items-start gap-3.5">
-                                <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-                                    <iconify-icon icon="solar:info-circle-bold" width="22"></iconify-icon>
+                        <div class="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-amber-950/60 via-[#1a1409]/80 to-[#0a0d14]/90 border border-amber-400/40 shadow-[0_0_30px_rgba(245,158,11,0.15)] backdrop-blur-xl animate-fade-in">
+                            <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/50 text-amber-400 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                                    <iconify-icon icon="solar:info-circle-bold" width="28"></iconify-icon>
                                 </div>
                                 <div class="flex-grow">
-                                    <div class="font-heading font-bold text-slate-900 text-base mb-1">${data.title}</div>
-                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">${data.message}</p>
-                                    <a href="${data.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-white font-heading font-bold text-xs hover:bg-amber-600 transition-colors shadow-sm">
-                                        <span>Request Perluasan Wilayah via WA</span>
-                                    </a>
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-[11px] font-mono text-amber-300 font-bold mb-2">
+                                        <span>DALAM PERLUASAN JARINGAN</span>
+                                    </div>
+                                    <h3 class="font-heading font-extrabold text-white text-lg sm:text-xl mb-1.5">${data.title}</h3>
+                                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">${data.message}</p>
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <a href="${data.whatsapp_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20">
+                                            <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
+                                            <span>Ajukan Perluasan Area ke Sales</span>
+                                        </a>
+                                        <a href="#kontak" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-heading font-bold text-xs sm:text-sm border border-white/15 transition-all">
+                                            <span>Hubungi Kami</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -498,8 +678,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (coverageResult) {
                 coverageResult.classList.remove('hidden');
                 coverageResult.innerHTML = `
-                    <div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
-                        Terjadi kesalahan koneksi. Silakan coba kembali atau hubungi WhatsApp kami.
+                    <div class="p-4 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs font-medium">
+                        Terjadi kendala koneksi server. Silakan coba kembali atau hubungi WhatsApp kami.
                     </div>
                 `;
             }
@@ -508,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 coverageSubmitBtn.disabled = false;
                 coverageSubmitBtn.innerHTML = `
                     <span>Cek Coverage</span>
-                    <iconify-icon icon="solar:radar-bold" width="18"></iconify-icon>
+                    <iconify-icon icon="solar:radar-bold" width="20" class="text-white animate-pulse"></iconify-icon>
                 `;
             }
         }

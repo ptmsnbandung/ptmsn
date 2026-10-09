@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\CoverageArea;
 use App\Models\Package;
 use App\Models\Portfolio;
 use App\Models\Service;
@@ -72,13 +73,22 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $coverageAreas = CoverageArea::where('status', 'covered')
+            ->orderBy('city')
+            ->orderBy('district')
+            ->get();
+
+        $coveredCities = $coverageAreas->pluck('city')->unique()->values();
+
         return view('home', compact(
             'packages',
             'broadbandPackages',
             'sohoPackages',
             'services',
             'portfolios',
-            'clients'
+            'clients',
+            'coverageAreas',
+            'coveredCities'
         ));
     }
 }

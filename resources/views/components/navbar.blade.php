@@ -31,6 +31,9 @@
                 <a href="#layanan" class="nav-link-item px-2.5 xl:px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white transition-all duration-150 whitespace-nowrap">
                     Layanan
                 </a>
+                <a href="#coverage" class="nav-link-item px-2.5 xl:px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white transition-all duration-150 whitespace-nowrap">
+                    Coverage
+                </a>
                 <a href="#paket" class="nav-link-item px-2.5 xl:px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white transition-all duration-150 whitespace-nowrap">
                     Paket
                 </a>
@@ -84,6 +87,9 @@
             </a>
             <a href="#layanan" class="mobile-nav-link text-sm font-semibold text-white/80 hover:text-[#38bdf8] py-2 px-3 rounded-lg hover:bg-white/5 transition-colors">
                 Layanan
+            </a>
+            <a href="#coverage" class="mobile-nav-link text-sm font-semibold text-white/80 hover:text-[#38bdf8] py-2 px-3 rounded-lg hover:bg-white/5 transition-colors">
+                Cek Coverage
             </a>
             <a href="#paket" class="mobile-nav-link text-sm font-semibold text-white/80 hover:text-[#38bdf8] py-2 px-3 rounded-lg hover:bg-white/5 transition-colors">
                 Paket

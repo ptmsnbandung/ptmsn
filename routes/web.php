@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::post('/coverage/check', [CoverageController::class, 'check'])->name('coverage.check');
+Route::get('/coverage/areas', [CoverageController::class, 'areas'])->name('coverage.areas');
 
 /*
 |--------------------------------------------------------------------------
