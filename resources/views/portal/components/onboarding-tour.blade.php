@@ -53,19 +53,19 @@
 
 <script>
     window.__portalOnboardingConfig = {
-        customerId: {!! json_encode((string)$customerId) !!},
-        customerEmail: {!! json_encode((string)$customerEmail) !!},
-        customerName: {!! json_encode((string)$customerName) !!},
+        customerId: @js((string)$customerId),
+        customerEmail: @js((string)$customerEmail),
+        customerName: @js((string)$customerName),
         isLoginZero: {!! $isLoginDbZero ? 'true' : 'false' !!},
         isDashboard: {!! $isDashboardPage ? 'true' : 'false' !!},
         hasExplicitStep: {!! $requestedStep !== null ? 'true' : 'false' !!},
         initialStep: {{ (int)$initialStepIdx }},
         routes: {
-            dashboard: {!! json_encode(url('/portal')) !!},
-            tickets: {!! json_encode(route('portal.tickets.index')) !!},
-            billing: {!! json_encode(route('portal.billing.index')) !!},
-            complete: {!! json_encode(route('portal.onboarding.complete')) !!},
-            updateEmail: {!! json_encode(route('portal.profile.update-email')) !!}
+            dashboard: @js(url('/portal')),
+            tickets: @js(route('portal.tickets.index')),
+            billing: @js(route('portal.billing.index')),
+            complete: @js(route('portal.onboarding.complete')),
+            updateEmail: @js(route('portal.profile.update-email'))
         }
     };
 </script>

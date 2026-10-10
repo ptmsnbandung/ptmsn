@@ -7,6 +7,7 @@ use App\Models\Portfolio;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PortfolioController extends Controller
@@ -41,7 +42,9 @@ class PortfolioController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $safeName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $ext = $file->getClientOriginalExtension() ?: 'png';
+            $filename = time() . '_' . ($safeName ?: 'portfolio') . '.' . $ext;
             $file->move(public_path('images/portfolio'), $filename);
             $imagePath = 'images/portfolio/' . $filename;
         }
@@ -84,7 +87,9 @@ class PortfolioController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $safeName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $ext = $file->getClientOriginalExtension() ?: 'png';
+            $filename = time() . '_' . ($safeName ?: 'portfolio') . '.' . $ext;
             $file->move(public_path('images/portfolio'), $filename);
             $imagePath = 'images/portfolio/' . $filename;
         }

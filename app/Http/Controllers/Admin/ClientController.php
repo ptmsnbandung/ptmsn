@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ClientController extends Controller
@@ -34,7 +35,9 @@ class ClientController extends Controller
         ]);
 
         $file = $request->file('logo');
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $safeName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+        $ext = $file->getClientOriginalExtension() ?: 'png';
+        $filename = time() . '_' . ($safeName ?: 'client') . '.' . $ext;
         $file->move(public_path('images/clients'), $filename);
         $logoPath = 'images/clients/' . $filename;
 
@@ -70,7 +73,9 @@ class ClientController extends Controller
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $safeName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $ext = $file->getClientOriginalExtension() ?: 'png';
+            $filename = time() . '_' . ($safeName ?: 'client') . '.' . $ext;
             $file->move(public_path('images/clients'), $filename);
             $logoPath = 'images/clients/' . $filename;
         }
