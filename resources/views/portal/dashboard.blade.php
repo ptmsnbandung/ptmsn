@@ -2,8 +2,14 @@
 
 @section('title', 'Dashboard Pelanggan')
 
-@section('content')
-<div class="space-y-3 sm:space-y-5">
+<div 
+    x-data="portalEmailVerification({
+        showModal: {{ $shouldShowEmailModal ? 'true' : 'false' }},
+        email: '{{ addslashes($customer->email ?? '') }}',
+        isVerified: {{ $isEmailVerified ? 'true' : 'false' }}
+    })"
+    class="space-y-3 sm:space-y-5 relative"
+>
 
     <!-- Executive Dark Glassmorphism Hero Card -->
     <div id="tour-step-hero" class="hero-network-card p-3.5 sm:p-6 lg:p-7 relative">
@@ -41,6 +47,26 @@
                                 <span class="text-emerald-400 font-mono">{{ $customer->subscription_duration_text }}</span>
                             </span>
                         @endif
+
+                        <!-- Email Verification Status Badge / Trigger -->
+                        <template x-if="isVerified">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-2xs whitespace-nowrap">
+                                <iconify-icon icon="solar:verified-check-bold" class="text-emerald-400 text-xs shrink-0"></iconify-icon>
+                                <span>Email Terverifikasi</span>
+                            </span>
+                        </template>
+                        <template x-if="!isVerified">
+                            <button 
+                                type="button" 
+                                @click="showModal = true"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-amber-500/15 border-amber-400/40 text-amber-300 hover:bg-amber-500/25 transition-all shadow-2xs whitespace-nowrap cursor-pointer"
+                                title="Klik untuk verifikasi email"
+                            >
+                                <iconify-icon icon="solar:letter-bold" class="text-amber-400 text-xs shrink-0"></iconify-icon>
+                                <span>Verifikasi Email</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                            </button>
+                        </template>
                     </div>
 
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
@@ -341,5 +367,228 @@
 
     </div>
 
+    <!-- Email Verification Modal Popup (Bisa Dikonfirmasi atau Dilewati) -->
+    <div 
+        x-show="showModal" 
+        x-cloak 
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in"
+        @keydown.escape.window="skipEmail()"
+    >
+        <div 
+            @click.outside="skipEmail()" 
+            class="w-full max-w-md rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900 to-[#07172e] border border-sky-400/30 p-6 sm:p-7 shadow-2xl relative overflow-hidden space-y-5 text-white"
+        >
+            <!-- Ambient Glowing Orb -->
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-sky-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Close / Skip Icon Button -->
+            <button 
+                type="button" 
+                @click="skipEmail()" 
+                class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                title="Tutup / Lewati"
+            >
+                <iconify-icon icon="solar:close-circle-bold" class="text-2xl"></iconify-icon>
+            </button>
+
+            <!-- Header Icon & Title -->
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-sky-500/30 mb-3">
+                    <iconify-icon icon="solar:letter-unread-bold-duotone" class="text-3xl"></iconify-icon>
+                </div>
+                <h3 class="text-lg sm:text-xl font-heading font-extrabold text-white tracking-tight">
+                    Konfirmasi Alamat Email Anda
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
+                    Pastikan email Anda aktif untuk menerima invoice tagihan bulanan, bukti pembayaran resmi, dan informasi pemeliharaan jaringan.
+                </p>
+            </div>
+
+            <!-- Status Box -->
+            @if(!empty($customer->email))
+                <div class="p-3 rounded-xl bg-sky-500/10 border border-sky-400/30 text-xs text-sky-200 flex items-center gap-2">
+                    <iconify-icon icon="solar:info-circle-bold" class="text-sky-400 text-base shrink-0"></iconify-icon>
+                    <span class="truncate">Email terdaftar saat ini: <strong class="text-white">{{ $customer->email }}</strong></span>
+                </div>
+            @else
+                <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-xs text-amber-200 flex items-center gap-2">
+                    <iconify-icon icon="solar:info-circle-bold" class="text-amber-400 text-base shrink-0"></iconify-icon>
+                    <span>Anda belum memiliki email terdaftar di sistem.</span>
+                </div>
+            @endif
+
+            <!-- Form Input -->
+            <div class="space-y-3">
+                <div>
+                    <label for="modalEmailInput" class="block text-xs font-bold text-slate-300 mb-1.5">
+                        Alamat Email Aktif:
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="email" 
+                            id="modalEmailInput"
+                            x-model="emailInput" 
+                            placeholder="nama@gmail.com" 
+                            class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800/90 border border-slate-700 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/40 text-white placeholder-slate-500 text-xs sm:text-sm font-sans transition-all"
+                            @keydown.enter.prevent="confirmEmail()"
+                        />
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-400">
+                            <iconify-icon icon="solar:letter-bold" width="18"></iconify-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-[11px] text-slate-400 flex items-start gap-2">
+                    <span class="text-sky-400 shrink-0 mt-0.5">💡</span>
+                    <span>Jika tidak memiliki email, Anda dapat mengklik tombol <b>Lewati</b> di bawah untuk melanjutkan langsung ke dashboard.</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2 pt-1">
+                <button 
+                    type="button" 
+                    @click="confirmEmail()" 
+                    :disabled="isSubmitting || !emailInput.trim()"
+                    class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <iconify-icon icon="solar:check-circle-bold" class="text-lg"></iconify-icon>
+                    <span x-text="isSubmitting ? 'Memproses...' : 'Konfirmasi Email Saya'"></span>
+                </button>
+
+                <button 
+                    type="button" 
+                    @click="skipEmail()" 
+                    :disabled="isSkipping"
+                    class="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                >
+                    <span>Lewati (Tidak Ada Email / Nanti Saja)</span>
+                    <iconify-icon icon="solar:arrow-right-linear" width="14"></iconify-icon>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 </div>
+
+<script>
+function portalEmailVerification(config) {
+    return {
+        showModal: config.showModal,
+        emailInput: config.email,
+        isVerified: config.isVerified,
+        isSubmitting: false,
+        isSkipping: false,
+
+        async confirmEmail() {
+            const email = this.emailInput.trim();
+            if (!email) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Email Kosong',
+                        text: 'Silakan ketik alamat email aktif atau klik Lewati jika Anda tidak memiliki email.',
+                        background: '#0f172a',
+                        color: '#fff'
+                    });
+                }
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Format Email Salah',
+                        text: 'Format alamat email tidak valid (contoh: nama@gmail.com).',
+                        background: '#0f172a',
+                        color: '#fff'
+                    });
+                }
+                return;
+            }
+
+            this.isSubmitting = true;
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                const res = await fetch('{{ route('portal.email.confirm') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    this.showModal = false;
+                    this.isVerified = true;
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Email Berhasil Dikonfirmasi',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false,
+                            background: '#0f172a',
+                            color: '#fff'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Konfirmasi',
+                            text: data.message || 'Terjadi kesalahan saat memverifikasi email.',
+                            background: '#0f172a',
+                            color: '#fff'
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Gagal menghubungi server.',
+                        background: '#0f172a',
+                        color: '#fff'
+                    });
+                }
+            } finally {
+                this.isSubmitting = false;
+            }
+        },
+
+        async skipEmail() {
+            this.isSkipping = true;
+            this.showModal = false;
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                await fetch('{{ route('portal.email.skip') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+            } catch (err) {
+                console.error('Skip email error:', err);
+            } finally {
+                this.isSkipping = false;
+            }
+        }
+    };
+}
+</script>
 @endsection

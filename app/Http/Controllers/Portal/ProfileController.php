@@ -93,4 +93,95 @@ class ProfileController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Konfirmasi langsung email pelanggan dari modal dashboard MyMSN
+     */
+    public function confirmEmailAjax(Request $request)
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+        if (!$customer) {
+            return response()->json(['success' => false, 'message' => 'Sesi login telah berakhir.'], 401);
+        }
+
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ], [
+            'email.required' => 'Alamat email aktif wajib diisi.',
+            'email.email' => 'Format alamat email tidak valid.',
+        ]);
+
+        $newEmail = strtolower(trim((string)$request->input('email')));
+
+        try {
+            // 1. Simpan ke IMS jika ada
+            if ($customer->pelanggan) {
+                $customer->pelanggan->email = $newEmail;
+                $customer->pelanggan->save();
+            } elseif (!empty($customer->nik_penduduk)) {
+                \Illuminate\Support\Facades\DB::connection('ims')
+                    ->table('m_pelanggan')
+                    ->where('nik_penduduk', $customer->nik_penduduk)
+                    ->update(['email' => $newEmail]);
+            }
+
+            // 2. Tandai status email terverifikasi di tabel lokal
+            \App\Models\CustomerEmailVerification::updateOrCreate(
+                ['nomor_internet' => $customer->nomor_internet],
+                [
+                    'email' => $newEmail,
+                    'verified_at' => now(),
+                    'is_skipped' => false,
+                ]
+            );
+
+            session(['email_verification_skipped' => false]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Alamat email ' . $newEmail . ' berhasil dikonfirmasi dan diverifikasi!',
+                'email' => $newEmail,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses verifikasi email: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Lewati verifikasi email dari modal dashboard MyMSN
+     */
+    public function skipEmailAjax(Request $request)
+    {
+        /** @var \App\Models\Customer $customer */
+        $customer = Auth::guard('customer')->user();
+        if (!$customer) {
+            return response()->json(['success' => false, 'message' => 'Sesi login telah berakhir.'], 401);
+        }
+
+        try {
+            \App\Models\CustomerEmailVerification::updateOrCreate(
+                ['nomor_internet' => $customer->nomor_internet],
+                [
+                    'is_skipped' => true,
+                ]
+            );
+
+            session(['email_verification_skipped' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Verifikasi email dilewati.',
+            ]);
+        } catch (\Throwable $e) {
+            session(['email_verification_skipped' => true]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Verifikasi email dilewati.',
+            ]);
+        }
+    }
 }
