@@ -21,17 +21,12 @@
         
         <!-- Section Header -->
         <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 reveal-on-scroll">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.08] border border-sky-400/30 text-xs font-mono text-[#38bdf8] uppercase tracking-wider mb-4 font-semibold shadow-[0_0_15px_rgba(56,189,248,0.2)] backdrop-blur-md">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>GIS ODP Precision Coverage Engine</span>
-            </div>
-            
             <h2 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[44px] text-white tracking-tight leading-tight mb-4" data-reveal-words>
-                Cek Coverage Lokasi ke ODP Terdekat.
+                Cek Jangkauan Internet di Lokasi Anda.
             </h2>
             
             <p class="font-sans text-sm sm:text-base text-slate-300 leading-relaxed">
-                Cukup masukkan koordinat lokasi Anda untuk memeriksa kelayakan tarikan kabel fiber optik, estimasi jarak rute kabel ke Optical Distribution Point (ODP), dan ketersediaan port secara presisi & real-time di background.
+                Cukup masukkan titik koordinat lokasi rumah atau kantor Anda untuk memeriksa ketersediaan jaringan fiber optik dan kesiapan pemasangan secara langsung.
             </p>
         </div>
 
@@ -86,7 +81,7 @@
                             id="gisSubmitBtn" 
                             class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#38bdf8] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-heading font-extrabold text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_0_25px_rgba(56,189,248,0.35)] hover:scale-[1.01] active:scale-98 cursor-pointer"
                         >
-                            <span>Cek Coverage & Jarak ODP</span>
+                            <span>Cek Jangkauan Jaringan</span>
                             <iconify-icon icon="solar:radar-bold" width="18" class="animate-pulse"></iconify-icon>
                         </button>
                     </div>
@@ -180,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     <iconify-icon icon="solar:radar-bold" class="text-2xl animate-spin"></iconify-icon>
                 </div>
                 <div>
-                    <h4 class="font-heading font-bold text-white text-sm sm:text-base">Menganalisis Jarak ke ODP Terdekat...</h4>
-                    <p class="text-slate-400 text-xs font-mono mt-0.5">Memeriksa ketersediaan port & rute kabel fiber optik di sistem</p>
+                    <h4 class="font-heading font-bold text-white text-sm sm:text-base">Menganalisis Jangkauan Jaringan...</h4>
+                    <p class="text-slate-400 text-xs font-mono mt-0.5">Memeriksa ketersediaan jalur kabel fiber optik ke lokasi Anda</p>
                 </div>
             </div>
         `;
@@ -197,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (sortedOdps.length === 0) {
             resultEl.innerHTML = `
                 <div class="p-5 rounded-2xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-xs text-center">
-                    Data titik ODP belum tersedia. Silakan hubungi admin.
+                    Data titik jaringan belum tersedia. Silakan hubungi admin.
                 </div>
             `;
             return;
@@ -227,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (finalDistance <= 250) {
             badgeHtml = '<span class="px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/40 text-[11px] font-mono font-bold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>BAGUS (LAYAK PASANG)</span>';
         } else if (finalDistance <= 300) {
-            badgeHtml = '<span class="px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[11px] font-mono font-bold flex items-center gap-1.5">BATAS JANGKAUAN ODP</span>';
+            badgeHtml = '<span class="px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[11px] font-mono font-bold flex items-center gap-1.5">BATAS JANGKAUAN JARINGAN</span>';
         } else {
-            badgeHtml = '<span class="px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40 text-[11px] font-mono font-bold flex items-center gap-1.5">DI LUAR RADIUS STANDAR (>300m)</span>';
+            badgeHtml = '<span class="px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40 text-[11px] font-mono font-bold flex items-center gap-1.5">DI LUAR JANGKAUAN STANDAR (>300m)</span>';
         }
 
         const waMsg = isCovered
-            ? `Halo PT Media Solusi Network, saya sudah mengecek coverage di website pada koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)}. Jarak estimasi ke ${topCandidate.name_odp} (${topCandidate.kode_odp}) adalah ${finalDistance} meter. Mohon info promo dan jadwal pemasangannya.`
-            : `Halo PT Media Solusi Network, saya mengecek koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)} (jarak ${finalDistance}m dari ${topCandidate.name_odp}). Saya ingin mengajukan request survei perluasan ODP ke lokasi saya.`;
+            ? `Halo PT Media Solusi Network, saya sudah mengecek jangkauan di website pada koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)}. Estimasi jarak rute kabel adalah ${finalDistance} meter. Mohon info promo dan jadwal pemasangannya.`
+            : `Halo PT Media Solusi Network, saya mengecek koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)} (jarak estimasi ${finalDistance}m). Saya ingin mengajukan permohonan survei perluasan jaringan ke lokasi saya.`;
 
         const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`;
 
@@ -258,12 +253,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div>
                     <h3 class="font-heading font-extrabold text-white text-lg sm:text-xl mb-1.5 flex items-center gap-2">
                         <iconify-icon icon="${isCovered ? 'solar:check-circle-bold' : 'solar:danger-triangle-bold'}" class="${isCovered ? 'text-emerald-400' : 'text-amber-400'} text-2xl shrink-0"></iconify-icon>
-                        <span>${isCovered ? 'Lokasi Anda Tercover Jaringan Fiber Optic!' : 'Lokasi Berjarak Lebih dari 300m dari ODP Terdekat'}</span>
+                        <span>${isCovered ? 'Lokasi Anda Tercover Jaringan Fiber Optic!' : 'Lokasi Berjarak Lebih dari 300m dari Titik Jaringan'}</span>
                     </h3>
                     <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
                         ${isCovered 
-                            ? `Kabar baik! Titik koordinat Anda berjarak <b>${finalDistance} meter</b> dari titik distribusi ODP <b>${topCandidate.name_odp}</b> (${topCandidate.olt_name}). Jalur distribusi kabel dropcore siap ditarik ke lokasi Anda.`
-                            : `Titik koordinat Anda berjarak <b>${finalDistance} meter</b> dari ODP terdekat (melebihi radius standar 300m). Tim survei kami siap melakukan pengecekan penambahan tiang atau ODP baru untuk pendaftaran kolektif.`}
+                            ? `Kabar baik! Titik koordinat Anda berjarak <b>${finalDistance} meter</b> dari titik distribusi jaringan fiber optik. Jalur kabel siap ditarik ke lokasi Anda.`
+                            : `Titik koordinat Anda berjarak <b>${finalDistance} meter</b> dari jaringan terdekat (melebihi jarak standar 300m). Tim kami siap melakukan pengecekan penambahan tiang atau perluasan jaringan.`}
                     </p>
                 </div>
 
@@ -283,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ` : `
                         <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="w-full px-5 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-extrabold text-xs sm:text-sm text-center transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
                             <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
-                            <span>Ajukan Perluasan ODP via WhatsApp</span>
+                            <span>Ajukan Perluasan Jaringan via WhatsApp</span>
                         </a>
                     `}
                 </div>
