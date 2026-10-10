@@ -384,11 +384,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     await evaluateCoveragePoint(lat, lng);
                     reverseGeocode(lat, lng, null);
                 } else {
-                    alert('Lokasi atau koordinat tidak ditemukan. Silakan masukkan format koordinat seperti: -6.936988, 107.5904512');
+                    const addrBox = document.getElementById('gisAddressBox');
+                    const addrText = document.getElementById('gisAddressText');
+                    if (addrBox && addrText) {
+                        addrBox.classList.remove('hidden');
+                        addrText.innerHTML = 'Alamat tidak ditemukan. Silakan masukkan format koordinat seperti: <span class="font-mono text-sky-300">-6.936988, 107.5904512</span>';
+                    }
                 }
             } catch (err) {
                 console.error(err);
-                alert('Gagal mencari alamat. Silakan masukkan koordinat langsung.');
+                const addrBox = document.getElementById('gisAddressBox');
+                const addrText = document.getElementById('gisAddressText');
+                if (addrBox && addrText) {
+                    addrBox.classList.remove('hidden');
+                    addrText.innerHTML = 'Pencarian alamat offline/gagal. Silakan ketik titik koordinat langsung (contoh: <span class="font-mono text-sky-300">-6.936988, 107.5904512</span>).';
+                }
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -398,94 +408,109 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Fast & Robust Geolocation Engine (Mobile GPS with Instant Desktop WiFi/IP Fallback)
-    function acquireAccurateGps(onSuccess, onError) {
-        if (!navigator.geolocation) {
-            onError({ code: 0, message: 'Browser Anda tidak mendukung deteksi lokasi otomatis.' });
-            return;
-        }
+    // Fast Geolocation Engine with IP Location Fallback (Zero Blocking Alerts)
+    async function acquireSmartLocation(onSuccess, onError) {
+        let isResolved = false;
 
-        let isCompleted = false;
-
-        const completeWithPosition = (pos) => {
-            if (isCompleted) return;
-            isCompleted = true;
-            onSuccess(pos);
+        const deliverLocation = (lat, lng, accuracy, sourceName) => {
+            if (isResolved) return;
+            isResolved = true;
+            onSuccess({
+                coords: { latitude: lat, longitude: lng, accuracy: accuracy },
+                source: sourceName
+            });
         };
 
-        const tryFastNetworkLocation = () => {
-            navigator.geolocation.getCurrentPosition(
-                function (pos) {
-                    completeWithPosition(pos);
-                },
-                function (err) {
-                    if (!isCompleted) {
-                        isCompleted = true;
-                        onError(err);
+        const tryIpFallback = async () => {
+            try {
+                const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(3000) });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success && data.latitude && data.longitude) {
+                        deliverLocation(parseFloat(data.latitude), parseFloat(data.longitude), 500, 'Jaringan IP Provider');
+                        return;
                     }
-                },
-                { enableHighAccuracy: false, timeout: 6000, maximumAge: 60000 }
-            );
+                }
+            } catch (e) {}
+
+            try {
+                const res2 = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+                if (res2.ok) {
+                    const data2 = await res2.json();
+                    if (data2 && data2.latitude && data2.longitude) {
+                        deliverLocation(parseFloat(data2.latitude), parseFloat(data2.longitude), 500, 'Jaringan IP Provider');
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            if (!isResolved) {
+                isResolved = true;
+                onError();
+            }
         };
 
-        // Try high accuracy first (max 3.5s timeout for mobile GPS)
-        try {
+        // Try browser geolocation first with short 3s timeout
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (pos) {
-                    completeWithPosition(pos);
+                    deliverLocation(pos.coords.latitude, pos.coords.longitude, Math.round(pos.coords.accuracy || 20), 'GPS Perangkat');
                 },
                 function (err) {
-                    // Desktop / laptop PCs do not have satellite GPS and often timeout on high accuracy.
-                    // Immediately fallback to WiFi/network location without throwing an alert error!
-                    if (err.code === 3 || err.code === 2) {
-                        tryFastNetworkLocation();
-                    } else if (!isCompleted) {
-                        isCompleted = true;
-                        onError(err);
-                    }
+                    // If desktop/laptop or timeout, silently fallback to IP location
+                    tryIpFallback();
                 },
-                { enableHighAccuracy: true, timeout: 3500, maximumAge: 10000 }
+                { enableHighAccuracy: false, timeout: 3000, maximumAge: 60000 }
             );
-        } catch (e) {
-            tryFastNetworkLocation();
+
+            // Safety timer if browser geolocation hangs indefinitely without callback
+            setTimeout(() => {
+                if (!isResolved) {
+                    tryIpFallback();
+                }
+            }, 3200);
+        } else {
+            tryIpFallback();
         }
     }
 
-    // GPS Button Handler
+    // GPS Button Handler (Smooth Inline Notification, Zero Blocking Alert)
     document.getElementById('gisGpsBtn')?.addEventListener('click', function () {
         const btn = this;
         btn.disabled = true;
-        btn.innerHTML = `<iconify-icon icon="solar:radar-bold" class="text-sky-400 animate-spin text-base"></iconify-icon><span class="hidden sm:inline">Mendeteksi Lokasi...</span>`;
+        btn.innerHTML = `<iconify-icon icon="solar:radar-bold" class="text-sky-400 animate-spin text-base"></iconify-icon><span class="hidden sm:inline">Mendeteksi...</span>`;
 
-        acquireAccurateGps(
+        acquireSmartLocation(
             async function (pos) {
                 btn.disabled = false;
-                btn.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base"></iconify-icon><span class="hidden sm:inline">Lokasi Terkunci</span>`;
+                btn.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base"></iconify-icon><span class="hidden sm:inline">Terkunci</span>`;
                 setTimeout(() => {
                     btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-sm"></iconify-icon><span class="hidden sm:inline">GPS Saya</span>`;
                 }, 3000);
 
                 const lat = pos.coords.latitude;
                 const lng = pos.coords.longitude;
-                const accuracy = Math.round(pos.coords.accuracy || 0);
+                const accuracy = pos.coords.accuracy;
 
                 document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
                 await evaluateCoveragePoint(lat, lng);
                 reverseGeocode(lat, lng, accuracy);
             },
-            function (err) {
+            function () {
                 btn.disabled = false;
                 btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-sm"></iconify-icon><span class="hidden sm:inline">GPS Saya</span>`;
                 
-                let errorMsg = 'Izin lokasi tidak aktif atau sinyal GPS tidak terdeteksi.';
-                if (err.code === 1) {
-                    errorMsg = 'Akses lokasi ditolak oleh browser. Silakan izinkan akses lokasi di ikon setelan browser (ikon gembok) atau masukkan koordinat secara manual.';
-                } else if (err.code === 2) {
-                    errorMsg = 'Sinyal lokasi / posisi saat ini tidak terdeteksi. Silakan masukkan koordinat secara manual.';
-                } else if (err.code === 3) {
-                    errorMsg = 'Pencarian lokasi memerlukan waktu terlalu lama. Silakan coba kembali atau masukkan koordinat secara manual.';
+                const addrBox = document.getElementById('gisAddressBox');
+                const addrText = document.getElementById('gisAddressText');
+                const accBadge = document.getElementById('gisAccuracyBadge');
+                if (addrBox && addrText) {
+                    addrBox.classList.remove('hidden');
+                    if (accBadge) {
+                        accBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30';
+                        accBadge.textContent = 'Manual';
+                    }
+                    addrText.innerHTML = 'Lokasi perangkat tidak dapat dijangkau otomatis. Silakan masukkan koordinat lokasi Anda (contoh: <span class="font-mono text-sky-300">-6.936988, 107.5904512</span>).';
                 }
-                alert(errorMsg);
             }
         );
     });
