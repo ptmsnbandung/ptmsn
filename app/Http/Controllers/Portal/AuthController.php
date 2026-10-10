@@ -112,7 +112,6 @@ class AuthController extends Controller
             // Simpan data OTP di Cache & Session selama 5 menit
             $otpData = [
                 'otp' => $otp,
-                'customer_id' => $customer->id,
                 'nomor_internet' => $customer->nomor_internet,
                 'phone' => $destPhoneFormatted,
                 'created_at' => time(),
@@ -207,10 +206,9 @@ class AuthController extends Controller
         Cache::forget($cacheKey);
         session()->forget('portal_pending_otp');
 
-        // Ambil data pelanggan untuk login
+        // Ambil data pelanggan untuk login berdasarkan nomor internet (primary key)
         $customer = Customer::with(['pelanggan', 'bandwith'])
-            ->where('id', $otpData['customer_id'])
-            ->orWhere('nomor_internet', $otpData['nomor_internet'])
+            ->where('nomor_internet', $otpData['nomor_internet'])
             ->first();
 
         if (!$customer) {
