@@ -103,45 +103,7 @@
                         <span id="gisAddressText" class="block text-slate-200 leading-snug text-xs font-sans"></span>
                     </div>
 
-                    <!-- Master ODP Preset Selector (From Real Database) -->
-                    <div class="pt-3 border-t border-white/10 space-y-1.5">
-                        <div class="flex items-center justify-between text-[11px]">
-                            <span class="text-slate-300 font-bold flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                <span>Pilih Titik ODP Master (Database):</span>
-                            </span>
-                            <span class="text-sky-400 font-mono text-[10px]">{{ $totalOdps }} ODP Aktif</span>
-                        </div>
-                        
-                        <select 
-                            id="gisOdpSelect"
-                            class="w-full py-2.5 px-3 rounded-xl text-xs bg-[#050d1a] border border-white/20 text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#38bdf8] cursor-pointer"
-                        >
-                            <option value="">-- Atau Pilih Langsung dari {{ $totalOdps }} Node ODP Terdaftar --</option>
-                            @php
-                                $groupedOdps = collect($odpsList)->groupBy('olt_name');
-                            @endphp
-                            @foreach($groupedOdps as $oltName => $items)
-                                <optgroup label="🏢 {{ $oltName }} ({{ count($items) }} ODP)" class="bg-slate-900 text-sky-300 font-bold">
-                                    @foreach($items as $item)
-                                        <option value="{{ $item['lat'] }},{{ $item['lng'] }}" class="bg-slate-950 text-white font-normal">
-                                            {{ $item['name_odp'] }} ({{ $item['kode_odp'] }}) - Port {{ $item['used_ports'] }}/{{ $item['capacity_odp'] }}
-                                        </option>
-                                    @endforeach
-                                </optgroup>
-                            @endforeach
-                        </select>
-                    </div>
                 </form>
-
-                <!-- Quick City Buttons -->
-                <div class="flex flex-wrap items-center gap-1.5 mt-4 pt-3 border-t border-white/10 text-xs">
-                    <span class="text-slate-400 font-mono text-[11px]">Contoh Titik:</span>
-                    <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.936988, 107.5904512">Turangga Bandung</button>
-                    <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.921477, 107.607421">Lengkong</button>
-                    <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-7.032611, 107.518652">Soreang</button>
-                    <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.890632, 107.616335">Dago / Coblong</button>
-                </div>
             </div>
 
             <!-- Dynamic Real-time ODP Evaluation Result Card -->
@@ -305,33 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </p>
                 </div>
 
-                <!-- Technical Specification Metrics Box -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-xs">
-                    <div>
-                        <span class="text-slate-400 text-[10.5px] block font-medium">ODP Terdekat</span>
-                        <span class="text-white font-bold font-mono text-xs truncate block mt-0.5">${topCandidate.name_odp}</span>
-                        <span class="text-[10px] text-slate-400 font-mono block">${topCandidate.kode_odp}</span>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 text-[10.5px] block font-medium">OLT & PON</span>
-                        <span class="text-sky-400 font-bold text-xs truncate block mt-0.5">${topCandidate.olt_name}</span>
-                        <span class="text-[10px] text-slate-300 font-mono block">${topCandidate.kode_pon}</span>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 text-[10.5px] block font-medium">Status Port</span>
-                        <span class="${topCandidate.has_slot ? 'text-emerald-400' : 'text-rose-400'} font-bold text-xs block mt-0.5">
-                            ${topCandidate.used_ports}/${topCandidate.capacity_odp} Port
-                        </span>
-                        <span class="text-[10px] ${topCandidate.has_slot ? 'text-emerald-300' : 'text-rose-300'} font-mono block">
-                            ${topCandidate.has_slot ? '✓ Port Tersedia' : '✕ Port Penuh'}
-                        </span>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 text-[10.5px] block font-medium">Koordinat Target</span>
-                        <span class="text-slate-200 font-mono text-[11px] block mt-0.5 truncate">${lat.toFixed(6)}, ${lng.toFixed(6)}</span>
-                        <span class="text-[10px] text-sky-400 font-mono block">ODP: ${topCandidate.lat.toFixed(4)}, ${topCandidate.lng.toFixed(4)}</span>
-                    </div>
-                </div>
+
 
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap items-center gap-3 pt-1">
@@ -574,36 +510,7 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     });
 
-    // Master ODP Select Dropdown
-    document.getElementById('gisOdpSelect')?.addEventListener('change', async function () {
-        const val = this.value;
-        if (!val) return;
-        const parts = val.split(',');
-        if (parts.length === 2) {
-            const lat = parseFloat(parts[0]);
-            const lng = parseFloat(parts[1]);
-            document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-            await evaluateCoveragePoint(lat, lng);
-            reverseGeocode(lat, lng, null);
-        }
-    });
 
-    // Quick City Buttons
-    document.querySelectorAll('.gis-quick-btn').forEach(btn => {
-        btn.addEventListener('click', async function () {
-            const coord = this.getAttribute('data-coord');
-            if (coord) {
-                document.getElementById('gisInputCoord').value = coord;
-                const parts = coord.split(',');
-                if (parts.length === 2) {
-                    const lat = parseFloat(parts[0]);
-                    const lng = parseFloat(parts[1]);
-                    await evaluateCoveragePoint(lat, lng);
-                    reverseGeocode(lat, lng, null);
-                }
-            }
-        });
-    });
 
     // Initial evaluation on page load
     setTimeout(() => {
