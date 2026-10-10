@@ -46,19 +46,22 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $localPhone = str_starts_with($cleanPhone, '62') ? ('0' . substr($cleanPhone, 2)) : $cleanPhone;
-        $intlPhone = str_starts_with($cleanPhone, '0') ? ('62' . substr($cleanPhone, 1)) : $cleanPhone;
+        // Variasi format: di database IMS nomor diawali '62', sedangkan user mengetik '08...'
+        $variants = $this->getPhoneSearchVariants($rawPhone);
+        $corePhone = $this->extractCorePhoneNumber($rawPhone);
+        $intlPhone = MetaWhatsAppService::formatPhoneNumber($rawPhone);
 
         try {
-            // Cari pelanggan di database IMS berdasarkan nomor HP
+            // Cari pelanggan di database IMS berdasarkan nomor HP (mencocokkan awalan 62, 0, +62)
             $customer = Customer::with(['pelanggan', 'bandwith'])
-                ->whereHas('pelanggan', function ($q) use ($localPhone, $intlPhone, $rawPhone) {
-                    $q->where('nomor_hp', $localPhone)
-                      ->orWhere('nomor_hp_2', $localPhone)
-                      ->orWhere('nomor_hp', $intlPhone)
-                      ->orWhere('nomor_hp_2', $intlPhone)
-                      ->orWhere('nomor_hp', $rawPhone)
-                      ->orWhere('nomor_hp_2', $rawPhone);
+                ->whereHas('pelanggan', function ($q) use ($variants, $corePhone) {
+                    $q->whereIn('nomor_hp', $variants)
+                      ->orWhereIn('nomor_hp_2', $variants);
+
+                    if (!empty($corePhone) && strlen($corePhone) >= 7) {
+                        $q->orWhere('nomor_hp', 'like', "%{$corePhone}")
+                          ->orWhere('nomor_hp_2', 'like', "%{$corePhone}");
+                    }
                 })
                 ->orWhere('nomor_internet', $rawPhone)
                 ->first();
@@ -70,7 +73,7 @@ class AuthController extends Controller
                 ], 404);
             }
 
-            // Ambil nomor HP aktif dari data pelanggan (utamakan nomor terdaftar)
+            // Ambil nomor HP aktif dari data pelanggan (utamakan nomor terdaftar di database)
             $destPhone = $customer->pelanggan?->nomor_hp 
                 ?: $customer->pelanggan?->nomor_hp_2 
                 ?: $intlPhone;
@@ -248,26 +251,28 @@ class AuthController extends Controller
             ]);
         }
 
-        $phone = preg_replace('/[^0-9]/', '', $rawInput);
-        if (str_starts_with($phone, '62')) {
-            $phone = '0' . substr($phone, 2);
-        }
+        $cleanInput = preg_replace('/[^0-9]/', '', $rawInput);
+        $variants = $this->getPhoneSearchVariants($rawInput);
+        $corePhone = $this->extractCorePhoneNumber($rawInput);
 
         try {
             // 1. Cari pelanggan berdasarkan Nomor Internet (ID Pelanggan) persis
             $customer = Customer::with(['pelanggan', 'bandwith'])
                 ->where('nomor_internet', $rawInput)
+                ->orWhere('nomor_internet', $cleanInput)
                 ->first();
 
-            // 2. Jika tidak ditemukan, cari dengan angka bersih atau relasi ke biodata pelanggan
+            // 2. Jika tidak ditemukan, cari dengan nomor HP/WhatsApp pelanggan (mencocokkan awalan 62 dan 0)
             if (!$customer) {
                 $customer = Customer::with(['pelanggan', 'bandwith'])
-                    ->where('nomor_internet', $phone)
-                    ->orWhereHas('pelanggan', function ($q) use ($phone, $rawInput) {
-                        $q->where('nomor_hp', $phone)
-                          ->orWhere('nomor_hp_2', $phone)
-                          ->orWhere('nomor_hp', $rawInput)
-                          ->orWhere('nomor_hp_2', $rawInput);
+                    ->whereHas('pelanggan', function ($q) use ($variants, $corePhone) {
+                        $q->whereIn('nomor_hp', $variants)
+                          ->orWhereIn('nomor_hp_2', $variants);
+
+                        if (!empty($corePhone) && strlen($corePhone) >= 7) {
+                            $q->orWhere('nomor_hp', 'like', "%{$corePhone}")
+                              ->orWhere('nomor_hp_2', 'like', "%{$corePhone}");
+                        }
                     })
                     ->first();
             }
@@ -297,6 +302,48 @@ class AuthController extends Controller
         return back()->withInput($request->only('login', 'phone'))->withErrors([
             'login' => 'Nomor Internet / Nomor WhatsApp (' . $rawInput . ') tidak terdaftar di sistem pelanggan PT MSN. Pastikan data sesuai dengan yang terdaftar.',
         ]);
+    }
+
+    /**
+     * Hasilkan variasi nomor telepon (62xxx, 0xxx, +62xxx, 8xxx)
+     * agar pelanggan yang mengetikkan 08... tetap cocok dengan database IMS yang tersimpan 62...
+     */
+    protected function getPhoneSearchVariants(string $rawInput): array
+    {
+        $clean = preg_replace('/[^0-9]/', '', $rawInput);
+        if (empty($clean)) {
+            return array_values(array_filter([trim($rawInput)]));
+        }
+
+        $core = $clean;
+        if (str_starts_with($core, '62')) {
+            $core = substr($core, 2);
+        } elseif (str_starts_with($core, '0')) {
+            $core = substr($core, 1);
+        }
+
+        return array_values(array_unique(array_filter([
+            '62' . $core,      // Format utama di database IMS (6281234567890)
+            '+62' . $core,     // Format tanda plus (+6281234567890)
+            '0' . $core,       // Format lokal yang diketik user (081234567890)
+            $core,             // Format inti tanpa awalan (81234567890)
+            $clean,            // Angka bersih
+            trim($rawInput),   // Input mentah
+        ])));
+    }
+
+    /**
+     * Ambil inti nomor telepon tanpa kode negara atau leading zero (misal: 81234567890)
+     */
+    protected function extractCorePhoneNumber(string $rawInput): string
+    {
+        $clean = preg_replace('/[^0-9]/', '', $rawInput);
+        if (str_starts_with($clean, '62')) {
+            return substr($clean, 2);
+        } elseif (str_starts_with($clean, '0')) {
+            return substr($clean, 1);
+        }
+        return $clean;
     }
 
     /**
