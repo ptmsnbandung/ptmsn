@@ -43,6 +43,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
     // Guest customer routes
     Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [PortalAuthController::class, 'login'])->middleware('throttle:15,1')->name('login.submit');
+    Route::post('/login/send-otp', [PortalAuthController::class, 'sendOtp'])->middleware('throttle:10,1')->name('login.send-otp');
+    Route::post('/login/verify-otp', [PortalAuthController::class, 'verifyOtp'])->middleware('throttle:15,1')->name('login.verify-otp');
     Route::match(['get', 'post'], '/logout', [PortalAuthController::class, 'logout'])->name('logout');
 
     // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
