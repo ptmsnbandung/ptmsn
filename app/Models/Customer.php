@@ -116,12 +116,33 @@ class Customer extends Authenticatable
 
     public function getIsEmailVerifiedAttribute(): bool
     {
-        return $this->emailVerification && $this->emailVerification->verified_at !== null;
+        try {
+            return $this->emailVerification && $this->emailVerification->verified_at !== null;
+        } catch (\Throwable $e) {
+            CustomerEmailVerification::ensureTableExists();
+            try {
+                // Refresh relationship to re-query newly created table
+                $this->unsetRelation('emailVerification');
+                return $this->emailVerification && $this->emailVerification->verified_at !== null;
+            } catch (\Throwable $ex) {
+                return false;
+            }
+        }
     }
 
     public function getIsEmailSkippedAttribute(): bool
     {
-        return (bool) ($this->emailVerification?->is_skipped ?? false);
+        try {
+            return (bool) ($this->emailVerification?->is_skipped ?? false);
+        } catch (\Throwable $e) {
+            CustomerEmailVerification::ensureTableExists();
+            try {
+                $this->unsetRelation('emailVerification');
+                return (bool) ($this->emailVerification?->is_skipped ?? false);
+            } catch (\Throwable $ex) {
+                return false;
+            }
+        }
     }
 
     // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---

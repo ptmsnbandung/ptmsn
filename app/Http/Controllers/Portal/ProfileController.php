@@ -127,6 +127,7 @@ class ProfileController extends Controller
             }
 
             // 2. Tandai status email terverifikasi di tabel lokal
+            \App\Models\CustomerEmailVerification::ensureTableExists();
             \App\Models\CustomerEmailVerification::updateOrCreate(
                 ['nomor_internet' => $customer->nomor_internet],
                 [
@@ -163,6 +164,7 @@ class ProfileController extends Controller
         }
 
         try {
+            \App\Models\CustomerEmailVerification::ensureTableExists();
             \App\Models\CustomerEmailVerification::updateOrCreate(
                 ['nomor_internet' => $customer->nomor_internet],
                 [
