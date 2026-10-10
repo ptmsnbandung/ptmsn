@@ -2,6 +2,7 @@
 
 @section('title', 'Dashboard Pelanggan')
 
+@section('content')
 <div class="space-y-3 sm:space-y-5">
 
     <!-- Executive Dark Glassmorphism Hero Card -->
