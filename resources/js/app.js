@@ -736,28 +736,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       8. Hero Section Opening Sequence (GSAP)
+       8. Hero Section Animations (Idle Floating Only, No Entrance Animation)
        ========================================================================== */
     const initScrollAnimations = () => {
-
-        // Hero Section Opening Sequence (GSAP)
         if (typeof window.gsap !== 'undefined') {
             const heroSection = document.getElementById('hero');
             if (heroSection) {
-                const heroBadge = heroSection.querySelector('.inline-flex.items-center.px-4');
-                const heroH1 = heroSection.querySelector('h1');
-                const heroDesc = heroSection.querySelector('p');
-                const heroButtons = heroSection.querySelectorAll('a[href="#kontak"], a[href="#coverage"]');
-                const heroMetrics = heroSection.querySelectorAll('.grid.grid-cols-2 > div, .grid.grid-cols-4 > div');
                 const heroImage = heroSection.querySelector('img');
-
-                const heroTl = window.gsap.timeline({ delay: 0.1 });
-
-                if (heroBadge) heroTl.from(heroBadge, { y: -20, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' });
-                if (heroH1) heroTl.from(heroH1, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', clearProps: 'all' }, '-=0.4');
-                if (heroDesc) heroTl.from(heroDesc, { y: 20, opacity: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' }, '-=0.5');
-                if (heroButtons.length) heroTl.from(heroButtons, { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', clearProps: 'all' }, '-=0.4');
-                if (heroMetrics.length) heroTl.from(heroMetrics, { y: 20, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', clearProps: 'all' }, '-=0.3');
 
                 if (heroImage) {
                     window.gsap.to(heroImage, {
