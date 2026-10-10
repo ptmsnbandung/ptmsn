@@ -109,42 +109,6 @@ class Customer extends Authenticatable
         return $this->billingLayanan();
     }
 
-    public function emailVerification()
-    {
-        return $this->hasOne(CustomerEmailVerification::class, 'nomor_internet', 'nomor_internet');
-    }
-
-    public function getIsEmailVerifiedAttribute(): bool
-    {
-        try {
-            return $this->emailVerification && $this->emailVerification->verified_at !== null;
-        } catch (\Throwable $e) {
-            CustomerEmailVerification::ensureTableExists();
-            try {
-                // Refresh relationship to re-query newly created table
-                $this->unsetRelation('emailVerification');
-                return $this->emailVerification && $this->emailVerification->verified_at !== null;
-            } catch (\Throwable $ex) {
-                return false;
-            }
-        }
-    }
-
-    public function getIsEmailSkippedAttribute(): bool
-    {
-        try {
-            return (bool) ($this->emailVerification?->is_skipped ?? false);
-        } catch (\Throwable $e) {
-            CustomerEmailVerification::ensureTableExists();
-            try {
-                $this->unsetRelation('emailVerification');
-                return (bool) ($this->emailVerification?->is_skipped ?? false);
-            } catch (\Throwable $ex) {
-                return false;
-            }
-        }
-    }
-
     // --- ACCESSOR PROPERTI AGAR SESUAI DENGAN TAMPILAN VIEW PORTAL ---
 
     public function getCustomerIdAttribute()

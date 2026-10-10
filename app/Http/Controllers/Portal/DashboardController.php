@@ -43,22 +43,11 @@ class DashboardController extends Controller
             + $suspend->whereIn('status_suspend', ['13', '14', '16', 'resolved', 'done'])->count()
             + $terminasi->whereIn('status_terminasi', ['14', '16', 'resolved', 'done'])->count();
 
-        try {
-            $isEmailVerified = $customer ? $customer->is_email_verified : false;
-            $isEmailSkipped = $customer ? ($customer->is_email_skipped || session('email_verification_skipped', false)) : false;
-        } catch (\Throwable $e) {
-            $isEmailVerified = false;
-            $isEmailSkipped = session('email_verification_skipped', false);
-        }
-        $shouldShowEmailModal = !$isEmailVerified && !$isEmailSkipped;
-
         return view('portal.dashboard', compact(
             'customer',
             'recentTickets',
             'activeTicketsCount',
-            'resolvedTicketsCount',
-            'isEmailVerified',
-            'shouldShowEmailModal'
+            'resolvedTicketsCount'
         ));
     }
 

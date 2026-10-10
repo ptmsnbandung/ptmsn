@@ -70,8 +70,6 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
         Route::put('/profile', [PortalProfileController::class, 'update'])->name('profile.update');
         Route::post('/profile/update-email', [PortalProfileController::class, 'updateEmailAjax'])->name('profile.update-email');
-        Route::post('/email/confirm', [PortalProfileController::class, 'confirmEmailAjax'])->name('email.confirm');
-        Route::post('/email/skip', [PortalProfileController::class, 'skipEmailAjax'])->name('email.skip');
 
         // Interactive Onboarding Tour Completion
         Route::post('/onboarding/complete', [PortalDashboardController::class, 'completeOnboarding'])->name('onboarding.complete');
