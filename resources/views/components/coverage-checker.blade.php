@@ -31,7 +31,7 @@
             </h2>
             
             <p class="font-sans text-sm sm:text-base text-slate-300 leading-relaxed">
-                Periksa kelayakan tarikan kabel dropcore fiber optik, estimasi jarak meter ke Optical Distribution Point (ODP), dan ketersediaan port secara presisi & real-time.
+                Periksa kelayakan tarikan kabel dropcore fiber optik mengikuti rute jalan, estimasi jarak meter ke Optical Distribution Point (ODP), dan ketersediaan port secara presisi & real-time.
             </p>
         </div>
 
@@ -87,12 +87,18 @@
                             </button>
                         </div>
 
-                        <!-- Detected Address Notification -->
-                        <div id="gisAddressBox" class="hidden p-2.5 rounded-xl bg-sky-950/60 border border-sky-400/30 text-[11px] text-sky-200 flex items-start gap-2">
-                            <iconify-icon icon="solar:map-point-bold" class="text-[#38bdf8] shrink-0 text-sm mt-0.5"></iconify-icon>
-                            <div class="flex-1 min-w-0">
-                                <span class="font-bold text-white text-[10px] uppercase block tracking-wider">Alamat Titik Terpilih:</span>
-                                <span id="gisAddressText" class="truncate block text-slate-300"></span>
+                        <!-- Detected Address Notification & GPS Accuracy -->
+                        <div id="gisAddressBox" class="hidden p-3 rounded-2xl bg-sky-950/70 border border-sky-400/30 text-[11px] text-sky-200 space-y-1.5 shadow-lg backdrop-blur-md">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-1.5">
+                                    <iconify-icon icon="solar:map-point-bold" class="text-[#38bdf8] text-sm"></iconify-icon>
+                                    <span class="font-bold text-white text-[10px] uppercase tracking-wider">Alamat Titik Terpilih:</span>
+                                </div>
+                                <span id="gisAccuracyBadge" class="hidden"></span>
+                            </div>
+                            <span id="gisAddressText" class="block text-slate-200 leading-snug text-[11.5px] font-sans"></span>
+                            <div class="text-[10px] text-sky-300/80 font-sans flex items-center gap-1 pt-1 border-t border-white/5">
+                                <span>💡 Pin merah 📍 dapat digeser ke titik atap rumah Anda jika lokasi kurang pas.</span>
                             </div>
                         </div>
 
@@ -130,10 +136,10 @@
                     <!-- Quick City Buttons -->
                     <div class="flex flex-wrap items-center gap-1.5 mt-4 pt-3 border-t border-white/10 text-xs">
                         <span class="text-slate-400 font-mono text-[10.5px]">Wilayah:</span>
-                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors" data-coord="-6.936988, 107.5904512">Turangga Bandung</button>
-                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors" data-coord="-6.921477, 107.607421">Lengkong</button>
-                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors" data-coord="-7.032611, 107.518652">Soreang</button>
-                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors" data-coord="-6.890632, 107.616335">Dago / Coblong</button>
+                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.936988, 107.5904512">Turangga Bandung</button>
+                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.921477, 107.607421">Lengkong</button>
+                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-7.032611, 107.518652">Soreang</button>
+                        <button type="button" class="gis-quick-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer" data-coord="-6.890632, 107.616335">Dago / Coblong</button>
                     </div>
                 </div>
 
@@ -171,10 +177,7 @@
                             <button type="button" id="gisLayerTerrain" class="gis-layer-btn px-2.5 py-1 rounded-lg font-bold text-[10.5px] transition-all bg-white/5 hover:bg-white/15 text-slate-300 border border-white/10 cursor-pointer">
                                 ⛰️ Terrain
                             </button>
-                            <button type="button" id="gisToggleRadius" class="px-2.5 py-1 rounded-lg font-bold text-[10.5px] transition-all bg-white/5 hover:bg-white/15 text-slate-300 border border-white/10 cursor-pointer" title="Tampilkan / Sembunyikan Radius 300m">
-                                ⭕ Radius
-                            </button>
-                            <button type="button" id="gisFitBounds" class="px-2 py-1 rounded-lg text-sky-400 hover:text-white bg-white/5 hover:bg-white/15 border border-white/10 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
+                            <button type="button" id="gisFitBounds" class="px-2.5 py-1 rounded-lg text-sky-400 hover:text-white bg-white/5 hover:bg-white/15 border border-white/10 text-[10.5px] font-bold transition flex items-center gap-1 cursor-pointer">
                                 🔄 Fit
                             </button>
                         </div>
@@ -201,13 +204,11 @@
                         </div>
                         <div class="flex items-center gap-2 text-sky-400 font-semibold text-[10px]">
                             <span class="flex items-center gap-1">
-                                <span class="w-3 h-0.5 bg-sky-400 inline-block border-t border-dashed border-sky-400"></span>
-                                <span>Jalur Dropcore</span>
+                                <span class="w-3 h-0.5 bg-sky-400 inline-block"></span>
+                                <span>Rute Jalan Kabel Dropcore</span>
                             </span>
                             <span>•</span>
-                            <span class="text-emerald-400">Hijau &le; 150m</span>
-                            <span>•</span>
-                            <span class="text-sky-400">Biru &le; 300m</span>
+                            <span class="text-emerald-400">Max Jangkauan: &le; 300m</span>
                         </div>
                     </div>
 
@@ -235,8 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let odpMarkersLayer = L.layerGroup();
     let userMarkerLayer = L.layerGroup();
     let connectionLineLayer = L.layerGroup();
-    let radiusCirclesLayer = L.layerGroup();
-    let showRadius = true;
 
     const tileLayers = {
         roadmap: L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -258,16 +257,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let activeLayerKey = 'roadmap';
 
-    // Geodesic distance in meters (Haversine formula)
-    function calcDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371000;
+    // Geodesic straight-line distance in meters (Haversine formula)
+    function calcStraightDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371008.8;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+        return Math.round(R * c);
+    }
+
+    // OSRM Real Street / Foot Routing API
+    async function fetchStreetRoute(userLat, userLng, odpLat, odpLng) {
+        const routingUrls = [
+            `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${userLng},${userLat};${odpLng},${odpLat}?overview=full&geometries=geojson&continue_straight=true`,
+            `https://router.project-osrm.org/route/v1/foot/${userLng},${userLat};${odpLng},${odpLat}?overview=full&geometries=geojson&continue_straight=true`,
+            `https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${odpLng},${odpLat}?overview=full&geometries=geojson&continue_straight=true`
+        ];
+
+        for (const url of routingUrls) {
+            try {
+                const ctrl = new AbortController();
+                const timeoutId = setTimeout(() => ctrl.abort(), 2500);
+                const res = await fetch(url, { signal: ctrl.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.routes && data.routes[0] && data.routes[0].distance) {
+                        const coords = (data.routes[0].geometry && data.routes[0].geometry.coordinates)
+                            ? data.routes[0].geometry.coordinates.map(c => [c[1], c[0]])
+                            : null;
+                        return {
+                            distance: Math.round(data.routes[0].distance),
+                            geometry: coords
+                        };
+                    }
+                }
+            } catch (e) {
+                // Try next endpoint
+            }
+        }
+        return null;
     }
 
     // Initialize Map
@@ -280,27 +312,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     mapInstance = L.map('gisCoverageMapCanvas', {
         center: [defaultLat, defaultLng],
-        zoom: 15,
+        zoom: 16,
         preferCanvas: true,
         attributionControl: false
     });
 
     tileLayers.roadmap.addTo(mapInstance);
     odpMarkersLayer.addTo(mapInstance);
-    radiusCirclesLayer.addTo(mapInstance);
     connectionLineLayer.addTo(mapInstance);
     userMarkerLayer.addTo(mapInstance);
 
-    // Plot ODP Markers
+    // Plot ODP Markers Cleanly without any green radius circles
     function renderOdps() {
         odpMarkersLayer.clearLayers();
-        radiusCirclesLayer.clearLayers();
 
         (window.msnOdpsData || []).forEach(odp => {
             const hasSlot = odp.has_slot;
             const markerColor = hasSlot ? '#38bdf8' : '#f43f5e';
 
-            // Custom SVG icon for ODP
             const iconHtml = `
                 <div style="position: relative; width: 22px; height: 22px; background: ${markerColor}; border: 2px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
                     <div style="width: 6px; height: 6px; background: #ffffff; border-radius: 50%;"></div>
@@ -334,28 +363,6 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             marker.bindPopup(popupHtml);
             odpMarkersLayer.addLayer(marker);
-
-            // Radius Circles (150m green, 300m blue)
-            if (showRadius) {
-                const circle150 = L.circle([odp.lat, odp.lng], {
-                    radius: 150,
-                    color: '#10b981',
-                    weight: 1,
-                    opacity: 0.45,
-                    fillColor: '#10b981',
-                    fillOpacity: 0.05
-                });
-                const circle300 = L.circle([odp.lat, odp.lng], {
-                    radius: 300,
-                    color: '#38bdf8',
-                    weight: 1,
-                    opacity: 0.35,
-                    fillColor: '#38bdf8',
-                    fillOpacity: 0.03
-                });
-                radiusCirclesLayer.addLayer(circle150);
-                radiusCirclesLayer.addLayer(circle300);
-            }
         });
     }
 
@@ -384,15 +391,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('gisLayerHybrid')?.addEventListener('click', () => setMapLayer('hybrid'));
     document.getElementById('gisLayerTerrain')?.addEventListener('click', () => setMapLayer('terrain'));
 
-    document.getElementById('gisToggleRadius')?.addEventListener('click', () => {
-        showRadius = !showRadius;
-        if (showRadius) {
-            mapInstance.addLayer(radiusCirclesLayer);
-        } else {
-            mapInstance.removeLayer(radiusCirclesLayer);
-        }
-    });
-
     document.getElementById('gisFitBounds')?.addEventListener('click', () => {
         if (window.msnOdpsData && window.msnOdpsData.length > 0) {
             const group = L.featureGroup([odpMarkersLayer, userMarkerLayer]);
@@ -400,23 +398,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Evaluate Nearest ODP & Draw Connection Line
-    function evaluateCoveragePoint(lat, lng) {
+    // Evaluate Nearest ODP & Draw Street Routing Line (Following Roads)
+    async function evaluateCoveragePoint(lat, lng) {
         userMarkerLayer.clearLayers();
         connectionLineLayer.clearLayers();
 
-        // Draggable user pin icon
+        // Draggable Google Maps Red Pin
         const pinHtml = `
-            <div style="position: relative; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                <div style="position: absolute; width: 32px; height: 32px; background: rgba(239, 68, 68, 0.3); border-radius: 50%; animation: ping 1.5s infinite;"></div>
-                <div style="font-size: 24px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));">📍</div>
+            <div style="position: relative; width: 34px; height: 46px; display: flex; justify-content: center;">
+                <div style="position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); width: 22px; height: 10px; border-radius: 50%; background: rgba(234, 67, 53, 0.4); border: 1.5px solid #EA4335;"></div>
+                <svg width="34" height="46" viewBox="0 0 34 46" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); position: relative; z-index: 10;">
+                    <path d="M17 0C7.611 0 0 7.611 0 17C0 29.75 17 46 17 46C17 46 34 29.75 34 17C34 7.611 26.389 0 17 0Z" fill="#EA4335"/>
+                    <path d="M17 1C8.163 1 1 8.163 1 17C1 28.5 17 44.5 17 44.5C17 44.5 33 28.5 33 17C33 8.163 25.837 1 17 1Z" stroke="#B31412" stroke-width="1.2"/>
+                    <circle cx="17" cy="16" r="6" fill="#7A0000"/>
+                    <circle cx="17" cy="16" r="2.5" fill="#FFFFFF"/>
+                </svg>
             </div>
         `;
         const userIcon = L.divIcon({
             className: 'user-pin-marker',
             html: pinHtml,
-            iconSize: [32, 32],
-            iconAnchor: [16, 30]
+            iconSize: [34, 46],
+            iconAnchor: [17, 46]
         });
 
         const userMarker = L.marker([lat, lng], {
@@ -428,154 +431,192 @@ document.addEventListener('DOMContentLoaded', function () {
             const pos = e.target.getLatLng();
             document.getElementById('gisInputCoord').value = `${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`;
             evaluateCoveragePoint(pos.lat, pos.lng);
-            reverseGeocode(pos.lat, pos.lng);
+            reverseGeocode(pos.lat, pos.lng, null);
         });
 
         userMarkerLayer.addLayer(userMarker);
 
-        // Find nearest ODP from real points
-        let nearest = null;
-        let minDist = Infinity;
+        // Find top 6 closest ODPs by straight distance first
+        const sortedOdps = (window.msnOdpsData || []).map(odp => {
+            return {
+                ...odp,
+                straightDist: calcStraightDistance(lat, lng, odp.lat, odp.lng)
+            };
+        }).sort((a, b) => a.straightDist - b.straightDist);
 
-        (window.msnOdpsData || []).forEach(odp => {
-            const dist = calcDistance(lat, lng, odp.lat, odp.lng);
-            if (dist < minDist) {
-                minDist = dist;
-                nearest = odp;
+        if (sortedOdps.length === 0) return;
+
+        // Take top 4 candidates and fetch real street routing for the closest one
+        const topCandidate = sortedOdps[0];
+        let finalDistance = topCandidate.straightDist;
+        let routeCoordinates = null;
+
+        // Fetch street routing from OSRM
+        try {
+            const routeResult = await fetchStreetRoute(lat, lng, topCandidate.lat, topCandidate.lng);
+            if (routeResult && routeResult.geometry) {
+                finalDistance = routeResult.distance;
+                routeCoordinates = routeResult.geometry;
             }
-        });
+        } catch (err) {
+            console.warn('Street route fallback to direct line:', err);
+        }
 
-        const resultEl = document.getElementById('gisResultContainer');
+        // Draw street route polyline or direct polyline
+        const isCovered = finalDistance <= 300;
+        const lineColor = isCovered ? '#38bdf8' : '#f59e0b';
 
-        if (nearest) {
-            const distMeters = Math.round(minDist);
-            const isCovered = distMeters <= 300;
-            const waNumber = '6289696629955';
-
-            // Draw polyline connecting user pin to nearest ODP
-            const lineColor = isCovered ? '#38bdf8' : '#f59e0b';
-            const polyline = L.polyline([
+        let polyline;
+        if (routeCoordinates && routeCoordinates.length > 0) {
+            // Draw real street polyline following roads
+            polyline = L.polyline(routeCoordinates, {
+                color: lineColor,
+                weight: 4,
+                opacity: 0.9,
+                lineCap: 'round',
+                lineJoin: 'round'
+            });
+        } else {
+            // Fallback direct line
+            polyline = L.polyline([
                 [lat, lng],
-                [nearest.lat, nearest.lng]
+                [topCandidate.lat, topCandidate.lng]
             ], {
                 color: lineColor,
                 weight: 3,
                 dashArray: '6, 8',
                 opacity: 0.9
             });
-            connectionLineLayer.addLayer(polyline);
+        }
 
-            // Fit map view to show both points
-            mapInstance.fitBounds(L.latLngBounds([
-                [lat, lng],
-                [nearest.lat, nearest.lng]
-            ]), { padding: [60, 60], maxZoom: 18 });
+        connectionLineLayer.addLayer(polyline);
 
-            // Quality Badge Logic
-            let badgeHtml = '';
-            let lossEstimate = '';
-            if (distMeters <= 150) {
-                badgeHtml = '<span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>SANGAT BAGUS (FTTH IDEAL)</span>';
-                lossEstimate = '~ -18 dBm s/d -20 dBm (Loss Minimal)';
-            } else if (distMeters <= 250) {
-                badgeHtml = '<span class="px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>BAGUS (LAYAK PASANG)</span>';
-                lossEstimate = '~ -21 dBm s/d -23 dBm (Standar Optik)';
-            } else if (distMeters <= 300) {
-                badgeHtml = '<span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5">BATAS JANGKAUAN ODP</span>';
-                lossEstimate = '~ -24 dBm s/d -25 dBm';
-            } else {
-                badgeHtml = '<span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5">DI LUAR RADIUS STANDAR (>300m)</span>';
-                lossEstimate = 'Perlu Penambahan Tiang / ODP Baru';
-            }
+        // Fit map view to show route
+        mapInstance.fitBounds(polyline.getBounds().pad(0.2), { maxZoom: 18 });
 
-            const waMsg = isCovered
-                ? `Halo PT Media Solusi Network, saya sudah mengecek jaringan di website pada koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)}. Lokasi saya berjarak ${distMeters} meter dari ${nearest.name_odp} (${nearest.kode_odp}). Mohon info paket dan jadwal pasangnya.`
-                : `Halo PT Media Solusi Network, saya mengecek titik koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)} (jarak ${distMeters}m dari ${nearest.name_odp}). Saya ingin mengajukan request perluasan ODP ke area rumah saya.`;
+        // Build Result Card
+        const resultEl = document.getElementById('gisResultContainer');
+        const waNumber = '6289696629955';
 
-            const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`;
+        let badgeHtml = '';
+        if (finalDistance <= 150) {
+            badgeHtml = '<span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>SANGAT BAGUS (FTTH IDEAL)</span>';
+        } else if (finalDistance <= 250) {
+            badgeHtml = '<span class="px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>BAGUS (LAYAK PASANG)</span>';
+        } else if (finalDistance <= 300) {
+            badgeHtml = '<span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5">BATAS JANGKAUAN ODP</span>';
+        } else {
+            badgeHtml = '<span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40 text-[10.5px] font-mono font-bold flex items-center gap-1.5">DI LUAR RADIUS STANDAR (>300m)</span>';
+        }
 
-            if (resultEl) {
-                resultEl.classList.remove('hidden');
-                resultEl.innerHTML = `
-                    <div class="p-5 sm:p-6 rounded-3xl ${isCovered ? 'bg-gradient-to-br from-emerald-950/70 via-[#071d2b]/80 to-[#05131f]/90 border border-emerald-400/40 shadow-[0_0_30px_rgba(16,185,129,0.2)]' : 'bg-gradient-to-br from-amber-950/60 via-[#1a1409]/80 to-[#0a0d14]/90 border border-amber-400/40 shadow-[0_0_30px_rgba(245,158,11,0.15)]'} backdrop-blur-xl animate-fade-in space-y-4">
-                        
-                        <div class="flex items-center justify-between gap-2 flex-wrap">
-                            ${badgeHtml}
-                            <span class="text-xs font-mono text-white font-bold bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
-                                Jarak: ${distMeters} Meter
+        const waMsg = isCovered
+            ? `Halo PT Media Solusi Network, saya sudah mengecek jaringan di website pada koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)}. Jarak rute jalan ke ${topCandidate.name_odp} (${topCandidate.kode_odp}) adalah ${finalDistance} meter. Mohon info promo dan pemasangannya.`
+            : `Halo PT Media Solusi Network, saya mengecek koordinat ${lat.toFixed(6)}, ${lng.toFixed(6)} (jarak rute jalan ${finalDistance}m dari ${topCandidate.name_odp}). Saya ingin mengajukan request survei perluasan ODP ke lokasi saya.`;
+
+        const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`;
+
+        if (resultEl) {
+            resultEl.classList.remove('hidden');
+            resultEl.innerHTML = `
+                <div class="p-5 sm:p-6 rounded-3xl ${isCovered ? 'bg-gradient-to-br from-emerald-950/70 via-[#071d2b]/80 to-[#05131f]/90 border border-emerald-400/40 shadow-[0_0_30px_rgba(16,185,129,0.2)]' : 'bg-gradient-to-br from-amber-950/60 via-[#1a1409]/80 to-[#0a0d14]/90 border border-amber-400/40 shadow-[0_0_30px_rgba(245,158,11,0.15)]'} backdrop-blur-xl animate-fade-in space-y-4">
+                    
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        ${badgeHtml}
+                        <span class="text-xs font-mono text-white font-bold bg-white/10 px-2.5 py-1 rounded-lg border border-white/15">
+                            Rute Jalan: ${finalDistance} Meter
+                        </span>
+                    </div>
+
+                    <div>
+                        <h3 class="font-heading font-extrabold text-white text-base sm:text-lg mb-1">
+                            ${isCovered ? 'Lokasi Anda Tercover Jaringan Fiber Optic!' : 'Lokasi Berjarak Lebih dari 300m dari ODP'}
+                        </h3>
+                        <p class="text-xs text-slate-200 leading-relaxed">
+                            ${isCovered 
+                                ? `Kabar baik! Titik Anda berjarak <b>${finalDistance} meter</b> mengikuti rute jalan dari titik distribusi <b>${topCandidate.name_odp}</b> (${topCandidate.olt_name}). Jalur kabel dropcore siap ditarik ke rumah Anda.`
+                                : `Titik Anda berjarak <b>${finalDistance} meter</b> mengikuti rute jalan dari ODP terdekat. Tim teknik kami siap melakukan survei perluasan tiang untuk pendaftaran kolektif.`}
+                        </p>
+                    </div>
+
+                    <!-- Technical Specification Metrics Box -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 rounded-2xl bg-white/[0.04] border border-white/10 text-xs">
+                        <div>
+                            <span class="text-slate-400 text-[10px] block">ODP Terdekat</span>
+                            <span class="text-white font-bold font-mono text-[11px] truncate block">${topCandidate.name_odp}</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 text-[10px] block">OLT & PON</span>
+                            <span class="text-sky-400 font-bold text-[11px] truncate block">${topCandidate.olt_name} • ${topCandidate.kode_pon}</span>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <span class="text-slate-400 text-[10px] block">Port ODP</span>
+                            <span class="${topCandidate.has_slot ? 'text-emerald-400' : 'text-rose-400'} font-bold text-[11px] block">
+                                ${topCandidate.used_ports}/${topCandidate.capacity_odp} (${topCandidate.has_slot ? 'Tersedia' : 'Penuh'})
                             </span>
                         </div>
-
-                        <div>
-                            <h3 class="font-heading font-extrabold text-white text-base sm:text-lg mb-1">
-                                ${isCovered ? 'Lokasi Anda Tercover Jaringan Fiber Optic!' : 'Lokasi Berjarak Lebih dari 300m dari ODP'}
-                            </h3>
-                            <p class="text-xs text-slate-200 leading-relaxed">
-                                ${isCovered 
-                                    ? `Kabar baik! Titik Anda berjarak <b>${distMeters} meter</b> dari titik distribusi <b>${nearest.name_odp}</b> (${nearest.olt_name}). Jalur kabel dropcore siap ditarik langsung ke rumah Anda.`
-                                    : `Titik Anda berjarak <b>${distMeters} meter</b> dari ODP terdekat. Tim teknik kami siap melakukan survei perluasan tiang untuk registrasi kolektif.`}
-                            </p>
-                        </div>
-
-                        <!-- Technical Specification Metrics Box -->
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 rounded-2xl bg-white/[0.04] border border-white/10 text-xs">
-                            <div>
-                                <span class="text-slate-400 text-[10px] block">ODP Terdekat</span>
-                                <span class="text-white font-bold font-mono text-[11px] truncate block">${nearest.name_odp}</span>
-                            </div>
-                            <div>
-                                <span class="text-slate-400 text-[10px] block">OLT & PON</span>
-                                <span class="text-sky-400 font-bold text-[11px] truncate block">${nearest.olt_name} • ${nearest.kode_pon}</span>
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <span class="text-slate-400 text-[10px] block">Port ODP</span>
-                                <span class="${nearest.has_slot ? 'text-emerald-400' : 'text-rose-400'} font-bold text-[11px] block">
-                                    ${nearest.used_ports}/${nearest.capacity_odp} (${nearest.has_slot ? 'Tersedia' : 'Penuh'})
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex flex-wrap items-center gap-2.5 pt-1">
-                            ${isCovered ? `
-                                <a href="#paket" class="flex-1 min-w-[140px] px-4 py-3 rounded-xl bg-[#38bdf8] text-[#050d1a] font-heading font-extrabold text-xs text-center hover:bg-white hover:text-[#0284c7] transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-1.5">
-                                    <span>Pilih Paket Internet</span>
-                                    <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
-                                </a>
-                                <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[140px] px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-extrabold text-xs text-center transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5">
-                                    <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
-                                    <span>Daftar via WhatsApp</span>
-                                </a>
-                            ` : `
-                                <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="w-full px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-extrabold text-xs text-center transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5">
-                                    <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
-                                    <span>Ajukan Perluasan ODP via WhatsApp</span>
-                                </a>
-                            `}
-                        </div>
-
                     </div>
-                `;
-            }
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                        ${isCovered ? `
+                            <a href="#paket" class="flex-1 min-w-[140px] px-4 py-3 rounded-xl bg-[#38bdf8] text-[#050d1a] font-heading font-extrabold text-xs text-center hover:bg-white hover:text-[#0284c7] transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-1.5">
+                                <span>Pilih Paket Internet</span>
+                                <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+                            </a>
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[140px] px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-extrabold text-xs text-center transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5">
+                                <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
+                                <span>Daftar via WhatsApp</span>
+                            </a>
+                        ` : `
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="w-full px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-extrabold text-xs text-center transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                                <iconify-icon icon="logos:whatsapp-icon" width="16"></iconify-icon>
+                                <span>Ajukan Perluasan ODP via WhatsApp</span>
+                            </a>
+                        `}
+                    </div>
+
+                </div>
+            `;
         }
     }
 
-    // Reverse geocode to get street name
-    async function reverseGeocode(lat, lng) {
+    // Reverse geocode to get street name & display accuracy badge
+    async function reverseGeocode(lat, lng, accuracy = null) {
+        const addrBox = document.getElementById('gisAddressBox');
+        const addrText = document.getElementById('gisAddressText');
+        const accBadge = document.getElementById('gisAccuracyBadge');
+        
+        if (addrBox) addrBox.classList.remove('hidden');
+        if (addrText) addrText.textContent = 'Mencari detail alamat...';
+
+        if (accBadge) {
+            accBadge.classList.remove('hidden');
+            if (accuracy !== null && accuracy > 0) {
+                if (accuracy <= 25) {
+                    accBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1 shrink-0';
+                    accBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span>GPS Presisi ±${accuracy}m</span>`;
+                } else {
+                    accBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center gap-1 shrink-0';
+                    accBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Estimasi ±${accuracy}m</span>`;
+                }
+            } else {
+                accBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 flex items-center gap-1 shrink-0';
+                accBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span><span>Titik Manual</span>`;
+            }
+        }
+
         try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`, {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`, {
                 headers: { 'Accept-Language': 'id' }
             });
             const data = await res.json();
             if (data && data.display_name) {
-                const addrBox = document.getElementById('gisAddressBox');
-                const addrText = document.getElementById('gisAddressText');
-                if (addrBox && addrText) {
-                    addrBox.classList.remove('hidden');
-                    addrText.textContent = data.display_name;
-                }
+                if (addrText) addrText.textContent = data.display_name;
+            } else {
+                if (addrText) addrText.textContent = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
             }
         } catch (e) {
+            if (addrText) addrText.textContent = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
             console.warn('Geocode error:', e);
         }
     }
@@ -586,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const lng = e.latlng.lng;
         document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
         evaluateCoveragePoint(lat, lng);
-        reverseGeocode(lat, lng);
+        reverseGeocode(lat, lng, null);
     });
 
     // Form Submit Handler
@@ -600,9 +641,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const lat = parseFloat(coordMatch[1]);
             const lng = parseFloat(coordMatch[3]);
             evaluateCoveragePoint(lat, lng);
-            reverseGeocode(lat, lng);
+            reverseGeocode(lat, lng, null);
         } else {
-            // Geocode text address via Nominatim
             const submitBtn = document.getElementById('gisSubmitBtn');
             if (submitBtn) submitBtn.disabled = true;
 
@@ -616,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const lng = parseFloat(geoData[0].lon);
                     document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
                     evaluateCoveragePoint(lat, lng);
-                    reverseGeocode(lat, lng);
+                    reverseGeocode(lat, lng, null);
                 } else {
                     alert('Lokasi alamat tidak ditemukan. Silakan klik langsung pada peta atau masukkan koordinat (Lat, Lng).');
                 }
@@ -628,30 +668,124 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // GPS Geolocation Button Handler
-    document.getElementById('gisGpsBtn')?.addEventListener('click', function () {
-        const btn = this;
+    // Multi-sample High-Accuracy Geolocation Engine
+    let activeGpsWatcher = null;
+
+    function acquireAccurateGps(onSuccess, onError) {
         if (!navigator.geolocation) {
-            alert('Browser Anda tidak mendukung deteksi lokasi otomatis.');
+            onError({ code: 0, message: 'Browser Anda tidak mendukung deteksi lokasi otomatis.' });
             return;
         }
 
-        btn.disabled = true;
-        btn.innerHTML = `<span>⏳ Mencari GPS...</span>`;
+        let bestPosition = null;
+        let isFinalized = false;
+        let fallbackTimer = null;
 
-        navigator.geolocation.getCurrentPosition(function (pos) {
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-            document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-            evaluateCoveragePoint(lat, lng);
-            reverseGeocode(lat, lng);
-            btn.disabled = false;
-            btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-base"></iconify-icon><span>GPS Lokasi Saya</span>`;
-        }, function (err) {
-            btn.disabled = false;
-            btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-base"></iconify-icon><span>GPS Lokasi Saya</span>`;
-            alert('Izin lokasi ditolak. Silakan klik langsung pada peta.');
-        }, { enableHighAccuracy: true });
+        const finalize = () => {
+            if (isFinalized) return;
+            isFinalized = true;
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            if (activeGpsWatcher !== null) {
+                navigator.geolocation.clearWatch(activeGpsWatcher);
+                activeGpsWatcher = null;
+            }
+
+            if (bestPosition) {
+                onSuccess(bestPosition);
+            } else {
+                onError({ code: 3, message: 'Waktu pencarian GPS habis atau sinyal tidak ditemukan.' });
+            }
+        };
+
+        // Tunggu maksimal 6.5 detik untuk mengunci akurasi satelit terbaik
+        fallbackTimer = setTimeout(() => {
+            finalize();
+        }, 6500);
+
+        const geoOptions = {
+            enableHighAccuracy: true,
+            timeout: 8000,
+            maximumAge: 0 // Pastikan GPS chip melakukan pembacaan baru dan tidak menggunakan cache lama
+        };
+
+        try {
+            activeGpsWatcher = navigator.geolocation.watchPosition(
+                function (pos) {
+                    const acc = pos.coords.accuracy || 9999;
+                    if (!bestPosition || acc < (bestPosition.coords.accuracy || 9999)) {
+                        bestPosition = pos;
+                    }
+
+                    // Jika akurasi sudah mencapai <= 20 meter (standar akurat GPS mobile), kunci langsung!
+                    if (acc <= 20) {
+                        finalize();
+                    }
+                },
+                function (err) {
+                    if (bestPosition) {
+                        finalize();
+                    } else {
+                        isFinalized = true;
+                        if (fallbackTimer) clearTimeout(fallbackTimer);
+                        if (activeGpsWatcher !== null) {
+                            navigator.geolocation.clearWatch(activeGpsWatcher);
+                            activeGpsWatcher = null;
+                        }
+                        onError(err);
+                    }
+                },
+                geoOptions
+            );
+        } catch (e) {
+            navigator.geolocation.getCurrentPosition(
+                function (pos) { onSuccess(pos); },
+                function (err) { onError(err); },
+                geoOptions
+            );
+        }
+    }
+
+    // GPS Geolocation Button Handler
+    document.getElementById('gisGpsBtn')?.addEventListener('click', function () {
+        const btn = this;
+        btn.disabled = true;
+        btn.innerHTML = `<iconify-icon icon="solar:radar-bold" class="text-sky-400 animate-spin text-base"></iconify-icon><span>Mengunci GPS...</span>`;
+
+        acquireAccurateGps(
+            function (pos) {
+                btn.disabled = false;
+                btn.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base"></iconify-icon><span>GPS Terkunci</span>`;
+                setTimeout(() => {
+                    btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-base"></iconify-icon><span>GPS Lokasi Saya</span>`;
+                }, 3000);
+
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                const accuracy = Math.round(pos.coords.accuracy || 0);
+
+                document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+                // Zoom dan geser ke lokasi pengguna dengan halus
+                mapInstance.flyTo([lat, lng], 18, { duration: 1.0 });
+
+                evaluateCoveragePoint(lat, lng);
+                reverseGeocode(lat, lng, accuracy);
+            },
+            function (err) {
+                btn.disabled = false;
+                btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-base"></iconify-icon><span>GPS Lokasi Saya</span>`;
+                
+                let errorMsg = 'Izin lokasi tidak aktif atau sinyal GPS tidak terdeteksi.';
+                if (err.code === 1) {
+                    errorMsg = 'Akses lokasi ditolak browser. Silakan izinkan akses lokasi di pengaturan browser atau klik langsung posisi rumah Anda pada peta.';
+                } else if (err.code === 2) {
+                    errorMsg = 'Sinyal GPS / posisi saat ini tidak terdeteksi. Silakan klik langsung pada peta.';
+                } else if (err.code === 3) {
+                    errorMsg = 'Pencarian GPS memerlukan waktu terlalu lama. Silakan coba klik tombol kembali atau tentukan titik pada peta.';
+                }
+                alert(errorMsg);
+            }
+        );
     });
 
     // Master ODP Select Dropdown
@@ -664,7 +798,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const lng = parseFloat(parts[1]);
             document.getElementById('gisInputCoord').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
             evaluateCoveragePoint(lat, lng);
-            reverseGeocode(lat, lng);
+            reverseGeocode(lat, lng, null);
         }
     });
 
@@ -679,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const lat = parseFloat(parts[0]);
                     const lng = parseFloat(parts[1]);
                     evaluateCoveragePoint(lat, lng);
-                    reverseGeocode(lat, lng);
+                    reverseGeocode(lat, lng, null);
                 }
             }
         });
