@@ -60,6 +60,7 @@ class DashboardController extends Controller
         $customer = Auth::guard('customer')->user();
         if ($customer) {
             $customer->markAsLoggedIn();
+            \Illuminate\Support\Facades\Cache::put("portal_cust_is_login_{$customer->nomor_internet}", 1, 86400);
         }
 
         session(['is_first_login' => false]);

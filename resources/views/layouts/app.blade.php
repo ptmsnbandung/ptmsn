@@ -117,5 +117,71 @@
         <iconify-icon icon="solar:arrow-up-linear" width="20" height="20" class="sm:w-[22px] sm:h-[22px]"></iconify-icon>
     </button>
 
+    <!-- Global Top Loading Progress Bar -->
+    <div id="global-page-loader" style="position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,#0284c7,#38bdf8,#0ea5e9);z-index:99999;transition:width 0.2s cubic-bezier(0.1,0.9,0.2,1),opacity 0.25s ease;box-shadow:0 0 10px rgba(56,189,248,0.8);pointer-events:none;opacity:0;"></div>
+
+    <!-- Speculative Link Prefetcher for Ultra-Fast Page Transitions -->
+    <script>
+        (function() {
+            const prefetched = new Set();
+            const loader = document.getElementById('global-page-loader');
+
+            function prefetch(url) {
+                if (!url || prefetched.has(url)) return;
+                try {
+                    const parsed = new URL(url, window.location.origin);
+                    if (parsed.origin !== window.location.origin) return;
+                    if (parsed.pathname === window.location.pathname && !parsed.hash) return;
+                    if (parsed.pathname.includes('logout')) return;
+
+                    prefetched.add(url);
+                    const link = document.createElement('link');
+                    link.rel = 'prefetch';
+                    link.href = url;
+                    link.as = 'document';
+                    document.head.appendChild(link);
+                } catch(e) {}
+            }
+
+            document.addEventListener('mouseover', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
+                    prefetch(a.href);
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchstart', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
+                    prefetch(a.href);
+                }
+            }, { passive: true });
+
+            document.addEventListener('click', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:') && !a.href.includes('#')) {
+                    try {
+                        const parsed = new URL(a.href, window.location.origin);
+                        if (parsed.origin === window.location.origin && parsed.pathname !== window.location.pathname) {
+                            if (loader) {
+                                loader.style.opacity = '1';
+                                loader.style.width = '80%';
+                            }
+                        }
+                    } catch(e) {}
+                }
+            });
+
+            window.addEventListener('pageshow', function() {
+                if (loader) {
+                    loader.style.width = '100%';
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.width = '0%';
+                    }, 300);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

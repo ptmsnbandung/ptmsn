@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CoverageArea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -16,10 +17,11 @@ class CoverageController extends Controller
      */
     public function getOdps(): array
     {
-        $odps = collect();
+        return Cache::remember('gomsn_coverage_odps_v2', 1800, function () {
+            $odps = collect();
 
-        try {
-            if (Schema::hasTable('gomsn.olt')) {
+            try {
+                if (Schema::hasTable('gomsn.olt')) {
                 $olts = DB::table('gomsn.olt')->orderBy('olt_id', 'asc')->get();
 
                 foreach ($olts as $olt) {
@@ -117,7 +119,8 @@ class CoverageController extends Controller
             Log::warning("Coverage ODP gomsn fetch warning: " . $e->getMessage());
         }
 
-        return $odps->values()->toArray();
+            return $odps->values()->toArray();
+        });
     }
 
     /**

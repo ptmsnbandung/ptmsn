@@ -5,60 +5,49 @@
     $customerEmail = $customer?->email ?? '';
     $customerName = $customer?->name ?? 'Pelanggan';
     
-    // Status is_login selalu dibaca real-time langsung dari database (bukan dari cache model/sesi in-memory)
-    $isLoginVal = null;
-    if ($nomorInternet) {
-        try {
-            $isLoginVal = \Illuminate\Support\Facades\DB::connection('ims')
-                ->table('trx_batchjob_register')
-                ->where('nomor_internet', $nomorInternet)
-                ->value('is_login');
-        } catch (\Throwable $e) {}
+    $currentRouteName = request()->route()?->getName() ?? '';
+    $requestedStep = request()->query('tour_step');
+    $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->routeIs('portal.dashboard*') || request()->is('portal') || request()->is('portal/dashboard'));
 
-        if ($isLoginVal === null) {
+    // Status is_login: Cek session dan model terlebih dahulu agar tidak melakukan query remote berulang setiap pindah halaman
+    $isLoginVal = null;
+    if (session('is_first_login') === false || (int)($customer?->is_login ?? 0) === 1) {
+        $isLoginVal = 1;
+    } elseif ($nomorInternet) {
+        $isLoginVal = \Illuminate\Support\Facades\Cache::remember("portal_cust_is_login_{$nomorInternet}", 300, function () use ($nomorInternet, $customer) {
+            $val = null;
             try {
-                $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
+                $val = \Illuminate\Support\Facades\DB::connection('ims')
                     ->table('trx_batchjob_register')
                     ->where('nomor_internet', $nomorInternet)
                     ->value('is_login');
             } catch (\Throwable $e) {}
-        }
 
-        if ($isLoginVal === null) {
-            try {
-                $isLoginVal = \Illuminate\Support\Facades\DB::table('trx_batchjob_register')
-                    ->where('nomor_internet', $nomorInternet)
-                    ->value('is_login');
-            } catch (\Throwable $e) {}
-        }
+            if ($val === null) {
+                try {
+                    $val = \Illuminate\Support\Facades\DB::connection('mysql')
+                        ->table('trx_batchjob_register')
+                        ->where('nomor_internet', $nomorInternet)
+                        ->value('is_login');
+                } catch (\Throwable $e) {}
+            }
 
-        if ($isLoginVal === null) {
-            try {
-                $isLoginVal = \Illuminate\Support\Facades\DB::connection('mysql')
-                    ->table('customers')
-                    ->where('customer_id', $nomorInternet)
-                    ->value('is_login');
-            } catch (\Throwable $e) {}
-        }
-    }
-
-    if ($isLoginVal === null) {
+            return $val !== null ? $val : ($customer?->is_login ?? 0);
+        });
+    } else {
         $isLoginVal = $customer?->is_login;
     }
 
     // Jika is_login = 0, '0', null, empty, atau false, wajib muncul onboarding
     $isLoginDbZero = ($isLoginVal === null) || empty($isLoginVal) || (string)$isLoginVal === '0' || (int)$isLoginVal === 0;
-    
-    $currentRouteName = request()->route()?->getName() ?? '';
-    $requestedStep = request()->query('tour_step');
-    $isDashboardPage = ($currentRouteName === 'portal.dashboard' || request()->routeIs('portal.dashboard*') || request()->is('portal') || request()->is('portal/dashboard'));
-    
+
     $initialStepIdx = 0;
     if ($requestedStep !== null && is_numeric($requestedStep)) {
         $initialStepIdx = max(0, min(5, ((int)$requestedStep) - 1));
     }
 @endphp
 
+@if($isLoginDbZero || $requestedStep !== null)
 <!-- Preload completion image so it appears instantly without delay -->
 <img src="{{ asset('images/logo/berhasil1.png') }}" alt="" class="hidden" style="display:none;" />
 
@@ -868,3 +857,4 @@
         }
     });
 </script>
+@endif

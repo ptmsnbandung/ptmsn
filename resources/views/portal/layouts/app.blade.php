@@ -48,8 +48,8 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Portal Custom CSS (Cache Busted) -->
-    <link rel="stylesheet" href="{{ asset('css/portal.css') }}?v={{ time() }}">
+    <!-- Portal Custom CSS (Cached by file modification time) -->
+    <link rel="stylesheet" href="{{ asset('css/portal.css') }}?v={{ file_exists(public_path('css/portal.css')) ? filemtime(public_path('css/portal.css')) : '1.0' }}">
 
     <style>
         [x-cloak] {
@@ -58,6 +58,29 @@
 
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        /* Instant Non-blocking Top Progress Indicator (Ultra-fast navigation) */
+        #portal-page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #0284c7, #38bdf8, #0ea5e9);
+            z-index: 99999;
+            transition: width 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.25s ease;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+            pointer-events: none;
+            opacity: 0;
+        }
+        #portal-page-loader.active {
+            opacity: 1;
+            width: 80%;
+        }
+        #portal-page-loader.finish {
+            width: 100%;
+            opacity: 0;
         }
 
         /* High-Performance Portal Card (Instant 60-120 FPS Rendering) */
@@ -101,32 +124,12 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Bypass preloader during onboarding tutorial navigation */
-        .no-preloader #portal-preloader {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-        }
     </style>
-    <script>
-        if (window.location.search.includes('tour_step')) {
-            document.documentElement.classList.add('no-preloader');
-        }
-    </script>
 </head>
 <body class="min-h-full flex flex-col font-sans antialiased text-slate-800 portal-bg pb-20 md:pb-8" x-data="{ userDropdown: false }">
 
-    <!-- Custom Portal Preloader (Hidden during onboarding tutorial) -->
-    @if(!request()->has('tour_step'))
-        <div id="portal-preloader">
-            <div class="loader-spinner-ring">
-                <div class="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center p-2.5 z-10 border border-slate-100">
-                    <img src="{{ asset('images/logo/logo-icon.png') }}" alt="PT MSN" class="w-full h-full object-contain loader-logo-pulse">
-                </div>
-            </div>
-        </div>
-    @endif
+    <!-- Instant Non-blocking Top Page Loading Indicator -->
+    <div id="portal-page-loader"></div>
 
     <!-- Top Portal Header -->
     <header class="sticky top-0 z-40 glass-header shadow-xs">
@@ -450,23 +453,69 @@
             resetIdleTimer();
         })();
 
-        // Preloader Dismissal Handler
-        window.addEventListener('load', function() {
-            const preloader = document.getElementById('portal-preloader');
-            if (preloader) {
-                setTimeout(function() {
-                    preloader.classList.add('loaded');
-                }, 300);
-            }
-        });
+        // Ultra-Fast Speculative Link Prefetcher & Non-Blocking Top Progress Bar
+        (function() {
+            const prefetchedUrls = new Set();
+            const loader = document.getElementById('portal-page-loader');
 
-        // Safety fallback: dismiss preloader after 2.5s if not already dismissed
-        setTimeout(function() {
-            const preloader = document.getElementById('portal-preloader');
-            if (preloader && !preloader.classList.contains('loaded')) {
-                preloader.classList.add('loaded');
+            function prefetch(url) {
+                if (!url || prefetchedUrls.has(url)) return;
+                try {
+                    const parsed = new URL(url, window.location.origin);
+                    if (parsed.origin !== window.location.origin) return;
+                    if (parsed.pathname === window.location.pathname) return;
+                    if (parsed.pathname.includes('logout') || parsed.pathname.includes('pay') || parsed.pathname.includes('transfer')) return;
+
+                    prefetchedUrls.add(url);
+                    const link = document.createElement('link');
+                    link.rel = 'prefetch';
+                    link.href = url;
+                    link.as = 'document';
+                    document.head.appendChild(link);
+                } catch(e) {}
             }
-        }, 2500);
+
+            // Hover & Touch Prefetching for Near-Instant Page Transitions
+            document.addEventListener('mouseover', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
+                    prefetch(a.href);
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchstart', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
+                    prefetch(a.href);
+                }
+            }, { passive: true });
+
+            // Visual Instant Loading Bar when navigating
+            document.addEventListener('click', function(e) {
+                const a = e.target.closest('a[href]');
+                if (a && a.href && !a.target && !a.href.startsWith('javascript:') && !a.href.includes('#')) {
+                    try {
+                        const parsed = new URL(a.href, window.location.origin);
+                        if (parsed.origin === window.location.origin && parsed.pathname !== window.location.pathname) {
+                            if (loader) {
+                                loader.classList.remove('finish');
+                                loader.classList.add('active');
+                            }
+                        }
+                    } catch(e) {}
+                }
+            });
+
+            window.addEventListener('pageshow', function() {
+                if (loader) {
+                    loader.classList.add('finish');
+                    setTimeout(() => {
+                        loader.classList.remove('active', 'finish');
+                        loader.style.width = '0%';
+                    }, 300);
+                }
+            });
+        })();
 
         // Universal Tactile Click, Ripple & Pop Micro-interaction System
         document.addEventListener('pointerdown', function(e) {
