@@ -398,76 +398,56 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // High-Accuracy GPS Geolocation
-    let activeGpsWatcher = null;
+    // Fast & Robust Geolocation Engine (Mobile GPS with Instant Desktop WiFi/IP Fallback)
     function acquireAccurateGps(onSuccess, onError) {
         if (!navigator.geolocation) {
             onError({ code: 0, message: 'Browser Anda tidak mendukung deteksi lokasi otomatis.' });
             return;
         }
 
-        let bestPosition = null;
-        let isFinalized = false;
-        let fallbackTimer = null;
+        let isCompleted = false;
 
-        const finalize = () => {
-            if (isFinalized) return;
-            isFinalized = true;
-            if (fallbackTimer) clearTimeout(fallbackTimer);
-            if (activeGpsWatcher !== null) {
-                navigator.geolocation.clearWatch(activeGpsWatcher);
-                activeGpsWatcher = null;
-            }
-
-            if (bestPosition) {
-                onSuccess(bestPosition);
-            } else {
-                onError({ code: 3, message: 'Waktu pencarian GPS habis atau sinyal tidak ditemukan.' });
-            }
+        const completeWithPosition = (pos) => {
+            if (isCompleted) return;
+            isCompleted = true;
+            onSuccess(pos);
         };
 
-        fallbackTimer = setTimeout(() => {
-            finalize();
-        }, 6500);
-
-        const geoOptions = {
-            enableHighAccuracy: true,
-            timeout: 8000,
-            maximumAge: 0
-        };
-
-        try {
-            activeGpsWatcher = navigator.geolocation.watchPosition(
+        const tryFastNetworkLocation = () => {
+            navigator.geolocation.getCurrentPosition(
                 function (pos) {
-                    const acc = pos.coords.accuracy || 9999;
-                    if (!bestPosition || acc < (bestPosition.coords.accuracy || 9999)) {
-                        bestPosition = pos;
-                    }
-                    if (acc <= 20) {
-                        finalize();
-                    }
+                    completeWithPosition(pos);
                 },
                 function (err) {
-                    if (bestPosition) {
-                        finalize();
-                    } else {
-                        isFinalized = true;
-                        if (fallbackTimer) clearTimeout(fallbackTimer);
-                        if (activeGpsWatcher !== null) {
-                            navigator.geolocation.clearWatch(activeGpsWatcher);
-                            activeGpsWatcher = null;
-                        }
+                    if (!isCompleted) {
+                        isCompleted = true;
                         onError(err);
                     }
                 },
-                geoOptions
+                { enableHighAccuracy: false, timeout: 6000, maximumAge: 60000 }
+            );
+        };
+
+        // Try high accuracy first (max 3.5s timeout for mobile GPS)
+        try {
+            navigator.geolocation.getCurrentPosition(
+                function (pos) {
+                    completeWithPosition(pos);
+                },
+                function (err) {
+                    // Desktop / laptop PCs do not have satellite GPS and often timeout on high accuracy.
+                    // Immediately fallback to WiFi/network location without throwing an alert error!
+                    if (err.code === 3 || err.code === 2) {
+                        tryFastNetworkLocation();
+                    } else if (!isCompleted) {
+                        isCompleted = true;
+                        onError(err);
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 3500, maximumAge: 10000 }
             );
         } catch (e) {
-            navigator.geolocation.getCurrentPosition(
-                function (pos) { onSuccess(pos); },
-                function (err) { onError(err); },
-                geoOptions
-            );
+            tryFastNetworkLocation();
         }
     }
 
@@ -475,12 +455,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('gisGpsBtn')?.addEventListener('click', function () {
         const btn = this;
         btn.disabled = true;
-        btn.innerHTML = `<iconify-icon icon="solar:radar-bold" class="text-sky-400 animate-spin text-base"></iconify-icon><span class="hidden sm:inline">Mengunci GPS...</span>`;
+        btn.innerHTML = `<iconify-icon icon="solar:radar-bold" class="text-sky-400 animate-spin text-base"></iconify-icon><span class="hidden sm:inline">Mendeteksi Lokasi...</span>`;
 
         acquireAccurateGps(
             async function (pos) {
                 btn.disabled = false;
-                btn.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base"></iconify-icon><span class="hidden sm:inline">GPS Terkunci</span>`;
+                btn.innerHTML = `<iconify-icon icon="solar:check-circle-bold" class="text-emerald-400 text-base"></iconify-icon><span class="hidden sm:inline">Lokasi Terkunci</span>`;
                 setTimeout(() => {
                     btn.innerHTML = `<iconify-icon icon="solar:gps-bold" class="text-[#38bdf8] text-sm"></iconify-icon><span class="hidden sm:inline">GPS Saya</span>`;
                 }, 3000);
@@ -499,11 +479,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 let errorMsg = 'Izin lokasi tidak aktif atau sinyal GPS tidak terdeteksi.';
                 if (err.code === 1) {
-                    errorMsg = 'Akses lokasi ditolak browser. Silakan izinkan akses lokasi di pengaturan browser atau masukkan koordinat secara manual.';
+                    errorMsg = 'Akses lokasi ditolak oleh browser. Silakan izinkan akses lokasi di ikon setelan browser (ikon gembok) atau masukkan koordinat secara manual.';
                 } else if (err.code === 2) {
-                    errorMsg = 'Sinyal GPS / posisi saat ini tidak terdeteksi. Silakan masukkan koordinat secara manual.';
+                    errorMsg = 'Sinyal lokasi / posisi saat ini tidak terdeteksi. Silakan masukkan koordinat secara manual.';
                 } else if (err.code === 3) {
-                    errorMsg = 'Pencarian GPS memerlukan waktu terlalu lama. Silakan coba kembali atau masukkan koordinat.';
+                    errorMsg = 'Pencarian lokasi memerlukan waktu terlalu lama. Silakan coba kembali atau masukkan koordinat secara manual.';
                 }
                 alert(errorMsg);
             }
