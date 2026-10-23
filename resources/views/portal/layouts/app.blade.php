@@ -489,13 +489,6 @@
                 }
             });
         })();
-
-        // Ringan & Cepat: Haptic feedback untuk perangkat sentuh tanpa DOM reflow
-        document.addEventListener('pointerdown', function(e) {
-            if (e.isTrusted && e.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
-                try { navigator.vibrate(10); } catch(err) {}
-            }
-        }, { passive: true });
     </script>
 
     @stack('scripts')
