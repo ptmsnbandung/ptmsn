@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class BillingController extends Controller
 {
@@ -167,11 +169,15 @@ class BillingController extends Controller
         $filename = 'tf_' . $cleanId . '_' . time() . '.' . $file->getClientOriginalExtension();
         $destinationPath = public_path('uploads/bukti_transfer');
 
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
+        try {
+            if (!file_exists($destinationPath)) {
+                File::ensureDirectoryExists($destinationPath, 0775, true);
+            }
+            $file->move($destinationPath, $filename);
+        } catch (\Throwable $e) {
+            Log::error('Gagal upload bukti transfer: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan bukti transfer di server. Silakan hubungi admin untuk memeriksa izin direktori uploads.');
         }
-
-        $file->move($destinationPath, $filename);
         $filePath = 'uploads/bukti_transfer/' . $filename;
         $portalDomain = rtrim(config('company.portal_url', env('PORTAL_URL', 'https://portal.ptmsn.co.id')), '/');
         $fullUrl = $portalDomain . '/' . $filePath;
