@@ -13,15 +13,11 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     /**
-     * Tampilkan halaman login portal pelanggan
+     * Tampilkan halaman login portal pelanggan (dialihkan ke portal pelanggan baru)
      */
     public function showLogin()
     {
-        if (Auth::guard('customer')->check()) {
-            return redirect()->route('portal.dashboard');
-        }
-
-        return view('portal.auth.login');
+        return redirect()->away('https://portal.ptmsn.co.id');
     }
 
     /**

@@ -51,7 +51,7 @@
             <!-- Action Button: Portal Pelanggan & Mobile Toggle -->
             <div class="flex items-center gap-2 sm:gap-2.5">
                 <!-- MyMSN Button (Visible on mobile & desktop) -->
-                <a href="{{ route('portal.login') }}" class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group" id="navCtaBtn" title="MyMSN — Customer Self-Care">
+                <a href="https://portal.ptmsn.co.id" class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#38bdf8] text-[#050d1a] hover:bg-white hover:text-[#0284c7] transition-all duration-200 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:scale-105 active:scale-95 whitespace-nowrap group" id="navCtaBtn" title="MyMSN — Customer Self-Care">
                     <iconify-icon icon="solar:user-circle-bold" width="16" class="text-current sm:w-[17px] sm:h-[17px] transition-transform group-hover:scale-110"></iconify-icon>
                     <span class="font-brand font-extrabold tracking-tight text-xs sm:text-sm">My<span class="font-black">MSN</span></span>
                 </a>
@@ -107,7 +107,7 @@
     </div>
 
     <div class="pt-4 border-t border-white/10">
-        <a href="{{ route('portal.login') }}" class="w-full py-3 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 font-bold text-sm tracking-wide flex flex-col items-center justify-center gap-0.5 shadow-lg shadow-sky-500/25 active:scale-95 transition-all">
+        <a href="https://portal.ptmsn.co.id" class="w-full py-3 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950 font-bold text-sm tracking-wide flex flex-col items-center justify-center gap-0.5 shadow-lg shadow-sky-500/25 active:scale-95 transition-all">
             <div class="flex items-center gap-1.5 font-brand font-extrabold text-base">
                 <iconify-icon icon="solar:user-circle-bold" width="18"></iconify-icon>
                 <span>My<span class="font-black">MSN</span></span>

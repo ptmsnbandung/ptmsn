@@ -46,7 +46,9 @@ Route::get('/error-419', function () {
 | Portal Pelanggan (Customer Portal) Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/portal', [PortalDashboardController::class, 'index'])->middleware(['auth:customer', 'portal.timeout']);
+Route::get('/portal', function () {
+    return redirect()->away('https://portal.ptmsn.co.id');
+});
 
 Route::prefix('portal')->name('portal.')->group(function () {
     // Guest customer routes
