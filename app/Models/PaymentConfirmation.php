@@ -28,6 +28,9 @@ class PaymentConfirmation extends Model
         if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://') || str_starts_with($file, 'data:')) {
             return $file;
         }
+        if (str_contains($file, 'proof_')) {
+            return 'https://ims-v2.ptmsn.co.id/' . ltrim($file, '/');
+        }
         $portalDomain = rtrim(config('company.portal_url', env('PORTAL_URL', 'https://portal.ptmsn.co.id')), '/');
         return $portalDomain . '/' . ltrim($file, '/');
     }
