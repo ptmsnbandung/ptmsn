@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Pagination\Paginator::useTailwind();
+
         // 1. Extend driver database session agar aman dari SQL Error 1366 saat user_id adalah string non-numeric (seperti ID pelanggan 'MS...')
         Session::extend('database', function ($app) {
             $table = $app['config']->get('session.table');
