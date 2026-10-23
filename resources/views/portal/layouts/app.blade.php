@@ -9,10 +9,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
 
-    <!-- Google Fonts: Plus Jakarta Sans, Outfit, Inter, JetBrains Mono -->
+    <!-- Google Fonts: Plus Jakarta Sans, Outfit, Inter, JetBrains Mono (Streamlined Weights) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -490,54 +490,11 @@
             });
         })();
 
-        // Universal Tactile Click, Ripple & Pop Micro-interaction System
+        // Ringan & Cepat: Haptic feedback untuk perangkat sentuh tanpa DOM reflow
         document.addEventListener('pointerdown', function(e) {
-            const target = e.target.closest('button, .btn, a.btn, .dock-item, .copy-btn, .tab-btn, .action-btn, .badge-btn, .portal-card-hover, [role="button"], input[type="submit"], input[type="button"]');
-            if (!target) return;
-
-            // Haptic feedback for touch devices (only after explicit trusted user activation)
             if (e.isTrusted && e.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
-                const canVibrate = !navigator.userActivation || navigator.userActivation.isActive || navigator.userActivation.hasBeenActive;
-                if (canVibrate) {
-                    try { navigator.vibrate(12); } catch(err) {}
-                }
+                try { navigator.vibrate(10); } catch(err) {}
             }
-
-            // Create dynamic expanding ripple element
-            const rect = target.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height, 40) * 2;
-            const x = e.clientX - rect.left - (size / 2);
-            const y = e.clientY - rect.top - (size / 2);
-
-            const isDarkBg = target.classList.contains('dock-item') || 
-                             target.classList.contains('bg-slate-900') || 
-                             target.classList.contains('bg-slate-800') || 
-                             target.classList.contains('bg-sky-600') || 
-                             target.classList.contains('bg-sky-500');
-
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple-wave ' + (isDarkBg ? 'ripple-wave-light' : 'ripple-wave-dark');
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-
-            const compPos = window.getComputedStyle(target).position;
-            if (compPos === 'static') {
-                target.style.position = 'relative';
-            }
-            target.style.overflow = 'hidden';
-            target.appendChild(ripple);
-
-            // Pop animation on dock item
-            if (target.classList.contains('dock-item')) {
-                target.classList.remove('tap-pop');
-                void target.offsetWidth;
-                target.classList.add('tap-pop');
-            }
-
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
         }, { passive: true });
     </script>
 

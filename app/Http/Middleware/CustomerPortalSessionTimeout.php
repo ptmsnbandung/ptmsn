@@ -40,8 +40,10 @@ class CustomerPortalSessionTimeout
                     ->with('warning', 'Sesi login Anda telah berakhir otomatis karena tidak ada aktivitas selama 1 jam. Silakan masuk kembali.');
             }
 
-            // Perbarui penanda waktu aktivitas terakhir
-            session(['customer_last_activity' => time()]);
+            // Perbarui penanda waktu aktivitas terakhir (hanya jika lewat 60 detik agar tidak menulis ke DB session di setiap request)
+            if (!$lastActivity || (time() - $lastActivity) > 60) {
+                session(['customer_last_activity' => time()]);
+            }
         }
 
         return $next($request);
