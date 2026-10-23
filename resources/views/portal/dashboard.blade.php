@@ -43,24 +43,22 @@
                         @endif
 
                         <!-- Email Verification Status Badge / Trigger -->
-                        <template x-if="isVerified">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-2xs whitespace-nowrap">
+                        @if(!empty($customer->email))
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-2xs whitespace-nowrap" title="{{ $customer->email }}">
                                 <iconify-icon icon="solar:verified-check-bold" class="text-emerald-400 text-xs shrink-0"></iconify-icon>
                                 <span>Email Terverifikasi</span>
                             </span>
-                        </template>
-                        <template x-if="!isVerified">
-                            <button 
-                                type="button" 
-                                @click="showModal = true"
+                        @else
+                            <a 
+                                href="{{ route('portal.profile') }}"
                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-amber-500/15 border-amber-400/40 text-amber-300 hover:bg-amber-500/25 transition-all shadow-2xs whitespace-nowrap cursor-pointer"
-                                title="Klik untuk verifikasi email"
+                                title="Klik untuk melengkapi email di profil"
                             >
                                 <iconify-icon icon="solar:letter-bold" class="text-amber-400 text-xs shrink-0"></iconify-icon>
                                 <span>Verifikasi Email</span>
                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                            </button>
-                        </template>
+                            </a>
+                        @endif
                     </div>
 
                     <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
