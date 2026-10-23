@@ -32,6 +32,8 @@
                         src="{{ asset('images/hero/fiber-technician-field.jpg') }}" 
                         alt="Teknisi Infrastruktur Jaringan Fiber Optic PT Media Solusi Network" 
                         class="w-full h-72 sm:h-80 lg:h-[330px] object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
                     >
                 </div>
             </div>

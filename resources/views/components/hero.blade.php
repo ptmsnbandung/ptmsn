@@ -1,7 +1,7 @@
 <section id="hero" class="relative flex items-center justify-center pt-24 sm:pt-28 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden z-10 w-full" style="background: radial-gradient(circle at 50% 30%, #0c2340 0%, #07172e 60%, #050d1a 100%); min-height: calc(100vh / 0.9); min-height: 111.2vh;">
 
-    <!-- 1. WebGL Moving Neon Aurora Wave Shader Canvas (Thin Delicate Ambient Wave) -->
-    <canvas id="glCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-50 z-0"></canvas>
+    <!-- 1. WebGL Moving Neon Aurora Wave Shader Canvas (Desktop Only for Maximum Performance) -->
+    <canvas id="glCanvas" class="hidden md:block absolute inset-0 w-full h-full pointer-events-none opacity-50 z-0"></canvas>
 
     <!-- 2. Ambient Soft Glowing Orbs -->
     <div class="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#38bdf8]/6 rounded-full blur-[140px] pointer-events-none z-0"></div>
@@ -67,12 +67,16 @@
             <!-- Ambient Cyan Glow Behind Hero Image -->
             <div class="absolute w-[320px] sm:w-[480px] h-[320px] sm:h-[480px] bg-[#38bdf8]/15 rounded-full blur-[90px] pointer-events-none"></div>
 
-            <!-- Hero Image Showcase with Smooth Hover Effect -->
+            <!-- Hero Image Showcase with Native CSS Float Effect -->
             <div class="relative z-10 w-full flex items-center justify-center group">
                 <img 
                     src="{{ asset('images/hero/hero.png') }}" 
                     alt="PT Media Solusi Network - IT & Internet Solution" 
-                    class="w-full max-w-sm sm:max-w-lg h-auto object-contain drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)] group-hover:scale-105 transition-transform duration-500"
+                    class="w-full max-w-sm sm:max-w-lg h-auto object-contain drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)] group-hover:scale-105 transition-transform duration-500 hero-float-animation"
+                    width="512"
+                    height="512"
+                    fetchpriority="high"
+                    decoding="async"
                 >
             </div>
 

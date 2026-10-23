@@ -25,7 +25,7 @@
             
             <!-- Left Side: Grand Real Deployment Photo (6 cols) -->
             <div class="lg:col-span-6 relative min-h-[340px] lg:min-h-[480px] overflow-hidden group">
-                <img src="{{ asset('images/portfolio/featured-case-study.jpg') }}" alt="Pekerjaan Penggelaran Kabel Fiber Optic PT Media Solusi Network" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <img src="{{ asset('images/portfolio/featured-case-study.jpg') }}" alt="Pekerjaan Penggelaran Kabel Fiber Optic PT Media Solusi Network" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0c2340] via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0c2340]/90 pointer-events-none"></div>
                 
                 <!-- Badge on Photo -->
@@ -111,7 +111,7 @@
             @foreach($portfolios as $portfolio)
                 <div class="flex items-center justify-center w-full p-2 group transition-transform duration-300 hover:scale-105 reveal-zoom" title="{{ $portfolio->title }}">
                     @if(file_exists(public_path($portfolio->image)))
-                        <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg">
+                        <img src="{{ asset($portfolio->image) }}?v=2" alt="{{ $portfolio->title }}" class="h-16 sm:h-24 max-w-[150px] sm:max-w-[220px] w-auto object-contain transition-all duration-300 drop-shadow-xs group-hover:drop-shadow-lg" loading="lazy" decoding="async">
                     @else
                         <div class="text-[#0284c7] flex items-center justify-center">
                             <iconify-icon icon="solar:code-square-bold" width="40"></iconify-icon>

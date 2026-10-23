@@ -51,6 +51,8 @@
                         src="{{ asset('images/about/tentang-kami.png') }}" 
                         alt="Tentang PT Media Solusi Network" 
                         class="relative z-10 w-full max-w-lg h-auto object-contain drop-shadow-[0_15px_30px_rgba(2,132,199,0.18)] group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
                     >
                 </div>
             </div>

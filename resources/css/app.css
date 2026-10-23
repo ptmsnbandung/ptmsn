@@ -178,6 +178,27 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   animation: subtleShimmer 4s infinite;
 }
 
+/* Smooth Hardware-Accelerated Floating Effect */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hero-float-animation {
+  animation: floatGentle 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float-animation {
+    animation: none !important;
+  }
+}
+
 /* ==========================================================================
    Tactile Press Micro-interaction for Buttons & Interactive Links
    ========================================================================== */

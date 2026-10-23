@@ -25,10 +25,10 @@
     <meta property="og:description" content="Nikmati koneksi internet cepat, stabil, dan terpercaya dengan teknologi fiber optic dan dukungan teknis 24/7.">
     <meta property="og:image" content="{{ asset('images/hero/hero-illustration.png') }}">
 
-    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Geist, Inter -->
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Inter (Streamlined Weights) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -65,11 +65,7 @@
     <!-- Iconify Web Component (Deferred) -->
     <script defer src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 
-    <!-- GSAP 3.12.5 & ScrollTrigger (Deferred) -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-    <!-- Lenis 1.1.13 Smooth Scroll (Deferred) -->
+    <!-- Lenis 1.1.13 Smooth Scroll (Desktop Only, Deferred) -->
     <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
     <!-- Schema.org JSON-LD -->
@@ -151,13 +147,6 @@
             }
 
             document.addEventListener('mouseover', function(e) {
-                const a = e.target.closest('a[href]');
-                if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
-                    prefetch(a.href);
-                }
-            }, { passive: true });
-
-            document.addEventListener('touchstart', function(e) {
                 const a = e.target.closest('a[href]');
                 if (a && a.href && !a.target && !a.href.startsWith('javascript:')) {
                     prefetch(a.href);

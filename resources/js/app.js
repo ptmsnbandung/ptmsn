@@ -211,133 +211,173 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     const canvas = document.getElementById('glCanvas');
     if (canvas) {
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            const vsSource = `
-                attribute vec2 position;
-                void main() {
-                    gl_Position = vec4(position, 0.0, 1.0);
-                }
-            `;
+        // Skip WebGL execution on mobile devices (<768px) and reduced-motion for maximum battery life & zero TBT
+        const isMobileScreen = window.innerWidth < 768;
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            const fsSource = `
-                precision mediump float;
-                uniform vec2 u_resolution;
-                uniform float u_time;
+        if (isMobileScreen || prefersReducedMotion) {
+            canvas.style.display = 'none';
+        } else {
+            const gl = canvas.getContext('webgl', { powerPreference: 'low-power', alpha: true }) || canvas.getContext('experimental-webgl');
+            if (gl) {
+                const vsSource = `
+                    attribute vec2 position;
+                    void main() {
+                        gl_Position = vec4(position, 0.0, 1.0);
+                    }
+                `;
 
-                void main() {
-                    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-                    vec2 p = uv * 2.0 - 1.0;
-                    p.x *= u_resolution.x / u_resolution.y;
+                const fsSource = `
+                    precision mediump float;
+                    uniform vec2 u_resolution;
+                    uniform float u_time;
 
-                    float t = u_time * 0.30;
-                    
-                    // Fluid undulating harmonic waves
-                    float wave1 = sin(p.x * 2.0 + t * 0.8 + sin(p.y * 1.3 + t * 0.5)) * 0.42;
-                    float wave2 = cos(p.x * 2.4 - t * 0.6 + cos(p.y * 1.6 - t * 0.7)) * 0.32;
-                    float wave3 = sin(p.x * 1.3 + p.y * 2.0 + t * 0.4) * 0.22;
+                    void main() {
+                        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                        vec2 p = uv * 2.0 - 1.0;
+                        p.x *= u_resolution.x / u_resolution.y;
 
-                    // Ultra-thin, delicate, fine neon ribbon (Decay ~18.0)
-                    float dist1 = abs(p.y + wave1 + wave2 * 0.45);
-                    float dist2 = abs(p.y + wave2 + wave3 * 0.5 + 0.12);
-                    
-                    // Fine delicate line + soft minimal glow
-                    float core1 = exp(-dist1 * 18.0) * 0.55;
-                    float halo1 = exp(-dist1 * 4.2) * 0.20;
-                    
-                    float core2 = exp(-dist2 * 15.0) * 0.35;
-                    float halo2 = exp(-dist2 * 3.8) * 0.15;
+                        float t = u_time * 0.30;
+                        
+                        // Fluid undulating harmonic waves
+                        float wave1 = sin(p.x * 2.0 + t * 0.8 + sin(p.y * 1.3 + t * 0.5)) * 0.42;
+                        float wave2 = cos(p.x * 2.4 - t * 0.6 + cos(p.y * 1.6 - t * 0.7)) * 0.32;
+                        float wave3 = sin(p.x * 1.3 + p.y * 2.0 + t * 0.4) * 0.22;
 
-                    float neonGlow = core1 + halo1 + core2 + halo2;
+                        // Ultra-thin, delicate, fine neon ribbon (Decay ~18.0)
+                        float dist1 = abs(p.y + wave1 + wave2 * 0.45);
+                        float dist2 = abs(p.y + wave2 + wave3 * 0.5 + 0.12);
+                        
+                        // Fine delicate line + soft minimal glow
+                        float core1 = exp(-dist1 * 18.0) * 0.55;
+                        float halo1 = exp(-dist1 * 4.2) * 0.20;
+                        
+                        float core2 = exp(-dist2 * 15.0) * 0.35;
+                        float halo2 = exp(-dist2 * 3.8) * 0.15;
 
-                    // Deep Elegant Palette (No blinding white, just crisp telecom cyan)
-                    vec3 darkNavy = vec3(0.020, 0.051, 0.102);
-                    vec3 deepSapphire = vec3(0.035, 0.095, 0.190);
-                    vec3 cyanGlow = vec3(0.15, 0.65, 0.92);
-                    vec3 electricSky = vec3(0.25, 0.78, 0.98);
+                        float neonGlow = core1 + halo1 + core2 + halo2;
 
-                    vec3 color = mix(darkNavy, deepSapphire, uv.y * 0.75 + 0.15);
-                    
-                    // Delicate glowing ribbon
-                    vec3 ribbonColor = mix(cyanGlow, electricSky, sin(t * 0.7 + p.x * 1.2) * 0.5 + 0.5);
-                    
-                    color += ribbonColor * neonGlow * 0.34;
+                        // Deep Elegant Palette (No blinding white, just crisp telecom cyan)
+                        vec3 darkNavy = vec3(0.020, 0.051, 0.102);
+                        vec3 deepSapphire = vec3(0.035, 0.095, 0.190);
+                        vec3 cyanGlow = vec3(0.15, 0.65, 0.92);
+                        vec3 electricSky = vec3(0.25, 0.78, 0.98);
 
-                    // Ambient depth
-                    float topGlow = smoothstep(0.0, 1.0, uv.y) * 0.18;
-                    color += vec3(0.03, 0.16, 0.35) * topGlow;
+                        vec3 color = mix(darkNavy, deepSapphire, uv.y * 0.75 + 0.15);
+                        
+                        // Delicate glowing ribbon
+                        vec3 ribbonColor = mix(cyanGlow, electricSky, sin(t * 0.7 + p.x * 1.2) * 0.5 + 0.5);
+                        
+                        color += ribbonColor * neonGlow * 0.34;
 
-                    gl_FragColor = vec4(color, 0.75);
-                }
-            `;
+                        // Ambient depth
+                        float topGlow = smoothstep(0.0, 1.0, uv.y) * 0.18;
+                        color += vec3(0.03, 0.16, 0.35) * topGlow;
 
-            const createShader = (gl, type, source) => {
-                const shader = gl.createShader(type);
-                gl.shaderSource(shader, source);
-                gl.compileShader(shader);
-                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
-                    gl.deleteShader(shader);
-                    return null;
-                }
-                return shader;
-            };
+                        gl_FragColor = vec4(color, 0.75);
+                    }
+                `;
 
-            const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
-            const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+                const createShader = (gl, type, source) => {
+                    const shader = gl.createShader(type);
+                    gl.shaderSource(shader, source);
+                    gl.compileShader(shader);
+                    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+                        gl.deleteShader(shader);
+                        return null;
+                    }
+                    return shader;
+                };
 
-            if (vertexShader && fragmentShader) {
-                const program = gl.createProgram();
-                gl.attachShader(program, vertexShader);
-                gl.attachShader(program, fragmentShader);
-                gl.linkProgram(program);
+                const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+                const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
-                if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
-                    gl.useProgram(program);
+                if (vertexShader && fragmentShader) {
+                    const program = gl.createProgram();
+                    gl.attachShader(program, vertexShader);
+                    gl.attachShader(program, fragmentShader);
+                    gl.linkProgram(program);
 
-                    const positionBuffer = gl.createBuffer();
-                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-                    const positions = new Float32Array([
-                        -1.0, -1.0,
-                         1.0, -1.0,
-                        -1.0,  1.0,
-                        -1.0,  1.0,
-                         1.0, -1.0,
-                         1.0,  1.0,
-                    ]);
-                    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+                    if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                        gl.useProgram(program);
 
-                    const positionLocation = gl.getAttribLocation(program, 'position');
-                    gl.enableVertexAttribArray(positionLocation);
-                    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+                        const positionBuffer = gl.createBuffer();
+                        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                        const positions = new Float32Array([
+                            -1.0, -1.0,
+                             1.0, -1.0,
+                            -1.0,  1.0,
+                            -1.0,  1.0,
+                             1.0, -1.0,
+                             1.0,  1.0,
+                        ]);
+                        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
-                    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-                    const timeLocation = gl.getUniformLocation(program, 'u_time');
+                        const positionLocation = gl.getAttribLocation(program, 'position');
+                        gl.enableVertexAttribArray(positionLocation);
+                        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-                    const resizeCanvas = () => {
-                        const rect = canvas.getBoundingClientRect();
-                        const width = Math.floor(rect.width) || window.innerWidth;
-                        const height = Math.floor(rect.height) || window.innerHeight;
-                        if (canvas.width !== width || canvas.height !== height) {
-                            canvas.width = width;
-                            canvas.height = height;
-                            gl.viewport(0, 0, width, height);
-                        }
-                    };
+                        const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+                        const timeLocation = gl.getUniformLocation(program, 'u_time');
 
-                    window.addEventListener('resize', resizeCanvas);
-                    resizeCanvas();
+                        // High Performance Canvas Sizing - DO NOT call on every requestAnimationFrame!
+                        const resizeCanvas = () => {
+                            const width = canvas.clientWidth || window.innerWidth;
+                            const height = canvas.clientHeight || window.innerHeight;
+                            if (canvas.width !== width || canvas.height !== height) {
+                                canvas.width = width;
+                                canvas.height = height;
+                                gl.viewport(0, 0, width, height);
+                            }
+                        };
 
-                    let startTime = performance.now();
-                    const renderLoop = () => {
+                        let resizeTimeout = null;
+                        window.addEventListener('resize', () => {
+                            if (window.innerWidth < 768) {
+                                canvas.style.display = 'none';
+                                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                                return;
+                            }
+                            canvas.style.display = 'block';
+                            clearTimeout(resizeTimeout);
+                            resizeTimeout = setTimeout(resizeCanvas, 150);
+                        }, { passive: true });
                         resizeCanvas();
-                        const currentTime = (performance.now() - startTime) * 0.001;
-                        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-                        gl.uniform1f(timeLocation, currentTime);
-                        gl.drawArrays(gl.TRIANGLES, 0, 6);
-                        requestAnimationFrame(renderLoop);
-                    };
-                    requestAnimationFrame(renderLoop);
+
+                        let isVisible = true;
+                        let animationFrameId = null;
+
+                        // Pause WebGL rendering when hero is scrolled out of view to save 100% CPU/GPU
+                        if ('IntersectionObserver' in window) {
+                            const heroObserver = new IntersectionObserver((entries) => {
+                                entries.forEach(entry => {
+                                    isVisible = entry.isIntersecting;
+                                    if (isVisible && !animationFrameId) {
+                                        animationFrameId = requestAnimationFrame(renderLoop);
+                                    } else if (!isVisible && animationFrameId) {
+                                        cancelAnimationFrame(animationFrameId);
+                                        animationFrameId = null;
+                                    }
+                                });
+                            }, { threshold: 0.05 });
+                            heroObserver.observe(canvas);
+                        }
+
+                        let startTime = performance.now();
+                        const renderLoop = (now) => {
+                            if (!isVisible) {
+                                animationFrameId = null;
+                                return;
+                            }
+                            const currentTime = ((now || performance.now()) - startTime) * 0.001;
+                            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                            gl.uniform1f(timeLocation, currentTime);
+                            gl.drawArrays(gl.TRIANGLES, 0, 6);
+                            animationFrameId = requestAnimationFrame(renderLoop);
+                        };
+                        animationFrameId = requestAnimationFrame(renderLoop);
+                    }
                 }
             }
         }
@@ -425,8 +465,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allCoverageAreasCache = [];
 
-    // Pre-fetch coverage areas for instant autocomplete suggestions
+    // Defer coverage areas cache pre-fetch until idle to not block FCP/LCP
+    let hasFetchedCache = false;
     const fetchCoverageAreasCache = async () => {
+        if (hasFetchedCache) return;
+        hasFetchedCache = true;
         try {
             const res = await fetch('/coverage/areas', {
                 headers: { 'Accept': 'application/json' }
@@ -441,7 +484,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('Coverage areas cache error:', err);
         }
     };
-    fetchCoverageAreasCache();
+
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => fetchCoverageAreasCache(), { timeout: 3500 });
+    } else {
+        setTimeout(fetchCoverageAreasCache, 2500);
+    }
+    if (coverageQuery) {
+        coverageQuery.addEventListener('focus', fetchCoverageAreasCache, { once: true });
+    }
 
     // Auto-complete suggestions on typing
     if (coverageQuery && coverageSuggestions) {
@@ -736,25 +787,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-       8. Hero Section Animations (Idle Floating Only, No Entrance Animation)
+       8. Hero Section Animations (Now handled natively via CSS hero-float-animation)
        ========================================================================== */
     const initScrollAnimations = () => {
-        if (typeof window.gsap !== 'undefined') {
-            const heroSection = document.getElementById('hero');
-            if (heroSection) {
-                const heroImage = heroSection.querySelector('img');
-
-                if (heroImage) {
-                    window.gsap.to(heroImage, {
-                        y: -10,
-                        duration: 3.2,
-                        ease: 'sine.inOut',
-                        yoyo: true,
-                        repeat: -1
-                    });
-                }
-            }
-        }
+        // Pure CSS @keyframes floatGentle handles this smoothly with zero main-thread CPU overhead
     };
 
     /* ==========================================================================
