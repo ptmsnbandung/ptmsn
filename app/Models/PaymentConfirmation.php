@@ -25,12 +25,8 @@ class PaymentConfirmation extends Model
     public function getProofUrlAttribute(): string
     {
         $file = (string) $this->proof_file;
-        if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
-            return str_replace(
-                ['https://www.ptmsn.co.id', 'https://ptmsn.co.id', 'http://www.ptmsn.co.id', 'http://ptmsn.co.id'],
-                'https://portal.ptmsn.co.id',
-                $file
-            );
+        if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://') || str_starts_with($file, 'data:')) {
+            return $file;
         }
         $portalDomain = rtrim(config('company.portal_url', env('PORTAL_URL', 'https://portal.ptmsn.co.id')), '/');
         return $portalDomain . '/' . ltrim($file, '/');
