@@ -173,7 +173,8 @@ class BillingController extends Controller
 
         $file->move($destinationPath, $filename);
         $filePath = 'uploads/bukti_transfer/' . $filename;
-        $fullUrl = url($filePath);
+        $portalDomain = rtrim(config('company.portal_url', env('PORTAL_URL', 'https://portal.ptmsn.co.id')), '/');
+        $fullUrl = $portalDomain . '/' . $filePath;
 
         $destBank = trim((string) $request->input('destination_bank', ''));
         $rawNotes = trim((string) $request->input('notes', ''));
