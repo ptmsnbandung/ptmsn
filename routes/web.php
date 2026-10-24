@@ -1,159 +1,356 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController as AdminAuthController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\CoverageController as AdminCoverageController;
-use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\Admin\PackageController;
-use App\Http\Controllers\Admin\PortfolioController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\TicketController as AdminTicketController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\CoverageController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Portal\AuthController as PortalAuthController;
-use App\Http\Controllers\Portal\BillingController as PortalBillingController;
-use App\Http\Controllers\Portal\DashboardController as PortalDashboardController;
-use App\Http\Controllers\Portal\ProfileController as PortalProfileController;
-use App\Http\Controllers\Portal\TicketController as PortalTicketController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BroadcastController;
+use App\Http\Controllers\Admin\EmailController;
+use App\Http\Controllers\AiAssistantController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Finance\FinanceController;
+use App\Http\Controllers\Noc\NocController;
+use App\Http\Controllers\Noc\OltExplorerController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Teknik\TeknikController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-Route::post('/coverage/check', [CoverageController::class, 'check'])->name('coverage.check');
-Route::get('/coverage/areas', [CoverageController::class, 'areas'])->name('coverage.areas');
-Route::get('/coverage/odps', [CoverageController::class, 'odps'])->name('coverage.odps');
-Route::get('/csrf-token', function () {
-    return response()->json([
-        'token' => csrf_token(),
-    ]);
-})->name('csrf.token');
-
-Route::get('/error-419', function () {
-    return view('errors.419');
-})->name('error.419');
-
-/*
-|--------------------------------------------------------------------------
-| Portal Pelanggan (Customer Portal) Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/portal', function () {
-    return redirect()->away('https://portal.ptmsn.co.id');
+// Guest Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::get('/login', [LoginController::class, 'showLoginForm']);
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit')->middleware('throttle:6,1');
 });
 
-Route::prefix('portal')->name('portal.')->group(function () {
-    // Guest customer routes
-    Route::get('/login', [PortalAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [PortalAuthController::class, 'login'])->middleware('throttle:15,1')->name('login.submit');
-    Route::post('/login/send-otp', [PortalAuthController::class, 'sendOtp'])->middleware('throttle:10,1')->name('login.send-otp');
-    Route::post('/login/verify-otp', [PortalAuthController::class, 'verifyOtp'])->middleware('throttle:15,1')->name('login.verify-otp');
-    Route::match(['get', 'post'], '/logout', [PortalAuthController::class, 'logout'])->name('logout');
+// Authenticated Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/api/notifications/poll', [NotificationController::class, 'poll'])->name('api.notifications.poll');
+    Route::get('/api/notifications/stream', [NotificationController::class, 'stream'])->name('api.notifications.stream');
+    Route::get('/api/notifications/payments', [NotificationController::class, 'getRecentPayments'])->name('api.notifications.payments');
 
-    // Protected customer routes (auto-logout dalam 1 jam tidak ada aktivitas)
-    Route::middleware(['auth:customer', 'portal.timeout'])->group(function () {
-        Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard', [PortalDashboardController::class, 'index'])->name('dashboard.view');
+    // AI Assistant / Copilot Routes
+    Route::prefix('ai-assistant')->name('ai.')->group(function () {
+        Route::post('/chat', [AiAssistantController::class, 'chat'])->name('chat');
+        Route::get('/status', [AiAssistantController::class, 'status'])->name('status');
+    });
 
-        // Trouble Tickets (Laporan Gangguan)
-        Route::get('/tickets', [PortalTicketController::class, 'index'])->name('tickets.index');
-        Route::get('/tickets/create', [PortalTicketController::class, 'create'])->name('tickets.create');
-        Route::post('/tickets', [PortalTicketController::class, 'store'])->name('tickets.store');
-        Route::get('/tickets/image/{filename}', [PortalTicketController::class, 'showImage'])->where('filename', '.*')->name('tickets.image');
-        Route::get('/tickets/{ticket}', [PortalTicketController::class, 'show'])->name('tickets.show');
+    // Routes Role Master Admin & Direktur
+    Route::middleware('role:admin,direktur')->prefix('admin')->name('admin.')->group(function () {
+        // 1. User Management & Access Rights
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+        Route::match(['POST', 'PUT'], '/users/{kode_pengguna}/update', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::match(['POST', 'PUT'], '/users/{kode_pengguna}', [AdminController::class, 'updateUser']);
+        Route::match(['POST', 'PATCH'], '/users/{kode_pengguna}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
+        Route::match(['POST', 'DELETE'], '/users/{kode_pengguna}/delete', [AdminController::class, 'deleteUser'])->name('users.delete');
+        Route::match(['POST', 'DELETE'], '/users/{kode_pengguna}', [AdminController::class, 'deleteUser']);
 
-        // Tagihan & Pembayaran (Billing)
-        Route::get('/tagihan', [PortalBillingController::class, 'index'])->name('billing.index');
-        Route::post('/tagihan/pay', [PortalBillingController::class, 'payDirect'])->name('billing.pay.direct');
-        Route::post('/tagihan/sync', [PortalBillingController::class, 'syncDirect'])->name('billing.sync.direct');
-        Route::post('/tagihan/{invoice}/pay', [PortalBillingController::class, 'pay'])->where('invoice', '.*')->name('billing.pay');
-        Route::post('/tagihan/{invoice}/sync', [PortalBillingController::class, 'sync'])->where('invoice', '.*')->name('billing.sync');
-        Route::post('/tagihan/{invoice}/transfer-confirm', [PortalBillingController::class, 'confirmTransfer'])->where('invoice', '.*')->name('billing.transfer.confirm');
-        Route::get('/tagihan/{invoice}', [PortalBillingController::class, 'show'])->where('invoice', '.*')->name('billing.show');
+        // 2. Master Paket Internet & Layanan Bandwidth
+        Route::get('/paket', [AdminController::class, 'paket'])->name('paket');
+        Route::post('/paket/store', [AdminController::class, 'storePaket'])->name('paket.store');
+        Route::match(['POST', 'DELETE'], '/paket/{kode_bandwith}/delete', [AdminController::class, 'deletePaket'])->name('paket.delete')->where('kode_bandwith', '.*');
 
-        // Profile & Service Settings
-        Route::get('/profile', [PortalProfileController::class, 'index'])->name('profile');
-        Route::put('/profile', [PortalProfileController::class, 'update'])->name('profile.update');
-        Route::post('/profile/update-email', [PortalProfileController::class, 'updateEmailAjax'])->name('profile.update-email');
+        // 3. Broadcast WhatsApp (Jatuh Tempo, Massal, Per Orangan, Custom Template & Meta Cloud API)
+        Route::get('/broadcast', [BroadcastController::class, 'index'])->name('broadcast');
+        Route::get('/broadcast/preview', [BroadcastController::class, 'preview'])->name('broadcast.preview');
+        Route::post('/broadcast/send-single', [BroadcastController::class, 'sendSingle'])->name('broadcast.send-single');
+        Route::post('/broadcast/send-bulk', [BroadcastController::class, 'sendBulk'])->name('broadcast.send-bulk');
+        Route::post('/broadcast/send-api-item', [BroadcastController::class, 'sendApiItem'])->name('broadcast.send-api-item');
+        Route::post('/broadcast/test-connection', [BroadcastController::class, 'testConnection'])->name('broadcast.test-connection');
+        Route::post('/broadcast/sync-templates', [BroadcastController::class, 'syncTemplates'])->name('broadcast.sync-templates');
+        Route::post('/broadcast/template/store', [BroadcastController::class, 'saveTemplate'])->name('broadcast.template.store');
+        Route::post('/broadcast/template/{id}/delete', [BroadcastController::class, 'deleteTemplate'])->name('broadcast.template.delete');
+        Route::get('/broadcast/history', [BroadcastController::class, 'history'])->name('broadcast.history');
 
-        // Interactive Onboarding Tour Completion
-        Route::post('/onboarding/complete', [PortalDashboardController::class, 'completeOnboarding'])->name('onboarding.complete');
+        // 4. Monitoring AI (Gemini Multi-Key Pooling & Token Usage)
+        Route::get('/ai-monitor', [AiAssistantController::class, 'monitorView'])->name('ai-monitor');
+        Route::post('/ai-monitor/ping', [AiAssistantController::class, 'monitorPing'])->name('ai-monitor.ping');
+        Route::post('/ai-monitor/reset-metrics', [AiAssistantController::class, 'resetMetrics'])->name('ai-monitor.reset');
+
+        // 5. Kelola Email (Kirim Custom & Broadcast Email ke Pelanggan)
+        Route::prefix('email')->name('email.')->group(function () {
+            Route::get('/', [EmailController::class, 'index'])->name('index');
+            Route::post('/send', [EmailController::class, 'send'])->name('send');
+            Route::post('/preview', [EmailController::class, 'preview'])->name('preview');
+            Route::get('/history', [EmailController::class, 'history'])->name('history');
+            Route::get('/history/{id}', [EmailController::class, 'getHistoryDetail'])->name('history.detail');
+        });
+    });
+
+    // WhatsApp Cloud API Webhook (Public Callback Endpoint)
+    Route::get('/webhook/whatsapp', [BroadcastController::class, 'webhookVerify']);
+    Route::post('/webhook/whatsapp', [BroadcastController::class, 'webhookReceive']);
+
+    // Midtrans Payment Gateway Webhook (Auto Unsuspend Callback)
+    Route::post('/webhook/midtrans', [FinanceController::class, 'handleMidtransWebhook'])->name('webhook.midtrans');
+
+    // Routes Shared Ticket Hub & Tiket Gangguan (Teknik, NOC, Direktur, Admin, Finance, CEO)
+    Route::middleware('role:teknik,noc,direktur,admin,finance,ceo')->prefix('teknik')->name('teknik.')->group(function () {
+        Route::get('/tiket', [TeknikController::class, 'tiket'])->name('tiket');
+        Route::get('/tiket/gangguan', [TeknikController::class, 'tiketGangguan'])->name('tiket.gangguan');
+        Route::get('/tiket/gangguan/check-customer', [TeknikController::class, 'checkCustomerForTiket'])->name('tiket.gangguan.check-customer');
+        Route::post('/tiket/gangguan', [TeknikController::class, 'storeTiketGangguan'])->name('tiket.gangguan.store');
+        Route::get('/tiket/gangguan/export', [TeknikController::class, 'exportTiketGangguan'])->name('tiket.gangguan.export');
+        Route::post('/tiket/gangguan/{id}/schedule', [TeknikController::class, 'scheduleTiketGangguan'])->name('tiket.gangguan.schedule');
+        Route::post('/tiket/gangguan/{id}/resolve', [TeknikController::class, 'resolveTiketGangguan'])->name('tiket.gangguan.resolve');
+        Route::post('/tiket/gangguan/{id}/cancel', [TeknikController::class, 'cancelTiketGangguan'])->name('tiket.gangguan.cancel');
+    });
+
+    // Routes Role Teknik, NOC, Direktur, Admin, Finance, & CEO
+    Route::middleware('role:teknik,noc,direktur,admin,finance,ceo')->prefix('teknik')->name('teknik.')->group(function () {
+        
+        // Pendaftaran Pelanggan Baru & Edit Pendaftaran
+        Route::get('/pendaftaran', [TeknikController::class, 'pendaftaran'])->name('pendaftaran');
+        Route::get('/pendaftaran/export', [TeknikController::class, 'exportPendaftaran'])->name('pendaftaran.export');
+        Route::post('/pendaftaran', [TeknikController::class, 'storePendaftaran'])->name('pendaftaran.store');
+        Route::post('/pendaftaran/update', [TeknikController::class, 'updatePendaftaran'])->name('pendaftaran.update');
+        Route::post('/pendaftaran/batal-pasang', [TeknikController::class, 'batalPasang'])->name('pendaftaran.batal-pasang');
+        
+        // Survey & Instalasi Workflow Routes
+        Route::post('/pendaftaran/schedule-survey', [TeknikController::class, 'storeScheduleSurvey'])->name('pendaftaran.schedule-survey');
+        Route::post('/pendaftaran/report-survey', [TeknikController::class, 'storeReportSurvey'])->name('pendaftaran.report-survey');
+        Route::post('/pendaftaran/schedule-instalasi', [TeknikController::class, 'storeScheduleInstalasi'])->name('pendaftaran.schedule-instalasi');
+        Route::post('/pendaftaran/report-instalasi', [TeknikController::class, 'storeReportInstalasi'])->name('pendaftaran.report-instalasi');
+        Route::post('/pendaftaran/request-aktivasi', [TeknikController::class, 'requestAktivasiNoc'])->name('pendaftaran.request-aktivasi');
+
+        // AJAX API Dropdowns & Detail Pelanggan & Billing & Survey/Instalasi
+        Route::get('/api/billing/{nomor_internet}', [TeknikController::class, 'getBillingDetail'])->name('api.billing.detail');
+        Route::get('/api/pendaftaran/{nomor_internet}', [TeknikController::class, 'getPendaftaranDetail'])->name('api.pendaftaran.detail');
+        Route::get('/api/survey-instalasi/{nomor_internet}', [TeknikController::class, 'getSurveyInstalasiDetail'])->name('api.survey-instalasi.detail');
+        Route::get('/api/paket/{kategori}', [TeknikController::class, 'getPaket'])->name('api.paket');
+        Route::get('/api/wilayah/kota/{provinsi}', [TeknikController::class, 'getKota'])->name('api.kota');
+        Route::get('/api/wilayah/kecamatan/{kota}', [TeknikController::class, 'getKecamatan'])->name('api.kecamatan');
+        Route::get('/api/wilayah/kelurahan/{kecamatan}', [TeknikController::class, 'getKelurahan'])->name('api.kelurahan');
+
+        // API Endpoint Foto Bukti / Report UP/Downgrade
+        Route::get('/api/up-downgrade/foto/{filename}', [TeknikController::class, 'apiGetUpDowngradeFoto'])->name('api.up-downgrade.foto')->where('filename', '.*');
+        Route::get('/api/up-downgrade/{kode_trx}/foto', [TeknikController::class, 'apiGetUpDowngradeFotoByTrx'])->name('api.up-downgrade.trx.foto')->where('kode_trx', '.*');
+        Route::get('/api/up-downgrade/{kode_trx}/bukti', [TeknikController::class, 'apiGetUpDowngradeBuktiInfo'])->name('api.up-downgrade.trx.bukti')->where('kode_trx', '.*');
+        Route::get('/api/up-downgrade/foto-list', [TeknikController::class, 'apiListUpDowngradeFotos'])->name('api.up-downgrade.foto-list');
+
+        // Group Permintaan
+        Route::prefix('permintaan')->name('permintaan.')->group(function () {
+            Route::get('/up-downgrade', [TeknikController::class, 'upDowngrade'])->name('up-downgrade');
+            Route::post('/up-downgrade/{kode_trx}/schedule', [TeknikController::class, 'scheduleUpDowngrade'])->name('up-downgrade.schedule');
+            Route::post('/up-downgrade/{kode_trx}/execute', [TeknikController::class, 'executeUpDowngrade'])->name('up-downgrade.execute');
+            Route::post('/up-downgrade/{kode_trx}/cancel', [TeknikController::class, 'cancelUpDowngrade'])->name('up-downgrade.cancel');
+            Route::get('/terminasi', [TeknikController::class, 'terminasi'])->name('terminasi');
+            Route::post('/terminasi/{kode_trx}/schedule', [TeknikController::class, 'scheduleCollect'])->name('terminasi.schedule');
+            Route::post('/terminasi/{kode_trx}/report', [TeknikController::class, 'reportCollect'])->name('terminasi.report');
+            Route::post('/terminasi/{kode_trx}/close', [TeknikController::class, 'closeTerminasi'])->name('terminasi.close');
+            Route::post('/terminasi/{kode_trx}/cancel', [TeknikController::class, 'cancelTerminasi'])->name('terminasi.cancel');
+            Route::get('/suspend', [TeknikController::class, 'suspend'])->name('suspend');
+        });
+
+        // Data Pelanggan & Profile & Export Excel
+        Route::get('/pelanggan', [TeknikController::class, 'pelanggan'])->name('pelanggan');
+        Route::get('/pelanggan/export', [TeknikController::class, 'exportPelanggan'])->name('pelanggan.export');
+        Route::get('/pelanggan/{nomor_internet}', [TeknikController::class, 'profilePelanggan'])->name('pelanggan.profile');
+        Route::get('/pelanggan/{nomor_internet}/live-traffic', [TeknikController::class, 'liveTrafficOnu'])->name('pelanggan.live-traffic');
+        Route::get('/dokumen/langganan/{nomor_internet}', [TeknikController::class, 'dokumenLangganan'])->name('dokumen.langganan');
+        Route::get('/dokumen/survey/{nomor_internet}', [TeknikController::class, 'dokumenSurvey'])->name('dokumen.survey');
+        Route::get('/dokumen/instalasi/{nomor_internet}', [TeknikController::class, 'dokumenInstalasi'])->name('dokumen.instalasi');
+        Route::get('/dokumen/invoice/{kode_billing}', [FinanceController::class, 'dokumenInvoice'])->name('dokumen.invoice')->where('kode_billing', '.*');
+        Route::get('/dokumen/batch-invoice/search', [FinanceController::class, 'searchBatchInvoiceJson'])->name('dokumen.batch-invoice.search');
+        Route::match(['get', 'post'], '/dokumen/batch-invoice', [FinanceController::class, 'batchDokumenInvoice'])->name('dokumen.batch-invoice');
+        Route::post('/pelanggan/{nomor_internet}/upload-doc', [TeknikController::class, 'uploadDocArsip'])->name('pelanggan.upload-doc');
+        Route::post('/pelanggan/{nomor_internet}/perangkat', [TeknikController::class, 'storePerangkat'])->name('pelanggan.perangkat.store');
+        Route::post('/pelanggan/{nomor_internet}/perangkat/{kode_inst_barang}/delete', [TeknikController::class, 'deletePerangkat'])->name('pelanggan.perangkat.delete');
+        Route::post('/pelanggan/{nomor_internet}/update-pppoe', [TeknikController::class, 'updatePppoe'])->name('pelanggan.update-pppoe');
+        Route::post('/pelanggan/{nomor_internet}/unified-activate', [NocController::class, 'unifiedActivate'])->name('pelanggan.unified-activate');
+        Route::post('/pelanggan/{nomor_internet}/unified-suspend', [NocController::class, 'unifiedSuspend'])->name('pelanggan.unified-suspend');
+        Route::post('/pelanggan/adjust', [FinanceController::class, 'adjustCustomerPricing'])->name('pelanggan.adjust.post');
+        Route::post('/pelanggan/{nomor_internet}/adjust', [FinanceController::class, 'adjustCustomerPricing'])->name('pelanggan.adjust');
+
+        // Cek Coverage Lokasi ke ODP Terdekat (GIS Dropcore Routing)
+        Route::get('/coverage', [TeknikController::class, 'coverage'])->name('coverage');
+        Route::post('/coverage/update-ticket-status', [TeknikController::class, 'updateCoverageTicketStatus'])->name('coverage.update-status');
+    });
+
+    Route::middleware('role:noc,direktur,admin,ceo')->prefix('noc')->name('noc.')->group(function () {
+        // 1. Dashboard NOC Command Center & Pendaftaran
+        Route::get('/', [NocController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard', [NocController::class, 'dashboard'])->name('dashboard.index');
+        Route::get('/pendaftaran', fn() => redirect()->route('teknik.pendaftaran'))->name('pendaftaran');
+
+        // 2. Menu OLT (Dropdown OLT -> PON -> ODP -> Users)
+        Route::get('/network-olt/{olt_id?}', [OltExplorerController::class, 'index'])->name('network-olt');
+        Route::get('/olt', [NocController::class, 'olt'])->name('olt');
+        Route::get('/olt/create', [NocController::class, 'oltCreate'])->name('olt.create');
+        Route::get('/olt/{kode_olt}/edit', [NocController::class, 'oltEdit'])->name('olt.edit');
+        Route::get('/olt/{kode_olt}/traffic-pon', [NocController::class, 'oltPonTraffic'])->name('olt.pon-traffic');
+        Route::get('/olt/{kode_olt}/pon/{pon_index}/onu', [NocController::class, 'oltPonOnuList'])->name('olt.pon.onu-list');
+        Route::get('/olt/{kode_olt}/onu-attenuation', [NocController::class, 'checkOnuAttenuation'])->name('olt.onu-attenuation');
+        Route::get('/monitoring-instalasi-onu', [NocController::class, 'monitoringInstalasiOnu'])->name('monitoring-instalasi-onu');
+        Route::post('/olt/store', [NocController::class, 'storeOlt'])->name('olt.store');
+        Route::post('/olt/{kode_olt}/delete', [NocController::class, 'deleteOlt'])->name('olt.delete');
+        Route::post('/olt/test-connection', [NocController::class, 'testOltConnection'])->name('olt.test-connection');
+        Route::post('/olt/sync-live', [NocController::class, 'syncLiveGpon'])->name('olt.sync-live');
+        Route::post('/olt/scan-uncfg', [NocController::class, 'scanUncfgOnu'])->name('olt.scan-uncfg');
+        Route::post('/olt/telemetry', [NocController::class, 'getOltTelemetry'])->name('olt.telemetry');
+        Route::get('/gpon', [NocController::class, 'gponTopology'])->name('gpon');
+        Route::post('/pon/store', [NocController::class, 'storePon'])->name('pon.store');
+
+        // 3. Infrastruktur: ODP (Optical Distribution Point)
+        Route::get('/odp', [NocController::class, 'odp'])->name('odp');
+        Route::post('/odp/store', [NocController::class, 'storeOdp'])->name('odp.store');
+
+        // 4. Infrastruktur: POP (Point of Presence)
+        Route::get('/pop', [NocController::class, 'pop'])->name('pop');
+        Route::post('/pop/store', [NocController::class, 'storePop'])->name('pop.store');
+
+        // 5. Infrastruktur: Wilayah Perangkat Jaringan
+        Route::get('/wilayah', [NocController::class, 'wilayahPerangkat'])->name('wilayah');
+        Route::post('/wilayah/store', [NocController::class, 'storeWilayahPerangkat'])->name('wilayah.store');
+
+        // 6. Infrastruktur: Router MikroTik (Core & Edge NAS)
+        Route::get('/router', [NocController::class, 'router'])->name('router');
+        Route::post('/router/store', [NocController::class, 'storeRouter'])->name('router.store');
+        Route::post('/router/{id}/update', [NocController::class, 'updateRouter'])->name('router.update');
+        Route::post('/router/{id}/delete', [NocController::class, 'deleteRouter'])->name('router.delete');
+        Route::post('/router/test-connection', [NocController::class, 'testRouterConnection'])->name('router.test-connection');
+        Route::get('/router/{id}/ppp-profiles', [NocController::class, 'getRouterPppProfiles'])->name('router.ppp-profiles');
+        Route::get('/router/{id}/secrets', [NocController::class, 'getRouterSecrets'])->name('router.secrets');
+        Route::post('/router/{id}/sync-customers', [NocController::class, 'syncRouterCustomers'])->name('router.sync-customers');
+        Route::get('/activity-log', [NocController::class, 'activityLog'])->name('activity-log');
+        Route::post('/activity-log/{id}/delete', [NocController::class, 'deleteSingleActivityLog'])->name('activity-log.delete');
+
+        // 7. Provisioning & Aktivasi Jaringan
+        Route::get('/aktivasi', [NocController::class, 'aktivasi'])->name('aktivasi');
+        Route::post('/aktivasi/{nomor_internet}/schedule', [NocController::class, 'storeScheduleAktivasi'])->name('aktivasi.schedule');
+        Route::post('/aktivasi/{nomor_internet}/report', [NocController::class, 'storeReportAktivasi'])->name('aktivasi.report');
+        Route::post('/aktivasi/{nomor_internet}/proses', [NocController::class, 'doAktivasi'])->name('aktivasi.proses');
+        Route::post('/aktivasi/{nomor_internet}/pppoe-activate', [NocController::class, 'doAktivasiPPPoE'])->name('aktivasi.pppoe');
+
+        // 6. Isolir / Suspend Layanan
+        Route::get('/suspend', [NocController::class, 'suspend'])->name('suspend');
+        Route::post('/suspend/bulk-approve', [NocController::class, 'bulkApproveSuspend'])->name('suspend.bulk-approve');
+        Route::get('/suspend/queue-status', [NocController::class, 'getQueueStatus'])->name('suspend.queue-status');
+        Route::post('/suspend/process-queue', [NocController::class, 'processNextQueueItem'])->name('suspend.process-queue');
+        Route::post('/suspend/{kode_suspend}/approve', [NocController::class, 'approveSuspend'])->name('suspend.approve');
+        Route::post('/suspend/{kode_suspend}/cancel', [NocController::class, 'cancelSuspend'])->name('suspend.cancel');
+
+        // 7. Terminasi Layanan
+        Route::get('/terminasi', [NocController::class, 'terminasi'])->name('terminasi');
+        Route::post('/terminasi/{kode_trx}/schedule', [NocController::class, 'scheduleCollect'])->name('terminasi.schedule');
+        Route::post('/terminasi/{kode_trx}/report', [NocController::class, 'reportCollect'])->name('terminasi.report');
+        Route::post('/terminasi/{kode_trx}/close', [NocController::class, 'closeTerminasi'])->name('terminasi.close');
+        Route::post('/terminasi/{kode_trx}/cancel', [NocController::class, 'cancelTerminasi'])->name('terminasi.cancel');
+
+        // 8. Inventaris Perangkat (Dinonaktifkan dari modul NOC)
+        Route::get('/perangkat', function () {
+            return redirect()->route('noc.index');
+        })->name('perangkat');
+
+        // 9. Tiket Gangguan (Pelaksana Utama NOC)
+        Route::get('/tiket', [TeknikController::class, 'tiket'])->name('tiket');
+        Route::get('/tiket-gangguan', [TeknikController::class, 'tiketGangguan'])->name('tiket.gangguan');
+
+        // 10. Pusat Notifikasi & Monitoring Isu Jaringan NOC
+        Route::get('/notifikasi', [NocController::class, 'notifikasi'])->name('notifikasi');
+        Route::get('/api/notifications', [NocController::class, 'getNocNotificationsJson'])->name('api.notifications');
+        Route::post('/api/notifications/intentional', [NocController::class, 'markIntentional'])->name('api.notifications.intentional');
+        Route::post('/api/notifications/unmark-intentional', [NocController::class, 'unmarkIntentional'])->name('api.notifications.unmark-intentional');
+    });
+
+    // Routes Role Finance & Direktur & Admin & CEO
+    Route::middleware('role:finance,direktur,admin,ceo')->prefix('finance')->name('finance.')->group(function () {
+        // 1. Billing Layanan (Recurring Monthly Invoicing)
+        Route::get('/', [FinanceController::class, 'billingLayanan'])->name('index');
+        Route::get('/billing-layanan', [FinanceController::class, 'billingLayanan'])->name('billing-layanan');
+        Route::get('/billing-layanan/generate-candidates', [FinanceController::class, 'getGenerateCandidatesJson'])->name('billing-layanan.generate-candidates');
+        Route::post('/billing-layanan/generate', [FinanceController::class, 'generateInvoice'])->name('billing-layanan.generate');
+        Route::post('/billing-layanan/publish', [FinanceController::class, 'publishBillingLayanan'])->name('billing-layanan.publish.post');
+        Route::post('/billing-layanan/{kode_billing}/publish', [FinanceController::class, 'publishBillingLayanan'])->name('billing-layanan.publish')->where('kode_billing', '.*');
+        Route::post('/billing-layanan/generate-midtrans', [FinanceController::class, 'generateMidtransLayanan'])->name('billing-layanan.generate-midtrans.post');
+        Route::post('/billing-layanan/renew-midtrans', [FinanceController::class, 'renewMidtransLayanan'])->name('billing-layanan.renew-midtrans.post');
+        Route::post('/billing-layanan/konfirmasi-bayar', [FinanceController::class, 'konfirmasiBayarLayanan'])->name('billing-layanan.konfirmasi-bayar.post');
+        Route::post('/billing-layanan/{kode_billing}/konfirmasi-bayar', [FinanceController::class, 'konfirmasiBayarLayanan'])->name('billing-layanan.konfirmasi-bayar')->where('kode_billing', '.*');
+        Route::post('/billing-layanan/adjust', [FinanceController::class, 'adjustBillingLayanan'])->name('billing-layanan.adjust.post');
+        Route::post('/billing-layanan/{kode_billing}/adjust', [FinanceController::class, 'adjustBillingLayanan'])->name('billing-layanan.adjust')->where('kode_billing', '.*');
+        Route::post('/billing-layanan/rollback', [FinanceController::class, 'rollbackBillingLayanan'])->name('billing-layanan.rollback.post');
+        Route::post('/billing-layanan/{kode_billing}/rollback', [FinanceController::class, 'rollbackBillingLayanan'])->name('billing-layanan.rollback')->where('kode_billing', '.*');
+        Route::post('/billing-layanan/change-payment-method', [FinanceController::class, 'changePaymentMethodLayanan'])->name('billing-layanan.change-payment-method.post');
+        Route::post('/billing-layanan/{kode_billing}/change-payment-method', [FinanceController::class, 'changePaymentMethodLayanan'])->name('billing-layanan.change-payment-method')->where('kode_billing', '.*');
+        Route::post('/billing-layanan/delete', [FinanceController::class, 'deleteBillingLayanan'])->name('billing-layanan.delete.post');
+        Route::post('/billing-layanan/upload-proof', [FinanceController::class, 'uploadProofFile'])->name('billing-layanan.upload-proof');
+        Route::get('/billing-layanan/export', [FinanceController::class, 'exportBillingLayanan'])->name('billing-layanan.export');
+        Route::get('/dokumen/invoice/{kode_billing}', [FinanceController::class, 'dokumenInvoice'])->name('dokumen.invoice')->where('kode_billing', '.*');
+        Route::get('/dokumen/batch-invoice/search', [FinanceController::class, 'searchBatchInvoiceJson'])->name('dokumen.batch-invoice.search');
+        Route::match(['get', 'post'], '/dokumen/batch-invoice', [FinanceController::class, 'batchDokumenInvoice'])->name('dokumen.batch-invoice');
+        Route::get('/invoice/{kode_billing}', [FinanceController::class, 'dokumenInvoice'])->name('invoice')->where('kode_billing', '.*');
+        Route::get('/api/billing-layanan-detail', [FinanceController::class, 'getBillingLayananDetail'])->name('billing-layanan.detail.query');
+        Route::get('/api/billing-layanan/{kode_billing}', [FinanceController::class, 'getBillingLayananDetail'])->name('billing-layanan.detail')->where('kode_billing', '.*');
+        Route::get('/billing-layanan/requests', [FinanceController::class, 'getBillingRequestsJson'])->name('billing-layanan.requests.json');
+        Route::post('/billing-layanan/requests/{id}/approve', [FinanceController::class, 'approveBillingRequest'])->name('billing-layanan.requests.approve');
+        Route::post('/billing-layanan/requests/approve-all', [FinanceController::class, 'approveAllBillingRequests'])->name('billing-layanan.requests.approve-all');
+        Route::post('/billing-layanan/requests/{id}/reject', [FinanceController::class, 'rejectBillingRequest'])->name('billing-layanan.requests.reject');
+        Route::post('/billing-layanan/request-invoice', [FinanceController::class, 'storeBillingRequest'])->name('billing-layanan.request-invoice.post');
+
+        // Notifikasi Pembayaran & Approval (Finance)
+        Route::get('/notifikasi', [FinanceController::class, 'notifikasiIndex'])->name('notifikasi');
+        Route::post('/notifikasi/approve', [FinanceController::class, 'approvePaymentNotification'])->name('notifikasi.approve');
+        Route::post('/notifikasi/reject', [FinanceController::class, 'rejectPaymentNotification'])->name('notifikasi.reject');
+
+        // 2. Billing Registrasi (Tagihan Pasang Baru)
+        Route::get('/billing-registrasi', [FinanceController::class, 'billingRegistrasi'])->name('billing-registrasi');
+        Route::post('/billing-registrasi/publish', [FinanceController::class, 'publishBillingRegistrasi'])->name('billing-registrasi.publish.post');
+        Route::post('/billing-registrasi/{kode_billing}/publish', [FinanceController::class, 'publishBillingRegistrasi'])->name('billing-registrasi.publish')->where('kode_billing', '.*');
+        Route::post('/billing-registrasi/generate-midtrans', [FinanceController::class, 'generateMidtransRegistrasi'])->name('billing-registrasi.generate-midtrans.post');
+        Route::post('/billing-registrasi/renew-midtrans', [FinanceController::class, 'renewMidtransRegistrasi'])->name('billing-registrasi.renew-midtrans.post');
+        Route::post('/billing-registrasi/konfirmasi-bayar', [FinanceController::class, 'konfirmasiBayarRegistrasi'])->name('billing-registrasi.konfirmasi-bayar.post');
+        Route::post('/billing-registrasi/{kode_billing}/konfirmasi-bayar', [FinanceController::class, 'konfirmasiBayarRegistrasi'])->name('billing-registrasi.konfirmasi-bayar')->where('kode_billing', '.*');
+        Route::post('/billing-registrasi/change-payment-method', [FinanceController::class, 'changePaymentMethodRegistrasi'])->name('billing-registrasi.change-payment-method.post');
+        Route::post('/billing-registrasi/{kode_billing}/change-payment-method', [FinanceController::class, 'changePaymentMethodRegistrasi'])->name('billing-registrasi.change-payment-method')->where('kode_billing', '.*');
+        Route::get('/billing-registrasi/export', [FinanceController::class, 'exportBillingRegistrasi'])->name('billing-registrasi.export');
+        Route::get('/api/billing-registrasi-detail', [FinanceController::class, 'getBillingRegistrasiDetail'])->name('billing-registrasi.detail.query');
+
+        // 3. Master Paket Internet & Layanan Bandwidth (Redirect to Admin)
+        Route::get('/paket', fn() => redirect()->route('admin.paket'))->name('paket');
+        Route::post('/paket/store', [AdminController::class, 'storePaket'])->name('paket.store');
+        Route::post('/paket/{kode_bandwith}/delete', [AdminController::class, 'deletePaket'])->name('paket.delete')->where('kode_bandwith', '.*');
+
+        // 4. Permintaan ke NOC: UP / Downgrade Bandwidth Layanan
+        Route::get('/permintaan/up-downgrade', [FinanceController::class, 'upDowngrade'])->name('permintaan.up-downgrade');
+        Route::post('/permintaan/up-downgrade', [FinanceController::class, 'storeUpDowngrade'])->name('permintaan.up-downgrade.store');
+        Route::post('/permintaan/up-downgrade/{kode_trx}/cancel', [FinanceController::class, 'cancelUpDowngrade'])->name('permintaan.up-downgrade.cancel')->where('kode_trx', '.*');
+
+        // 4. Permintaan ke NOC: Suspend Layanan (Jatuh Tempo / Tunggakan)
+        Route::get('/permintaan/suspend', [FinanceController::class, 'suspend'])->name('permintaan.suspend');
+        Route::post('/permintaan/suspend', [FinanceController::class, 'storeSuspend'])->name('permintaan.suspend.store');
+        Route::post('/permintaan/suspend/auto', [FinanceController::class, 'autoSuspendUnpaid'])->name('permintaan.suspend.auto');
+        Route::post('/permintaan/suspend/{kode_suspend}/unsuspend', [FinanceController::class, 'requestUnsuspend'])->name('permintaan.suspend.unsuspend')->where('kode_suspend', '.*');
+        Route::post('/permintaan/suspend/{kode_suspend}/cancel', [FinanceController::class, 'cancelSuspend'])->name('permintaan.suspend.cancel')->where('kode_suspend', '.*');
+
+        // 5. Permintaan ke NOC: Terminasi Layanan (Berhenti Berlangganan)
+        Route::get('/permintaan/terminasi', [FinanceController::class, 'terminasi'])->name('permintaan.terminasi');
+        Route::post('/permintaan/terminasi', [FinanceController::class, 'storeTerminasi'])->name('permintaan.terminasi.store');
+        Route::post('/permintaan/terminasi/{kode_trx}/cancel', [FinanceController::class, 'cancelTerminasi'])->name('permintaan.terminasi.cancel')->where('kode_trx', '.*');
+
+        // 6. API Helpers
+        Route::get('/api/pelanggan-search', [FinanceController::class, 'apiPelangganSearch'])->name('api.pelanggan-search');
+
+        // 7. Data Pelanggan & Profile (Finance)
+        Route::get('/pelanggan', [TeknikController::class, 'pelanggan'])->name('pelanggan');
+        Route::get('/pelanggan/export', [TeknikController::class, 'exportPelanggan'])->name('pelanggan.export');
+        Route::get('/pelanggan/{nomor_internet}', [TeknikController::class, 'profilePelanggan'])->name('pelanggan.profile');
+        Route::post('/pelanggan/adjust', [FinanceController::class, 'adjustCustomerPricing'])->name('pelanggan.adjust.post');
+        Route::post('/pelanggan/{nomor_internet}/adjust', [FinanceController::class, 'adjustCustomerPricing'])->name('pelanggan.adjust');
+
+        // 8. Tiket Gangguan (Monitoring Finance)
+        Route::get('/tiket', [TeknikController::class, 'tiket'])->name('tiket');
+        Route::get('/tiket-gangguan', [TeknikController::class, 'tiketGangguan'])->name('tiket.gangguan');
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| Midtrans Payment Gateway Webhook Callback
-|--------------------------------------------------------------------------
-*/
-Route::match(['get', 'post'], '/midtrans/notification', [PortalBillingController::class, 'handleNotification'])->name('midtrans.notification');
-Route::match(['get', 'post'], '/api/midtrans/notification', [PortalBillingController::class, 'handleNotification']);
-
-
-/*
-|--------------------------------------------------------------------------
-| Admin Authentication Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
-
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
-    Route::match(['get', 'post'], '/logout', [AdminAuthController::class, 'logout'])->name('logout');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Protected Admin Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware('auth')->group(function () {
-        // Dashboard
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-        // Site Content & Copywriting Settings
-        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
-
-        // Packages CRUD
-        Route::resource('packages', PackageController::class)->except(['show']);
-
-        // Services CRUD
-        Route::resource('services', ServiceController::class)->except(['show']);
-
-        // Portfolios CRUD
-        Route::resource('portfolios', PortfolioController::class)->except(['show']);
-
-        // Clients CRUD
-        Route::resource('clients', ClientController::class)->except(['show']);
-
-        // Coverage Areas CRUD
-        Route::resource('coverage', AdminCoverageController::class)->except(['show']);
-
-        // Trouble Tickets Management
-        Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
-        Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('tickets.show');
-        Route::put('/tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
-        Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
-
-        // Customers Management
-        Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
-        Route::post('/customers', [AdminCustomerController::class, 'store'])->name('customers.store');
-        Route::delete('/customers/{customer}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
-
-        // Contact Messages Inbox
-        Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-        Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
-        Route::patch('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.markAsRead');
-        Route::patch('/messages/{message}/replied', [MessageController::class, 'markAsReplied'])->name('messages.markAsReplied');
-        Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
-    });
+// Public API Routes (Dapat diakses oleh Mobile App / Frontend / API Client)
+Route::prefix('api/up-downgrade')->name('public.api.up-downgrade.')->group(function () {
+    Route::get('/foto-list', [TeknikController::class, 'apiListUpDowngradeFotos'])->name('foto-list');
+    Route::get('/foto/{filename}', [TeknikController::class, 'apiGetUpDowngradeFoto'])->name('foto')->where('filename', '.*');
+    Route::get('/{kode_trx}/foto', [TeknikController::class, 'apiGetUpDowngradeFotoByTrx'])->name('trx.foto')->where('kode_trx', '.*');
+    Route::get('/{kode_trx}/bukti', [TeknikController::class, 'apiGetUpDowngradeBuktiInfo'])->name('trx.bukti')->where('kode_trx', '.*');
 });
+
