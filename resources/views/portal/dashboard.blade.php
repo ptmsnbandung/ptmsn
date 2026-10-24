@@ -6,20 +6,21 @@
 <div class="space-y-3 sm:space-y-5">
 
     <!-- Executive Dark Glassmorphism Hero Card -->
-    <div id="tour-step-hero" class="hero-network-card p-3.5 sm:p-6 lg:p-7 relative">
+    <div id="tour-step-hero" class="hero-network-card p-4 sm:p-6 lg:p-7 relative">
         
         <div class="relative z-10 space-y-3 sm:space-y-4">
             
             <!-- Top Row: ID, Status Badge & Action Buttons -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
                 
                 <!-- Left: Greeting & Badges -->
-                <div class="space-y-1.5 sm:space-y-2">
+                <div class="space-y-2">
+                    <!-- Compact Single-Row Status Badges on Mobile -->
                     <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                         <button 
                             type="button"
                             onclick="copyToClipboard('{{ $customer->customer_id }}', 'ID Pelanggan {{ $customer->customer_id }}')" 
-                            class="copy-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700/90 hover:border-sky-400 text-sky-300 font-mono text-[11px] sm:text-xs font-bold transition-all shadow-2xs whitespace-nowrap"
+                            class="copy-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700/90 hover:border-sky-400 text-sky-300 font-mono text-[11px] sm:text-xs font-bold transition-all shadow-2xs whitespace-nowrap cursor-pointer"
                             title="Klik untuk menyalin ID Pelanggan"
                         >
                             <iconify-icon icon="solar:hashtag-bold" class="text-sky-400 text-xs shrink-0"></iconify-icon>
@@ -32,26 +33,16 @@
                             <span>{{ $customer->status_reg_label }}</span>
                         </span>
 
-                        @if($customer->berlangganan_sejak !== '-')
-                            <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-slate-800/90 border-slate-700/90 text-cyan-300 shadow-2xs whitespace-nowrap" title="Total durasi aktif: {{ $customer->subscription_duration_text }}">
-                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs shrink-0"></iconify-icon>
-                                <span class="hidden sm:inline">Bergabung </span>
-                                <span>Sejak {{ $customer->berlangganan_sejak }}</span>
-                                <span class="text-cyan-400/50">•</span>
-                                <span class="text-emerald-400 font-mono">{{ $customer->subscription_duration_text }}</span>
-                            </span>
-                        @endif
-
                         <!-- Email Verification Status Badge / Trigger -->
                         @if(!empty($customer->email))
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-2xs whitespace-nowrap" title="{{ $customer->email }}">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-2xs whitespace-nowrap" title="{{ $customer->email }}">
                                 <iconify-icon icon="solar:verified-check-bold" class="text-emerald-400 text-xs shrink-0"></iconify-icon>
-                                <span>Email Terverifikasi</span>
+                                <span class=" sm:inline">Email Terverifikasi</span>
                             </span>
                         @else
                             <a 
                                 href="{{ route('portal.profile') }}"
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-amber-500/15 border-amber-400/40 text-amber-300 hover:bg-amber-500/25 transition-all shadow-2xs whitespace-nowrap cursor-pointer"
+                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-[10.5px] sm:text-xs font-semibold bg-amber-500/15 border-amber-400/40 text-amber-300 hover:bg-amber-500/25 transition-all shadow-2xs whitespace-nowrap cursor-pointer"
                                 title="Klik untuk melengkapi email di profil"
                             >
                                 <iconify-icon icon="solar:letter-bold" class="text-amber-400 text-xs shrink-0"></iconify-icon>
@@ -59,27 +50,46 @@
                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
                             </a>
                         @endif
+
+                        @if($customer->berlangganan_sejak !== '-')
+                            <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold bg-slate-800/90 border-slate-700/90 text-cyan-300 shadow-2xs whitespace-nowrap" title="Total durasi aktif: {{ $customer->subscription_duration_text }}">
+                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs shrink-0"></iconify-icon>
+                                <span>Bergabung Sejak {{ $customer->berlangganan_sejak }}</span>
+                                <span class="text-cyan-400/50">•</span>
+                                <span class="text-emerald-400 font-mono">{{ $customer->subscription_duration_text }}</span>
+                            </span>
+                        @endif
                     </div>
 
-                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
-                        Halo, {{ $customer->name }}! 👋
-                    </h1>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white tracking-tight">
+                            Halo, {{ $customer->name }}! 👋
+                        </h1>
+                        @if($customer->berlangganan_sejak !== '-')
+                            <p class="sm:hidden text-[11px] font-medium text-cyan-300/90 flex items-center gap-1.5 mt-0.5">
+                                <iconify-icon icon="solar:calendar-date-bold" class="text-cyan-400 text-xs shrink-0"></iconify-icon>
+                                <span>Sejak {{ $customer->berlangganan_sejak }}</span>
+                                <span class="text-slate-500">•</span>
+                                <span class="text-emerald-400 font-mono font-semibold">{{ $customer->subscription_duration_text }}</span>
+                            </p>
+                        @endif
+                    </div>
                     
                     <p class="text-xs sm:text-sm text-slate-200/90 max-w-2xl leading-relaxed">
                         Pantau performa koneksi internet broadband dan rincian layanan Anda secara real-time.
                     </p>
                 </div>
 
-                <!-- Right: Action Buttons -->
-                <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2.5 shrink-0">
-                    <a href="{{ route('portal.tickets.create') }}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 text-center">
+                <!-- Right: Action Buttons (Symmetric Single-Line Height on Mobile) -->
+                <div class="grid grid-cols-2 gap-2.5 sm:flex sm:items-center sm:gap-2.5 shrink-0 pt-0.5 sm:pt-0">
+                    <a href="{{ route('portal.tickets.create') }}" class="h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 text-center whitespace-nowrap">
                         <iconify-icon icon="solar:danger-triangle-bold" class="text-amber-300 text-sm sm:text-base shrink-0"></iconify-icon>
                         <span>Lapor Gangguan</span>
                     </a>
-                    <div class="inline-flex items-center justify-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-800/80 text-slate-300 font-heading font-bold text-xs sm:text-sm border border-slate-700/80 shadow-xs cursor-not-allowed select-none text-center opacity-80" title="Fitur Upgrade Paket segera hadir (Soon Launching)">
+                    <div class="relative h-10 sm:h-11 inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 rounded-xl bg-slate-800/85 text-slate-300 font-heading font-bold text-xs sm:text-sm border border-slate-700/90 shadow-xs cursor-not-allowed select-none text-center whitespace-nowrap opacity-90" title="Fitur Upgrade Paket segera hadir (Soon Launching)">
                         <iconify-icon icon="solar:round-transfer-vertical-bold" class="text-slate-400 text-sm sm:text-base shrink-0"></iconify-icon>
                         <span>Upgrade Paket</span>
-                        <span class="px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[9px] font-mono font-bold uppercase tracking-wider">Soon Launching</span>
+                        <span class="absolute -top-2 right-2 px-1.5 py-0.2 rounded-full bg-amber-500/95 text-slate-950 text-[8px] font-mono font-extrabold uppercase tracking-wider shadow-xs">Soon</span>
                     </div>
                 </div>
 
@@ -90,8 +100,7 @@
     </div>
 
     <!-- Status 4 KPI Cards Grid (Compact 2x2 on Mobile, 4 Cols on Desktop) -->
-    <!-- Status 4 KPI Cards Grid (Compact 2x2 on Mobile, 4 Cols on Desktop) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         
         <!-- Card 1: Paket Internet -->
         <div id="tour-step-package" class="kpi-stat-card kpi-sky flex flex-col justify-between">
@@ -162,8 +171,8 @@
                         <iconify-icon icon="solar:shield-warning-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-sm sm:text-base lg:text-xl font-heading font-extrabold text-slate-900 leading-tight">
-                    {{ $activeTicketsCount }}
+                <div class="text-xs sm:text-sm lg:text-base font-heading font-extrabold text-slate-900 truncate">
+                    {{ $activeTicketsCount }} Laporan
                 </div>
                 <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
                     {{ $activeTicketsCount > 0 ? 'Sedang ditangani' : 'Jaringan Normal' }}
@@ -182,19 +191,22 @@
         <div class="kpi-stat-card kpi-purple flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-1.5 sm:mb-2">
-                    <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Alamat Pasang</span>
+                    <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Lokasi</span>
                     <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shrink-0">
                         <iconify-icon icon="solar:map-point-wave-bold" class="text-sm sm:text-base"></iconify-icon>
                     </div>
                 </div>
-                <div class="text-xs sm:text-sm font-heading font-bold text-slate-900 line-clamp-2 leading-tight min-h-[28px] sm:min-h-[32px]" title="{{ $customer->address ?: 'Alamat belum tercatat di sistem' }}">
-                    {{ $customer->address ?: 'Alamat belum tercatat di sistem' }}
+                <div class="text-xs sm:text-sm lg:text-base font-heading font-extrabold text-slate-900 truncate" title="{{ $customer->address ?: 'Alamat belum tercatat di sistem' }}">
+                    {{ $customer->address ?: 'Alamat belum tercatat' }}
+                </div>
+                <div class="text-[10px] sm:text-xs text-slate-500 mt-0.5 truncate">
+                    {{ $customer->city ?? 'Area Layanan FTTH' }}
                 </div>
             </div>
             <div class="pt-2 mt-2 sm:pt-2.5 sm:mt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
-                <span class="flex items-center gap-1 truncate text-slate-500" title="{{ $customer->city ?? 'Area Layanan' }}">
-                    <iconify-icon icon="solar:city-bold" class="text-purple-500 text-xs shrink-0"></iconify-icon>
-                    <span class="truncate">{{ $customer->city ?? 'Area Layanan' }}</span>
+                <span class="flex items-center gap-1 truncate text-slate-500">
+                    <iconify-icon icon="solar:buildings-2-bold" class="text-purple-500 text-xs shrink-0"></iconify-icon>
+                    <span class="truncate">Terdaftar</span>
                 </span>
                 <a href="{{ route('portal.profile') }}" class="text-sky-600 hover:text-sky-700 font-heading font-semibold text-[10px] sm:text-xs hover:underline shrink-0 flex items-center gap-0.5">
                     <span>Lihat</span>
@@ -206,11 +218,11 @@
     </div>
 
     <!-- Main Content Section: Recent Tickets & Diagnostics -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5 sm:gap-5">
         
         <!-- Left 2 Cols: Recent Trouble Tickets -->
         <div class="lg:col-span-2 space-y-2.5 sm:space-y-4">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between px-0.5">
                 <div class="flex items-center gap-2">
                     <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
                         <iconify-icon icon="solar:ticket-sale-bold" class="text-sm sm:text-base"></iconify-icon>
@@ -226,40 +238,50 @@
             @if($recentTickets->count() > 0)
                 <div class="space-y-2.5 sm:space-y-3">
                     @foreach($recentTickets as $ticket)
-                        <div class="portal-card rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 overflow-hidden">
-                            <div class="space-y-1 sm:space-y-1.5 flex-1 min-w-0">
-                                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                    <span class="text-[11px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-md sm:rounded-lg shrink-0">
-                                        #{{ $ticket->ticket_number }}
-                                    </span>
-                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 sm:px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold shrink-0">
-                                        {{ $ticket->status_label }}
-                                    </span>
-                                    <span class="text-[10px] sm:text-[11px] font-sans px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
-                                        {{ $ticket->category_label }}
-                                    </span>
-                                    <span class="text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0">
-                                        {{ $ticket->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
+                        <div class="portal-card rounded-xl sm:rounded-2xl p-3.5 sm:p-4 lg:p-5 flex flex-col justify-between gap-2.5 overflow-hidden">
+                            <!-- Top Header: Ticket Number (Left) & Status Badge (Right) -->
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] sm:text-xs font-mono font-bold text-sky-700 bg-sky-50 border border-sky-200/80 px-2 py-0.5 rounded-md truncate">
+                                    #{{ $ticket->ticket_number }}
+                                </span>
+                                <span class="text-[10px] sm:text-[11px] font-sans px-2.5 py-0.5 rounded-full {{ $ticket->status_badge_class }} font-semibold shrink-0">
+                                    {{ $ticket->status_label }}
+                                </span>
+                            </div>
+
+                            <!-- Middle Body: Subject & Description -->
+                            <div class="space-y-0.5 min-w-0">
                                 <h3 class="text-xs sm:text-sm lg:text-base font-heading font-bold text-slate-900 truncate">
                                     {{ $ticket->subject }}
                                 </h3>
-                                <p class="text-[11px] sm:text-xs text-slate-500 truncate">
+                                <p class="text-[11px] sm:text-xs text-slate-500 line-clamp-1">
                                     {{ $ticket->description }}
                                 </p>
                             </div>
 
-                            <div class="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 text-xs">
-                                @if($ticket->technician_name)
-                                    <div class="text-left sm:text-right">
-                                        <span class="text-slate-400 text-[10px] block sm:inline">Teknisi:</span>
-                                        <span class="text-slate-700 font-semibold text-xs">{{ $ticket->technician_name }}</span>
-                                    </div>
-                                @endif
-                                <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-sky-600 text-slate-400 hover:text-white flex items-center justify-center transition-all ml-auto sm:ml-0 shadow-2xs active:scale-95" title="Lihat detail laporan kendala" aria-label="Lihat detail laporan kendala">
-                                    <iconify-icon icon="solar:arrow-right-linear" class="text-sm sm:text-base"></iconify-icon>
-                                </a>
+                            <!-- Bottom Footer: Category + Time (Left) & Action Button (Right) -->
+                            <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px]">
+                                <div class="flex items-center gap-1.5 text-slate-500 min-w-0 truncate">
+                                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/70 font-medium text-[10px] shrink-0">
+                                        {{ $ticket->category_label }}
+                                    </span>
+                                    <span class="text-slate-300">•</span>
+                                    <span class="text-[10px] text-slate-400 font-mono truncate">
+                                        {{ $ticket->created_at->diffForHumans() }}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-2 shrink-0">
+                                    @if($ticket->technician_name)
+                                        <span class="hidden sm:inline text-[11px] text-slate-500">
+                                            Teknisi: <strong class="text-slate-700">{{ $ticket->technician_name }}</strong>
+                                        </span>
+                                    @endif
+                                    <a href="{{ route('portal.tickets.show', $ticket->id) }}" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-600 text-slate-600 hover:text-white text-[11px] font-heading font-semibold transition-all active:scale-95" title="Lihat detail laporan kendala">
+                                        <span>Detail</span>
+                                        <iconify-icon icon="solar:arrow-right-linear" class="text-xs"></iconify-icon>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     @endforeach
