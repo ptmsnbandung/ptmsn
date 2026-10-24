@@ -537,10 +537,15 @@
             }
         })();
 
-        // Ringan & Cepat: Haptic feedback untuk perangkat sentuh tanpa DOM reflow
+        // Haptic feedback halus khusus saat menekan elemen tombol (button)
         document.addEventListener('pointerdown', function(e) {
-            if (e.isTrusted && e.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
-                try { navigator.vibrate(10); } catch(err) {}
+            if (!e.isTrusted || e.pointerType !== 'touch' || typeof navigator.vibrate !== 'function') {
+                return;
+            }
+            // Hanya bergetar jika elemen yang disentuh adalah tombol aktif
+            const buttonElement = e.target.closest('button, [role="button"], input[type="submit"], input[type="button"]');
+            if (buttonElement && !buttonElement.disabled) {
+                try { navigator.vibrate(8); } catch(err) {}
             }
         }, { passive: true });
     </script>
