@@ -1,0 +1,66 @@
+{
+  "name": "MyMSN — Portal Pelanggan PT Media Solusi Network",
+  "short_name": "MyMSN",
+  "description": "Portal Layanan Mandiri Pelanggan Internet Fiber PT Media Solusi Network. Cek tagihan, unduh invoice, dan ajukan bantuan.",
+  "start_url": "/portal/dashboard",
+  "scope": "/portal/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "orientation": "portrait-primary",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["utilities", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "/images/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tagihan & Pembayaran",
+      "short_name": "Billing",
+      "description": "Lihat tagihan dan konfirmasi pembayaran",
+      "url": "/portal/billing",
+      "icons": [
+        {
+          "src": "/images/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Bantuan & Tiket",
+      "short_name": "Tiket",
+      "description": "Buat tiket pengaduan gangguan",
+      "url": "/portal/tickets",
+      "icons": [
+        {
+          "src": "/images/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
