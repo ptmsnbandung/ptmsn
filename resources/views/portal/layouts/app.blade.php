@@ -624,6 +624,8 @@
             window.addEventListener('beforeinstallprompt', function(e) {
                 e.preventDefault();
                 deferredPrompt = e;
+                window.pwaDeferredPrompt = e;
+                window.dispatchEvent(new CustomEvent('pwa-prompt-available'));
                 // Tampilkan banner dengan delay sedikit agar halaman selesai render
                 setTimeout(showBanner, 2500);
             });
@@ -660,6 +662,8 @@
             // Deteksi ketika user selesai install
             window.addEventListener('appinstalled', function() {
                 console.log('[PWA] Aplikasi MyMSN berhasil diinstall!');
+                localStorage.setItem('pwa_installed', 'true');
+                window.dispatchEvent(new CustomEvent('pwa-installed-success'));
                 hideBanner();
             });
 

@@ -205,6 +205,78 @@
 
     </div>
 
+    <!-- PWA Mobile App Card (Di Bawah Statistik Sesuai Panduan) -->
+    <div id="pwa-dashboard-banner"
+         x-data="pwaDashboardCard()"
+         class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-[#061122] via-[#0b1b33] to-[#081529] border border-sky-500/25 shadow-xl relative overflow-hidden text-white transition-all duration-300">
+        
+        <!-- Ambient Background Glow -->
+        <div class="absolute -right-8 -top-8 w-44 h-44 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col gap-3.5 sm:gap-4">
+            <div class="flex items-center gap-3.5 sm:gap-4">
+                <!-- Phone Mockup Illustration (Sesuai Desain Mobile App PT MSN) -->
+                <div class="w-13 sm:w-16 h-18 sm:h-22 bg-slate-950 border-2 border-slate-700/80 rounded-2xl p-1.5 flex flex-col items-center justify-between shadow-2xl shrink-0 relative">
+                    <!-- Notch Bar -->
+                    <div class="w-5 h-1 bg-slate-700 rounded-full mb-1"></div>
+                    <!-- App Logo Inside Screen -->
+                    <div class="w-9 sm:w-11 h-9 sm:h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md">
+                        <img src="{{ asset('images/logo/logo-icon.png') }}" alt="MyMSN Logo" class="w-full h-full object-contain">
+                    </div>
+                    <!-- Home Indicator -->
+                    <div class="w-6 h-0.5 bg-slate-600 rounded-full mt-1"></div>
+                </div>
+
+                <!-- Text Info -->
+                <div class="flex-1 min-w-0 space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="text-sm sm:text-base font-heading font-extrabold text-white tracking-tight">
+                            Aplikasi Mobile PT MSN
+                        </h3>
+                        <template x-if="isInstalled">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                Terpasang
+                            </span>
+                        </template>
+                        <template x-if="!isInstalled">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                                PWA
+                            </span>
+                        </template>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed"
+                       x-text="isInstalled ? 'Aplikasi resmi MyMSN telah terpasang di perangkat Anda. Akses cepat dan praktis tanpa buka browser.' : 'Pasang aplikasi untuk akses cepat, praktis, dan notifikasi langsung di HP.'">
+                        Pasang aplikasi untuk akses cepat, praktis, dan notifikasi langsung di HP.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Full Width Action Button (Pasang Aplikasi / Buka Aplikasi) -->
+            <button type="button"
+                    @click="handleAction()"
+                    :class="isInstalled ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-600/25' : 'bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 shadow-sky-600/30'"
+                    class="w-full py-2.5 sm:py-3 px-4 rounded-xl text-white font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98] cursor-pointer">
+                
+                <!-- State 1: Belum Pasang -->
+                <template x-if="!isInstalled">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:download-minimalistic-bold" class="text-base sm:text-lg shrink-0"></iconify-icon>
+                        <span>Pasang Aplikasi</span>
+                    </div>
+                </template>
+
+                <!-- State 2: Sudah Terpasang -> Buka Aplikasi -->
+                <template x-if="isInstalled">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:play-circle-bold" class="text-base sm:text-lg text-emerald-200 shrink-0"></iconify-icon>
+                        <span>Buka Aplikasi</span>
+                    </div>
+                </template>
+            </button>
+        </div>
+    </div>
+
     <!-- Main Content Section: Recent Tickets & Diagnostics -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-5">
         
@@ -361,3 +433,105 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function pwaDashboardCard() {
+    return {
+        isInstalled: false,
+
+        init() {
+            this.checkInstallation();
+
+            // Dengarkan event ketika prompt install siap
+            window.addEventListener('pwa-prompt-available', () => {
+                this.checkInstallation();
+            });
+
+            // Dengarkan event ketika app berhasil diinstall
+            window.addEventListener('pwa-installed-success', () => {
+                this.isInstalled = true;
+            });
+
+            window.addEventListener('appinstalled', () => {
+                this.isInstalled = true;
+                localStorage.setItem('pwa_installed', 'true');
+            });
+        },
+
+        checkInstallation() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isMarkedInstalled = localStorage.getItem('pwa_installed') === 'true';
+            this.isInstalled = isStandalone || isMarkedInstalled;
+        },
+
+        async handleAction() {
+            if (this.isInstalled) {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                if (isStandalone) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Aplikasi Sedang Aktif',
+                            text: 'Anda saat ini sudah menjalankan aplikasi resmi MyMSN.',
+                            icon: 'success',
+                            confirmButtonColor: '#0284c7'
+                        });
+                    } else {
+                        alert('Aplikasi MyMSN sudah aktif dan berjalan!');
+                    }
+                } else {
+                    window.location.href = '{{ route("portal.dashboard") }}';
+                }
+                return;
+            }
+
+            // Jika belum diinstall: Jalankan prompt install
+            if (window.pwaDeferredPrompt) {
+                window.pwaDeferredPrompt.prompt();
+                const { outcome } = await window.pwaDeferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    this.isInstalled = true;
+                    localStorage.setItem('pwa_installed', 'true');
+                }
+                window.pwaDeferredPrompt = null;
+            } else {
+                const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIos) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Pasang di iPhone / iPad',
+                            html: '<div class="text-left text-xs text-slate-600 space-y-2 mt-2">' +
+                                  '<p>1. Ketuk ikon <b>Bagikan (Share)</b> di Safari (tanda kotak berpanah ke atas di bilah bawah).</p>' +
+                                  '<p>2. Geser ke bawah lalu pilih menu <b>"Tambah ke Layar Utama" (Add to Home Screen)</b>.</p>' +
+                                  '<p>3. Ketuk <b>Tambah</b> di pojok kanan atas.</p>' +
+                                  '</div>',
+                            icon: 'info',
+                            confirmButtonText: 'Saya Mengerti',
+                            confirmButtonColor: '#0284c7'
+                        });
+                    } else {
+                        alert('Untuk memasang di iPhone/iPad:\n1. Ketuk ikon Bagikan (Share) di Safari.\n2. Pilih "Tambah ke Layar Utama" (Add to Home Screen).');
+                    }
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Pasang Aplikasi MyMSN',
+                            html: '<div class="text-left text-xs text-slate-600 space-y-2 mt-2">' +
+                                  '<p>Jika pop-up otomatis tidak muncul:</p>' +
+                                  '<p>1. Ketuk ikon menu titik tiga (⋮) di pojok kanan atas browser.</p>' +
+                                  '<p>2. Pilih menu <b>"Install app"</b> atau <b>"Tambahkan ke Layar Utama"</b>.</p>' +
+                                  '</div>',
+                            icon: 'info',
+                            confirmButtonText: 'Tutup',
+                            confirmButtonColor: '#0284c7'
+                        });
+                    } else {
+                        alert('Ketuk menu titik tiga (⋮) di browser Anda, lalu pilih "Install app" atau "Tambahkan ke Layar Utama".');
+                    }
+                }
+            }
+        }
+    };
+}
+</script>
+@endpush
