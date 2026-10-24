@@ -54,4 +54,9 @@ return [
         'template_lang' => env('META_WA_OTP_LANG', 'en_US'),
     ],
 
+    'hostinger_mail' => [
+        'token' => env('HOSTINGER_MAIL_TOKEN', ''),
+        'from'  => env('HOSTINGER_MAIL_FROM', 'info@ptmsn.co.id'),
+    ],
+
 ];

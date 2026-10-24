@@ -402,7 +402,20 @@ class MidtransService
                 return false;
             }
 
-            Mail::to($email)->send(new PaymentSuccessMail($billing, $customer, $payload));
+            $hostingerService = app(\App\Services\HostingerMailService::class);
+            if ($hostingerService->isConfigured()) {
+                $invoiceNumber = $billing->kode_billing_layanan ?? 'INVOICE';
+                $companyName = config('company.name', 'PT Media Solusi Network');
+                $subject = "[LUNAS] Bukti Pembayaran Tagihan Internet - {$invoiceNumber} - {$companyName}";
+                $html = view('emails.payment_success', [
+                    'billing' => $billing,
+                    'customer' => $customer,
+                    'paymentData' => $payload,
+                ])->render();
+                $hostingerService->send($email, $subject, $html);
+            } else {
+                Mail::to($email)->send(new PaymentSuccessMail($billing, $customer, $payload));
+            }
 
             Log::info("Payment Success Email: Berhasil dikirimkan ke {$email} untuk invoice {$billing->kode_billing_layanan}");
             return true;
