@@ -157,3 +157,4 @@ class TestHostingerMailCommand extends Command
         }
     }
 }
+
