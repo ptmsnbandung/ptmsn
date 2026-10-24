@@ -215,16 +215,37 @@
 
         <div class="relative z-10 flex flex-col gap-3.5 sm:gap-4">
             <div class="flex items-center gap-3.5 sm:gap-4">
-                <!-- Phone Mockup Illustration (Sesuai Desain Mobile App PT MSN) -->
-                <div class="w-13 sm:w-16 h-18 sm:h-22 bg-slate-950 border-2 border-slate-700/80 rounded-2xl p-1.5 flex flex-col items-center justify-between shadow-2xl shrink-0 relative">
-                    <!-- Notch Bar -->
-                    <div class="w-5 h-1 bg-slate-700 rounded-full mb-1"></div>
-                    <!-- App Logo Inside Screen -->
-                    <div class="w-9 sm:w-11 h-9 sm:h-11 rounded-xl bg-white p-1 flex items-center justify-center shadow-md">
-                        <img src="{{ asset('images/logo/logo-icon.png') }}" alt="MyMSN Logo" class="w-full h-full object-contain">
+                <!-- Realistic Smartphone / iPhone Mockup (Sleek Edge-to-Edge Display) -->
+                <div class="w-[52px] sm:w-[60px] h-[98px] sm:h-[114px] bg-slate-900 border-2 border-slate-600/90 rounded-[20px] sm:rounded-[22px] p-[2.5px] shadow-2xl shrink-0 relative ring-1 ring-white/10 flex flex-col justify-between">
+                    <!-- Side Buttons (Realistic iPhone Details) -->
+                    <div class="absolute -left-[3px] top-5 w-[2px] h-2.5 bg-slate-500 rounded-l"></div>
+                    <div class="absolute -left-[3px] top-9 w-[2px] h-4 bg-slate-500 rounded-l"></div>
+                    <div class="absolute -left-[3px] top-15 w-[2px] h-4 bg-slate-500 rounded-l"></div>
+                    <div class="absolute -right-[3px] top-8 w-[2px] h-5 bg-slate-500 rounded-r"></div>
+
+                    <!-- Edge-to-Edge White Screen Display -->
+                    <div class="w-full h-full bg-white rounded-[16px] sm:rounded-[18px] flex flex-col items-center justify-between relative overflow-hidden shadow-inner p-1">
+                        <!-- Top iPhone Notch / Dynamic Island -->
+                        <div class="w-6 sm:w-7 h-2 bg-slate-950 rounded-b-md flex items-center justify-center gap-0.5 shadow-xs shrink-0 -mt-1">
+                            <span class="w-2.5 h-0.5 bg-slate-800 rounded-full"></span>
+                            <span class="w-1 h-1 bg-slate-700 rounded-full"></span>
+                        </div>
+
+                        <!-- App Branding in Center of Screen -->
+                        <div class="flex flex-col items-center justify-center my-auto px-0.5">
+                            <img src="{{ asset('images/logo/logo-icon.png') }}" alt="MyMSN Logo" class="w-7 sm:w-8 h-7 sm:h-8 object-contain drop-shadow-sm">
+                            <div class="text-center mt-0.5">
+                                <span class="text-[7.5px] sm:text-[9px] font-black text-slate-800 tracking-tight leading-none block font-heading">PT MSN</span>
+                                <span class="text-[5.5px] sm:text-[6.5px] font-extrabold text-[#0284c7] tracking-wider leading-none block uppercase mt-0.5">MyMSN</span>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Home Indicator -->
+                        <div class="w-6 sm:w-7 h-0.5 bg-slate-400 rounded-full mb-0.5 shrink-0"></div>
+
+                        <!-- Subtle Screen Glass Glare Reflection -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/40 pointer-events-none rounded-[16px]"></div>
                     </div>
-                    <!-- Home Indicator -->
-                    <div class="w-6 h-0.5 bg-slate-600 rounded-full mt-1"></div>
                 </div>
 
                 <!-- Text Info -->
