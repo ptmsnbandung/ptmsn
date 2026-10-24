@@ -62,6 +62,7 @@ class HostingerMailService
                 throw new Exception("Hostinger Mail API: Tidak ada mailbox yang ditemukan untuk token API ini.");
             }
 
+            // Cari mailbox yang cocok dengan alamat 'from' (misal: info@ptmsn.co.id)
             $matched = null;
             $fromAddress = strtolower(trim($this->from));
             foreach ($mailboxes as $mb) {
@@ -71,6 +72,7 @@ class HostingerMailService
                 }
             }
 
+            // Jika tidak ada yang cocok persis, gunakan mailbox pertama
             if (!$matched && !empty($mailboxes[0]['resourceId'])) {
                 $matched = $mailboxes[0]['resourceId'];
             }
@@ -81,6 +83,40 @@ class HostingerMailService
 
             return $matched;
         });
+    }
+
+    /**
+     * Dapatkan informasi kuota mailbox dari Hostinger Mail API (GET /api/v1/mailboxes/{mailboxResourceId}/quota)
+     *
+     * @return array|null
+     */
+    public function getMailboxQuota(): ?array
+    {
+        if (!$this->isConfigured()) {
+            return null;
+        }
+
+        try {
+            $mailboxId = $this->getMailboxResourceId();
+            $cacheKey = 'hostinger_mailbox_quota_' . md5($this->token . '_' . $mailboxId);
+
+            return Cache::remember($cacheKey, 180, function () use ($mailboxId) {
+                $response = Http::withToken($this->token)
+                    ->timeout(10)
+                    ->withHeaders([
+                        'Accept' => 'application/json',
+                    ])
+                    ->get("{$this->baseUrl}/api/v1/mailboxes/{$mailboxId}/quota");
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+                return null;
+            });
+        } catch (\Throwable $e) {
+            Log::info("Hostinger Mail API getMailboxQuota notice: " . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -124,6 +160,7 @@ class HostingerMailService
 
             $status = $response->status();
 
+            // Status 200, 201, 202, atau 204 No Content menandakan pesan berhasil terkirim
             if ($response->successful() || in_array($status, [200, 201, 202, 204])) {
                 Log::info("Hostinger Mail API: Email berhasil dikirim ke {$cleanTo} via mailbox {$mailboxResourceId} (HTTP {$status})");
                 return true;

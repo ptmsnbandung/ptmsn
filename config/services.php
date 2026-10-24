@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
+    | as Resend, Postmark, AWS, and more. This file provides the de facto
     | location for this type of information, allowing packages to have
     | a conventional file to locate the various service credentials.
     |
@@ -35,28 +35,30 @@ return [
         ],
     ],
 
-    'midtrans' => [
-        'server_key' => env('MIDTRANS_SERVER_KEY'),
-        'client_key' => env('MIDTRANS_CLIENT_KEY'),
-        'is_production' => (bool) env('MIDTRANS_IS_PRODUCTION', false),
-        'is_sanitized' => (bool) env('MIDTRANS_IS_SANITIZED', true),
-        'is_3ds' => (bool) env('MIDTRANS_IS_3DS', true),
-        'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
+    'meta_whatsapp' => [
+        'token'               => env('META_WA_TOKEN'),
+        'phone_number_id'     => env('META_WA_PHONE_NUMBER_ID'),
+        'business_account_id' => env('META_WA_BUSINESS_ACCOUNT_ID'),
+        'webhook_verify_token'=> env('META_WA_WEBHOOK_VERIFY_TOKEN', 'ims_secret_token_2026'),
+        'api_version'         => env('META_WA_API_VERSION', 'v21.0'),
     ],
 
-    'meta_wa' => [
-        'token' => env('META_WA_TOKEN'),
-        'phone_number_id' => env('META_WA_PHONE_NUMBER_ID'),
-        'business_account_id' => env('META_WA_BUSINESS_ACCOUNT_ID'),
-        'api_version' => env('META_WA_API_VERSION', 'v25.0'),
-        'webhook_verify_token' => env('META_WA_WEBHOOK_VERIFY_TOKEN'),
-        'template_name' => env('META_WA_OTP_TEMPLATE', 'vertifikasi'),
-        'template_lang' => env('META_WA_OTP_LANG', 'en_US'),
+    'midtrans' => [
+        'server_key'    => env('MIDTRANS_SERVER_KEY', ''),
+        'client_key'    => env('MIDTRANS_CLIENT_KEY', ''),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY', ''),
+        'model'   => env('GEMINI_MODEL', 'gemini-3.8-flash'),
+        'timeout' => (int)env('GEMINI_TIMEOUT', 60),
     ],
 
     'hostinger_mail' => [
-        'token' => env('HOSTINGER_MAIL_TOKEN', ''),
-        'from'  => env('HOSTINGER_MAIL_FROM', 'info@ptmsn.co.id'),
+        'token'       => env('HOSTINGER_MAIL_TOKEN', ''),
+        'from'        => env('HOSTINGER_MAIL_FROM', 'info@ptmsn.co.id'),
+        'daily_limit' => (int) env('HOSTINGER_MAIL_DAILY_LIMIT', 1000),
     ],
 
 ];
