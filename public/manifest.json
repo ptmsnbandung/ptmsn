@@ -2,8 +2,9 @@
   "name": "MyMSN — Portal Pelanggan PT Media Solusi Network",
   "short_name": "MyMSN",
   "description": "Portal Layanan Mandiri Pelanggan Internet Fiber PT Media Solusi Network. Cek tagihan, unduh invoice, dan ajukan bantuan.",
+  "id": "/",
   "start_url": "/portal/dashboard",
-  "scope": "/portal/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0284c7",
@@ -64,3 +65,4 @@
     }
   ]
 }
+

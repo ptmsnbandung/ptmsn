@@ -564,11 +564,11 @@ function pwaDashboardCard() {
                     Swal.fire({
                         title: 'Aplikasi MyMSN Terpasang! 🎉',
                         html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-2 mt-2">' +
-                              '<p>Aplikasi resmi <b>MyMSN</b> telah berhasil ditambahkan ke <b>Layar Utama (Homescreen)</b> HP Anda.</p>' +
-                              '<p class="text-slate-500 text-[11px]">Anda sekarang dapat membukanya kapan saja langsung dari menu HP tanpa perlu membuka browser lagi.</p>' +
+                              '<p>Aplikasi resmi <b>MyMSN</b> telah berhasil ditambahkan ke HP Anda.</p>' +
+                              '<p class="text-slate-500 text-[11px]">Silakan buka <b>Layar Utama (Homescreen)</b> atau cari di <b>Daftar Semua Aplikasi</b> di HP Anda untuk menjalankannya langsung tanpa browser.</p>' +
                               '</div>',
                         icon: 'success',
-                        confirmButtonText: 'Buka Sekarang',
+                        confirmButtonText: 'Siap',
                         confirmButtonColor: '#0284c7'
                     });
                 }
@@ -576,21 +576,53 @@ function pwaDashboardCard() {
         },
 
         async handleAction() {
-            if (this.isInstalled) {
-                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-                if (isStandalone) {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: 'Aplikasi Sedang Aktif',
-                            text: 'Anda saat ini sudah menjalankan aplikasi resmi MyMSN di HP.',
-                            icon: 'success',
-                            confirmButtonColor: '#0284c7'
-                        });
-                    } else {
-                        alert('Aplikasi MyMSN sudah aktif dan berjalan!');
-                    }
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+            if (isStandalone) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Aplikasi Sedang Aktif',
+                        text: 'Anda saat ini sudah menjalankan aplikasi resmi MyMSN di HP.',
+                        icon: 'success',
+                        confirmButtonColor: '#0284c7'
+                    });
                 } else {
-                    window.location.href = '{{ route("portal.dashboard") }}';
+                    alert('Aplikasi MyMSN sudah aktif dan berjalan!');
+                }
+                return;
+            }
+
+            if (this.isInstalled) {
+                // User mengklik Buka Aplikasi dari dalam browser Chrome biasa
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Status Pemasangan MyMSN',
+                        html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-2.5 mt-2">' +
+                              '<p>Aplikasi telah didaftarkan ke sistem HP Anda.</p>' +
+                              '<div class="p-2.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/50 space-y-1.5">' +
+                              '<p class="font-bold text-sky-700 dark:text-sky-300">1. Notifikasi "Menginstal MyMSN...":</p>' +
+                              '<p class="text-[11px] text-slate-600 dark:text-slate-400">Jika notifikasi masih muncul di bar atas HP, tunggu sekitar 15–30 detik hingga sistem Android selesai memproses.</p>' +
+                              '</div>' +
+                              '<div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-1.5">' +
+                              '<p class="font-bold text-slate-700 dark:text-slate-200">2. Cari di Menu HP:</p>' +
+                              '<p class="text-[11px] text-slate-600 dark:text-slate-400">Geser layar HP ke atas (Daftar Semua Aplikasi / App Drawer) lalu cari <b>MyMSN</b>.</p>' +
+                              '</div>' +
+                              '<p class="text-[11px] text-slate-400">Ikon belum muncul? Anda juga bisa ketuk menu titik tiga (⋮) di pojok kanan atas Chrome lalu pilih <b>"Tambahkan ke Layar Utama"</b>.</p>' +
+                              '</div>',
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Pasang Ulang via Menu',
+                        cancelButtonText: 'Tutup',
+                        confirmButtonColor: '#0284c7'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            localStorage.removeItem('pwa_installed');
+                            this.isInstalled = false;
+                            this.handleAction();
+                        }
+                    });
+                } else {
+                    alert('Silakan cek Layar Utama atau Daftar Aplikasi di HP Anda untuk membuka MyMSN.');
                 }
                 return;
             }
@@ -603,7 +635,21 @@ function pwaDashboardCard() {
                         const { outcome } = await window.pwaDeferredPrompt.userChoice;
                         console.log('[PWA] Pilihan user:', outcome);
                         if (outcome === 'accepted') {
-                            this.onInstallCompleted();
+                            this.installProgress = 90;
+                            this.installStepText = 'Memproses instalasi ke sistem Android...';
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    title: 'Sedang Memasang ke HP...',
+                                    html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-2 mt-2">' +
+                                          '<p>Permintaan pemasangan diterima! Sistem Android saat ini sedang memasang aplikasi <b>MyMSN</b> di latar belakang.</p>' +
+                                          '<p class="text-sky-600 dark:text-sky-400 font-semibold">Perhatikan bar notifikasi HP Anda ("Menginstal MyMSN...").</p>' +
+                                          '<p class="text-slate-500 text-[11px]">Setelah notifikasi selesai (sekitar 10–30 detik), ikon MyMSN otomatis muncul di Layar Utama / Daftar Aplikasi HP Anda.</p>' +
+                                          '</div>',
+                                    icon: 'info',
+                                    confirmButtonText: 'Baik, Saya Mengerti',
+                                    confirmButtonColor: '#0284c7'
+                                });
+                            }
                         } else {
                             if (this.progressTimer) clearInterval(this.progressTimer);
                             this.isInstalling = false;
