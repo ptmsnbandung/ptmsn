@@ -252,22 +252,59 @@
                 </div>
             </div>
 
+            <!-- Installation Visual Progress Indicator (Muncul saat proses download & pasang) -->
+            <div x-show="isInstalling" x-cloak class="space-y-2 pt-1 pb-1">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-sky-300 font-semibold flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 animate-spin text-sky-400 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        <span x-text="installStepText">Mengunduh aset & konfigurasi...</span>
+                    </span>
+                    <span class="font-mono font-bold text-sky-400" x-text="installProgress + '%'">0%</span>
+                </div>
+                
+                <!-- Animated Progress Track & Bar -->
+                <div class="w-full h-2 rounded-full bg-slate-900/90 overflow-hidden border border-slate-700/80 p-0.5 shadow-inner">
+                    <div class="h-full rounded-full bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-400 transition-all duration-300 ease-out"
+                         :style="'width: ' + installProgress + '%'"></div>
+                </div>
+
+                <div class="flex items-center justify-between text-[10px] text-slate-400">
+                    <span>*Aplikasi PWA dipasang langsung ke sistem HP</span>
+                    <span class="font-mono text-emerald-400" x-show="installProgress >= 100">Siap Digunakan</span>
+                </div>
+            </div>
+
             <!-- Full Width Action Button (Pasang Aplikasi / Buka Aplikasi) -->
             <button type="button"
                     @click="handleAction()"
-                    :class="isInstalled ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-600/25' : 'bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 shadow-sky-600/30'"
+                    :disabled="isInstalling"
+                    :class="isInstalled ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-600/25' : (isInstalling ? 'bg-slate-800 text-slate-400 cursor-wait opacity-80' : 'bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 shadow-sky-600/30')"
                     class="w-full py-2.5 sm:py-3 px-4 rounded-xl text-white font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98] cursor-pointer">
                 
-                <!-- State 1: Belum Pasang -->
-                <template x-if="!isInstalled">
+                <!-- State 1: Sedang Memasang -->
+                <template x-if="isInstalling">
+                    <div class="flex items-center gap-2 text-sky-300">
+                        <svg class="w-4 h-4 animate-spin text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        <span>Memasang Aplikasi (<span x-text="installProgress + '%'"></span>)...</span>
+                    </div>
+                </template>
+
+                <!-- State 2: Belum Pasang -->
+                <template x-if="!isInstalled && !isInstalling">
                     <div class="flex items-center gap-2">
                         <iconify-icon icon="solar:download-minimalistic-bold" class="text-base sm:text-lg shrink-0"></iconify-icon>
                         <span>Pasang Aplikasi</span>
                     </div>
                 </template>
 
-                <!-- State 2: Sudah Terpasang -> Buka Aplikasi -->
-                <template x-if="isInstalled">
+                <!-- State 3: Sudah Terpasang -> Buka Aplikasi -->
+                <template x-if="isInstalled && !isInstalling">
                     <div class="flex items-center gap-2">
                         <iconify-icon icon="solar:play-circle-bold" class="text-base sm:text-lg text-emerald-200 shrink-0"></iconify-icon>
                         <span>Buka Aplikasi</span>
@@ -439,6 +476,10 @@
 function pwaDashboardCard() {
     return {
         isInstalled: false,
+        isInstalling: false,
+        installProgress: 0,
+        installStepText: 'Menyiapkan paket aplikasi...',
+        progressTimer: null,
 
         init() {
             this.checkInstallation();
@@ -448,14 +489,13 @@ function pwaDashboardCard() {
                 this.checkInstallation();
             });
 
-            // Dengarkan event ketika app berhasil diinstall
+            // Dengarkan event ketika app berhasil diinstall oleh OS
             window.addEventListener('pwa-installed-success', () => {
-                this.isInstalled = true;
+                this.onInstallCompleted();
             });
 
             window.addEventListener('appinstalled', () => {
-                this.isInstalled = true;
-                localStorage.setItem('pwa_installed', 'true');
+                this.onInstallCompleted();
             });
         },
 
@@ -465,6 +505,55 @@ function pwaDashboardCard() {
             this.isInstalled = isStandalone || isMarkedInstalled;
         },
 
+        startProgressIndicator(callback) {
+            this.isInstalling = true;
+            this.installProgress = 15;
+            this.installStepText = 'Mengunduh aset & konfigurasi MyMSN...';
+
+            if (this.progressTimer) clearInterval(this.progressTimer);
+
+            this.progressTimer = setInterval(() => {
+                if (this.installProgress < 45) {
+                    this.installProgress += 10;
+                    this.installStepText = 'Mengunduh icon & modul antarmuka...';
+                } else if (this.installProgress < 80) {
+                    this.installProgress += 7;
+                    this.installStepText = 'Menyiapkan pemasangan ke sistem HP...';
+                } else if (this.installProgress < 95) {
+                    this.installProgress += 3;
+                    this.installStepText = 'Memasang icon ke Layar Utama...';
+                }
+            }, 300);
+
+            if (callback) {
+                setTimeout(callback, 600);
+            }
+        },
+
+        onInstallCompleted() {
+            if (this.progressTimer) clearInterval(this.progressTimer);
+            this.installProgress = 100;
+            this.installStepText = 'Pemasangan Berhasil 100%!';
+            this.isInstalled = true;
+            localStorage.setItem('pwa_installed', 'true');
+
+            setTimeout(() => {
+                this.isInstalling = false;
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Aplikasi MyMSN Terpasang! 🎉',
+                        html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-2 mt-2">' +
+                              '<p>Aplikasi resmi <b>MyMSN</b> telah berhasil ditambahkan ke <b>Layar Utama (Homescreen)</b> HP Anda.</p>' +
+                              '<p class="text-slate-500 text-[11px]">Anda sekarang dapat membukanya kapan saja langsung dari menu HP tanpa perlu membuka browser lagi.</p>' +
+                              '</div>',
+                        icon: 'success',
+                        confirmButtonText: 'Buka Sekarang',
+                        confirmButtonColor: '#0284c7'
+                    });
+                }
+            }, 800);
+        },
+
         async handleAction() {
             if (this.isInstalled) {
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -472,7 +561,7 @@ function pwaDashboardCard() {
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
                             title: 'Aplikasi Sedang Aktif',
-                            text: 'Anda saat ini sudah menjalankan aplikasi resmi MyMSN.',
+                            text: 'Anda saat ini sudah menjalankan aplikasi resmi MyMSN di HP.',
                             icon: 'success',
                             confirmButtonColor: '#0284c7'
                         });
@@ -485,15 +574,26 @@ function pwaDashboardCard() {
                 return;
             }
 
-            // Jika belum diinstall: Jalankan prompt install
+            // Jika belum diinstall: Jalankan progress dan prompt install
             if (window.pwaDeferredPrompt) {
-                window.pwaDeferredPrompt.prompt();
-                const { outcome } = await window.pwaDeferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    this.isInstalled = true;
-                    localStorage.setItem('pwa_installed', 'true');
-                }
-                window.pwaDeferredPrompt = null;
+                this.startProgressIndicator(async () => {
+                    try {
+                        window.pwaDeferredPrompt.prompt();
+                        const { outcome } = await window.pwaDeferredPrompt.userChoice;
+                        console.log('[PWA] Pilihan user:', outcome);
+                        if (outcome === 'accepted') {
+                            this.onInstallCompleted();
+                        } else {
+                            if (this.progressTimer) clearInterval(this.progressTimer);
+                            this.isInstalling = false;
+                            this.installProgress = 0;
+                        }
+                        window.pwaDeferredPrompt = null;
+                    } catch (e) {
+                        if (this.progressTimer) clearInterval(this.progressTimer);
+                        this.isInstalling = false;
+                    }
+                });
             } else {
                 const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
                 if (isIos) {
@@ -518,7 +618,7 @@ function pwaDashboardCard() {
                             title: 'Pasang Aplikasi MyMSN',
                             html: '<div class="text-left text-xs text-slate-600 space-y-2 mt-2">' +
                                   '<p>Jika pop-up otomatis tidak muncul:</p>' +
-                                  '<p>1. Ketuk ikon menu titik tiga (⋮) di pojok kanan atas browser.</p>' +
+                                  '<p>1. Ketuk ikon menu titik tiga (⋮) di pojok kanan atas browser Chrome.</p>' +
                                   '<p>2. Pilih menu <b>"Install app"</b> atau <b>"Tambahkan ke Layar Utama"</b>.</p>' +
                                   '</div>',
                             icon: 'info',
