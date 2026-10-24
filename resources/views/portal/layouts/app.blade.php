@@ -8,18 +8,7 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo/logo-icon.png') }}">
-
-    <!-- PWA Web App Manifest & Mobile App Meta Tags -->
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
-    <meta name="theme-color" content="#0284c7">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MyMSN">
-    <link rel="apple-touch-icon" href="{{ asset('images/icons/apple-touch-icon.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/apple-touch-icon.png') }}">
-    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('images/icons/icon-192x192.png') }}">
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ asset('images/icons/icon-512x512.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo/logo-icon.png') }}">
 
     <!-- Google Fonts: Plus Jakarta Sans, Outfit, Inter, JetBrains Mono (Streamlined Weights) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -556,124 +545,15 @@
         }, { passive: true });
     </script>
 
-    <!-- PWA Installation Floating Banner & Service Worker Script -->
-    <div id="pwa-install-banner" class="fixed bottom-5 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none">
-        <div class="bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-sky-500/30 flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700/60 p-1.5 flex items-center justify-center shrink-0 shadow-inner">
-                <img src="{{ asset('images/icons/icon-192x192.png') }}" alt="MyMSN App" class="w-full h-full object-contain rounded-lg">
-            </div>
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                    <h4 class="text-xs font-bold text-white tracking-tight">Pasang Aplikasi MyMSN</h4>
-                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">PWA</span>
-                </div>
-                <p class="text-[11px] text-slate-300 line-clamp-1 mt-0.5" id="pwa-desc-text">Akses tagihan &amp; lapor kendala langsung dari layar HP.</p>
-            </div>
-            <div class="flex items-center gap-1.5 shrink-0">
-                <button id="pwa-btn-install" type="button" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-sky-500/20 active:scale-95 transition cursor-pointer">
-                    Install
-                </button>
-                <button id="pwa-btn-dismiss" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer" aria-label="Tutup">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // PWA Service Worker Registration & Install Handler
-        (function() {
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                        console.log('[PWA] Service Worker terdaftar dengan scope:', reg.scope);
-                    }).catch(function(err) {
-                        console.warn('[PWA] Service Worker gagal didaftarkan:', err);
-                    });
-                });
-            }
-
-            let deferredPrompt = null;
-            const banner = document.getElementById('pwa-install-banner');
-            const btnInstall = document.getElementById('pwa-btn-install');
-            const btnDismiss = document.getElementById('pwa-btn-dismiss');
-            const descText = document.getElementById('pwa-desc-text');
-
-            // Cek apakah user pernah menutup banner dalam 7 hari terakhir
-            const isDismissed = localStorage.getItem('pwa_install_dismissed');
-            const isDismissedValid = isDismissed && (Date.now() - parseInt(isDismissed, 10) < 7 * 86400 * 1000);
-
-            // Cek apakah sudah berjalan di standalone mode (sudah diinstall)
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
-            function showBanner() {
-                if (isStandalone || isDismissedValid || !banner) return;
-                banner.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-                banner.classList.add('translate-y-0', 'opacity-100');
-            }
-
-            function hideBanner() {
-                if (!banner) return;
-                banner.classList.remove('translate-y-0', 'opacity-100');
-                banner.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
-            }
-
-            // Android / Chromium Browser beforeinstallprompt event
-            window.addEventListener('beforeinstallprompt', function(e) {
-                e.preventDefault();
-                deferredPrompt = e;
-                window.pwaDeferredPrompt = e;
-                window.dispatchEvent(new CustomEvent('pwa-prompt-available'));
-                // Tampilkan banner dengan delay sedikit agar halaman selesai render
-                setTimeout(showBanner, 2500);
+        // Bersihkan service worker PWA di browser klien jika sebelumnya terdaftar
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
             });
-
-            // Klik tombol Install
-            if (btnInstall) {
-                btnInstall.addEventListener('click', async function() {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        console.log('[PWA] Pilihan user:', outcome);
-                        deferredPrompt = null;
-                        hideBanner();
-                    } else {
-                        // Jika di iOS Safari
-                        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                        if (isIos) {
-                            alert('Untuk memasang di iPhone/iPad:\n1. Ketuk tombol Bagikan (Share / tanda kotak panah ke atas di bawah layar Safari).\n2. Geser dan pilih "Tambah ke Layar Utama" (Add to Home Screen).');
-                        } else {
-                            hideBanner();
-                        }
-                    }
-                });
-            }
-
-            // Klik tombol Dismiss (Tutup)
-            if (btnDismiss) {
-                btnDismiss.addEventListener('click', function() {
-                    hideBanner();
-                    localStorage.setItem('pwa_install_dismissed', Date.now().toString());
-                });
-            }
-
-            // Deteksi ketika user selesai install
-            window.addEventListener('appinstalled', function() {
-                console.log('[PWA] Aplikasi MyMSN berhasil diinstall!');
-                localStorage.setItem('pwa_installed', 'true');
-                window.dispatchEvent(new CustomEvent('pwa-installed-success'));
-                hideBanner();
-            });
-
-            // Deteksi perangkat iOS jika belum standalone
-            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIos && !isStandalone && !isDismissedValid) {
-                if (descText) descText.textContent = 'Ketuk Bagikan lalu Tambah ke Layar Utama.';
-                setTimeout(showBanner, 4000);
-            }
-        })();
+        }
     </script>
 
     @stack('scripts')
