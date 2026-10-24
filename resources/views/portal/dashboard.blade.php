@@ -320,6 +320,18 @@
                     </div>
                 </template>
             </button>
+
+            <!-- Quick Help / Permission Guide Link -->
+            <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-0.5">
+                <span class="flex items-center gap-1 text-slate-400">
+                    <iconify-icon icon="solar:shield-check-bold" class="text-sky-400 text-xs"></iconify-icon>
+                    <span>Resmi WebAPK PT MSN</span>
+                </span>
+                <button type="button" @click="showPermissionGuideModal()" class="text-sky-300 hover:text-white underline transition-colors flex items-center gap-1 cursor-pointer">
+                    <iconify-icon icon="solar:info-circle-linear" class="text-xs"></iconify-icon>
+                    <span>Izin Pintasan HP</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -595,18 +607,18 @@ function pwaDashboardCard() {
                               '<p class="font-bold text-slate-700 dark:text-slate-200">2. Cari di Menu HP:</p>' +
                               '<p class="text-[11px] text-slate-600 dark:text-slate-400">Geser layar HP ke atas (Daftar Semua Aplikasi / App Drawer) lalu cari <b>MyMSN</b>.</p>' +
                               '</div>' +
-                              '<p class="text-[11px] text-slate-400">Ikon belum muncul? Anda juga bisa ketuk menu titik tiga (⋮) di pojok kanan atas Chrome lalu pilih <b>"Tambahkan ke Layar Utama"</b>.</p>' +
+                              '<p class="text-[11px] text-slate-400">Ikon belum muncul? Pastikan izin pintasan diizinkan atau pasang ulang via menu browser.</p>' +
                               '</div>',
                         icon: 'info',
                         showCancelButton: true,
-                        confirmButtonText: 'Pasang Ulang via Menu',
+                        confirmButtonText: 'Pasang Ulang / Izin',
                         cancelButtonText: 'Tutup',
                         confirmButtonColor: '#0284c7'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             localStorage.removeItem('pwa_installed');
                             this.isInstalled = false;
-                            this.handleAction();
+                            this.confirmAndInstall();
                         }
                     });
                 } else {
@@ -615,6 +627,79 @@ function pwaDashboardCard() {
                 return;
             }
 
+            // Minta konfirmasi izin terlebih dahulu sebelum instalasi
+            this.confirmAndInstall();
+        },
+
+        confirmAndInstall() {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Izin Pasang Aplikasi MyMSN',
+                    html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-3 mt-2">' +
+                          '<div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60">' +
+                          '<div class="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0 font-bold">📲</div>' +
+                          '<p class="text-[11px] text-sky-900 dark:text-sky-200 leading-snug">Aplikasi akan dipasang ke HP Anda dan menambahkan ikon langsung ke <b>Layar Utama (Homescreen)</b>.</p>' +
+                          '</div>' +
+                          '<div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 space-y-1">' +
+                          '<p class="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5 text-[11px]">' +
+                          '<svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>' +
+                          'Penting Bagi Pengguna Xiaomi / Oppo / Vivo / Realme:' +
+                          '</p>' +
+                          '<p class="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">' +
+                          'Pastikan izin <b>"Pintasan Layar Utama" (Home screen shortcuts)</b> pada Chrome telah diizinkan agar ikon tidak diblokir oleh sistem HP.' +
+                          '</p>' +
+                          '</div>' +
+                          '<p class="text-slate-500 dark:text-slate-400 text-[11px]">Lanjutkan untuk memasang aplikasi MyMSN sekarang?</p>' +
+                          '</div>',
+                    icon: 'question',
+                    showCancelButton: true,
+                    showDenyButton: true,
+                    confirmButtonText: 'Izinkan & Pasang Sekarang',
+                    denyButtonText: 'Cara Buka Izin HP',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#0284c7',
+                    denyButtonColor: '#475569',
+                    cancelButtonColor: '#94a3b8'
+                }).then((res) => {
+                    if (res.isConfirmed) {
+                        this.executeInstall();
+                    } else if (res.isDenied) {
+                        this.showPermissionGuideModal();
+                    }
+                });
+            } else {
+                this.executeInstall();
+            }
+        },
+
+        showPermissionGuideModal() {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Cara Mengizinkan Pintasan Layar HP',
+                    html: '<div class="text-left text-xs text-slate-600 dark:text-slate-300 space-y-2.5 mt-2">' +
+                          '<p class="font-semibold text-slate-800 dark:text-slate-100">Ikuti langkah mudah ini di HP Anda:</p>' +
+                          '<ol class="list-decimal pl-4 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-300">' +
+                          '<li>Tekan dan tahan (klik lama) ikon aplikasi <b>Chrome</b> di layar HP Anda.</li>' +
+                          '<li>Ketuk menu <b>"Info Aplikasi"</b> (ikon huruf <b>i</b> dalam lingkaran).</li>' +
+                          '<li>Gulir ke menu <b>"Perizinan Lainnya"</b> (Other permissions).</li>' +
+                          '<li>Cari <b>"Pintasan Layar Utama"</b> (Home screen shortcuts) lalu ubah ke <b>"Selalu Izinkan"</b>.</li>' +
+                          '</ol>' +
+                          '<p class="text-sky-600 dark:text-sky-400 text-[11px] font-semibold mt-2">Setelah itu, ketuk tombol di bawah untuk langsung memasang.</p>' +
+                          '</div>',
+                    icon: 'info',
+                    confirmButtonText: 'Saya Mengerti, Pasang Sekarang',
+                    showCancelButton: true,
+                    cancelButtonText: 'Tutup',
+                    confirmButtonColor: '#0284c7'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        this.executeInstall();
+                    }
+                });
+            }
+        },
+
+        executeInstall() {
             // Jika belum diinstall: Jalankan progress dan prompt install
             if (window.pwaDeferredPrompt) {
                 this.startProgressIndicator(async () => {
