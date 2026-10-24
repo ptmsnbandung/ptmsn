@@ -176,10 +176,10 @@
                             <tr>
                                 <td align="center">
                                     <div style="display: inline-block; background-color: #ffffff; width: 50px; height: 50px; border-radius: 12px; line-height: 50px; text-align: center; margin-bottom: 8px;">
-                                        <img src="https://ptmsn.net.id/images/logo/logo-icon.png" alt="MSN Logo" width="36" height="36" style="vertical-align: middle; margin-top: 7px;">
+                                        <img src="https://ptmsn.co.id/images/logo/logo-icon.png" alt="MSN Logo" width="36" height="36" style="vertical-align: middle; margin-top: 7px;">
                                     </div>
                                     <h1>My<span style="color: #38bdf8;">MSN</span></h1>
-                                    <p>PT MEDIA SOLUSI NETWORK</p>
+                                    <p>{{ config('company.name', 'PT MEDIA SOLUSI NETWORK') }}</p>
                                     <div class="status-badge">&#10003; PEMBAYARAN BERHASIL (LUNAS)</div>
                                 </td>
                             </tr>
@@ -189,10 +189,10 @@
                     <!-- Content -->
                     <div class="content">
                         <div class="greeting">
-                            Halo, <strong>{{ $customer->name ?? 'Pelanggan Setia' }}</strong>
+                            Halo, <strong>{{ $customer->nama_pelanggan ?? $customer->nama_penduduk ?? $customer->name ?? 'Pelanggan Setia' }}</strong>
                         </div>
                         <div class="intro-text">
-                            Terima kasih! Pembayaran tagihan internet Anda telah kami terima dan diverifikasi secara otomatis melalui payment gateway Midtrans.
+                            Terima kasih! Pembayaran tagihan internet Anda telah kami terima dan diverifikasi resmi (Lunas). Berikut adalah rincian kwitansi pembayaran Anda:
                         </div>
 
                         <!-- Receipt Details Card -->
@@ -200,28 +200,30 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr class="receipt-row">
                                     <td class="receipt-label">No. Invoice / Tagihan</td>
-                                    <td class="receipt-value" style="color: #0284c7;">{{ $billing->kode_billing_layanan }}</td>
+                                    <td class="receipt-value" style="color: #0284c7;">{{ $billing->kode_billing_layanan ?? '-' }}</td>
                                 </tr>
                                 <tr class="receipt-row">
                                     <td class="receipt-label">ID Pelanggan (No. Internet)</td>
-                                    <td class="receipt-value">{{ $customer->nomor_internet ?? $billing->nomor_internet }}</td>
+                                    <td class="receipt-value">{{ $customer->nomor_internet ?? $billing->nomor_internet ?? '-' }}</td>
                                 </tr>
                                 <tr class="receipt-row">
                                     <td class="receipt-label">Periode Tagihan</td>
-                                    <td class="receipt-value">{{ $billing->period }}</td>
+                                    <td class="receipt-value">{{ $billing->period ?? '-' }}</td>
                                 </tr>
                                 <tr class="receipt-row">
                                     <td class="receipt-label">Paket Layanan</td>
-                                    <td class="receipt-value">{{ $customer->bandwith?->nama_bandwith ?? 'Internet Broadband' }}</td>
+                                    <td class="receipt-value">{{ $customer->nama_bandwith ?? 'Internet Broadband' }}</td>
                                 </tr>
                                 <tr class="receipt-row">
                                     <td class="receipt-label">Metode Pembayaran</td>
-                                    <td class="receipt-value">{{ strtoupper(str_replace(['_', '-'], ' ', $billing->merchant_type ?: ($paymentData['payment_type'] ?? 'Midtrans Payment'))) }}</td>
+                                    <td class="receipt-value">
+                                        {{ strtoupper(str_replace(['_', '-'], ' ', $billing->merchant_type ?: ($paymentData['metode_bayar'] ?? 'Transfer Bank'))) }}
+                                    </td>
                                 </tr>
                                 <tr class="receipt-row">
                                     <td class="receipt-label">Waktu Pembayaran</td>
                                     <td class="receipt-value">
-                                        {{ $billing->payment_paid ? \Carbon\Carbon::parse($billing->payment_paid)->translatedFormat('d F Y, H:i') . ' WIB' : now()->translatedFormat('d F Y, H:i') . ' WIB' }}
+                                        {{ !empty($billing->payment_paid) ? \Carbon\Carbon::parse($billing->payment_paid)->translatedFormat('d F Y, H:i') . ' WIB' : now()->translatedFormat('d F Y, H:i') . ' WIB' }}
                                     </td>
                                 </tr>
                             </table>
@@ -230,7 +232,7 @@
                             <div class="total-box">
                                 <div class="total-label">Total Pelunasan</div>
                                 <div class="total-amount">
-                                    Rp {{ number_format((float) ($billing->amount_paid ?: $billing->payable_amount), 0, ',', '.') }}
+                                    Rp {{ number_format((float) ($billing->amount_paid ?: ($billing->total_layanan ?? $paymentData['nominal'] ?? 0)), 0, ',', '.') }}
                                 </div>
                             </div>
                         </div>
@@ -242,7 +244,7 @@
 
                         <!-- CTA Button -->
                         <div class="action-container">
-                            <a href="{{ route('portal.billing.index') }}" class="btn-portal" target="_blank">
+                            <a href="{{ config('company.portal_url', 'https://portal.ptmsn.co.id') }}/portal/billing" class="btn-portal" target="_blank">
                                 Buka Portal Tagihan Saya
                             </a>
                         </div>
@@ -251,16 +253,16 @@
                     <!-- Footer -->
                     <div class="footer">
                         <p style="margin: 0 0 6px 0;">
-                            Email ini dibuat secara otomatis oleh sistem penagihan <strong>PT Media Solusi Network</strong>.
+                            Email ini dibuat secara otomatis oleh sistem penagihan <strong>{{ config('company.name', 'PT Media Solusi Network') }}</strong>.
                         </p>
                         <p style="margin: 0 0 10px 0;">
-                            Butuh bantuan? Hubungi WhatsApp NOC: 
-                            <a href="https://wa.me/{{ config('company.whatsapp', '6289696629955') }}?text={{ urlencode('Halo Tim NOC PT MSN, saya ingin bertanya tentang tagihan ' . $billing->kode_billing_layanan) }}" target="_blank">
-                                +{{ config('company.whatsapp', '6289696629955') }}
+                            Butuh bantuan? Hubungi WhatsApp Layanan Pelanggan: 
+                            <a href="https://wa.me/{{ config('company.billing_whatsapp', config('company.whatsapp', '6289696629955')) }}?text={{ urlencode('Halo Tim PT MSN, saya ingin bertanya tentang pembayaran tagihan ' . ($billing->kode_billing_layanan ?? '')) }}" target="_blank">
+                                +{{ config('company.billing_whatsapp', config('company.whatsapp', '6289696629955')) }}
                             </a>
                         </p>
                         <p style="margin: 0; color: #cbd5e1; font-size: 10.5px;">
-                            &copy; {{ date('Y') }} PT Media Solusi Network. All rights reserved.
+                            &copy; {{ date('Y') }} {{ config('company.name', 'PT Media Solusi Network') }}. All rights reserved.
                         </p>
                     </div>
 
@@ -271,3 +273,4 @@
 
 </body>
 </html>
+
