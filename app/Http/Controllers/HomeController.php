@@ -51,10 +51,10 @@ class HomeController extends Controller
         // Fallback: If SOHO/Bisnis packages are empty, generate default list
         if ($sohoPackages->isEmpty()) {
             $sohoList = [
-                ['name' => 'UMKM BASIC', 'category' => 'soho', 'speed' => '50 Mbps', 'price' => 399000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Koneksi Fiber Cepat', 'Router Gigabit ONT']],
-                ['name' => 'UMKM PLUS', 'category' => 'soho', 'speed' => '100 Mbps', 'price' => 699000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Private / Static Ready', 'Koneksi Fiber Cepat', 'Router Gigabit Dual-Band']],
-                ['name' => 'BISNIS PRO', 'category' => 'soho', 'speed' => '200 Mbps', 'price' => 999000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Dedicated Bisnis', 'SLA 99.5% Perusahaan', 'Router Gigabit Dual-Band']],
-                ['name' => 'BISNIS ENTERPRISE', 'category' => 'soho', 'speed' => '300 Mbps', 'price' => 1299000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'IP Dedicated Bisnis', 'SLA 99.8% Korporat', 'Dukungan Dedicated NOC 24/7']],
+                ['name' => 'UMKM BASIC', 'category' => 'soho', 'speed' => '50 Mbps', 'price' => 399000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Bantuan Prioritas 24/7']],
+                ['name' => 'UMKM PLUS', 'category' => 'soho', 'speed' => '100 Mbps', 'price' => 699000, 'period' => 'bln', 'is_popular' => true, 'features' => ['Unlimited Akses (Tanpa FUP)', 'SLA Bisnis Terjamin']],
+                ['name' => 'BISNIS PRO', 'category' => 'soho', 'speed' => '200 Mbps', 'price' => 999000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'SLA Bisnis 99.5%']],
+                ['name' => 'BISNIS ENTERPRISE', 'category' => 'soho', 'speed' => '300 Mbps', 'price' => 1299000, 'period' => 'bln', 'is_popular' => false, 'features' => ['Unlimited Akses (Tanpa FUP)', 'Dedicated NOC & SLA 99.8%']],
             ];
             $sohoPackages = collect($sohoList)->map(fn($item) => new Package($item));
         }
